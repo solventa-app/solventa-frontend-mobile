@@ -73,7 +73,7 @@ jobs:
           retention-days: 30
 
       - name: Crear GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: Solventa ${{ steps.version.outputs.name }} (build ${{ github.run_number }})
