@@ -1,0 +1,30 @@
+name: Título del PR
+
+# Conventional Commits con alcance y clave de Jira: tipo(alcance): KAN-N descripción.
+# Ver docs/convenciones.md de solventa-frontend-web.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions: {}
+
+jobs:
+  titulo:
+    name: Título del PR
+    # Dependabot usa su propio formato.
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Validar formato
+        env:
+          TITULO: ${{ github.event.pull_request.title }}
+        run: |
+          patron='^(feat|fix|refactor|test|docs|chore|ci)\((mobile|contrato|docs|ci)\): KAN-[0-9]+ .+'
+          if ! printf '%s' "$TITULO" | grep -Eq "$patron"; then
+            echo "::error title=Título del PR::Formato esperado: tipo(alcance): KAN-N descripción. Ej.: feat(mobile): KAN-24 login biométrico"
+            echo "Recibido: $TITULO"
+            echo "Tipos: feat fix refactor test docs chore ci"
+            echo "Alcances: mobile contrato docs ci"
+            exit 1
+          fi

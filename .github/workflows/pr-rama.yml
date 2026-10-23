@@ -1,0 +1,45 @@
+name: Nombre de rama
+
+# Git-flow adaptado al móvil (convenciones de solventa-backend / solventa-frontend-web):
+#   feat|fix|chore/KAN-N-descripcion  ->  develop   (trabajo diario)
+#   develop                           ->  main      (liberación)
+#   fix/KAN-N-descripcion             ->  main      (corrección urgente)
+#   main                              ->  develop   (reintegración tras un fix directo)
+# Cada merge a main dispara el CD (APK + AAB). Se exige con este check, obligatorio en `main` y `develop`.
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+
+permissions: {}
+
+jobs:
+  rama:
+    name: Nombre de rama
+    # Dependabot usa sus propias ramas (dependabot/**) y apunta a develop (dependabot.yml).
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Validar rama y destino
+        env:
+          RAMA: ${{ github.head_ref }}
+          BASE: ${{ github.base_ref }}
+        run: |
+          trabajo='^(feat|fix|chore)/KAN-[0-9]+-[a-z0-9-]+$'
+          correccion='^fix/KAN-[0-9]+-[a-z0-9-]+$'
+          coincide() { printf '%s' "$RAMA" | grep -Eq "$1"; }
+
+          case "$BASE" in
+            main)
+              [ "$RAMA" = "develop" ] || coincide "$correccion" && exit 0
+              esperado="develop, o fix/KAN-N-descripcion (el trabajo diario va a develop)" ;;
+            develop)
+              coincide "$trabajo" || [ "$RAMA" = "main" ] && exit 0
+              esperado="feat|fix|chore/KAN-N-descripcion, o main para reintegrar un fix" ;;
+            *)
+              coincide "$trabajo" && exit 0
+              esperado="feat|fix|chore/KAN-N-descripcion" ;;
+          esac
+          echo "::error title=Nombre de rama::Hacia '$BASE' se espera $esperado. Descripción en minúsculas, dígitos y guiones. Ej.: feat/KAN-24-login-biometrico -> develop"
+          echo "Recibido: $RAMA -> $BASE"
+          exit 1

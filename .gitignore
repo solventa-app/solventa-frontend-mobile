@@ -1,0 +1,13 @@
+# Firmado: nunca commitear
+android/key.properties
+*.jks
+*.keystore
+
+# Flutter
+.dart_tool/
+build/
+.flutter-plugins*
+coverage/
+*.iml
+.idea/
+.DS_Store
