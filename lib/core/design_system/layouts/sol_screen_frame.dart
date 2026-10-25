@@ -17,6 +17,7 @@ class SolScreenFrame extends StatelessWidget {
     this.anchorActions = true,
     this.centerBody = false,
     this.padding = defaultPadding,
+    this.backgroundColor,
   });
 
   /// Margen lateral de 16 dp y 24 dp arriba y abajo (Figma).
@@ -33,6 +34,9 @@ class SolScreenFrame extends StatelessWidget {
   final bool anchorActions;
   final bool centerBody;
   final EdgeInsets padding;
+
+  /// Fondo de la pantalla; por defecto el del tema (gris #F5F5F5).
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +88,7 @@ class SolScreenFrame extends StatelessWidget {
     );
 
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: topBar,
       body: Column(
         children: [

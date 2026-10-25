@@ -28,7 +28,7 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
     this.showBack = true,
     this.showProfile = true,
     this.onProfileTap,
-    this.localeLabel = 'ES · COP',
+    this.localeLabel,
     this.onLocaleTap,
   }) : type = SolTopBarType.flow,
        onWordmarkLongPress = null;
@@ -36,7 +36,7 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
   /// Barra «Inicio».
   const SolTopBar.home({
     super.key,
-    this.localeLabel = 'ES · COP',
+    this.localeLabel,
     this.onLocaleTap,
     this.onWordmarkLongPress,
   }) : type = SolTopBarType.home,
@@ -52,7 +52,7 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBack;
   final bool showProfile;
   final VoidCallback? onProfileTap;
-  final String localeLabel;
+  final String? localeLabel;
   final VoidCallback? onLocaleTap;
 
   /// Solo para depuración (abrir la galería interna).

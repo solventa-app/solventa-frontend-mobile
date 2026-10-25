@@ -1,0 +1,199 @@
+{
+  "@@locale": "es",
+  "localeChip": "ES · COP",
+  "@localeChip": {
+    "description": "Píldora de idioma y moneda de la barra superior"
+  },
+  "m0101Titulo": "Bienvenida a Solventa",
+  "@m0101Titulo": {
+    "description": "M01-01 título"
+  },
+  "m0101Intro": "Antes de activar tu cuenta, vamos a verificar tu identidad en 3 pasos rápidos:",
+  "@m0101Intro": {
+    "description": "M01-01 párrafo"
+  },
+  "m0101Paso1": "Autorización de tratamiento de datos",
+  "@m0101Paso1": {
+    "description": "M01-01 paso 1"
+  },
+  "m0101Paso2": "Captura de tu documento de identidad (frente y reverso)",
+  "@m0101Paso2": {
+    "description": "M01-01 paso 2"
+  },
+  "m0101Paso3": "Prueba de vida (selfie)",
+  "@m0101Paso3": {
+    "description": "M01-01 paso 3"
+  },
+  "m0101PasoSemantica": "Paso {numero} de 3: {texto}",
+  "@m0101PasoSemantica": {
+    "description": "M01-01 lectura de TalkBack de cada paso",
+    "placeholders": {
+      "numero": {
+        "type": "int"
+      },
+      "texto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0101Empezar": "Empezar",
+  "@m0101Empezar": {
+    "description": "M01-01 botón"
+  },
+  "m0102Titulo": "Autorización de datos",
+  "@m0102Titulo": {
+    "description": "M01-02 barra superior"
+  },
+  "m0102Legal": "Para verificar tu identidad necesitamos tu autorización para tratar tus datos personales conforme a la Ley 1581 de 2012 (Habeas Data).",
+  "@m0102Legal": {
+    "description": "M01-02 texto legal"
+  },
+  "m0102Consentimiento": "Autorizo el tratamiento de mis datos personales",
+  "@m0102Consentimiento": {
+    "description": "M01-02 casilla"
+  },
+  "continuar": "Continuar",
+  "@continuar": {
+    "description": "Botón continuar"
+  },
+  "m0103Titulo": "Captura del documento",
+  "@m0103Titulo": {
+    "description": "M01-03/04 barra superior"
+  },
+  "m0103Tipo": "Cédula de ciudadanía",
+  "@m0103Tipo": {
+    "description": "Tipo de documento en el visor"
+  },
+  "m0103Instruccion": "Ubica el FRENTE del documento dentro del marco",
+  "@m0103Instruccion": {
+    "description": "M01-03 instrucción"
+  },
+  "m0103Consejo": "Evita reflejos de luz directa y sombras pronunciadas",
+  "@m0103Consejo": {
+    "description": "M01-03 consejo"
+  },
+  "repetir": "Repetir",
+  "@repetir": {
+    "description": "Botón repetir captura"
+  },
+  "capturar": "Capturar",
+  "@capturar": {
+    "description": "Botón capturar"
+  },
+  "m0104Paso": "Paso 2 de 2: Reverso",
+  "@m0104Paso": {
+    "description": "M01-04 indicador de paso"
+  },
+  "m0104LadoPosterior": "Lado posterior",
+  "@m0104LadoPosterior": {
+    "description": "M01-04 marca de agua del visor"
+  },
+  "m0104Instruccion": "Ubica el REVERSO del documento dentro del marco",
+  "@m0104Instruccion": {
+    "description": "M01-04 instrucción"
+  },
+  "m0104Consejo": "Evita reflejos de luz directa y sombras pronunciadas sobre el código de barras y la huella.",
+  "@m0104Consejo": {
+    "description": "M01-04 consejo"
+  },
+  "m0104Calidad": "Enfoque y luz adecuados",
+  "@m0104Calidad": {
+    "description": "M01-04 estado de calidad"
+  },
+  "m0105Titulo": "Prueba de vida",
+  "@m0105Titulo": {
+    "description": "M01-05 barra superior"
+  },
+  "m0105Instruccion": "Gira tu rostro lentamente dentro del marco (cámara frontal)",
+  "@m0105Instruccion": {
+    "description": "M01-05 instrucción"
+  },
+  "m0105DemoRevision": "Simular que la identidad queda en revisión",
+  "@m0105DemoRevision": {
+    "description": "Disparador de demo (solo debug)"
+  },
+  "m0105DemoRechazo": "Simular que el documento es rechazado",
+  "@m0105DemoRechazo": {
+    "description": "Disparador de demo (solo debug)"
+  },
+  "verificacionTitulo": "Verificación",
+  "@verificacionTitulo": {
+    "description": "M01-06/07 barra superior"
+  },
+  "m0106Validando": "Validando con el proveedor KYC/AML...",
+  "@m0106Validando": {
+    "description": "M01-06 mensaje de carga"
+  },
+  "m0107aMensaje": "¡Identidad verificada! Bienvenido a Solventa.",
+  "@m0107aMensaje": {
+    "description": "M01-07a"
+  },
+  "m0107aAccion": "Ir a mi cuenta",
+  "@m0107aAccion": {
+    "description": "M01-07a botón"
+  },
+  "m0107bMensaje": "Estamos revisando tu identidad, te avisamos.",
+  "@m0107bMensaje": {
+    "description": "M01-07b"
+  },
+  "m0107bAccion": "Entendido",
+  "@m0107bAccion": {
+    "description": "M01-07b botón"
+  },
+  "m0107cMensaje": "No pudimos verificar tu documento (imagen ilegible)",
+  "@m0107cMensaje": {
+    "description": "M01-07c"
+  },
+  "reintentar": "Reintentar",
+  "@reintentar": {
+    "description": "Botón reintentar"
+  },
+  "m0108Titulo": "Activación",
+  "@m0108Titulo": {
+    "description": "M01-08 barra superior"
+  },
+  "m0108Encabezado": "Necesitamos activar tu huella o rostro",
+  "@m0108Encabezado": {
+    "description": "M01-08 título"
+  },
+  "m0108Explicacion": "Solventa protege tu cuenta con la seguridad de tu propio teléfono: para continuar, tu celular debe tener huella dactilar o reconocimiento facial activado. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.",
+  "@m0108Explicacion": {
+    "description": "M01-08 explicación"
+  },
+  "m0108Sello": "Validación biométrica encriptada localmente",
+  "@m0108Sello": {
+    "description": "M01-08 sello de confianza"
+  },
+  "m0108Ajustes": "Ir a configuración del teléfono",
+  "@m0108Ajustes": {
+    "description": "M01-08 botón secundario"
+  },
+  "m0108Continuar": "Ya lo activé, continuar",
+  "@m0108Continuar": {
+    "description": "M01-08 botón principal"
+  },
+  "m0108Requisito": "Sin huella o rostro activado en el equipo, la app no puede usarse — es un requisito, no una opción.",
+  "@m0108Requisito": {
+    "description": "M01-08 nota"
+  },
+  "m0108NoActivada": "Aún no detectamos huella o rostro en tu teléfono.",
+  "@m0108NoActivada": {
+    "description": "M01-08 aviso si no está activada"
+  },
+  "fallaSinConexion": "No tienes conexión. Revisa tu internet e intenta de nuevo.",
+  "@fallaSinConexion": {
+    "description": "Falla SinConexion"
+  },
+  "fallaServicio": "El servicio tardó más de lo esperado. Intenta nuevamente.",
+  "@fallaServicio": {
+    "description": "Falla ServicioNoDisponible"
+  },
+  "fallaGenerica": "Algo salió mal. Intenta nuevamente.",
+  "@fallaGenerica": {
+    "description": "Falla Inesperada"
+  },
+  "localeChipSemantica": "Idioma español, moneda pesos colombianos. Toca para cambiar a inglés.",
+  "@localeChipSemantica": {
+    "description": "Lectura de TalkBack de la píldora de idioma"
+  }
+}

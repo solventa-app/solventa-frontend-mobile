@@ -1,66 +1,52 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../core/design_system/solventa_ui.dart';
-import '../features/assistance/presentation/assistance_placeholder_page.dart';
-import '../features/home/presentation/home_page.dart';
+import '../core/l10n/l10n.dart';
+import 'router.dart';
 
-/// Raíz de la app: tema M3 de Solventa, locale es-CO y shell de navegación.
-class SolventaApp extends StatelessWidget {
+/// Raíz de la app: tema M3 de Solventa, idioma (es-CO / en) y rutas.
+class SolventaApp extends ConsumerStatefulWidget {
   const SolventaApp({super.key});
 
   @override
+  ConsumerState<SolventaApp> createState() => _SolventaAppState();
+}
+
+class _SolventaAppState extends ConsumerState<SolventaApp> {
+  late final GoRouter _router = crearRouter();
+
+  @override
+  void dispose() {
+    _router.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final locale = ref.watch(localeProvider);
+    return MaterialApp.router(
       title: 'Solventa',
       debugShowCheckedModeBanner: false,
       theme: SolTheme.light(),
       themeMode: ThemeMode.light,
-      locale: SolLocalizations.locale,
-      supportedLocales: SolLocalizations.supportedLocales,
-      localizationsDelegates: SolLocalizations.delegates,
-      // Galería interna: solo en debug (toque largo en el wordmark o
-      // --dart-define=SOL_GALLERY=true).
-      initialRoute: kDebugMode && _openGallery
-          ? SolGalleryPage.routeName
-          : Navigator.defaultRouteName,
-      onGenerateRoute: (settings) {
-        if (settings.name == Navigator.defaultRouteName) {
-          return MaterialPageRoute<void>(
-            settings: settings,
-            builder: (_) => const _RootShell(),
-          );
-        }
-        return SolGalleryPage.route(settings);
+      locale: locale,
+      supportedLocales: AppLocales.supported,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        ...SolLocalizations.delegates,
+      ],
+      routerConfig: _router,
+      builder: (context, child) {
+        final l10n = context.l10n;
+        return SolLocaleScope(
+          label: l10n.localeChip,
+          semanticLabel: l10n.localeChipSemantica,
+          onTap: ref.read(localeProvider.notifier).alternar,
+          child: child ?? const SizedBox.shrink(),
+        );
       },
-    );
-  }
-}
-
-const bool _openGallery = bool.fromEnvironment('SOL_GALLERY');
-
-class _RootShell extends StatelessWidget {
-  const _RootShell();
-
-  @override
-  Widget build(BuildContext context) {
-    return SolAppShell(
-      home: HomePage(
-        userName: 'María',
-        onCompleteRegistration: () {},
-        onRequestAssistance: () {},
-      ),
-      assistance: const AssistancePlaceholderPage(),
-      onWordmarkLongPress: kDebugMode
-          ? () => Navigator.pushNamed(context, SolGalleryPage.routeName)
-          : null,
-      onLogout: () => SolConfirmDialog.show(
-        context,
-        title: '¿Quieres cerrar sesión?',
-        message: 'Tendrás que ingresar de nuevo para usar Solventa.',
-        confirmLabel: 'Sí, cerrar sesión',
-        cancelLabel: 'No, seguir aquí',
-      ),
     );
   }
 }

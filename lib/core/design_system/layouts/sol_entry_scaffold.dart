@@ -14,6 +14,7 @@ class SolEntryScaffold extends StatelessWidget {
     this.anchorActions = true,
     this.centerBody = false,
     this.onLocaleTap,
+    this.backgroundColor,
   });
 
   final String? title;
@@ -22,6 +23,9 @@ class SolEntryScaffold extends StatelessWidget {
   final bool anchorActions;
   final bool centerBody;
   final VoidCallback? onLocaleTap;
+
+  /// Fondo de la pantalla; M01-01 es blanca en Figma.
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,7 @@ class SolEntryScaffold extends StatelessWidget {
       actions: actions,
       anchorActions: anchorActions,
       centerBody: centerBody,
+      backgroundColor: backgroundColor,
     );
   }
 }

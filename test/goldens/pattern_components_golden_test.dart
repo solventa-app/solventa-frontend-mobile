@@ -272,6 +272,15 @@ void main() {
             instruction: 'Ubica el FRENTE del documento dentro del marco',
           ),
         ),
+        'Reverso (M01-04)': Center(
+          child: SolCameraFrame(
+            shape: SolCameraFrameShape.documentBack,
+            label: 'Cédula de ciudadanía',
+            labelIcon: SolIcons.idCard,
+            guideLabel: 'Lado posterior',
+            instruction: 'Ubica el REVERSO del documento dentro del marco',
+          ),
+        ),
         'Rostro (prueba de vida)': Center(
           child: SolCameraFrame(
             shape: SolCameraFrameShape.face,

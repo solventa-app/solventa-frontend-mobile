@@ -12,7 +12,10 @@ enum SolCameraFrameShape {
   /// Documento (cédula) en horizontal, M01-03.
   document,
 
-  /// Rostro para prueba de vida (óvalo).
+  /// Reverso del documento (código de barras, chip y zona MRZ), M01-04.
+  documentBack,
+
+  /// Rostro para prueba de vida: marco de 200 × 260 con bordes de 100 dp, M01-05.
   face,
 }
 
@@ -29,6 +32,8 @@ class SolCameraFrame extends StatelessWidget {
     this.labelIcon,
     this.preview,
     this.height = 420,
+    this.guideLabel,
+    this.viewfinderLabel = 'Visor de cámara',
   });
 
   /// Texto inferior, p. ej. «Ubica el FRENTE del documento dentro del marco».
@@ -42,13 +47,19 @@ class SolCameraFrame extends StatelessWidget {
   final Widget? preview;
   final double height;
 
+  /// Marca de agua del reverso («LADO POSTERIOR»). Solo para [SolCameraFrameShape.documentBack].
+  final String? guideLabel;
+
+  /// Nombre del visor para TalkBack (traducido por la feature).
+  final String viewfinderLabel;
+
   @override
   Widget build(BuildContext context) {
     final sol = context.solColors;
-    final isDoc = shape == SolCameraFrameShape.document;
+    final back = shape == SolCameraFrameShape.documentBack;
     return Semantics(
       container: true,
-      label: [?label, 'Visor de cámara', instruction].join('. '),
+      label: [?label, viewfinderLabel, instruction].join('. '),
       excludeSemantics: true,
       child: ConstrainedBox(
         constraints: BoxConstraints(minHeight: height, maxWidth: 328),
@@ -77,21 +88,23 @@ class SolCameraFrame extends StatelessWidget {
               child: Stack(
                 children: [
                   if (preview != null) Positioned.fill(child: preview!),
-                  const Positioned.fill(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color(0x0DFFFFFF),
-                            Color(0x00FFFFFF),
-                            Color(0x99000000),
-                          ],
+                  if (back) const Positioned.fill(child: _GridOverlay()),
+                  if (shape == SolCameraFrameShape.document)
+                    const Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color(0x0DFFFFFF),
+                              Color(0x00FFFFFF),
+                              Color(0x99000000),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(SolSpacing.lg),
                     // El texto superpuesto se limita a 1,3× para que la guía
@@ -108,19 +121,30 @@ class SolCameraFrame extends StatelessWidget {
                             else
                               const SizedBox.shrink(),
                             Flexible(
-                              child: isDoc
-                                  ? const _DocumentGuide()
-                                  : const _FaceGuide(),
+                              child: switch (shape) {
+                                SolCameraFrameShape.document =>
+                                  const _DocumentGuide(),
+                                SolCameraFrameShape.documentBack =>
+                                  _DocumentBackGuide(label: guideLabel),
+                                SolCameraFrameShape.face => const _FaceGuide(),
+                              },
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
                                 bottom: SolSpacing.xs,
                               ),
-                              child: Text(
-                                instruction,
-                                textAlign: TextAlign.center,
-                                style: context.solText.body.copyWith(
-                                  color: Colors.white,
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: shape == SolCameraFrameShape.face
+                                      ? 240
+                                      : double.infinity,
+                                ),
+                                child: Text(
+                                  instruction,
+                                  textAlign: TextAlign.center,
+                                  style: context.solText.body.copyWith(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
@@ -183,10 +207,10 @@ class _DocumentGuide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 296 / 190,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 296),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 296),
+      child: AspectRatio(
+        aspectRatio: 296 / 190,
         child: CustomPaint(
           painter: const _DashedFramePainter(oval: false),
           child: Padding(
@@ -243,19 +267,205 @@ class _DocumentGuide extends StatelessWidget {
   }
 }
 
-/// Óvalo para el rostro (prueba de vida).
+/// Marco del rostro (2001:507): 200 × 260, bordes de 100 dp, ícono de rostro y
+/// línea de escaneo.
 class _FaceGuide extends StatelessWidget {
   const _FaceGuide();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: SolSpacing.md),
+      padding: const EdgeInsets.only(top: SolSpacing.lg),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 220),
-        child: const AspectRatio(
-          aspectRatio: 3 / 4,
-          child: CustomPaint(painter: _DashedFramePainter(oval: true)),
+        constraints: const BoxConstraints(maxWidth: 200),
+        child: AspectRatio(
+          aspectRatio: 200 / 260,
+          child: CustomPaint(
+            painter: const _DashedFramePainter(oval: true),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                const Icon(SolIcons.face, size: 40, color: Color(0x80FFFFFF)),
+                Container(
+                  height: 2,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0x00FFFFFF),
+                        Color(0x66FFFFFF),
+                        Color(0x00FFFFFF),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Cuadrícula 3 × 3 sutil del visor del reverso (2001:416).
+class _GridOverlay extends StatelessWidget {
+  const _GridOverlay();
+
+  @override
+  Widget build(BuildContext context) =>
+      const CustomPaint(painter: _GridPainter());
+}
+
+class _GridPainter extends CustomPainter {
+  const _GridPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = const Color(0x1AFFFFFF)
+      ..strokeWidth = 1;
+    for (var i = 1; i < 3; i++) {
+      final x = size.width * i / 3, y = size.height * i / 3;
+      canvas
+        ..drawLine(Offset(x, 0), Offset(x, size.height), p)
+        ..drawLine(Offset(0, y), Offset(size.width, y), p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_GridPainter oldDelegate) => false;
+}
+
+/// Reverso de la cédula (2001:431): código de barras, chip, marca de agua y MRZ.
+class _DocumentBackGuide extends StatelessWidget {
+  const _DocumentBackGuide({this.label});
+
+  final String? label;
+
+  @override
+  Widget build(BuildContext context) {
+    // Zona de lectura mecánica: barras con texto monoespaciado de 6 dp.
+    Widget mrz(String texto, double? w) => Container(
+      width: w,
+      height: 6,
+      alignment: Alignment.centerLeft,
+      clipBehavior: Clip.hardEdge,
+      decoration: const BoxDecoration(color: Color(0x80FFFFFF)),
+      child: Text(
+        texto,
+        maxLines: 1,
+        softWrap: false,
+        style: const TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 6,
+          height: 1,
+          letterSpacing: 0.6,
+          color: Colors.white,
+        ),
+      ),
+    );
+    Widget bar(double? w, double h, double a) => Container(
+      width: w,
+      height: h,
+      color: Colors.white.withValues(alpha: a),
+    );
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 296),
+      child: AspectRatio(
+        aspectRatio: 296 / 190,
+        child: CustomPaint(
+          painter: const _DashedFramePainter(oval: false, corners: false),
+          child: Padding(
+            padding: const EdgeInsets.all(SolSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Opacity(
+                      opacity: 0.6,
+                      child: SizedBox(
+                        width: 112,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            bar(112, 6, 0.7),
+                            const SizedBox(height: 4),
+                            bar(93.33, 4, 0.4),
+                            const SizedBox(height: 4),
+                            bar(112, 8, 0.6),
+                            const SizedBox(height: 4),
+                            bar(74.66, 4, 0.3),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: const BoxDecoration(
+                        color: Color(0x1AFFFFFF),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        SolIcons.fingerprint,
+                        size: 16,
+                        opticalSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                          color: Color(0x1AFFFFFF),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          SolIcons.documentBack,
+                          size: 18,
+                          opticalSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                      if (label != null) ...[
+                        const SizedBox(height: SolSpacing.xs),
+                        Text(
+                          label!.toUpperCase(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.solText.note.copyWith(
+                            color: const Color(0x99FFFFFF),
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.275,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                Opacity(
+                  opacity: 0.6,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      mrz('I<COL0000000000<<<<<<<<<<<<<<<', null),
+                      const SizedBox(height: 4),
+                      mrz('9001018M3001015COL<<<<<<<<<<8', 211.19),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -264,15 +474,20 @@ class _FaceGuide extends StatelessWidget {
 
 /// Borde punteado blanco de 2 dp, oscurece el exterior y dibuja esquinas.
 class _DashedFramePainter extends CustomPainter {
-  const _DashedFramePainter({required this.oval});
+  const _DashedFramePainter({required this.oval, this.corners = true});
 
   final bool oval;
+
+  /// Esquinas guía (solo en el frente del documento).
+  final bool corners;
 
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
     final shape = oval
-        ? (Path()..addOval(rect))
+        ? (Path()..addRRect(
+            RRect.fromRectAndRadius(rect, Radius.circular(size.width / 2)),
+          ))
         : (Path()..addRRect(
             RRect.fromRectAndRadius(
               rect,
@@ -280,13 +495,21 @@ class _DashedFramePainter extends CustomPainter {
             ),
           ));
 
-    // Velo exterior (25 % negro) para resaltar la zona de encuadre.
-    final outside = Path()
-      ..fillType = PathFillType.evenOdd
-      ..addRect(rect.inflate(400))
-      ..addPath(shape, Offset.zero);
-    canvas.drawPath(outside, Paint()..color = const Color(0x40000000));
-    canvas.drawPath(shape, Paint()..color = const Color(0x0DFFFFFF));
+    if (oval) {
+      // Rostro (2001:507): solo el borde punteado.
+    } else if (corners) {
+      // Frente (2001:362): velo exterior del 25 % y relleno blanco del 5 %.
+      final outside = Path()
+        ..fillType = PathFillType.evenOdd
+        ..addRect(rect.inflate(400))
+        ..addPath(shape, Offset.zero);
+      canvas
+        ..drawPath(outside, Paint()..color = const Color(0x40000000))
+        ..drawPath(shape, Paint()..color = const Color(0x0DFFFFFF));
+    } else {
+      // Reverso (2001:431): relleno negro del 25 %.
+      canvas.drawPath(shape, Paint()..color = const Color(0x40000000));
+    }
 
     final stroke = Paint()
       ..color = Colors.white
@@ -301,7 +524,7 @@ class _DashedFramePainter extends CustomPainter {
       }
     }
 
-    if (!oval) {
+    if (!oval && corners) {
       // Esquinas de 10 dp, a 14 dp del borde.
       const inset = 14.0;
       const len = 10.0;
@@ -344,5 +567,6 @@ class _DashedFramePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DashedFramePainter old) => old.oval != oval;
+  bool shouldRepaint(_DashedFramePainter old) =>
+      old.oval != oval || old.corners != corners;
 }

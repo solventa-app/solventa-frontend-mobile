@@ -12,6 +12,7 @@ class SolInlineNote extends StatelessWidget {
     this.icon,
     this.center = false,
     this.color,
+    this.iconColor,
   });
 
   final String text;
@@ -20,6 +21,9 @@ class SolInlineNote extends StatelessWidget {
 
   /// Por defecto onSurfaceVariant.
   final Color? color;
+
+  /// Color del ícono si debe diferir del texto (M01-03).
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,12 @@ class SolInlineNote extends StatelessWidget {
         children: [
           if (icon != null) ...[
             ExcludeSemantics(
-              child: Icon(icon, size: 16, opticalSize: 20, color: c),
+              child: Icon(
+                icon,
+                size: 16,
+                opticalSize: 20,
+                color: iconColor ?? c,
+              ),
             ),
             const SizedBox(width: 6),
           ],
