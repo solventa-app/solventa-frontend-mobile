@@ -48,3 +48,4 @@ export 'layouts/sol_top_level_scaffold.dart';
 export 'layouts/sol_transitional_screen.dart';
 export 'responsive/sol_adaptive_body.dart';
 export 'responsive/sol_breakpoints.dart';
+export 'gallery/sol_gallery_page.dart';
