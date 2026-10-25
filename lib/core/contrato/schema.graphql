@@ -1,0 +1,269 @@
+"""
+Contrato GraphQL del BFF (v0, Sprint 1: HU-W01 y HU-W05).
+
+Este archivo es la FUENTE DE VERDAD del contrato con `solventa-frontend`.
+Reglas (ver contracts/README.md): solo cambios ADITIVOS; para quitar algo se marca @deprecated
+y se retira un sprint después; todo cambio se anota en contracts/CHANGELOG.md.
+"""
+
+scalar DateTime
+
+# ---------- Consentimiento (CA-W01-01/02/08) ----------
+
+enum EstadoConsentimiento {
+  VIGENTE
+  REVOCADO
+  VENCIDO
+}
+
+type Consentimiento {
+  id: ID!
+  finalidad: String!
+  versionTexto: String!
+  otorgadoEn: DateTime!
+  revocadoEn: DateTime
+  venceEn: DateTime!
+  vigente: Boolean!
+  estado: EstadoConsentimiento!
+}
+
+input ConsentimientoInput {
+  finalidad: String!
+  versionTexto: String!
+  documentoIdentidad: String = null
+  tipoDato: String = null
+  fuenteDatos: String = null
+  canal: String = null
+}
+
+# ---------- Oferta (CA-W01-03/04/05/06) ----------
+
+enum TipoOferta {
+  COMPLETA
+  PRELIMINAR
+}
+
+enum EstadoFuente {
+  OK
+  CACHE
+  FALLO
+}
+
+enum NivelRiesgo {
+  BAJO
+  MEDIO
+  ALTO
+}
+
+type PerfilRiesgo {
+  score: Int!
+  nivelRiesgo: NivelRiesgo!
+  fechaVigencia: DateTime!
+}
+
+enum MotivoErrorOferta {
+  CONSENTIMIENTO_NO_VIGENTE
+  DATOS_INSUFICIENTES
+  FUENTES_NO_DISPONIBLES
+}
+
+type Monto {
+  valor: String! # decimal como texto, nunca float
+  moneda: String!
+}
+
+type RangoPrima {
+  minima: Monto!
+  maxima: Monto!
+}
+
+type FactorScore {
+  nombre: String!
+  peso: Float!
+}
+
+type FuenteConsultada {
+  id: ID!
+  nombre: String!
+  origen: OrigenFuente!
+  estado: EstadoFuente!
+  capturadoEn: DateTime # presente si el dato viene de caché
+}
+
+enum OrigenFuente {
+  OPEN_FINANCE
+  OPEN_DATA
+}
+
+type Oferta {
+  id: ID!
+  tipo: TipoOferta!
+  prima: Monto # presente en la oferta COMPLETA
+  rangoPrima: RangoPrima # presente en la oferta PRELIMINAR
+  cobertura: Monto!
+  desgloseScore: [FactorScore!]!
+  fuentes: [FuenteConsultada!]!
+  perfilRiesgo: PerfilRiesgo
+}
+
+type ErrorOferta {
+  mensaje: String!
+  puedeReintentar: Boolean!
+  motivo: MotivoErrorOferta
+}
+
+union ResultadoOferta = Oferta | ErrorOferta # nunca un 5xx crudo al cliente (CA-W01-05)
+
+input SolicitudOfertaInput {
+  consentimientoId: ID!
+  documentoIdentidad: String!
+  valorCredito: String!
+  plazoMeses: Int!
+  direccionInmueble: String!
+}
+
+# ---------- Contacto con asesor (CA-W01-07) ----------
+
+enum CanalContacto {
+  LLAMAR
+  CHAT
+  AGENDAR
+}
+
+type ConfirmacionContacto {
+  canal: CanalContacto!
+  resumen: String!
+}
+
+# ---------- Cobros (HU-W05) ----------
+
+enum EstadoCobro {
+  COBRANDO
+  COBRADO
+  RECHAZADO
+  PENDIENTE
+}
+
+# Quién es el cliente de un cobro. El nombre es dato personal: solo lo ve el BACKOFFICE
+# y puede venir vacío si AUTH no responde o el cliente no tiene nombre registrado.
+type ClienteCobro {
+  id: ID!
+  nombre: String
+}
+
+type Cobro {
+  id: ID!
+  polizaId: ID!
+  estado: EstadoCobro!
+  monto: Monto!
+  actualizadoEn: DateTime!
+  motivo: String # por qué quedó pendiente o rechazado (p. ej. pasarela_no_disponible)
+  intentos: Int # cuántas veces se intentó cobrar
+  idTransaccion: String # referencia que devolvió la pasarela; null mientras no hay cobro hecho
+  # Reintentos manuales que le quedan a un cobro RECHAZADO (máximo 3, prototipo W05-01).
+  # En 0, `reintentarCobro` responde error: requiere otro medio de pago.
+  reintentosRestantes: Int
+  cliente: ClienteCobro # null en cobros creados sin clienteId
+}
+
+input MontoInput {
+  valor: String! # decimal como texto, nunca float
+  moneda: String!
+}
+
+input CrearCobroInput {
+  # Lo genera el cliente (un UUID por intento) y lo reenvía igual si repite la orden:
+  # así un doble clic o un reintento no cobra dos veces.
+  idIntentoCobro: ID!
+  polizaId: ID!
+  # El cliente (usuario CLIENTE de AUTH) a quien se le cobra. Mientras no exista el servicio de
+  # pólizas, nada valida que la póliza sea de ese cliente.
+  clienteId: ID = null
+  monto: MontoInput!
+  tokenMedioPago: String! # token del proveedor PCI-DSS; nunca datos de tarjeta
+}
+
+type ErrorCobro {
+  mensaje: String!
+}
+
+union ResultadoCobro = Cobro | ErrorCobro
+
+# ---------- Usuarios y sesión (HU-M02, CA-W01-11) ----------
+# El token de `Sesion` viaja en la cabecera `Authorization: Bearer <token>` de las demás operaciones.
+
+enum RolUsuario {
+  CLIENTE
+  ASESOR
+  BACKOFFICE
+}
+
+enum EstadoUsuario {
+  ACTIVO
+  SUSPENDIDO
+}
+
+type Usuario {
+  id: ID!
+  usuario: String! # alias de acceso: nunca un correo ni un documento
+  rol: RolUsuario!
+  estado: EstadoUsuario!
+  creadoEn: DateTime!
+  # Dato personal. Solo viene en `iniciarSesion` y `yo` (cada usuario ve el suyo); en `usuarios`,
+  # `crearUsuario` y los demás cambios va en null. Nunca viaja dentro del JWT.
+  nombre: String
+}
+
+type Sesion {
+  token: String!
+  expiraEn: DateTime!
+  usuario: Usuario!
+}
+
+type ErrorAutenticacion {
+  mensaje: String!
+}
+
+union ResultadoSesion = Sesion | ErrorAutenticacion
+
+type ErrorUsuario {
+  mensaje: String!
+}
+
+union ResultadoUsuario = Usuario | ErrorUsuario
+
+input CredencialesInput {
+  usuario: String!
+  clave: String!
+}
+
+input CrearUsuarioInput {
+  usuario: String!
+  clave: String!
+  rol: RolUsuario!
+  nombre: String = null # cualquier rol (2 a 100 caracteres); se guarda cifrado y `crearUsuario` no lo devuelve
+}
+
+# ---------- Operaciones ----------
+
+type Query {
+  oferta(id: ID!): Oferta
+  cobros(polizaId: ID, estado: EstadoCobro): [Cobro!]!
+  yo: Usuario
+  usuarios(rol: RolUsuario): [Usuario!]!
+}
+
+type Mutation {
+  registrarConsentimiento(entrada: ConsentimientoInput!): Consentimiento!
+  revocarConsentimiento(id: ID!): Consentimiento!
+  solicitarOferta(entrada: SolicitudOfertaInput!): ResultadoOferta!
+  contactarAsesor(ofertaId: ID!, canal: CanalContacto!): ConfirmacionContacto!
+  # PENDIENTE: concilia y cobra con la misma clave. RECHAZADO: un intento nuevo ante la pasarela,
+  # hasta 3 veces. COBRADO o COBRANDO: lo devuelve sin cambios.
+  reintentarCobro(cobroId: ID!): Cobro!
+  crearCobro(entrada: CrearCobroInput!): ResultadoCobro!
+  iniciarSesion(entrada: CredencialesInput!): ResultadoSesion!
+  crearUsuario(entrada: CrearUsuarioInput!): ResultadoUsuario!
+  cambiarRolUsuario(id: ID!, rol: RolUsuario!): ResultadoUsuario!
+  suspenderUsuario(id: ID!): ResultadoUsuario!
+}

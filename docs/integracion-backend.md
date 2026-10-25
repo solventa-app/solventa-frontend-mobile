@@ -8,6 +8,33 @@ contrato en `contrato/`) para que web y móvil se comporten igual ante el mismo 
 
 Todo este documento es **plan** salvo donde dice **hoy**.
 
+**Hoy** ya existe la capa data como ACL, con un ejemplo real (`registrarConsentimiento`, M01-02) en
+`lib/features/onboarding/`:
+
+- `lib/core/contrato/schema.graphql` y `tool/contrato.sh verificar|sincronizar`.
+- Codegen por operación (`graphql_codegen`, configurado en `build.yaml`).
+- `lib/core/network/` (`GraphqlClient`, providers con `API_ENV` y `API_BASE_URL`) y `lib/core/errors/` (`Falla`,
+  `Resultado`, `guardarFallas`).
+- Entidad, mapper, datasource real y fake, fixtures, repositorio y sus pruebas, más `test/contract/fixtures_test.dart`.
+
+**Plan**: interceptores de trazas y logs, sesión en secure storage, prefijo de datos por ambiente, `bootstrap.dart`
+y los pasos de CI de la tabla del §6.
+
+### Receta: agregar una operación
+
+```bash
+# 1. Si el backend cambió el contrato
+tool/contrato.sh sincronizar
+# 2. Escribir la operación en lib/features/<feature>/data/graphql/<operacion>.graphql
+# 3. Generar tipos (escribe <operacion>.graphql.dart al lado; se versiona)
+dart run build_runner build
+# 4. Fixtures (data/fixtures/), mapper, datasource real + fake, repositorio
+# 5. Registrar las fixtures en test/contract/fixtures_test.dart y probar
+flutter analyze && flutter test
+```
+
+Los archivos `*.graphql.dart` llevan `// ignore_for_file: type=lint` (lo pone el codegen) y ya salen formateados.
+
 ---
 
 ## 1. Ambientes
@@ -111,7 +138,7 @@ Reglas del cliente:
 **Generación.** Igual que la web genera tipos con `graphql-codegen`, el móvil usa
 [`graphql_codegen`](https://pub.dev/packages/graphql_codegen) con `build_runner`:
 
-- Esquema: `contrato/schema.graphql` (copia del backend, §6).
+- Esquema: `lib/core/contrato/schema.graphql` (copia del backend, §6).
 - Operaciones: `lib/features/<feature>/data/graphql/<operacion>.graphql`, una por archivo, con nombre
   (`mutation RegistrarConsentimiento(...)`). Se piden **solo** los campos que la pantalla usa.
 - Salida: `<operacion>.graphql.dart` junto al `.graphql`, con `Variables$...`, `Mutation$...`/`Query$...` y su
@@ -216,7 +243,7 @@ Mismo principio que la web: **se trabaja con fakes hasta que el BFF tenga la ope
 siguen el contrato.
 
 - Cada datasource remoto tiene `Fake<X>RemoteDataSource` en `data/datasources/`, que implementa la misma interfaz y
-  devuelve **tipos generados** construidos desde las fixtures de `test/fixtures/graphql/<operacion>/<caso>.json`.
+  devuelve **tipos generados** construidos desde las fixtures de `lib/features/<feature>/data/fixtures/<operacion>_fixtures.dart`.
   Si el contrato cambia y la fixture ya no parsea, la prueba falla.
 - Se activan con `API_ENV=mock`: el provider del datasource elige el fake. No hay `if (kDebugMode)` dentro de
   repositorios ni pantallas.
@@ -242,7 +269,7 @@ siguen el contrato.
 
 Reglas (ADR-06, las mismas que la web):
 
-1. `contrato/schema.graphql` es una **copia** de `solventa-backend/contracts/graphql/schema.graphql`. No se edita a
+1. `lib/core/contrato/schema.graphql` es una **copia** de `solventa-backend/contracts/graphql/schema.graphql`. No se edita a
    mano.
 2. `tool/contrato.sh sincronizar` trae la versión del backend (repo hermano `../solventa-backend`,
    `BACKEND_SCHEMA_PATH` o `BACKEND_SCHEMA_URL`, como `scripts/contrato.mjs` en la web) y `tool/contrato.sh verificar`
@@ -258,8 +285,8 @@ Qué impide que se rompa:
 
 | Barrera | Qué detecta | Dónde corre |
 |---|---|---|
-| `contrato.sh verificar` | La copia del esquema no es la del backend | CI de este repo |
-| Codegen + `flutter analyze` | Una operación pide un campo o argumento que ya no existe, o cambió de tipo | CI de este repo |
+| `contrato.sh verificar` | La copia del esquema no es la del backend | CI de este repo (plan: paso en `ci.yml`, necesita leer `solventa-backend`) |
+| Codegen + `flutter analyze` | Una operación pide un campo o argumento que ya no existe, o cambió de tipo | CI de este repo (plan: `dart run build_runner build` y `git diff --exit-code`) |
 | Prueba de fixtures (`test/contract/fixtures_test.dart`) | Toda fixture parsea con su tipo generado y pasa por su mapper | `flutter test` |
 | Pruebas de mappers | Enum desconocido, nulos, uniones de error | `flutter test` |
 | Colección Newman del backend (`tests/newman/`) | El BFF real responde lo que el contrato promete en el canal `app` | CI del backend (ya cubre el canal móvil en la oferta) |

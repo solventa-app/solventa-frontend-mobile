@@ -35,7 +35,6 @@ implementarlo). Quien implemente algo del plan lo pasa a **hoy** en ese mismo PR
 
 ```
 config/                       plan · dart-defines por ambiente: local.json, mock.json, dev.json, prod.json
-contrato/                     plan · copia del esquema GraphQL del backend (no se edita a mano)
 assets/
   fonts/Inter/                hoy
   images/                     plan · WebP o SVG, nunca PNG pesados
@@ -46,9 +45,10 @@ lib/
     router.dart               plan · go_router con las rutas de todas las features
     bootstrap.dart            plan · lee AppConfig, separa datos por ambiente, crea el ProviderScope
   core/
+    contrato/                 hoy  · schema.graphql (copia del backend, no se edita) y schema.graphql.dart (generado)
     config/                   plan · AppConfig: FLAVOR, API_ENV, API_BASE_URL (lo crea el PR de CI/CD)
-    network/                  plan · GraphqlClient sobre dio, interceptores, mapeo de errores HTTP
-    errors/                   plan · Falla (sealed) y Resultado<T>
+    network/                  hoy  · GraphqlClient sobre dio y providers de red
+    errors/                   hoy  · Falla (sealed), Resultado<T> y guardarFallas
     storage/                  plan · secure storage y SQLite con prefijo por ambiente
     log/                      plan · SolLog (docs/observabilidad.md)
     l10n/                     plan · archivos .arb y código generado
@@ -62,6 +62,7 @@ lib/
       data/
         graphql/              operaciones .graphql y su código generado (*.graphql.dart)
         datasources/          <x>_remote_datasource.dart, <x>_local_datasource.dart, fake_<x>_remote_datasource.dart
+        fixtures/             respuestas del BFF como Map (las usan el fake y las pruebas de contrato)
         mappers/              tipo generado o fila SQLite → entidad
         repositories/         <x>_repository_impl.dart
       presentation/
@@ -71,7 +72,7 @@ lib/
         widgets/              piezas exclusivas de la feature
 test/
   core/ · features/<feature>/{domain,data,presentation}/   mismas rutas que lib/
-  fixtures/graphql/           respuestas JSON del BFF (sirven a fakes y pruebas de contrato)
+  contract/                   prueba de que toda fixture parsea con su tipo generado
   goldens/                    hoy
 ```
 
@@ -297,10 +298,10 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
 | Capa | Qué se prueba | Herramienta |
 |---|---|---|
 | Dominio | Casos de uso y reglas | `test` puro |
-| Datos | Mappers (tipo generado → entidad), repositorio con datasource falso (éxito y cada `Falla`), datasource remoto contra respuestas de `test/fixtures/graphql/` | `test`, `mocktail` |
+| Datos | Mappers (tipo generado → entidad), repositorio con datasource falso (éxito y cada `Falla`), datasource remoto contra respuestas de `data/fixtures/` | `test`, `mocktail` |
 | Presentación | Notifier: transiciones de estado con overrides de Riverpod. Página: cada estado (carga, éxito, vacío, error, degradado), semántica, 48 dp, texto al 200 %, atrás del sistema | `flutter_test` |
-| Visual | Goldens de cada pantalla a 360 y 390 dp, texto 100 % y 200 %, en `es` y `en` | `alchemist` |
-| Contrato | Operaciones válidas contra `contrato/schema.graphql` y fixtures que parsean con los tipos generados | codegen + `test` ([integracion-backend.md §6](integracion-backend.md#6-contrato-y-pruebas-de-contrato)) |
+| Visual | Goldens de componentes a 360 y 390 dp; de pantallas a 360, 390 y 600 dp más horizontal (640 × 360), texto 100 % y 200 %, en `es` y `en`. 320, 412 y 840 dp se cubren en la granja de dispositivos y la sesión exploratoria (`docs/ci-cd.md`) | `alchemist` |
+| Contrato | Operaciones válidas contra `lib/core/contrato/schema.graphql` y fixtures que parsean con los tipos generados | codegen + `test` ([integracion-backend.md §6](integracion-backend.md#6-contrato-y-pruebas-de-contrato)) |
 | Flujo | Recorrido completo de la HU con fakes en emulador | `integration_test` |
 
 ---
@@ -331,5 +332,5 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
    prueba de cada falla.
 5. `presentation/`: estado sealed, notifier con prueba, páginas con layouts del sistema, textos en ARB (`es` y `en`).
 6. Rutas en `app/router.dart`.
-7. Goldens a 360/390 dp, 100/200 %, `es`/`en`; revisión contra Figma.
+7. Goldens a 360/390/600 dp y horizontal, 100/200 %, `es`/`en`; revisión contra Figma.
 8. `dart format`, `flutter analyze` y `flutter test` en verde; probado en emulador con el flavor `dev` y `config/mock.json`.
