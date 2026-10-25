@@ -1,16 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../config/app_config.dart';
 import 'graphql_client.dart';
 
 /// Ambiente del backend (`API_ENV` de `config/*.json`): `mock`, `local`, `dev` o `prod`.
 ///
 /// Sin `--dart-define-from-file` vale `mock`: la app nunca apunta a un backend
-/// por accidente. Cuando entre `AppConfig` (PR de CI/CD) estos dos providers
-/// leen de ahí en vez de `String.fromEnvironment`.
-final apiEnvProvider = Provider<String>(
-  (ref) => const String.fromEnvironment('API_ENV', defaultValue: 'mock'),
-);
+/// por accidente. Sale de [AppConfig]; las pruebas lo sobrescriben.
+final apiEnvProvider = Provider<String>((ref) => AppConfig.apiEnv);
 
 /// `true` con `API_ENV=mock`: los datasources remotos usan su fake.
 final usarFakesProvider = Provider<bool>(
@@ -18,9 +16,7 @@ final usarFakesProvider = Provider<bool>(
 );
 
 /// URL base del gateway, sin `/` final (`API_BASE_URL`).
-final apiBaseUrlProvider = Provider<String>(
-  (ref) => const String.fromEnvironment('API_BASE_URL'),
-);
+final apiBaseUrlProvider = Provider<String>((ref) => AppConfig.apiBaseUrl);
 
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(

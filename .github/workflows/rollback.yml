@@ -1,0 +1,71 @@
+name: Rollback
+
+# Vuelve a publicar una versión anterior de prod. Android no instala un build (versionCode) menor al que ya
+# tiene el teléfono, así que "volver atrás" es recompilar el código del tag elegido con un build nuevo:
+# tag rollback-<versión>+<build> y Release marcado como rollback. Instalar ese APK encima de la versión mala
+# conserva los datos del usuario; instalar el APK viejo tal cual obliga a desinstalar primero.
+# Solo funciona con tags creados después de que el CD compila con flavors y tool/build-prod.sh.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag de la versión a restaurar (p. ej. v1.2.0+45)
+        required: true
+        type: string
+
+concurrency:
+  group: cd-main
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: production
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Calcular build nuevo
+        id: version
+        env:
+          RESTAURAR: ${{ inputs.tag }}
+        run: |
+          tool/version.sh rollback "$RESTAURAR"
+          echo "sha=$(git rev-parse "$RESTAURAR^{commit}")" >> "$GITHUB_OUTPUT"
+
+      - name: Código del tag a restaurar
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag }}
+          path: restaurar
+
+      - name: Restaurar llave de firmado de prod
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: restaurar/tool/firma.sh prod
+
+      - name: Build de prod del tag
+        uses: ./.github/actions/devcontainer
+        with:
+          carpeta: restaurar
+          run: tool/build-prod.sh ${{ steps.version.outputs.nombre }} ${{ steps.version.outputs.build }}
+
+      - name: Crear Release de rollback
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          target_commitish: ${{ steps.version.outputs.sha }}
+          name: Solventa ${{ steps.version.outputs.nombre }} (build ${{ steps.version.outputs.build }}, rollback)
+          body: "Rollback: vuelve a publicar el código de `${{ inputs.tag }}` con el build ${{ steps.version.outputs.build }}."
+          files: restaurar/dist/*

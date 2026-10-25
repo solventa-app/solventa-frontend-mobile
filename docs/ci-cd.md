@@ -1,214 +1,235 @@
 # CI/CD de la app móvil
 
-Cómo se construye, se prueba, se versiona y se publica la app. Cada sección marca qué existe **hoy** en el repo y qué es **plan** (acordado, falta el PR). Quien implemente algo del plan actualiza este documento en el mismo PR.
+Cómo se construye, se prueba, se versiona y se publica la app (solo Android). Los diagramas están en [`diagramas.md`](diagramas.md). Quien cambie un workflow actualiza este documento en el mismo PR.
 
-Referencias: Estrategia de Pruebas v4 (granja de dispositivos, distribución OTA, SAST, evidencias) y la sección 4 del documento de arquitectura (frameworks y ambientes). Las prácticas siguen las de `solventa-frontend-web` y `solventa-backend`.
+Referencias: Estrategia de Pruebas v4 (granja de dispositivos, distribución OTA, SAST, evidencias) y la sección 4 del documento de arquitectura. Las prácticas siguen las de `solventa-frontend-web` y `solventa-backend`.
+
+Estado de cada pieza:
+
+- **Hoy**: está en el repo y corre.
+- **Listo, falta cuenta**: el workflow existe y se salta solo (con un aviso) hasta que se configuren el secreto o la variable de la cuenta externa (Firebase). Ver "Pasos manuales".
+- **Pendiente**: acordado y todavía sin código.
 
 ## Resumen
 
-| Momento | Hoy | Plan |
+| Momento | Qué corre | Estado |
 |---|---|---|
-| PR a `develop` | `Título del PR`, `Nombre de rama` y el job `mobile`: `dart format`, `flutter analyze`, `flutter test --coverage` | El job `mobile` corre dentro de la imagen del devcontainer (la misma que se usa en local). Además: build del APK `dev`, gitleaks, osv-scanner, actionlint |
-| Merge a `develop` | El mismo job `mobile` | Además: APK `dev` firmado a Firebase App Distribution (grupo `qa`), MobSF sobre ese APK, Firebase Test Lab, Sonar |
-| PR a `main` | Los mismos checks que hacia `develop` | Igual |
-| Merge a `main` | `cd.yml`: APK + AAB firmados, artifact de 30 días y GitHub Release `v<versión>+<build>` | Build `prod` ofuscado, versión calculada sola, AAB a la pista interna de Google Play, Release con símbolos |
-| Manual | Nada | `rollback` (recompila un tag anterior), Test Lab bajo demanda, CD de prueba desde otra rama sin Release |
+| PR a `develop`, `release/*` o `main` | `mobile` en el devcontainer: versiones, `dart format`, `flutter analyze`, `flutter test --coverage` y el APK de dev compilado en release (R8). `Título del PR`, `Nombre de rama`. Seguridad: gitleaks, actionlint, acciones por SHA, osv-scanner | Hoy |
+| Merge a `develop` | Lo mismo, más: APK "Solventa Dev" firmado (`develop.yml`), MobSF sobre ese APK, `integration_test` en 3 emuladores (`emuladores.yml`) | Hoy |
+| | APK de dev a Firebase App Distribution (grupo `qa`) | Listo, falta cuenta |
+| Cierre de sprint (`release/sprint-N`) | Sesión exploratoria ([`pruebas-exploratorias.md`](pruebas-exploratorias.md)) | Hoy |
+| | Firebase Test Lab manual (`test-lab.yml`): Robo test e `integration_test` en teléfonos reales | Listo, falta cuenta |
+| Merge a `main` | `cd.yml`: versión calculada sola, build prod firmado con R8 y Dart ofuscado, GitHub Release `v<versión>+<build>` con APK, AAB, mapping y símbolos | Hoy |
+| Manual | `rollback.yml` (recompila un tag anterior con build nuevo), `cd.yml` desde otra rama (compila sin publicar), `imagen-devcontainer.yml` | Hoy |
+| Sonar | SonarCloud con la cobertura | Pendiente (lo monta quien lo hizo en web y backend) |
+| Sentry | Reporte de errores con replay enmascarado | Pendiente: [`plan-sentry.md`](plan-sentry.md) |
 
 ## Flujo de ramas
 
-**Hoy** (`.github/workflows/pr-rama.yml`):
+Igual que el web (`.github/workflows/pr-rama.yml`):
 
 | Origen | Destino |
 |---|---|
-| `feat\|fix\|chore/KAN-N-descripcion` | `develop` |
-| `develop` o `fix/KAN-N-descripcion` | `main` |
-| `main` | `develop` (reintegración) |
+| `feat\|fix\|chore/KAN-N-descripcion` | `develop` (squash) |
+| `fix\|chore/KAN-N-descripcion` | `release/sprint-N` (solo correcciones durante la estabilización) |
+| `release/sprint-N` | `main` (merge commit) |
+| `hotfix/KAN-N-descripcion` | `main` (merge commit) |
+| `main` | `develop` (reintegración tras cada release o hotfix) |
 
-**Plan**, igual que el web: `release/sprint-N` (solo recibe `fix|chore`) o `hotfix/KAN-N-descripcion` hacia `main`; `main` hacia `develop` tras cada release o hotfix. Squash hacia `develop`, merge commit hacia `main`.
-
-Título del PR (`pr-titulo.yml`): `tipo(alcance): KAN-N descripción`. Tipos: `feat fix refactor test docs chore ci` (plan: sumar `infra`, como el web). Alcances: `mobile contrato docs ci`. El título es el mensaje del commit al hacer squash y, en el plan, también decide la próxima versión.
+Título del PR (`pr-titulo.yml`): `tipo(alcance): KAN-N descripción`. Tipos: `feat fix refactor test docs chore ci infra`. Alcances: `mobile contrato docs ci`. El título es el mensaje del commit al hacer squash y **decide la próxima versión** (ver "Versionado"). Dependabot queda exento por el autor del PR (`pull_request.user.login`), no por `github.actor`.
 
 ## Workflows
 
-| Archivo | Cuándo | Qué hace | Estado |
-|---|---|---|---|
-| `ci.yml` | Todo PR y push a `develop` | Job `mobile`: format, analyze, test con cobertura (artifact `coverage`) | Hoy |
-| `pr-titulo.yml` | PR abierto o editado | Valida el título | Hoy (plan: eximir a Dependabot por `pull_request.user.login`, no por `github.actor`) |
-| `pr-rama.yml` | PR abierto o editado | Valida rama y destino | Hoy |
-| `cd.yml` | Push a `main` | APK + AAB firmados y GitHub Release | Hoy |
-| `dependabot-auto-merge.yml` | PR de Dependabot | Aprueba y arma auto-merge de patch y minor | Hoy |
-| `distribucion.yml` | Push a `develop` | APK `dev` a Firebase App Distribution | Plan |
-| `emuladores.yml` | Push a `develop` | `integration_test` en emuladores de GitHub Actions: teléfono pequeño (API 28), teléfono grande (API 34) y tablet (API 34). Corre directo en el runner (necesita KVM), con la misma versión de Flutter | Plan |
-| `test-lab.yml` | Manual, en cada `release/sprint-N` | Firebase Test Lab en 3 teléfonos reales: Robo test e `integration_test` | Plan |
-| `seguridad.yml` (o jobs en `ci.yml`) | PR y push a `develop` | gitleaks, osv-scanner, MobSF, actionlint | Plan |
-| `sonar.yml` | Push a `develop` y manual | SonarCloud con la cobertura de `flutter test` | Plan (lo monta quien lo hizo en web y backend) |
-| `rollback.yml` (o entrada manual de `cd.yml`) | Manual | Recompila un tag anterior con un build nuevo | Plan |
-| `imagen-devcontainer.yml` | Push a `develop` que toque `.devcontainer/` y manual | Construye la imagen del devcontainer, la revisa con Trivy (informativo) y la publica en el GitHub Container Registry (`ghcr.io/solventa-app/solventa-frontend-mobile-dev`), con etiqueta = versión de Flutter. Los demás jobs la usan con `container:` | Plan |
+| Archivo | Cuándo | Qué hace |
+|---|---|---|
+| `ci.yml` | Todo PR, push a `develop`, manual | Job `mobile` dentro del devcontainer: `tool/verificar.sh --apk`. Artifact `coverage` |
+| `seguridad.yml` | Todo PR, push a `develop`, cada lunes, manual | Jobs `Secretos (gitleaks)`, `Dependencias (osv-scanner)` (informativo), `Workflows (actionlint)` con revisión de acciones por SHA |
+| `pr-titulo.yml`, `pr-rama.yml` | PR abierto o editado | Título y rama |
+| `develop.yml` | Push a `develop`, manual | `apk-dev` (firmado con la llave de dev, versión `X.Y.Z-dev.N`, artifact 14 días), `App Distribution`, `MobSF` (informativo, reporte como artifact `mobsf`) |
+| `emuladores.yml` | Push a `develop`, manual | `integration_test` en emuladores: teléfono pequeño API 28 (Nexus 5, 360 dp, el mínimo soportado), teléfono grande API 34, tablet API 34. Corre en el runner (necesita KVM) con la versión de Flutter de `pubspec.yaml` |
+| `test-lab.yml` | Manual (cada `release/sprint-N`) | Robo test e `integration_test` en teléfonos reales de Firebase Test Lab |
+| `cd.yml` | Push a `main`, manual | Build prod y GitHub Release con APK, AAB, mapping y símbolos. Desde otra rama compila sin tag ni Release |
+| `rollback.yml` | Manual | Vuelve a publicar un tag anterior con un build nuevo |
+| `imagen-devcontainer.yml` | Push a `develop` que toque `.devcontainer/`, manual | Publica la imagen como `latest` y `3.47.8` en GHCR y la revisa con Trivy (informativo) |
+| `dependabot-auto-merge.yml` | PR de Dependabot | Aprueba y arma auto-merge de patch y minor |
 
-Ningún check filtra por rutas: los checks obligatorios deben reportar en todos los PR.
+Ningún check obligatorio filtra por rutas: deben reportar en todos los PR.
+
+`.github/actions/devcontainer/` es la acción compartida que construye la imagen de `.devcontainer/` y corre un comando dentro. La imagen se publica en `ghcr.io/solventa-app/solventa-frontend-mobile-dev` con una etiqueta por contenido (`3.47.8-<huella>`): cuando cambia el Dockerfile se construye una vez y el resto de las veces solo se descarga. El primer PR que la crea tarda más (unos 15 minutos).
 
 ## Linter y formato
 
-**Hoy:**
+| Dónde | Qué |
+|---|---|
+| Reglas | `analysis_options.yaml`: `flutter_lints` + análisis estricto (`strict-casts`, `strict-inference`, `strict-raw-types`, como el modo estricto de TypeScript en el web) + `always_declare_return_types`, `avoid_dynamic_calls`, `cancel_subscriptions`, `close_sinks`, `directives_ordering`, `prefer_final_locals`, `prefer_single_quotes`, `unawaited_futures` |
+| Editor | `devcontainer.json` configura VS Code: formato al guardar y al escribir, `fixAll` y orden de imports al guardar, ancho 80, LF |
+| Antes del push | `lefthook.yml`: `pre-push` corre format, analyze y test dentro del contenedor (`tool/post-create.sh` lo instala). Saltarlo una vez: `LEFTHOOK=0 git push` |
+| CI | El job `mobile` corre `dart format --set-exit-if-changed` y `flutter analyze`, que falla con cualquier hallazgo, incluidos los de nivel info. Es check obligatorio |
 
-- Reglas: `analysis_options.yaml` incluye `package:flutter_lints/flutter.yaml` (el conjunto recomendado oficial de Flutter, nivel medio) sin reglas propias, y excluye `build/`, `android/` e `ios/`.
-- CI: el job `mobile` corre `dart format --output=none --set-exit-if-changed .` y `flutter analyze`. `flutter analyze` falla con cualquier hallazgo, incluidos los de nivel info. Como `mobile` es check obligatorio, un PR con formato o hallazgos no se puede integrar.
-- Local: no hay hook de git ni configuración de editor en el repo; cada quien corre los comandos a mano.
-
-Comparado con el web: ESLint ↔ `flutter analyze`, Prettier ↔ `dart format`, `vue-tsc` ↔ el analizador de Dart (los tipos se revisan en el mismo `flutter analyze`). El web tampoco tiene hooks de git.
-
-**Plan:**
-
-| Qué | Cómo | Por qué |
-|---|---|---|
-| Analizador estricto | En `analysis_options.yaml`: `strict-casts`, `strict-inference` y `strict-raw-types` | Lo mismo que hace el modo estricto de TypeScript en el web: evita `dynamic` escondidos |
-| Reglas extra sobre `flutter_lints` | `unawaited_futures`, `avoid_dynamic_calls`, `cancel_subscriptions`, `close_sinks`, `prefer_final_locals`, `prefer_single_quotes`, `directives_ordering`, `always_declare_return_types` | Errores típicos de async y de recursos que el conjunto recomendado no marca. No se usa `very_good_analysis` completo: es muy estricto para el tiempo del proyecto |
-| Formato y correcciones al guardar | `devcontainer.json` configura VS Code: `editor.formatOnSave`, `source.fixAll` y `source.organizeImports` al guardar, ancho de línea 80 | Que nadie llegue al CI con formato roto |
-| Hook antes del push (opcional) | `lefthook.yml` con `dart format --set-exit-if-changed` y `flutter analyze` en `pre-push`; corre dentro del contenedor porque git se usa desde ahí | Falla en tu máquina antes de esperar el CI |
-
-Las reglas nuevas se activan en un PR propio que también corrige lo que marquen.
+Comparado con el web: ESLint ↔ `flutter analyze`, Prettier ↔ `dart format`, `vue-tsc` ↔ el analizador de Dart.
 
 ## Protección de ramas y revisión
 
-| Pieza | Qué hace | Estado |
-|---|---|---|
-| Rulesets (`.github/rulesets/`) | `main` y `develop`: PR obligatorio, 1 aprobación, aprobaciones viejas se descartan con cada push, hilos resueltos, sin borrado ni force-push, checks `mobile`, `Título del PR` y `Nombre de rama`. `main` solo merge commit; `develop` squash o merge. Tags `sprint-*` inmutables | Hoy (los JSON son referencia: el ruleset real se edita en Settings → Rules) |
-| Plantilla de PR | Definición de hecho de cada PR | Hoy |
-| CODEOWNERS | Revisores automáticos por carpeta | Hoy comentado, falta poner los usuarios |
-| Auto-merge de Dependabot | Patch y minor se aprueban e integran solos cuando los checks pasan | Hoy (requiere permitir que Actions apruebe PRs en Settings) |
+| Pieza | Qué hace |
+|---|---|
+| Rulesets (`.github/rulesets/`) | `main` y `develop`: PR obligatorio, 1 aprobación, aprobaciones viejas se descartan con cada push, hilos resueltos, sin borrado ni force-push. Checks obligatorios: `mobile`, `Título del PR`, `Nombre de rama`, `Secretos (gitleaks)`, `Workflows (actionlint)`. `main` solo merge commit; `develop` squash o merge. Tags `sprint-*` y `v*` sin borrado ni cambio. **Los JSON son referencia**: el ruleset real se edita en Settings → Rules |
+| Plantilla de PR | Definición de hecho de cada PR |
+| CODEOWNERS | Comentado, falta poner los usuarios |
+| Auto-merge de Dependabot | Patch y minor se integran solos cuando los checks pasan. Dependabot también sube las acciones fijadas por SHA y la imagen base del devcontainer |
 
 ## Pruebas
 
 | Tipo | Herramienta | Dónde corre | Estado |
 |---|---|---|---|
-| Unitarias y de widget | `flutter_test` | Local y CI, en cada PR | Hoy |
-| Goldens (comparación visual) | `flutter_test` + alchemist | Local y CI | Llega con el PR del sistema de diseño (KAN-239) |
-| Accesibilidad (contraste, tap targets) | `meetsGuideline` de `flutter_test` | Local y CI | Llega con KAN-239 |
-| Goldens en varios tamaños | alchemist | Cada PR, en el contenedor | KAN-239 trae 360 y 390 dp con texto al 100 % y 200 %; plan: sumar 320, 412, 600 y 840 dp y horizontal |
-| Overflow por tamaño | `tester.view.physicalSize` y `textScaler` en `flutter_test` | Cada PR | KAN-239 lo hace en algunos componentes; plan: en cada pantalla nueva |
-| Integración en emuladores | `integration_test` | GitHub Actions, push a `develop` | Plan |
-| Integración y exploración en dispositivos reales | `integration_test` y Robo test | Firebase Test Lab, cada release | Plan |
-| Exploratoria manual | Guía y plantilla | Una sesión por sprint | Hoy el proceso ([`pruebas-exploratorias.md`](pruebas-exploratorias.md)); plan: `device_preview` y APK por App Distribution |
-| Resiliencia sin conexión (OFFLINE_STORE) | `flutter_test` con dobles del cliente HTTP; modo avión en Test Lab | CI y Test Lab | Plan, con las HU de billetera y siniestros |
-| Biometría, cámara, GPS, push, Wallet | Dobles de los plugins en `flutter_test`; dispositivo real en Test Lab | CI y Test Lab | Plan, con cada HU |
+| Unitarias y de widget | `flutter_test` | Devcontainer, en cada PR | Hoy |
+| Goldens de componentes | alchemist | Devcontainer, en cada PR | Llega con el PR del sistema de diseño (KAN-239): 360 y 390 dp, texto al 100 % y 200 % |
+| Goldens de pantallas | alchemist | Devcontainer, en cada PR | Hoy (HU-M01): 360 y 390 dp con texto al 100 % y 200 % en español, 390 dp en inglés y 600 dp. Pendiente: variante horizontal de 640 × 360. Se regeneran con `tool/goldens.sh` |
+| Accesibilidad (contraste, tap targets) | `meetsGuideline` | Cada PR | Llega con KAN-239 |
+| Integración en emuladores | `integration_test` | `emuladores.yml`, cada merge a `develop` | Hoy (prueba de humo; cada HU con recorrido agrega la suya en `integration_test/`) |
+| Integración y exploración en teléfonos reales | `integration_test` y Robo test | `test-lab.yml`, cada release | Listo, falta cuenta |
+| Exploratoria manual | Guía y plantilla | Una sesión por sprint | Hoy |
+| Resiliencia sin conexión, biometría, cámara, GPS, push, Wallet | Dobles de los plugins en `flutter_test`; dispositivo real en Test Lab | Con cada HU |
 
-La evidencia de cada prueba manual o de dispositivo va en [`docs/evidencias/`](evidencias/README.md), con nombre, fecha, escenario, dispositivo y vínculo a la HU, igual que en el web.
+Tamaños: 360 dp es el mínimo soportado (la base de Figma es 390 y desde 600 dp el contenido se centra con ancho máximo de 600). Por eso los goldens cubren 360, 390 y 600: por debajo de 360 no se soporta y por encima de 600 la pantalla se ve igual. Otros anchos reales (412, tablets grandes) se revisan en los emuladores, en Test Lab y en la exploratoria, no en goldens.
+
+La evidencia de cada prueba manual o de dispositivo va en [`docs/evidencias/`](evidencias/README.md).
 
 ## Granja de dispositivos
 
 Tres niveles, todos sin costo. Ninguno corre dentro de la imagen del devcontainer: los dispositivos necesitan hardware o viven en la nube.
 
-| Nivel | Qué es | Cuándo | Costo | Estado |
-|---|---|---|---|---|
-| Emuladores en GitHub Actions (`reactivecircus/android-emulator-runner`) | Emuladores Android en el runner de Linux, con una matriz de tamaños y versiones | Cada push a `develop` | Gratis (repo público) | Plan |
-| Firebase Test Lab, Robo test | Un robot recorre la app sin pruebas escritas: toca, llena campos, toma capturas y video, reporta cierres y ANR. En Flutter se guía por el árbol de semántica, así que explora mejor si los widgets tienen `Semantics` | Manual, en cada `release/sprint-N`, en 3 teléfonos reales de marcas y tamaños distintos | Plan Spark gratis (a la fecha, unas 10 pruebas al día en virtuales y 5 en físicos; verificar en la consola de Firebase) | Plan |
-| Firebase Test Lab, `integration_test` | Nuestras pruebas de recorrido en teléfonos reales | Junto al Robo, en cada release | La misma cuota | Plan |
+| Nivel | Qué es | Cuándo | Costo |
+|---|---|---|---|
+| Emuladores en GitHub Actions | `reactivecircus/android-emulator-runner` en el runner de Linux con KVM, matriz de tamaños y versiones | Cada merge a `develop` | Gratis (repo público) |
+| Firebase Test Lab, Robo test | Un robot recorre la app sin pruebas escritas: toca, llena campos, toma capturas y video, reporta cierres y ANR. En Flutter se guía por el árbol de semántica | Manual, en cada `release/sprint-N` | Plan Spark gratis (a la fecha, unas 10 pruebas al día en virtuales y 5 en físicos; verificar en la consola) |
+| Firebase Test Lab, `integration_test` | Nuestras pruebas en teléfonos reales, a través de `android/app/src/androidTest/.../MainActivityTest.java` | Junto al Robo | La misma cuota |
 
-BrowserStack y AWS Device Farm quedan descartados: duplican Test Lab y son de pago. El resultado de cada corrida de Test Lab (enlace a la consola, capturas de fallos) se anota en `docs/evidencias/`.
-
-## Responsive y adaptabilidad
-
-| Capa | Herramienta | Cuándo |
-|---|---|---|
-| Goldens en varios tamaños y escalas de texto | alchemist | Cada PR |
-| Sin overflow ni texto cortado por tamaño | `flutter_test` con `physicalSize` y `textScaler` | Cada PR |
-| Accesibilidad (tap targets, contraste, etiquetas) | `meetsGuideline` | Cada PR |
-| Comportamiento real (teclado, rotación, barras del sistema) | `integration_test` en emuladores de varios tamaños | Push a `develop` |
-| Marcas, densidades y versiones de Android reales | Test Lab | Cada release |
-| Lo que la automatización no ve (fricción, textos, flujo) | Sesión exploratoria con `device_preview`, Accessibility Scanner y los teléfonos del equipo | Una vez por sprint ([`pruebas-exploratorias.md`](pruebas-exploratorias.md)) |
+Dispositivos por defecto de `test-lab.yml`: Pixel 6 (API 33) y Pixel 5 (API 30). Se cambian en la entrada del workflow; conviene sumar un Samsung de la lista vigente (`gcloud firebase test android models list --filter=form=PHYSICAL`).
 
 ## Seguridad
 
-Todo lo nuevo arranca **informativo** (no bloquea el check) y pasa a obligatorio cuando no queden hallazgos, como hicieron web y backend.
-
 | Control | Qué es | Cómo se usa aquí | Estado |
 |---|---|---|---|
-| Dependabot | Abre PRs cuando hay versiones nuevas o vulnerables de paquetes pub y de GitHub Actions | `.github/dependabot.yml`, hacia `develop`. Patch y minor se integran solos | Hoy |
-| osv-scanner | Revisa `pubspec.lock` contra la base de vulnerabilidades OSV de Google | Job en cada PR; falla si hay una vulnerabilidad conocida en una dependencia (al principio solo avisa) | Plan |
-| gitleaks | Busca secretos (llaves, contraseñas, tokens) en **todo el historial** de git | Mismo job que el backend. Importa por `key.properties`, keystores y `google-services.json` | Plan |
-| MobSF | Análisis estático del APK compilado: permisos, manifest, cifrado, llaves embebidas, librerías inseguras | Corre en Docker sobre el APK `dev` de cada push a `develop`; el reporte queda como artifact | Plan |
-| actionlint | Valida la sintaxis y las expresiones de los workflows | Job en cada PR que toque `.github/` | Plan |
-| Acciones fijadas por SHA | `uses: accion@<sha> # vX` en vez de `@vX`, para que nadie cambie la acción por debajo | Dependabot las sigue actualizando | Plan |
-| SonarCloud | Calidad, deuda técnica y SAST; analiza Dart | Ver tabla de workflows | Plan |
-| Secret scanning y push protection | Funciones de GitHub que bloquean un push con un secreto conocido | Se activan en Settings → Code security | Plan (configuración, no código) |
-| Endurecimiento del build de prod | R8 (`isMinifyEnabled`, `isShrinkResources`), `--obfuscate --split-debug-info`, `android:allowBackup="false"`, sin tráfico en claro | `android/app/build.gradle.kts` y manifest de `prod` | Plan |
-
-DAST (OWASP ZAP) corre en el backend contra el API Gateway; el plan es que también cubra el BFF móvil.
+| gitleaks | Busca secretos en **todo el historial** de git | Job `Secretos (gitleaks)`, bloquea. Importa por keystores, `key.properties` y `google-services.json` | Hoy |
+| actionlint | Valida sintaxis, expresiones y scripts de los workflows | Job `Workflows (actionlint)`, bloquea | Hoy |
+| Acciones fijadas por SHA | `uses: accion@<sha> # vX`, para que nadie cambie una acción por debajo | El mismo job falla si una acción no tiene SHA | Hoy |
+| osv-scanner | Revisa `pubspec.lock` contra la base OSV de Google | Job `Dependencias (osv-scanner)`, informativo hasta confirmar cero hallazgos | Hoy |
+| MobSF | Análisis estático del APK: permisos, manifest, cifrado, llaves embebidas, librerías inseguras | `develop.yml`, sobre el APK de dev. Puntaje en el resumen del job, reporte PDF y JSON como artifact. Informativo | Hoy |
+| Trivy | Vulnerabilidades de la imagen del devcontainer | `imagen-devcontainer.yml`, informativo | Hoy |
+| Dependabot | PRs con versiones nuevas o vulnerables de pub, acciones e imagen base | `.github/dependabot.yml`, hacia `develop` | Hoy |
+| Endurecimiento del APK | R8, Dart ofuscado en prod, sin copia de seguridad (`allowBackup="false"` y `data_extraction_rules.xml`), sin tráfico en claro en prod | Ver la sección siguiente | Hoy |
+| SonarCloud | Calidad y SAST | | Pendiente |
+| Secret scanning y push protection | Funciones de GitHub | Settings → Code security | Configuración pendiente |
 
 Regla: nada secreto en el código ni en `config/*.json`. Todo lo que entra con `--dart-define` queda dentro del APK.
 
+## R8, ofuscación y símbolos
+
+**Qué es.** El APK de release pasa por dos procesos distintos:
+
+| | R8 | Ofuscación de Dart |
+|---|---|---|
+| Sobre qué | El código Java/Kotlin (el de Android, Flutter y los plugins) y los recursos | El código Dart de la app (casi toda la lógica) |
+| Qué hace | **Encoge** (quita clases y recursos sin uso), **ofusca** (renombra clases y métodos a `a`, `b`, `c`) y **optimiza** | Renombra clases y funciones en el binario compilado |
+| Cómo se activa | `isMinifyEnabled` e `isShrinkResources` en `android/app/build.gradle.kts`, con `proguard-rules.pro` | `--obfuscate --split-debug-info=build-symbols` en `tool/build-prod.sh` |
+| En qué builds | Todo build de release (dev y prod), así un problema de R8 aparece en dev antes que en prod | Solo prod |
+| Archivo para leer errores | `mapping.txt` | Carpeta `build-symbols/` (un `.symbols` por arquitectura) |
+
+**Por qué.** APK más pequeño, y quien descompile la app no lee los nombres de nuestras clases ni la lógica con facilidad. No reemplaza la regla de no guardar secretos en la app.
+
+**Dónde quedan los archivos.** Cada GitHub Release de prod (y de rollback) adjunta, además del APK y el AAB:
+
+- `solventa-<versión>+<build>-mapping.txt`: el mapeo de R8;
+- `solventa-<versión>+<build>-simbolos-dart.zip`: los símbolos de Dart.
+
+Cuando entre Sentry, el CD sube ambos ([`plan-sentry.md`](plan-sentry.md)). Los símbolos no van en git (`build-symbols/` está en `.gitignore`).
+
+**Cómo leer un error ofuscado.**
+
+1. Descargar del Release de esa versión el zip de símbolos (y el mapping si el error es de Java/Kotlin).
+2. Dart:
+
+   ```bash
+   unzip solventa-1.3.0+57-simbolos-dart.zip -d simbolos
+   flutter symbolize -i error.txt -d simbolos/app.android-arm64.symbols
+   ```
+
+   Usar el `.symbols` de la arquitectura del teléfono (casi siempre `arm64`).
+3. Java/Kotlin: `retrace` del Android SDK (`$ANDROID_HOME/cmdline-tools/latest/bin/retrace mapping.txt error.txt`).
+
+**Si R8 rompe algo.** Síntoma típico: funciona en debug y en release falla con `ClassNotFoundException` o un plugin que no responde. Se agrega la regla `-keep` que pida el plugin en `android/app/proguard-rules.pro` y se prueba con `tool/verificar.sh --apk` y en el emulador con `flutter run --release`.
+
 ## Ambientes dev y prod
 
-**Hoy** hay una sola app (`com.solventa.solventa_mobile`) y un solo juego de secretos de firmado.
-
-**Plan** (flavors de Android + `--dart-define-from-file`):
+Flavors de Android + `--dart-define-from-file`:
 
 | | dev | prod |
 |---|---|---|
 | Paquete Android | `com.solventa.solventa_mobile.dev` | `com.solventa.solventa_mobile` |
 | Nombre en el teléfono | Solventa Dev | Solventa |
 | Versión visible | `1.3.0-dev.214` | `1.3.0` |
-| Configuración | `config/dev.json` (URL del backend de pruebas, `FLAVOR=dev`) | `config/prod.json` |
-| Firmado | Keystore de dev, environment `dev` | Keystore de subida, environment `production` |
-| Se entrega por | Firebase App Distribution | GitHub Release + Google Play |
-| Ofuscado | No | Sí |
+| Configuración de Dart | `config/dev.json` | `config/prod.json` |
+| Firmado | Llave de dev (environment `dev`) | Llave de subida (environment `production`) |
+| Tráfico `http` | Permitido (backend local) | Bloqueado |
+| Dart ofuscado | No | Sí |
+| Se entrega por | Artifact `apk-dev` y App Distribution (testers del grupo `qa`) | APK firmado en el GitHub Release (sin tienda por ahora) |
 
-Como el paquete es distinto, Android le da a cada app su propio espacio: almacenamiento local, SQLite, `flutter_secure_storage`, caché y sesión nunca se mezclan, y las dos se pueden instalar a la vez. El paquete de Dart (`solventa_mobile`, el de los `import`) no cambia. `flutter run` sin `--flavor` usa dev. FCM (`google-services.json`) y Google Maps (llave restringida por paquete) se configuran por flavor.
+- Como el paquete es distinto, Android le da a cada app su propio espacio: almacenamiento local, SQLite, almacenamiento seguro, caché y sesión nunca se mezclan, y las dos se instalan a la vez.
+- `flutter run` sin `--flavor` usa dev (`default-flavor: dev` en `pubspec.yaml`). Prod en local: `flutter run --flavor prod --dart-define-from-file=config/prod.json`.
+- Claves de `config/*.json`: `FLAVOR`, `API_ENV` (`mock`, `local`, `dev`, `prod`) y `API_BASE_URL`, leídas en `lib/core/config/app_config.dart`. Archivos: `mock.json` (fakes, sin red), `local.json` (backend en tu máquina), `dev.json` (staging) y `prod.json`; detalle en [`integracion-backend.md`](integracion-backend.md). Mientras no exista el gateway de staging, el CI compila y prueba el flavor dev con `config/mock.json`; cuando exista, se pone su URL en `dev.json` y el CI pasa a usarlo.
+- En tu máquina no hay llaves: el build de release se firma con la de debug. En el CI, `tool/firma.sh` escribe `android/key.properties` (prod) o `android/key-dev.properties` (dev) desde los secretos.
+- FCM (`google-services.json`) y Google Maps (llave restringida por paquete) se configurarán por flavor con sus HU.
 
 ## Secretos y variables
 
 | Nombre | Dónde | Para qué | Estado |
 |---|---|---|---|
-| `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` | Hoy en el repo; plan: environment `production` | Firmar prod | Hoy |
-| `ANDROID_DEV_KEYSTORE_BASE64`, `ANDROID_DEV_KEYSTORE_PASSWORD`, `ANDROID_DEV_KEY_ALIAS`, `ANDROID_DEV_KEY_PASSWORD` | Environment `dev` | Firmar dev con una llave compartida, para que cualquier build de dev actualice al anterior | Plan |
-| `FIREBASE_SERVICE_ACCOUNT` (secreto), `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID_DEV` (variables) | Repo | App Distribution y Test Lab | Plan |
-| `PLAY_SERVICE_ACCOUNT` | Environment `production` | Subir el AAB a Play | Plan |
-| `SONAR_TOKEN` | Repo | SonarCloud | Plan |
-
-Los jobs que necesitan un secreto que todavía no existe se saltan solos, así el código puede integrarse antes de configurar las cuentas.
+| `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` | Hoy en el repo; moverlos al environment `production` | Firmar prod | Hoy |
+| `ANDROID_DEV_KEYSTORE_BASE64`, `ANDROID_DEV_KEYSTORE_PASSWORD`, `ANDROID_DEV_KEY_ALIAS`, `ANDROID_DEV_KEY_PASSWORD` | Environment `dev` | Firmar dev con una llave compartida, para que cada build de dev se instale encima del anterior. Sin ellos se firma con la de debug | Falta crearlos |
+| `FIREBASE_SERVICE_ACCOUNT` (secreto), `FIREBASE_APP_ID_DEV`, `FIREBASE_PROJECT_ID` (variables) | Environment `dev` | App Distribution y Test Lab | Falta cuenta |
+| `SONAR_TOKEN` | Repo | SonarCloud | Pendiente |
+| `SENTRY_AUTH_TOKEN` | Environment `production` | Subir símbolos a Sentry | Pendiente |
 
 ## Versionado
 
-**Hoy:** la versión sale de `version:` en `pubspec.yaml` (se cambia a mano) y el build es el número de ejecución de `cd.yml`. Tag y Release: `v<versión>+<build>`.
-
-**Plan:**
-
-- La **versión** se calcula sola en cada merge a `main` desde los títulos de los PR desde el último tag `v*`: un `feat` sube la menor, solo `fix` sube el parche, un `!` sube la mayor. Lo hace `git-cliff --bumped-version`, que también escribe las notas del Release.
-- El **build** (`versionCode`) es el número de ejecución del workflow de CD, que siempre crece.
-- La versión vive en el tag (`v1.3.0+57`) y en el Release, no en un commit: el ruleset de `main` no permite pushes de bots. Se pasa al build con `--build-name` y `--build-number`.
-- Dev usa `<próxima versión>-dev.<ejecución>`.
+- La **versión** se calcula sola en cada merge a `main` con `git-cliff --bumped-version` (`cliff.toml`), desde los títulos de PR desde el último tag `v*`: un `feat` sube la menor, el resto sube el parche y un `!` o `BREAKING CHANGE` sube la mayor. git-cliff también escribe las notas del Release, agrupadas.
+- El **build** (`versionCode`) es el mayor build de todos los tags (`v*+N` y `rollback-*+N`) más 1, así siempre crece, también después de un rollback.
+- La versión vive en el tag (`v1.3.0+57`) y en el Release, **no en un commit**: el ruleset de `main` no deja pushear a bots. Se pasa al build con `--build-name` y `--build-number`. `version:` de `pubspec.yaml` ya no se toca.
+- Dev usa `<próxima versión>-dev.<ejecución de develop.yml>`; como es otro paquete, su build no choca con el de prod.
+- Todo lo calcula `tool/version.sh`.
 - El tag `sprint-N` se pone a mano al cerrar el sprint, igual que en web y backend.
 
 ## Rollback
 
-Android no deja instalar un build con `versionCode` menor al instalado, así que "volver atrás" es publicar el código viejo con un build nuevo.
+Android no instala un build con `versionCode` menor al instalado, así que "volver atrás" es publicar el código viejo con un build nuevo.
 
 | Situación | Qué se hace | Estado |
 |---|---|---|
-| Error en un build de prod que va en despliegue gradual | Play Console → "Detener lanzamiento"; nadie más lo recibe | Plan (requiere Play) |
-| Volver a la versión anterior para todos | Workflow manual `rollback` con el tag a restaurar (p. ej. `v1.2.0`): checkout del tag, build con número nuevo, subida a Play y Release marcado "rollback" | Plan |
-| QA necesita un build de dev anterior | App Distribution guarda todos los builds | Plan |
-| Hace falta un APK o AAB específico | Cada GitHub Release guarda los archivos (hoy el artifact dura 30 días; el Release no vence) | Hoy |
+| Volver a la versión anterior | Actions → Rollback → tag a restaurar (p. ej. `v1.2.0+45`). Compila ese código con un build nuevo, crea el tag `rollback-1.2.0+58` y un Release marcado "rollback" con el APK | Hoy. Solo con tags creados desde este CD |
+| QA necesita un build de dev anterior | App Distribution guarda todos los builds; los artifacts `apk-dev` duran 14 días | Falta cuenta |
+| Hace falta un APK o AAB específico | Cada GitHub Release guarda los archivos y no vence | Hoy |
 
-Prod sale primero a la pista interna de Play y se promueve a producción con despliegue gradual (por ejemplo 20 %).
+Sin tienda, cada quien instala el APK del Release. Para volver atrás se corre Rollback y se instala el APK del Release `rollback-…` encima de la versión mala: el build es mayor, así que Android lo acepta y conserva los datos. El APK del Release anterior no sirve tal cual, porque su build es menor y Android lo rechaza encima de uno mayor.
+
+## Google Play (futuro)
+
+Desactivado: por ahora no hay tienda. El CD ya genera el AAB firmado y el mapping, así que activarlo es agregar al final de `cd.yml` y `rollback.yml` un paso con `r0adkll/upload-google-play` (pista `internal`, `mappingFile` del Release) condicionado a un secreto `PLAY_SERVICE_ACCOUNT` en el environment `production`. Antes: cuenta de desarrollador, app creada en Play Console, primer AAB subido a mano y cuenta de servicio con permiso de publicar. Con Play, el rollback rápido pasa a ser "Detener lanzamiento" del despliegue gradual.
 
 ## Logs y errores en producción
 
-Plan: `package:logging` en desarrollo y Sentry en producción (mobile y web), con captura y video enmascarados, `traceparent` hacia el backend y código de soporte en la pantalla de error. Detalle en [`observabilidad.md`](observabilidad.md). El CD sube los símbolos de ofuscación a Sentry.
+Pendiente: Sentry en mobile y web, con captura y video enmascarados, `traceparent` hacia el backend y código de soporte en la pantalla de error. Decisión en [`observabilidad.md`](observabilidad.md); paso a paso en [`plan-sentry.md`](plan-sentry.md).
 
-## Fuera de este plan
+## Fuera de alcance
 
-- **iOS y PWA:** fuera de alcance; la app es solo Android.
+- **iOS y PWA:** la app es solo Android.
 
 ## Pasos manuales (fuera del repo)
 
-- Rulesets: confirmar en Settings → Rules que los de `main`, `develop` y `sprint-*` están activos y son iguales a `.github/rulesets/` (el JSON del repo no se aplica solo).
+- Rulesets: en Settings → Rules, dejar `main`, `develop` y tags iguales a `.github/rulesets/` (sumar los checks `Secretos (gitleaks)` y `Workflows (actionlint)` y el patrón de tags `v*`).
+- Paquete de GHCR `solventa-frontend-mobile-dev`: después del primer push a `develop`, en Packages → Package settings, ponerlo **público** (el repo es público), para que el devcontainer descargue la imagen sin iniciar sesión.
+- Environments `dev` y `production` en Settings → Environments; mover los secretos de firmado de prod a `production` y crear los de dev (llave nueva con `keytool -genkeypair -v -keystore dev.jks -alias dev -keyalg RSA -keysize 2048 -validity 10000`, en base64 con `base64 -i dev.jks`).
 - CODEOWNERS: reemplazar los roles por los usuarios reales y descomentar.
 - Settings → Actions → General: "Allow GitHub Actions to create and approve pull requests" (organización y repo), para el auto-merge de Dependabot.
-- Organización de Sentry con los proyectos `solventa-mobile` y `solventa-web`, y `SENTRY_AUTH_TOKEN` como secreto.
-
-- Firebase: proyecto, apps `com.solventa.solventa_mobile` y `.dev`, App Distribution con el grupo `qa`, cuenta de servicio con permisos de App Distribution y Test Lab.
-- Google Play Console: cuenta de desarrollador, app creada y primer AAB subido a mano.
-- Environments `dev` y `production` en GitHub, con sus secretos.
-- Secret scanning y push protection.
-- Llaves de Google Maps por flavor cuando llegue la HU de mapas.
+- Firebase: proyecto, apps `com.solventa.solventa_mobile` y `com.solventa.solventa_mobile.dev`, App Distribution con el grupo `qa`, cuenta de servicio con los roles "Firebase App Distribution Admin" y "Firebase Test Lab Admin"; guardar su JSON en `FIREBASE_SERVICE_ACCOUNT` y las variables `FIREBASE_APP_ID_DEV` y `FIREBASE_PROJECT_ID`.
+- Secret scanning y push protection en Settings → Code security.
+- Sentry: ver [`plan-sentry.md`](plan-sentry.md).

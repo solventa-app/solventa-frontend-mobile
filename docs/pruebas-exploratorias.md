@@ -9,15 +9,15 @@ La automatización cubre tamaños, overflow, contraste y recorridos, pero no ve 
 | Cuánto | 60 a 90 minutos, más 15 minutos para registrar hallazgos |
 | Qué sale | Un archivo `docs/evidencias/EXP-sprint-N-AAAA-MM-DD.md` (plantilla en [`evidencias/plantilla-exploratoria.md`](evidencias/plantilla-exploratoria.md)) y un ticket en Jira por cada hallazgo de gravedad media o alta |
 
-Estado: el proceso y la plantilla son **hoy**. `device_preview` en el flavor dev y la instalación del APK por App Distribution son **plan**; mientras no existan, la app se instala en cada dispositivo con `flutter run` (o `flutter install`) desde `develop` actualizado, porque hoy el CI no publica un APK de `develop`.
+Estado: el proceso y la plantilla son **hoy**. Cada merge a `develop` deja el APK "Solventa Dev" como artifact `apk-dev` (Actions → Develop → la última ejecución), y App Distribution lo enviará solo cuando exista la cuenta de Firebase. `device_preview` en el flavor dev está **pendiente**.
 
 ## 1. Preparar (15 min, antes de la sesión)
 
 1. Elegir el **foco** (charter) de la sesión: las HU que entraron en el sprint y sus pantallas. Ejemplo: "Explorar el reporte de siniestro sin conexión para encontrar pérdidas de datos o mensajes confusos".
 2. Copiar la plantilla a `docs/evidencias/EXP-sprint-N-AAAA-MM-DD.md` y llenar el encabezado.
 3. Instalar la app en los dispositivos:
-   - **Plan:** abrir la invitación de Firebase App Distribution en el teléfono e instalar "Solventa Dev" del último build de `develop`.
-   - **Hoy:** con `develop` actualizado, conectar cada teléfono (ver README, "Emulador o teléfono por USB") y correr `flutter install -d <id>` (o `flutter run -d <id>`). Cuando existan los flavors, con `--flavor dev`.
+   - **Con App Distribution (cuando exista la cuenta):** abrir la invitación en el teléfono e instalar "Solventa Dev" del último build de `develop`.
+   - **Hoy:** descargar el artifact `apk-dev` de la última ejecución de Develop y, con el teléfono conectado (README, "Emulador o teléfono por USB"), `adb install -r solventa-dev-*.apk`. O desde el contenedor, con `develop` actualizado: `flutter install -d <id>` (flavor dev por defecto).
 4. Reunir los dispositivos: los teléfonos del equipo (anotar marca, modelo y versión de Android de cada uno) y un emulador de tablet.
 5. Instalar **Accessibility Scanner** (Google, gratis en Play Store) en al menos un teléfono.
 
@@ -29,7 +29,7 @@ Recorrer las pantallas del foco como lo haría un usuario real, y repetir pasand
 
 | # | Qué cambiar | Cómo | Qué buscar |
 |---|---|---|---|
-| 1 | Tamaño de pantalla | **Plan:** `device_preview` (solo en dev): botón flotante → elegir teléfono pequeño (320 dp), mediano, grande y tablet. **Hoy:** emulador de tablet y los teléfonos del equipo | Desbordes (franjas amarillas y negras), botones fuera de la pantalla, contenido que no se centra en tablet |
+| 1 | Tamaño de pantalla | **Pendiente:** `device_preview` (solo en dev): botón flotante → elegir teléfono pequeño (360 dp), mediano, grande y tablet. **Hoy:** emulador de tablet y los teléfonos del equipo | Desbordes (franjas amarillas y negras), botones fuera de la pantalla, contenido que no se centra en tablet |
 | 2 | Orientación | Girar el teléfono (o `device_preview` → horizontal) | Formularios que pierden datos al girar, teclado que tapa el botón principal |
 | 3 | Texto grande | Ajustes → Pantalla → Tamaño de fuente al máximo (o `device_preview` → text scale 2.0) | Textos cortados o encimados, palabras partidas, botones que crecen fuera de lugar |
 | 4 | Tamaño de pantalla del sistema | Ajustes → Pantalla → Tamaño de visualización al máximo | Lo mismo que el punto 3, con menos espacio |

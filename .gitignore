@@ -15,3 +15,12 @@ coverage/
 # Goldens legibles locales (alchemist platform goldens)
 test/goldens/platform/
 test/goldens/failures/
+
+android/key*.properties
+google-services.json
+
+# Símbolos de --split-debug-info (se adjuntan al Release, no van en git)
+build-symbols/
+
+# Configuración local que no se versiona (config/dev.json y config/prod.json sí)
+config/*.local.json

@@ -19,7 +19,7 @@ Copiar este archivo como `EXP-sprint-N-AAAA-MM-DD.md` y llenarlo. Guía: [`../pr
 |---|---|---|---|
 | Ej.: Samsung Galaxy A14 | 14 | 6,6" · 400 dpi | Teléfono de … |
 | Emulador Pixel Tablet | 14 (API 34) | 10,95" | |
-| `device_preview` | — | 320, 390, 412, 600, 840 dp | Solo si ya existe en dev |
+| `device_preview` | — | 360, 390, 412, 600 dp y tablet | Solo si ya existe en dev |
 
 ## Checklist
 

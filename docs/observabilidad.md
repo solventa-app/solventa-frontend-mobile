@@ -1,6 +1,6 @@
 # Logs y reporte de errores
 
-Cómo se registra lo que pasa en la app mientras se desarrolla, qué pasa cuando un usuario tiene un error en producción y cómo se reproduce, con captura o video de lo que falló. Todo es **plan**: hoy la app no tiene logger ni reporte de errores (no hay `print`, `debugPrint` ni manejadores globales en `lib/`). El web tampoco.
+Cómo se registra lo que pasa en la app mientras se desarrolla, qué pasa cuando un usuario tiene un error en producción y cómo se reproduce, con captura o video de lo que falló. Todo está **pendiente** y el paso a paso para implementarlo, en web y en mobile, está en [`plan-sentry.md`](plan-sentry.md). Hoy la app no tiene logger ni reporte de errores (no hay `print`, `debugPrint` ni manejadores globales en `lib/`). El web tampoco.
 
 Reglas que no cambian:
 

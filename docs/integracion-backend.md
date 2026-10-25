@@ -47,7 +47,7 @@ El backend es un **BFF GraphQL** (`solventa-backend/services/bff`) detrás de un
 | `mock` | Construir pantallas sin backend; demos; pruebas de integración en CI | `dev` | vacío (no hay red: fakes) | `config/mock.json` |
 | `local` | Probar contra el backend en tu máquina (`docker compose up` en `solventa-backend`) | `dev` | `http://10.0.2.2:8080` (gateway Envoy local) | `config/local.json` |
 | `dev` | Build de pruebas contra el backend desplegado en la nube (staging) | `dev` | `gateway_url` de staging | `config/dev.json` |
-| `prod` | Build de Google Play | `prod` | `gateway_url` de producción | `config/prod.json` |
+| `prod` | APK firmado del GitHub Release | `prod` | `gateway_url` de producción | `config/prod.json` |
 
 ```bash
 flutter run --flavor dev  --dart-define-from-file=config/mock.json    # sin backend

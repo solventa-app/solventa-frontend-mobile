@@ -6,17 +6,21 @@ App Flutter de Solventa, solo para Android (sin iOS ni PWA). El backend y el con
 |---|---|
 | Este README | Correr la app en local y el resumen del flujo de trabajo |
 | [`docs/entorno-local.md`](docs/entorno-local.md) | Versiones de Flutter, Dart, JDK, Gradle y Android SDK; devcontainer obligatorio; emulador |
+| [`docs/diagramas.md`](docs/diagramas.md) · [`docs/diagramas.html`](docs/diagramas.html) | Diagramas: correr en local, CI/CD de punta a punta y pruebas (Mermaid en GitHub, o la página para abrir en el navegador) |
 | [`docs/ci-cd.md`](docs/ci-cd.md) | Qué corre en cada PR y en cada merge, linter, pruebas, granja de dispositivos, responsive, seguridad, ambientes, versionado y rollback |
+| [`docs/arquitectura.md`](docs/arquitectura.md) | Arquitectura de la app: features por capas, estado, repositorios, i18n (fuente para agentes) |
+| [`docs/integracion-backend.md`](docs/integracion-backend.md) | Ambientes, cliente GraphQL, errores, fakes y contrato con el backend |
 | [`docs/observabilidad.md`](docs/observabilidad.md) | Logs en desarrollo, Sentry con captura y video, y cómo reproducir un error de un usuario |
+| [`docs/plan-sentry.md`](docs/plan-sentry.md) | Paso a paso para implementar Sentry en web y mobile |
 | [`docs/pruebas-exploratorias.md`](docs/pruebas-exploratorias.md) | Cómo hacer la sesión exploratoria de cada sprint, con checklist |
 | [`docs/evidencias/`](docs/evidencias/README.md) | Evidencias de pruebas manuales y de dispositivo, con plantilla |
 | [`CLAUDE.md`](CLAUDE.md) | Contexto corto para agentes (y para quien llega nuevo) |
 
-`docs/ci-cd.md` y `docs/entorno-local.md` marcan cada cosa como **hoy** (ya está en el repo) o **plan** (acordado, falta el PR). Cuando un PR implementa algo del plan, ese mismo PR lo pasa a **hoy**.
+`docs/ci-cd.md` marca cada pieza como **hoy**, **listo, falta cuenta** (el workflow existe y espera los secretos de Firebase) o **pendiente**. Quien cambie algo actualiza el documento en el mismo PR.
 
 ## Correr la app en local
 
-### Con el devcontainer (plan: obligatorio)
+### Con el devcontainer (obligatorio)
 
 **Qué es un devcontainer:** un contenedor de Docker descrito en la carpeta `.devcontainer/` (`Dockerfile` + `devcontainer.json`, un estándar abierto). Trae Flutter 3.47.8, JDK 17 y el Android SDK ya instalados. VS Code abre el repo *dentro* de ese contenedor: la terminal, el análisis de Dart y la depuración corren ahí, y tus archivos siguen en tu disco. El CI usa la misma imagen, así que lo que pasa en tu máquina pasa en el pipeline.
 
@@ -31,16 +35,17 @@ Prerrequisitos (no hace falta instalar Flutter, Dart, JDK ni Android SDK):
 Primera vez:
 
 1. Clonar el repo y abrirlo en VS Code.
-2. `Ctrl/Cmd+Shift+P` → **Dev Containers: Reopen in Container**. La primera vez descarga la imagen (unos minutos); después abre en segundos.
+2. `Ctrl/Cmd+Shift+P` → **Dev Containers: Reopen in Container**. La primera vez arma la imagen (unos minutos si ya está publicada en GHCR, hasta 20 si se compila desde cero); después abre en segundos. Al crearse, el contenedor verifica la versión de Flutter, corre `flutter pub get` e instala el hook de pre-push.
+   En Docker Desktop, dale al menos 8 GB de memoria (Settings → Resources): Gradle la necesita para compilar el APK.
 3. En Android Studio → Device Manager, crear un emulador (API 34 o más) y arrancarlo.
 
 Cada día:
 
 1. Arrancar el emulador (o conectar el teléfono por USB con depuración activada).
-2. En una terminal **de tu máquina**: `adb kill-server && adb -a nodaemon server start`, y dejarla abierta. Así el contenedor ve el emulador y el teléfono (solo en redes de confianza: abre el puerto 5037).
+2. En una terminal **de tu máquina**: en Mac basta con `adb start-server` (Docker Desktop lleva `host.docker.internal` al localhost del Mac); en Windows y Linux, `adb kill-server && adb -a nodaemon server start` y dejarla abierta (solo en redes de confianza: abre el puerto 5037). Así el contenedor ve el emulador y el teléfono.
 3. En VS Code (ya dentro del contenedor): `flutter devices` debe listar el emulador.
 4. `flutter run` (o F5). La app aparece en el emulador; `r` recarga en caliente.
-5. Antes del PR, en la misma terminal: `dart format --output=none --set-exit-if-changed .`, `flutter analyze`, `flutter test`.
+5. Antes del PR, en la misma terminal: `tool/verificar.sh` (formato, análisis y pruebas; con `--apk` también compila el APK de dev, como el CI). El hook corre lo mismo en cada `git push` desde el contenedor.
 
 #### ¿Necesito el Android SDK en mi máquina?
 
@@ -81,61 +86,34 @@ El resultado es el mismo en los tres: misma imagen, mismo Flutter, mismas prueba
 | Teléfono USB: driver | Pixel: Android Studio → SDK Manager → SDK Tools → **Google USB Driver**. Otras marcas: el driver USB del fabricante (Samsung, Xiaomi, Motorola…) | No hace falta | No hace falta | Reglas udev: `sudo apt install android-sdk-platform-tools-common` y tu usuario en el grupo `plugdev`; desconectar y volver a conectar |
 | Teléfono USB: dónde se conecta | Al puerto de Windows (no a WSL; el `adb` que se usa es el de Windows) | Al Mac | Al Mac | A la máquina |
 | `adb` en la máquina | `%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe` (agregarlo al PATH) | `~/Library/Android/sdk/platform-tools/adb` | Igual que Mac Intel | `~/Android/Sdk/platform-tools/adb` |
-| Comando del paso 2 de "Cada día" | En PowerShell: `adb kill-server; adb -a nodaemon server start` (aceptar el aviso del firewall solo para redes privadas) | `adb kill-server && adb -a nodaemon server start` | Igual | Igual |
+| Comando del paso 2 de "Cada día" | En PowerShell: `adb kill-server; adb -a nodaemon server start` (aceptar el aviso del firewall solo para redes privadas) | `adb start-server` (sin `-a`, no abre el puerto a la red) | Igual que Mac Intel | `adb kill-server && adb -a nodaemon server start` |
 | Cómo llega el contenedor al `adb` | `host.docker.internal` (Docker Desktop lo trae) | Igual | Igual | El `devcontainer.json` agrega `--add-host=host.docker.internal:host-gateway`, porque Docker Engine no lo define solo |
 | Velocidad | Normal | Normal | Analyze, test y goldens normales; el build del APK 2 a 3 veces más lento (el Android SDK no tiene binarios para Linux ARM, el contenedor corre emulado) | Normal |
 
-Sin VS Code se puede usar la CLI oficial (`npm i -g @devcontainers/cli`, luego `devcontainer up --workspace-folder .` y `devcontainer exec --workspace-folder . flutter test`). Detalle, versiones y por qué el emulador queda fuera del contenedor: [`docs/entorno-local.md`](docs/entorno-local.md#devcontainer-plan-obligatorio).
+Sin VS Code se puede usar la CLI oficial (`npm i -g @devcontainers/cli`, luego `devcontainer up --workspace-folder .` y `devcontainer exec --workspace-folder . flutter test`). Detalle, versiones y por qué el emulador queda fuera del contenedor: [`docs/entorno-local.md`](docs/entorno-local.md#devcontainer-obligatorio).
 
-### Hoy, mientras no exista el devcontainer
+### Sin el devcontainer
 
-| Herramienta | Versión | Nota |
-|---|---|---|
-| Flutter | Stable con Dart ≥ 3.13.5 (el plan fija 3.47.8) | Ver [`docs/entorno-local.md`](docs/entorno-local.md) |
-| JDK | 17 | El que trae Android Studio sirve |
-| Android Studio | Estable reciente | Con Android SDK, un emulador (API 34 o más) y el plugin de Flutter |
-| Git | Cualquiera reciente | En Windows, con `core.autocrlf=false` para no convertir a CRLF |
-
-Comprueba todo con `flutter doctor`.
-
-```bash
-git clone https://github.com/solventa-app/solventa-frontend-mobile.git
-cd solventa-frontend-mobile
-flutter pub get
-flutter run            # con un emulador abierto o un teléfono conectado por USB
-```
-
-Antes de abrir un PR, lo mismo que corre el CI:
-
-```bash
-dart format --output=none --set-exit-if-changed .
-flutter analyze
-flutter test
-```
-
-Para corregir el formato: `dart format .`.
+No se usa: `tool/verificar-versiones.sh` falla si la versión de Flutter no es 3.47.8, y los goldens solo coinciden con los del CI dentro del contenedor. Si una emergencia obliga a trabajar fuera, instala exactamente Flutter 3.47.8 y JDK 17 y corre `tool/verificar.sh` antes de subir.
 
 ### Linter y formato
 
-El CI (job `mobile`, obligatorio) bloquea el PR si falla cualquiera de estos; córrelos antes de subir, en el devcontainer o en tu máquina:
+- VS Code dentro del contenedor formatea y corrige al guardar (lo configura `devcontainer.json`).
+- `analysis_options.yaml` usa `flutter_lints` con análisis estricto y reglas extra de async y recursos.
+- El hook de pre-push y el job `mobile` del CI corren `dart format --set-exit-if-changed` y `flutter analyze` (falla incluso con hallazgos de nivel info). Para corregir el formato: `dart format .`.
 
-```bash
-dart format .          # formatea; el CI usa --output=none --set-exit-if-changed
-flutter analyze        # reglas de flutter_lints (analysis_options.yaml); falla incluso con hallazgos de nivel info
-```
-
-Plan: reglas más estrictas, formateo y correcciones al guardar en VS Code dentro del devcontainer y un hook `pre-push` opcional. Detalle en [`docs/ci-cd.md`](docs/ci-cd.md#linter-y-formato).
+Detalle en [`docs/ci-cd.md`](docs/ci-cd.md#linter-y-formato).
 
 ### Firmado
 
-`flutter run --release` firma con la llave debug salvo que exista `android/key.properties` (ignorado por git). El firmado de verdad solo pasa en el CD. Nunca subas un keystore ni `key.properties` al repo.
+En tu máquina el build de release se firma con la llave de debug. El firmado de verdad pasa solo en el CI (`tool/firma.sh` escribe la llave de cada ambiente desde los secretos). Nunca subas un keystore, `key.properties` ni `key-dev.properties` al repo.
 
-### Ambientes (plan)
+### Ambientes
 
-Cuando entren los flavors habrá dos apps que conviven en el teléfono, cada una con sus propios datos:
+Dos apps que conviven en el teléfono, cada una con sus propios datos (paquete distinto):
 
 ```bash
-flutter run --flavor dev  --dart-define-from-file=config/dev.json    # "Solventa Dev"
+flutter run                                                          # "Solventa Dev" (dev es el flavor por defecto)
 flutter run --flavor prod --dart-define-from-file=config/prod.json   # "Solventa"
 ```
 
@@ -143,7 +121,7 @@ Detalle en [`docs/ci-cd.md`](docs/ci-cd.md#ambientes-dev-y-prod).
 
 ## Trazabilidad y reporte de errores (Sentry)
 
-Decisión del equipo (2026-10-25), igual en la app y en la web; falta implementarla:
+Decisión del equipo (2026-10-25), igual en la app y en la web; falta implementarla con [`docs/plan-sentry.md`](docs/plan-sentry.md):
 
 - **Sentry** recibe cada error y cierre de la app de los usuarios, con breadcrumbs, captura de pantalla y un **video (Session Replay) de lo que pasó antes**, grabado solo cuando hay un error y con todo el texto y las imágenes enmascarados. Las pantallas de pago, documento, cámara y billetera quedan fuera.
 - Cada petición al BFF lleva un encabezado **`traceparent`**; el backend escribe ese id en Cloud Logging y Cloud Trace, así un error se sigue de la pantalla al servicio que falló.
@@ -156,20 +134,21 @@ Detalle: [`docs/observabilidad.md`](docs/observabilidad.md).
 
 | Origen | Destino | Uso |
 |---|---|---|
-| `feat\|fix\|chore/KAN-N-descripcion` | `develop` | Trabajo diario (squash o merge) |
-| `develop` | `main` | Liberación |
-| `fix/KAN-N-descripcion` | `main` | Corrección urgente |
-| `main` | `develop` | Reintegración tras un fix directo |
+| `feat\|fix\|chore/KAN-N-descripcion` | `develop` | Trabajo diario (squash) |
+| `fix\|chore/KAN-N-descripcion` | `release/sprint-N` | Correcciones durante la estabilización |
+| `release/sprint-N` | `main` | Liberación de fin de sprint |
+| `hotfix/KAN-N-descripcion` | `main` | Corrección urgente |
+| `main` | `develop` | Reintegración tras cada release o hotfix |
 
-Plan: igualarlo al web (`release/sprint-N` y `hotfix/KAN-N-...` hacia `main`). Ver [`docs/ci-cd.md`](docs/ci-cd.md#flujo-de-ramas).
+Título del PR: `tipo(alcance): KAN-N descripción`, por ejemplo `feat(mobile): KAN-24 login biométrico`. Decide la próxima versión: `feat` sube la menor, `fix` el parche.
 
-Título del PR: `tipo(alcance): KAN-N descripción`, por ejemplo `feat(mobile): KAN-24 login biométrico`. Alcances: `mobile`, `contrato`, `docs`, `ci`.
+`main` y `develop` están protegidas por ruleset (`.github/rulesets/`): PR obligatorio, 1 aprobación y los checks `mobile`, `Título del PR`, `Nombre de rama`, `Secretos (gitleaks)` y `Workflows (actionlint)` en verde.
 
-`main` y `develop` están protegidas por ruleset (`.github/rulesets/`): PR obligatorio, 1 aprobación y checks `mobile`, `Título del PR` y `Nombre de rama` en verde.
+## CI y CD en pocas líneas
 
-## CI y CD en una línea
+- **Cada PR:** formato, análisis, pruebas y APK de dev dentro del devcontainer, más gitleaks, actionlint y osv-scanner.
+- **Cada merge a `develop`:** APK "Solventa Dev" firmado, MobSF, pruebas en 3 emuladores y, cuando exista Firebase, App Distribution.
+- **Cada merge a `main`:** versión calculada sola, APK y AAB de prod firmados y ofuscados, GitHub Release con el APK para instalar (sin tienda por ahora).
+- **Manual:** rollback de una versión y Test Lab en teléfonos reales.
 
-- **CI** (`ci.yml`): `dart format`, `flutter analyze` y `flutter test` en cada PR.
-- **CD** (`cd.yml`): cada merge a `main` compila el APK y el AAB firmados y crea un GitHub Release.
-
-Todo lo demás (qué corre en cada caso, secretos, seguridad, versionado y rollback) está en [`docs/ci-cd.md`](docs/ci-cd.md).
+Todo el detalle está en [`docs/ci-cd.md`](docs/ci-cd.md) y los diagramas en [`docs/diagramas.md`](docs/diagramas.md).

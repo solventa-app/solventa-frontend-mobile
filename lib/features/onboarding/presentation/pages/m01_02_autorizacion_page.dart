@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -22,7 +24,9 @@ class M0102AutorizacionPage extends ConsumerWidget {
 
     Future<void> continuar() async {
       final ok = await notifier.registrarConsentimiento();
-      if (ok && context.mounted) context.push(OnboardingRoutes.frente);
+      if (ok && context.mounted) {
+        unawaited(context.push(OnboardingRoutes.frente));
+      }
     }
 
     return SolFlowScaffold(

@@ -1,0 +1,41 @@
+# Versión y notas del Release a partir de los títulos de los PR (Conventional Commits), desde el último tag v*.
+# feat -> sube la menor, fix y el resto -> el parche, `!` o BREAKING CHANGE -> la mayor. Ver docs/ci-cd.md, "Versionado".
+# Lo usa tool/version.sh (CD, rollback y builds de dev).
+
+[changelog]
+header = ""
+body = """
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group | striptags | trim }}
+{% for commit in commits %}
+- {{ commit.message | split(pat="\n") | first | trim }}\
+{% endfor %}
+{% endfor %}
+"""
+trim = true
+footer = ""
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+protect_breaking_commits = true
+filter_commits = false
+# Los tags llevan el build (`v1.3.0+57`): se compara solo la parte de la versión.
+tag_pattern = "^v[0-9]+\\.[0-9]+\\.[0-9]+"
+topo_order = false
+sort_commits = "oldest"
+commit_parsers = [
+  { message = "^Merge ", skip = true },
+  { message = "^feat", group = "<!-- 0 -->Nuevo" },
+  { message = "^fix", group = "<!-- 1 -->Correcciones" },
+  { message = "^refactor", group = "<!-- 2 -->Refactor" },
+  { message = "^test", group = "<!-- 3 -->Pruebas" },
+  { message = "^docs", group = "<!-- 4 -->Documentación" },
+  { message = "^chore\\(deps\\)", group = "<!-- 6 -->Dependencias" },
+  { message = "^(chore|ci|infra)", group = "<!-- 5 -->Mantenimiento" },
+]
+
+[bump]
+features_always_bump_minor = true
+breaking_always_bump_major = true

@@ -24,7 +24,9 @@
         "required_status_checks": [
           { "context": "mobile" },
           { "context": "Título del PR" },
-          { "context": "Nombre de rama" }
+          { "context": "Nombre de rama" },
+          { "context": "Secretos (gitleaks)" },
+          { "context": "Workflows (actionlint)" }
         ]
       }
     }
