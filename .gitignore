@@ -11,3 +11,7 @@ coverage/
 *.iml
 .idea/
 .DS_Store
+
+# Goldens legibles locales (alchemist platform goldens)
+test/goldens/platform/
+test/goldens/failures/
