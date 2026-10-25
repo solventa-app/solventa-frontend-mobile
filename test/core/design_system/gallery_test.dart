@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/app/solventa_app.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
@@ -30,7 +31,7 @@ void main() {
   testWidgets('En debug, un toque largo en el wordmark abre la galería', (
     tester,
   ) async {
-    await tester.pumpWidget(const SolventaApp());
+    await tester.pumpWidget(const ProviderScope(child: SolventaApp()));
     await tester.pumpAndSettle();
     await tester.longPress(find.text('Solventa'));
     // La galería tiene indicadores de carga infinitos: no se usa

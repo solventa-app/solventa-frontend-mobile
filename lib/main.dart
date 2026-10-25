@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/solventa_app.dart';
 import 'core/design_system/solventa_ui.dart';
@@ -19,5 +20,5 @@ void main() {
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
-  runApp(const SolventaApp());
+  runApp(const ProviderScope(child: SolventaApp()));
 }

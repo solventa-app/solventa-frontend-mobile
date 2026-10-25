@@ -1,0 +1,21 @@
+# Generación de tipos por operación GraphQL (docs/integracion-backend.md §3).
+# Esquema: lib/core/contrato/schema.graphql (copia del backend, no se edita a mano).
+# Operaciones: lib/features/<feature>/data/graphql/*.graphql → *.graphql.dart al lado.
+targets:
+  $default:
+    sources:
+      - $package$
+      - pubspec.yaml
+      - lib/**
+      - test/**
+    builders:
+      graphql_codegen:
+        options:
+          assetsPath: "lib/**.graphql"
+          addTypename: true
+          setOperationName: true
+          disableCopyWithGeneration: true
+          generatedFileHeader: "// GENERADO por graphql_codegen desde lib/core/contrato/schema.graphql. No editar.\n// ignore_for_file: type=lint\n"
+          scalars:
+            DateTime:
+              type: DateTime

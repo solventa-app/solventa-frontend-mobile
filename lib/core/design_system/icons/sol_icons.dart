@@ -46,8 +46,14 @@ abstract final class SolIcons {
   // Captura de documento y prueba de vida.
   static const IconData camera = Symbols.photo_camera;
   static const IconData retry = Symbols.refresh;
-  static const IconData idCard = Symbols.badge;
+  static const IconData idCard = Symbols.id_card;
   static const IconData lighting = Symbols.light_mode;
   static const IconData face = Symbols.face;
   static const IconData portrait = Symbols.account_box;
+  static const IconData documentBack = Symbols.flip_to_back;
+
+  // Biometría (M01-08)
+  static const IconData fingerprint = Symbols.fingerprint;
+  static const IconData settings = Symbols.settings;
+  static const IconData shield = Symbols.verified_user;
 }

@@ -15,7 +15,11 @@ class SolDemoTrigger extends StatelessWidget {
     required this.label,
     required this.onTap,
     this.forceVisible = false,
+    this.center = false,
   });
+
+  /// Centrado horizontal (M01-05).
+  final bool center;
 
   final String label;
   final VoidCallback onTap;
@@ -42,9 +46,15 @@ class SolDemoTrigger extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: SolSpacing.xs),
             child: Align(
-              alignment: AlignmentDirectional.centerStart,
-              widthFactor: 1,
-              child: Text('$label →', style: style),
+              alignment: center
+                  ? Alignment.center
+                  : AlignmentDirectional.centerStart,
+              widthFactor: center ? null : 1,
+              child: Text(
+                '$label →',
+                style: style,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),

@@ -11,19 +11,22 @@ import '../../tokens/sol_spacing.dart';
 /// Siempre visible arriba a la derecha. 32 dp de alto visual y 48 dp de
 /// área táctil.
 class SolLocaleChip extends StatelessWidget {
-  const SolLocaleChip({
-    super.key,
-    this.label = 'ES · COP',
-    this.semanticLabel = 'Idioma español, moneda pesos colombianos',
-    this.onTap,
-  });
+  const SolLocaleChip({super.key, this.label, this.semanticLabel, this.onTap});
 
-  final String label;
-  final String semanticLabel;
+  final String? label;
+  final String? semanticLabel;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    // Sin valores explícitos usa los de [SolLocaleScope] (idioma activo).
+    final scope = SolLocaleScope.maybeOf(context);
+    final label = this.label ?? scope?.label ?? 'ES · COP';
+    final semanticLabel =
+        this.semanticLabel ??
+        scope?.semanticLabel ??
+        'Idioma español, moneda pesos colombianos';
+    final onTap = this.onTap ?? scope?.onTap;
     final colors = context.colors;
     final sol = context.solColors;
     final pill = Container(
@@ -74,4 +77,28 @@ class SolLocaleChip extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Idioma activo para todas las píldoras [SolLocaleChip] de la app. Se pone
+/// una vez en la raíz; así cualquier layout muestra «ES · COP» o «EN · COP» y
+/// alterna el idioma sin pasar callbacks por cada pantalla.
+class SolLocaleScope extends InheritedWidget {
+  const SolLocaleScope({
+    super.key,
+    required this.label,
+    required this.semanticLabel,
+    required this.onTap,
+    required super.child,
+  });
+
+  final String label;
+  final String semanticLabel;
+  final VoidCallback onTap;
+
+  static SolLocaleScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<SolLocaleScope>();
+
+  @override
+  bool updateShouldNotify(SolLocaleScope oldWidget) =>
+      label != oldWidget.label || semanticLabel != oldWidget.semanticLabel;
 }
