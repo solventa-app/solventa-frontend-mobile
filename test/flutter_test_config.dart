@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:alchemist/alchemist.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
@@ -18,6 +19,14 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   // Los tests de widget miden con Inter real, no con la fuente de pruebas.
   TestWidgetsFlutterBinding.ensureInitialized();
   await _loadInter();
+  // Antialiasing de macOS y Linux difiere en fracciones de píxel: se tolera
+  // hasta 0,5 % para que los goldens de CI pasen también en local.
+  final comparator = goldenFileComparator;
+  if (comparator is LocalFileComparator) {
+    goldenFileComparator = _TolerantGoldenComparator(
+      comparator.basedir.resolve('_golden_test.dart'),
+    );
+  }
   final platformGoldens = Platform.environment['SOL_PLATFORM_GOLDENS'] == '1';
   return AlchemistConfig.runWithConfig(
     config: AlchemistConfig(
@@ -45,4 +54,26 @@ Future<void> _loadInter() async {
     loader.addFont(rootBundle.load('assets/fonts/Inter/Inter-$weight.ttf'));
   }
   await loader.load();
+}
+
+/// Comparador local que acepta diferencias de píxel menores al umbral.
+class _TolerantGoldenComparator extends LocalFileComparator {
+  _TolerantGoldenComparator(super.testFile);
+
+  static const double _tolerance = 0.005;
+
+  @override
+  Future<bool> compare(Uint8List imageBytes, Uri golden) async {
+    final result = await GoldenFileComparator.compareLists(
+      imageBytes,
+      await getGoldenBytes(golden),
+    );
+    if (result.passed || result.diffPercent <= _tolerance) {
+      result.dispose();
+      return true;
+    }
+    final error = await generateFailureOutput(result, golden, basedir);
+    result.dispose();
+    throw FlutterError(error);
+  }
 }
