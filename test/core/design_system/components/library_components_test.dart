@@ -358,4 +358,115 @@ void main() {
       await expectA11yGuidelines(tester);
     });
   });
+
+  group('Ajustes de la revisión UX', () {
+    Widget pair() => SolButtonPair(
+      secondary: SolButton.outlined(label: 'Repetir', onPressed: () {}),
+      primary: SolButton.primary(label: 'Capturar', onPressed: () {}),
+    );
+
+    testWidgets('SolButtonPair: en fila al 100 %, apilado al 200 %', (
+      tester,
+    ) async {
+      await pumpSol(tester, pair());
+      final redo = tester.getRect(find.text('Repetir'));
+      final shoot = tester.getRect(find.text('Capturar'));
+      expect(redo.center.dy, shoot.center.dy);
+      expect(redo.left, lessThan(shoot.left));
+      expect(tester.getSize(find.byType(SolButton).first).height, 48);
+
+      await pumpSol(tester, pair(), textScale: 2);
+      final buttons = find.byType(SolButton);
+      final first = tester.getRect(buttons.first);
+      final second = tester.getRect(buttons.last);
+      // Primaria arriba, 8 dp de separación y ancho completo.
+      expect(tester.getRect(find.text('Capturar')).top, lessThan(first.bottom));
+      expect(second.top - first.bottom, closeTo(8, 0.5));
+      expect(first.width, second.width);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('SolTopBar: sin onProfileTap el avatar no es un botón', (
+      tester,
+    ) async {
+      await pumpSol(
+        tester,
+        const SolTopBar.flow(title: 'Verificación', showBack: false),
+        scaffold: false,
+      );
+      final avatar = tester.widget<SolAvatar>(find.byType(SolAvatar));
+      expect(avatar.onTap, isNull);
+      expect(
+        find.descendant(
+          of: find.byType(SolAvatar),
+          matching: find.byType(InkResponse),
+        ),
+        findsNothing,
+      );
+    });
+
+    testWidgets('SolTransitionalScreen no muestra el avatar', (tester) async {
+      await pumpSol(
+        tester,
+        const SolTransitionalScreen(title: 'Verificación', message: '...'),
+        scaffold: false,
+      );
+      expect(find.byType(SolAvatar), findsNothing);
+    });
+
+    testWidgets('SolLinkButton inline: sin padding lateral y 48 dp de alto', (
+      tester,
+    ) async {
+      await pumpSol(
+        tester,
+        Align(
+          alignment: Alignment.topLeft,
+          child: SolLinkButton(
+            label: 'Abrir Ajustes',
+            inline: true,
+            onPressed: () {},
+          ),
+        ),
+      );
+      final link = tester.getRect(find.byType(SolLinkButton));
+      expect(tester.getRect(find.text('Abrir Ajustes')).left, link.left);
+      expect(link.height, greaterThanOrEqualTo(48));
+    });
+
+    testWidgets('SolTextField deshabilitado: fondo #F5F5F5 y borde #D9D9D9', (
+      tester,
+    ) async {
+      await pumpSol(
+        tester,
+        const SolTextField(label: 'Cédula', enabled: false),
+      );
+      final box = tester.widget<AnimatedContainer>(
+        find.descendant(
+          of: find.byType(SolTextField),
+          matching: find.byType(AnimatedContainer),
+        ),
+      );
+      final deco = box.decoration! as BoxDecoration;
+      expect(deco.color, const Color(0xFFF5F5F5));
+      expect((deco.border! as Border).top.color, const Color(0xFFD9D9D9));
+    });
+
+    testWidgets('SolSheetLayout: hoja pegada abajo y limitada al 60 %', (
+      tester,
+    ) async {
+      await pumpSol(
+        tester,
+        const SolSheetLayout(
+          background: ColoredBox(color: Colors.green),
+          sheet: SolBottomSheetPanel(child: SizedBox(height: 2000)),
+        ),
+        scaffold: false,
+      );
+      final sheet = tester.getRect(find.byType(SolBottomSheetPanel));
+      expect(sheet.bottom, 844);
+      // Contenido largo: la hoja se limita al 60 % y hace scroll dentro.
+      expect(sheet.height, closeTo(844 * 0.6, 0.5));
+      expect(tester.takeException(), isNull);
+    });
+  });
 }

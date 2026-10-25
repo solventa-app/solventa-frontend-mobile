@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 ///
 /// - Montos: `$ 450.000` (sin decimales, punto de miles).
 /// - Fechas: `12 sep 2026, 11:02 a. m.`
-/// - Cuentas: `****4821`
+/// - Cuentas: `••••4821`
 ///
 /// Entre el símbolo y la cifra, y en «a. m.», se usa un espacio duro
 /// (U+00A0) para que el monto nunca se parta en dos líneas.
@@ -59,20 +59,31 @@ abstract final class SolFormat {
   /// `12 sep 2026, 11:02 a. m.`
   static String dateTime(DateTime d) => '${date(d)}, ${time(d)}';
 
-  /// `****4821`: deja visibles los últimos [visible] dígitos.
+  /// `••••4821`: deja visibles los últimos [visible] dígitos.
+  ///
+  /// Para lectores de pantalla usa [maskedAccountSemantics].
   static String maskedAccount(
     String account, {
     int visible = 4,
-    String maskChar = '*',
+    String maskChar = '\u2022',
   }) {
     final digits = account.replaceAll(RegExp(r'\D'), '');
     if (digits.length <= visible) return digits;
     return '${maskChar * 4}${digits.substring(digits.length - visible)}';
   }
 
-  /// `1,2 km` (coma decimal es-CO).
-  static String distanceKm(double km) => '${_decimal1.format(km)} km';
+  /// Etiqueta semántica de una cuenta enmascarada: «cuenta terminada en 4821».
+  static String maskedAccountSemantics(String account, {int visible = 4}) {
+    final digits = account.replaceAll(RegExp(r'\D'), '');
+    final tail = digits.length <= visible
+        ? digits
+        : digits.substring(digits.length - visible);
+    return 'cuenta terminada en $tail';
+  }
 
-  /// `6 min`.
-  static String minutes(int minutes) => '$minutes min';
+  /// `1,2 km` (coma decimal es-CO, espacio duro antes de la unidad).
+  static String distanceKm(double km) => '${_decimal1.format(km)}${nbsp}km';
+
+  /// `6 min` (espacio duro antes de la unidad).
+  static String minutes(int minutes) => '$minutes${nbsp}min';
 }

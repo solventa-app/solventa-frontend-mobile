@@ -120,7 +120,11 @@ class SolButton extends StatelessWidget {
         Size(SolSizes.minTouchTarget, SolSizes.buttonHeight),
       ),
       padding: const WidgetStatePropertyAll(
-        EdgeInsets.symmetric(horizontal: SolSpacing.xxl),
+        // 12 + 24 (alto de línea) + 12 = 48 al 100 %; con texto grande crece.
+        EdgeInsets.symmetric(
+          horizontal: SolSpacing.xxl,
+          vertical: SolSpacing.md,
+        ),
       ),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
@@ -198,7 +202,7 @@ class _ButtonContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (icon != null) ...[
-          Icon(icon, size: 20, color: color),
+          Icon(icon, size: 20, opticalSize: 20, color: color),
           const SizedBox(width: SolSpacing.xs),
         ],
         Flexible(child: text),

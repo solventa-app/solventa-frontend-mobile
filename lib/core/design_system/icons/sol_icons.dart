@@ -49,5 +49,5 @@ abstract final class SolIcons {
   static const IconData idCard = Symbols.badge;
   static const IconData lighting = Symbols.light_mode;
   static const IconData face = Symbols.face;
-  static const IconData portrait = Symbols.id_card;
+  static const IconData portrait = Symbols.account_box;
 }

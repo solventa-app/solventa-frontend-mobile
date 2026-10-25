@@ -161,9 +161,9 @@ class _SolGalleryPageState extends State<SolGalleryPage> {
           ),
 
           const _Section('Tarjetas'),
-          const SolCard(child: Text('Tarjeta delineada')),
+          const SolCard.outlined(child: Text('Tarjeta delineada')),
           const _Gap(),
-          const SolCard.elevated(child: Text('Tarjeta elevada')),
+          const SolCard(child: Text('Tarjeta elevada')),
           const _Gap(),
           SolActionTile(
             icon: SolIcons.assistanceActive,

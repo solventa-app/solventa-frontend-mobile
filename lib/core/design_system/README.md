@@ -19,7 +19,7 @@ Reglas de producto que el sistema hace cumplir o facilita:
 - Ningún estado solo por color: siempre ícono o texto.
 - Áreas táctiles de 48 × 48 dp como mínimo.
 - Material Symbols *outlined* como único set de íconos.
-- Formato es-CO: `$ 450.000`, `12 sep 2026, 11:02 a. m.`, `****4821`.
+- Formato es-CO: `$ 450.000`, `12 sep 2026, 11:02 a. m.`, `••••4821`.
 
 ---
 
@@ -33,13 +33,13 @@ lib/core/design_system/
   icons/                catálogo SolIcons (Material Symbols outlined)
   l10n/                 SolFormat (es-CO) y SolLocalizations
   components/
-    buttons/            SolButton, SolLinkButton
+    buttons/            SolButton, SolButtonPair, SolLinkButton
     navigation/         SolTopBar, SolBottomNav, SolLocaleChip
     lists/              SolProviderRow, SolActionTile, SolSectionHeader
     feedback/           SolStatusBadge/Banner, SolLoadingState, SolResultView,
                         SolInlineNote, SolDemoTrigger
     inputs/             SolTextField, SolConsentCheckbox
-    surfaces/           SolCard, SolBottomSheet(+Panel), SolConfirmDialog(+Panel),
+    surfaces/           SolCard, SolBottomSheet(+Panel, SolSheetLayout), SolConfirmDialog(+Panel),
                         SolDivider, SolAvatar
     auth/               SolPinIndicator, SolNumericKeypad, SolCameraFrame
   layouts/              SolTopLevelScaffold, SolFlowScaffold, SolEntryScaffold,
@@ -95,7 +95,8 @@ context.solText.title / .body / .note / .wordmark / .button / .labelStrong
 Tipografía (Inter, sp): `headlineSmall` 24/600 · `titleLarge` (wordmark)
 20/700 · `titleMedium` 16/600 · `titleSmall` 14/600 · `bodyMedium` 14/400 ·
 `labelLarge` (botones) 16/600 · `labelMedium` 12/500 · `labelSmall` 11/600 ·
-nota 11/400 (`context.solText.note`).
+nota 11/400 (`context.solText.note`). Los tokens no llevan `letterSpacing`; el
+saludo de Home aplica -0,6 localmente porque el Figma solo lo usa ahí (2001:183).
 
 Medidas en `SolSpacing` (2, 4, 8, 12, 16, 20, 24, 32; margen de pantalla 16),
 `SolRadius` (`full` 999, `card` 12, `field` 8, `checkbox` 4) y `SolSizes`
@@ -113,6 +114,10 @@ Icon(SolIcons.home)              // outlined
 Icon(SolIcons.home, fill: 1)     // relleno (destino activo, estados)
 ```
 
+El tema fija `IconThemeData(size: 24, weight: 400, grade: 0, opticalSize: 24,
+fill: 0)`. En íconos de 16–20 dp pasa `opticalSize: 20` (el mínimo del set) para
+que el trazo no se vea fino.
+
 Usa siempre `SolIcons` (no `Icons` ni `Symbols` directo) para mantener un solo
 set. Todo ícono sin texto al lado necesita `Semantics(label:)` o un `tooltip`.
 
@@ -121,13 +126,18 @@ set. Todo ícono sin texto al lado necesita `Semantics(label:)` o un `tooltip`.
 ```dart
 SolFormat.currency(450000);                        // $ 450.000
 SolFormat.dateTime(DateTime(2026, 9, 12, 11, 2));  // 12 sep 2026, 11:02 a. m.
-SolFormat.maskedAccount('1234 5678 4821');         // ****4821
+SolFormat.maskedAccount('1234 5678 4821');         // ••••4821
+SolFormat.maskedAccountSemantics('1234 5678 4821'); // cuenta terminada en 4821
 SolFormat.distanceKm(1.2);                         // 1,2 km
 SolFormat.minutes(6);                              // 6 min
 ```
 
-Entre `$` y la cifra, y dentro de «a. m.», se usa un espacio duro (U+00A0) para
-que nunca se partan de línea; en pantalla se ve igual que el Figma.
+Entre `$` y la cifra, entre la cifra y `km`/`min`, y dentro de «a. m.», se usa
+un espacio duro (U+00A0) para que nunca se partan de línea; en pantalla se ve
+igual que el Figma.
+
+La máscara usa `•` (U+2022) por defecto. TalkBack no debe leer «punto punto
+punto»: pon la etiqueta de `maskedAccountSemantics` en el `Semantics` del texto.
 
 ---
 
@@ -148,7 +158,18 @@ SolButton.primary(label: 'Enviar', loading: true, onPressed: send); // cargando
 ```
 
 Deshabilitado = la condición aún no se cumple (p. ej. consentimiento sin
-marcar). Un solo primario por pantalla.
+marcar). Un solo primario por pantalla. Con texto grande el botón crece en
+alto (padding vertical 12) y nunca parte palabras.
+
+Para dos acciones lado a lado («Repetir» / «Capturar») usa `SolButtonPair`: en
+fila con la primaria a la derecha y, con texto ≥ 150 %, apiladas con la
+primaria arriba y 8 dp de separación.
+```dart
+SolButtonPair(
+  secondary: SolButton.outlined(label: 'Repetir', icon: SolIcons.retry, onPressed: redo),
+  primary: SolButton.primary(label: 'Capturar', icon: SolIcons.camera, onPressed: shoot),
+);
+```
 
 ### SolLinkButton
 Enlace de acción alterna con 48 dp de área táctil.
@@ -160,6 +181,8 @@ SolLinkButton(
   size: SolLinkSize.small,
   onPressed: help,
 );
+// A ras del texto (sin padding lateral), p. ej. dentro de un banner:
+SolLinkButton(label: 'Abrir Ajustes', inline: true, onPressed: openSettings);
 ```
 
 ### SolTopBar (Figma `2018:35`)
@@ -169,7 +192,9 @@ appBar: SolTopBar.flow(title: 'Prueba de vida', onBack: ..., onProfileTap: ...)
 appBar: SolTopBar.home(onLocaleTap: ...)
 appBar: SolTopBar.flow(title: 'Verificación', showBack: false) // entrada/transitoria
 ```
-Sin `onBack`, la flecha hace `Navigator.maybePop`.
+Sin `onBack`, la flecha hace `Navigator.maybePop`. Sin `onProfileTap` el avatar
+se dibuja pero no es interactivo; las pantallas transitorias no lo muestran.
+Con texto grande el título se limita a 1,5× y la píldora a 1,3×.
 
 ### SolBottomNav (Figma `2018:76`)
 3 destinos con ícono y etiqueta siempre visibles; solo en pantallas de nivel
@@ -177,6 +202,8 @@ superior. Normalmente lo usas a través de `SolAppShell`.
 ```dart
 SolBottomNav(selectedIndex: i, onDestinationSelected: (i) => ...)
 ```
+Los íconos quedan alineados arriba en todos los destinos; la etiqueta va en una
+línea y se limita a 1,5× con texto grande.
 
 ### SolLocaleChip (Figma `2018:3`)
 Píldora «ES · COP». Ya viene dentro de `SolTopBar`.
@@ -208,9 +235,10 @@ SolStatusBanner(
   status: SolStatus.error,
   title: 'Sin permiso de cámara',
   message: 'Actívalo para capturar tu documento.',
-  action: SolLinkButton(label: 'Abrir Ajustes', onPressed: open),
+  action: SolLinkButton(label: 'Abrir Ajustes', inline: true, onPressed: open),
 );
 ```
+Usa `inline: true` en el enlace para que quede alineado con el título.
 El banner se anuncia a TalkBack al aparecer (`liveRegion`).
 
 ### SolConsentCheckbox
@@ -231,8 +259,8 @@ SolNumericKeypad(onDigit: addDigit, onBackspace: removeDigit);
 
 ### SolCard y SolActionTile
 ```dart
-SolCard(child: ...);                  // borde outline (guía SG-01)
-SolCard.elevated(child: ...);         // sombra suave (G-03, M01-07, M06-02)
+SolCard(child: ...);                  // por defecto: sombra suave (G-03, M01-07, M06-02)
+SolCard.outlined(child: ...);         // variante con borde outline (guía SG-01)
 SolCard(onTap: ..., semanticLabel: '...', child: ...);
 SolActionTile(icon: SolIcons.assistanceActive,
               title: 'Solicitar asistencia en sitio', onTap: ...);
@@ -240,6 +268,8 @@ SolActionTile(icon: SolIcons.assistanceActive,
 
 ### SolTextField
 Etiqueta dentro del campo, borde 1 dp (2 dp con foco o error), radio 8 dp.
+Deshabilitado (`enabled: false`): fondo `surfaceContainer` #F5F5F5 y borde
+#D9D9D9.
 ```dart
 SolTextField(label: 'Correo', helperText: '...', onChanged: ...);
 SolTextField(label: 'Cédula', errorText: 'La cédula debe tener entre 6 y 10 dígitos.');
@@ -263,6 +293,23 @@ if (ok) cancelRequest();
 ```
 `SolConfirmPanel` es el mismo contenido para mostrarlo dentro de una pantalla.
 
+La hoja fija va **pegada a la barra inferior**: el mapa ocupa el resto
+(`Expanded`) y la hoja toma solo el alto de su contenido (2005:3). Usa
+`SolSheetLayout`, que limita la hoja al 60 % del alto disponible
+(`maxSheetFactor`); si el contenido no cabe, hace scroll dentro de la hoja. No
+envuelvas la hoja en `Flexible`/`Expanded`: con `flex` queda flotando con fondo
+vacío debajo.
+```dart
+SolTopLevelScaffold(
+  selectedIndex: 1,
+  onDestinationSelected: onTab,
+  body: SolSheetLayout(
+    background: const MapaPrestadores(),
+    sheet: SolBottomSheetPanel(child: ListaPrestadores()),
+  ),
+);
+```
+
 ### SolLoadingState y SolResultView
 ```dart
 SolLoadingState(message: 'Validando con el proveedor KYC/AML...');
@@ -281,6 +328,10 @@ SolCameraFrame(
 );
 SolCameraFrame(shape: SolCameraFrameShape.face, instruction: '...');
 ```
+La variante rostro (`SolCameraFrameShape.face`) está **sin diseño aprobado**:
+es un óvalo provisional hasta que exista la pantalla en Figma. El texto
+superpuesto (etiqueta e instrucción) se limita a 1,3× para que la guía siga
+visible con texto grande.
 
 ### Varios
 `SolDivider()`, `SolAvatar(onTap: ...)`, `SolSectionHeader(title: ..., count:
@@ -323,9 +374,13 @@ SolAppShell(
 );
 ```
 
-`anchorActions: true` (por defecto) deja el CTA fijo abajo, sobre el teclado y
-la barra de gestos. Todo el contenido hace scroll; nada queda debajo de la
-barra inferior.
+`anchorActions: true` (por defecto) deja el CTA fijo abajo (24 dp sobre la
+barra de gestos), sobre el teclado. Todo el contenido hace scroll; nada queda
+debajo de la barra inferior.
+
+Usa `anchorActions: false` (CTA al final del contenido) en **M01-02**
+(autorización de datos), **M02-02** (PIN) y **M06-02** (detalle del prestador),
+como en el Figma.
 
 ## Responsive y accesibilidad
 

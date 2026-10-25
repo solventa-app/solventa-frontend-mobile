@@ -41,7 +41,12 @@ class SolLocaleChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(SolIcons.language, size: 18, color: colors.primary),
+          Icon(
+            SolIcons.language,
+            size: 18,
+            opticalSize: 20,
+            color: colors.primary,
+          ),
           const SizedBox(width: 6),
           Text(
             label,

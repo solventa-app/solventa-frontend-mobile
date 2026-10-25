@@ -52,8 +52,8 @@ void main() {
 
       final anchored = await ctaTop(anchored: true);
       final inline = await ctaTop(anchored: false);
-      // 844 − 16 (margen) − 48 (botón) = 780.
-      expect(anchored, 780);
+      // 844 − 24 (margen) − 48 (botón) = 772.
+      expect(anchored, 772);
       expect(inline, lessThan(200));
     });
 
@@ -142,9 +142,9 @@ void main() {
       expect(actions, 1);
       final card = tester.getRect(find.byType(SolResultView));
       final button = tester.getRect(find.byType(SolButton));
-      expect(button.top, 780);
+      expect(button.top, 772);
       // Centrada en el área de contenido (entre la barra y el botón).
-      expect(card.center.dy, closeTo((56 + 780) / 2, 1));
+      expect(card.center.dy, closeTo((56 + 772) / 2, 1));
       await expectA11yGuidelines(tester);
     });
   });

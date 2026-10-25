@@ -57,8 +57,8 @@ void main() {
 
   group('SolFormat.maskedAccount', () {
     test('deja visibles los últimos 4 dígitos', () {
-      expect(SolFormat.maskedAccount('1234 5678 4821'), '****4821');
-      expect(SolFormat.maskedAccount('004821'), '****4821');
+      expect(SolFormat.maskedAccount('1234 5678 4821'), '••••4821');
+      expect(SolFormat.maskedAccount('004821'), '••••4821');
     });
 
     test('no enmascara cuentas cortas', () {
@@ -66,13 +66,21 @@ void main() {
     });
 
     test('admite otro carácter de máscara', () {
-      expect(SolFormat.maskedAccount('99994821', maskChar: '•'), '••••4821');
+      expect(SolFormat.maskedAccount('99994821', maskChar: '*'), '****4821');
+    });
+
+    test('etiqueta semántica legible', () {
+      expect(
+        SolFormat.maskedAccountSemantics('1234 5678 4821'),
+        'cuenta terminada en 4821',
+      );
     });
   });
 
   test('distancia y minutos', () {
-    expect(SolFormat.distanceKm(1.2), '1,2 km');
-    expect(SolFormat.minutes(6), '6 min');
+    // Espacio duro (U+00A0) entre cifra y unidad.
+    expect(SolFormat.distanceKm(1.2), '1,2\u00A0km');
+    expect(SolFormat.minutes(6), '6\u00A0min');
     expect(SolFormat.number(1250), '1.250');
   });
 

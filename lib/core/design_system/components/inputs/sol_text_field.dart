@@ -116,12 +116,14 @@ class _SolTextFieldState extends State<SolTextField> {
     final colors = context.colors;
     final hasError = widget.errorText != null;
     final focused = _focus.hasFocus;
-    final borderColor = hasError
+    final borderColor = !widget.enabled
+        ? colors.outline
+        : hasError
         ? colors.error
         : focused
         ? colors.primary
         : colors.outline;
-    final borderWidth = hasError || focused ? 2.0 : 1.0;
+    final borderWidth = widget.enabled && (hasError || focused) ? 2.0 : 1.0;
     final multiline = (widget.maxLines ?? 2) > 1;
     final valueStyle = context.solText.body.copyWith(
       color: widget.enabled ? colors.onSurface : colors.onSurfaceVariant,
@@ -165,7 +167,8 @@ class _SolTextFieldState extends State<SolTextField> {
       ),
       constraints: const BoxConstraints(minHeight: 56),
       decoration: BoxDecoration(
-        color: colors.surface,
+        // Deshabilitado: fondo surfaceContainer y borde outline.
+        color: widget.enabled ? colors.surface : colors.surfaceContainer,
         borderRadius: SolRadius.fieldAll,
         border: Border.all(color: borderColor, width: borderWidth),
       ),
@@ -236,6 +239,7 @@ class _SolTextFieldState extends State<SolTextField> {
                       child: Icon(
                         SolIcons.error,
                         size: 16,
+                        opticalSize: 20,
                         color: colors.error,
                       ),
                     ),

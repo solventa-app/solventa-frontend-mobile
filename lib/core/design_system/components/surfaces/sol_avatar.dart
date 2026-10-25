@@ -26,7 +26,12 @@ class SolAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final Widget glyph = initials == null
-        ? Icon(SolIcons.profile, size: size * 0.56, color: colors.onPrimary)
+        ? Icon(
+            SolIcons.profile,
+            size: size * 0.56,
+            opticalSize: 20,
+            color: colors.onPrimary,
+          )
         : MediaQuery.withNoTextScaling(
             child: Text(
               initials!,

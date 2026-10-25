@@ -22,14 +22,14 @@ class SolActionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return SolCard.elevated(
+    return SolCard(
       onTap: onTap,
       semanticLabel: title,
       child: ExcludeSemantics(
         child: Row(
           children: [
             Icon(icon, size: SolSpacing.xxl, color: colors.primary),
-            const SizedBox(width: SolSpacing.md),
+            const SizedBox(width: SolSpacing.sm),
             Expanded(
               child: Text(
                 title,
@@ -39,7 +39,12 @@ class SolActionTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: SolSpacing.sm),
-            Icon(SolIcons.chevronRight, size: 20, color: colors.onSurface),
+            Icon(
+              SolIcons.chevronRight,
+              size: 20,
+              opticalSize: 20,
+              color: colors.onSurface,
+            ),
           ],
         ),
       ),

@@ -23,6 +23,7 @@ class SolLinkButton extends StatelessWidget {
     required this.onPressed,
     this.size = SolLinkSize.regular,
     this.note,
+    this.inline = false,
   });
 
   final String label;
@@ -30,12 +31,18 @@ class SolLinkButton extends StatelessWidget {
   final SolLinkSize size;
   final String? note;
 
+  /// Sin padding lateral y alineado al inicio, para que el texto del enlace
+  /// quede a ras del contenido (p. ej. dentro de un banner). Mantiene 48 dp
+  /// de alto táctil.
+  final bool inline;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final color = onPressed == null
         ? context.solColors.disabledContent
         : colors.secondary;
+    final align = inline ? TextAlign.start : TextAlign.center;
     final labelStyle =
         (size == SolLinkSize.regular
                 ? context.solText.button
@@ -49,23 +56,28 @@ class SolLinkButton extends StatelessWidget {
       excludeSemantics: true,
       child: InkWell(
         onTap: onPressed,
-        customBorder: const StadiumBorder(),
+        customBorder: inline ? null : const StadiumBorder(),
         child: ConstrainedBox(
           constraints: const BoxConstraints(
             minHeight: SolSizes.minTouchTarget,
             minWidth: SolSizes.minTouchTarget,
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: SolSpacing.sm),
+            padding: inline
+                ? EdgeInsets.zero
+                : const EdgeInsets.symmetric(horizontal: SolSpacing.sm),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: inline
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.center,
               children: [
-                Text(label, textAlign: TextAlign.center, style: labelStyle),
+                Text(label, textAlign: align, style: labelStyle),
                 if (note != null)
                   Text(
                     note!,
-                    textAlign: TextAlign.center,
+                    textAlign: align,
                     style: labelStyle.copyWith(fontWeight: FontWeight.w400),
                   ),
               ],

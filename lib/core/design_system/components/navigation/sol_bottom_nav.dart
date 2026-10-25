@@ -63,9 +63,18 @@ class SolBottomNav extends StatelessWidget {
               minHeight: SolSizes.bottomNavHeight,
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: SolSpacing.lg),
+              // M3: el indicador arranca a 12 dp del borde (8 aquí + 4 del
+              // destino).
+              padding: const EdgeInsets.fromLTRB(
+                SolSpacing.lg,
+                SolSpacing.sm,
+                SolSpacing.lg,
+                0,
+              ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                // Arriba: los íconos quedan alineados aunque una etiqueta
+                // ocupe más alto que otra.
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for (var i = 0; i < destinations.length; i++)
                     Expanded(
@@ -127,7 +136,7 @@ class _NavItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: SolSpacing.xs),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 AnimatedContainer(
                   duration: SolMotion.of(context, SolMotion.short),
@@ -146,11 +155,15 @@ class _NavItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: SolSpacing.xxs),
-                Text(
-                  destination.label,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  style: labelStyle,
+                MediaQuery.withClampedTextScaling(
+                  maxScaleFactor: 1.5,
+                  child: Text(
+                    destination.label,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: labelStyle,
+                  ),
                 ),
               ],
             ),

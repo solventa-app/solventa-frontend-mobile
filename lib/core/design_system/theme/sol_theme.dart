@@ -69,6 +69,15 @@ abstract final class SolTheme {
       visualDensity: VisualDensity.standard,
       splashFactory: InkSparkle.splashFactory,
       extensions: const [solColors],
+      // Material Symbols con peso 400 y tamaño óptico 24 (trazo ~2 px).
+      iconTheme: const IconThemeData(
+        size: 24,
+        weight: 400,
+        grade: 0,
+        opticalSize: 24,
+        fill: 0,
+        color: SolColors.onSurface,
+      ),
       dividerTheme: DividerThemeData(
         color: scheme.outline,
         thickness: SolSizes.divider,

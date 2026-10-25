@@ -65,6 +65,7 @@ class SolNumericKeypad extends StatelessWidget {
               child: Icon(
                 SolIcons.backspace,
                 size: SolSizes.icon,
+                fill: 1,
                 color: context.colors.onSurface,
               ),
             ),

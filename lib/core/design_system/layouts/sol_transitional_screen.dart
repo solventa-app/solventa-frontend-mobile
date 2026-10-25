@@ -28,7 +28,11 @@ class SolTransitionalScreen extends StatelessWidget {
     return PopScope(
       canPop: false,
       child: SolScreenFrame(
-        topBar: SolTopBar.flow(title: title, showBack: false),
+        topBar: SolTopBar.flow(
+          title: title,
+          showBack: false,
+          showProfile: false,
+        ),
         padding: const EdgeInsets.fromLTRB(
           SolSpacing.screen,
           SolSpacing.xxxl,

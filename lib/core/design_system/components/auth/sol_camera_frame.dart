@@ -94,33 +94,38 @@ class SolCameraFrame extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(SolSpacing.lg),
+                    // El texto superpuesto se limita a 1,3× para que la guía
+                    // siga visible con texto grande.
                     child: SizedBox(
                       height: height - SolSpacing.lg * 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (label != null)
-                            _LabelPill(label: label!, icon: labelIcon)
-                          else
-                            const SizedBox.shrink(),
-                          Flexible(
-                            child: isDoc
-                                ? const _DocumentGuide()
-                                : const _FaceGuide(),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: SolSpacing.xs,
+                      child: MediaQuery.withClampedTextScaling(
+                        maxScaleFactor: 1.3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if (label != null)
+                              _LabelPill(label: label!, icon: labelIcon)
+                            else
+                              const SizedBox.shrink(),
+                            Flexible(
+                              child: isDoc
+                                  ? const _DocumentGuide()
+                                  : const _FaceGuide(),
                             ),
-                            child: Text(
-                              instruction,
-                              textAlign: TextAlign.center,
-                              style: context.solText.body.copyWith(
-                                color: Colors.white,
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: SolSpacing.xs,
+                              ),
+                              child: Text(
+                                instruction,
+                                textAlign: TextAlign.center,
+                                style: context.solText.body.copyWith(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -153,7 +158,7 @@ class _LabelPill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 16, color: fg),
+            Icon(icon, size: 16, opticalSize: 20, color: fg),
             const SizedBox(width: SolSpacing.xs),
           ],
           Flexible(
@@ -198,6 +203,7 @@ class _DocumentGuide extends StatelessWidget {
                   child: const Icon(
                     SolIcons.portrait,
                     size: 18,
+                    opticalSize: 20,
                     color: Colors.white,
                   ),
                 ),
@@ -207,11 +213,12 @@ class _DocumentGuide extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _bar(0.9, 8, 0.3),
+                      // Anchos fijos del Figma (2001:370).
+                      _bar(156, 8, 0.3),
                       const SizedBox(height: 6),
-                      _bar(0.6, 6, 0.2),
+                      _bar(104, 6, 0.2),
                       const SizedBox(height: 6),
-                      _bar(0.8, 6, 0.2),
+                      _bar(138.66, 6, 0.2),
                     ],
                   ),
                 ),
@@ -223,15 +230,14 @@ class _DocumentGuide extends StatelessWidget {
     );
   }
 
-  Widget _bar(double widthFactor, double height, double alpha) {
-    return FractionallySizedBox(
-      widthFactor: widthFactor,
-      child: Container(
-        height: height,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: alpha),
-          borderRadius: BorderRadius.circular(16),
-        ),
+  // Si el marco es más angosto, el ancho se recorta al disponible.
+  Widget _bar(double width, double height, double alpha) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: alpha),
+        borderRadius: BorderRadius.circular(16),
       ),
     );
   }

@@ -88,7 +88,13 @@ class SolStatusBadge extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(s.badgeIcon, size: 14, weight: 700, color: s.foreground),
+            Icon(
+              s.badgeIcon,
+              size: 14,
+              opticalSize: 20,
+              weight: 700,
+              color: s.foreground,
+            ),
             const SizedBox(width: 6),
             Flexible(
               child: Text(
@@ -141,7 +147,13 @@ class SolStatusBanner extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ExcludeSemantics(
-              child: Icon(s.icon, size: 20, fill: 1, color: s.foreground),
+              child: Icon(
+                s.icon,
+                size: 20,
+                opticalSize: 20,
+                fill: 1,
+                color: s.foreground,
+              ),
             ),
             const SizedBox(width: SolSpacing.md),
             Expanded(

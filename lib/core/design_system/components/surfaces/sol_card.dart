@@ -7,31 +7,34 @@ import '../../tokens/sol_spacing.dart';
 
 /// Estilo de la tarjeta.
 enum SolCardStyle {
-  /// Borde de 1 dp `outline` (guía SG-01).
-  outlined,
-
   /// Sombra suave 0 1 1 rgba(0,0,0,.05), sin borde (G-03, M01-07, M06-02).
+  /// Estilo por defecto.
   elevated,
+
+  /// Variante con borde de 1 dp `outline` (guía SG-01).
+  outlined,
 }
 
-/// Superficie blanca de 12 dp. Con [onTap] es un objetivo táctil ≥ 48 dp.
+/// Superficie blanca de 12 dp, elevada por defecto. Con [onTap] es un
+/// objetivo táctil ≥ 48 dp.
 class SolCard extends StatelessWidget {
   const SolCard({
     super.key,
     required this.child,
-    this.style = SolCardStyle.outlined,
+    this.style = SolCardStyle.elevated,
     this.padding = const EdgeInsets.all(SolSpacing.lg),
     this.onTap,
     this.semanticLabel,
   });
 
-  const SolCard.elevated({
+  /// Variante delineada (borde de 1 dp, sin sombra).
+  const SolCard.outlined({
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(SolSpacing.lg),
     this.onTap,
     this.semanticLabel,
-  }) : style = SolCardStyle.elevated;
+  }) : style = SolCardStyle.outlined;
 
   final Widget child;
   final SolCardStyle style;

@@ -67,3 +67,7 @@ class GoldenSheet extends StatelessWidget {
     );
   }
 }
+
+/// Avanza ~300 ms para que las ruedas de carga indeterminadas ya muestren
+/// su arco en el golden (en el primer cuadro el arco mide casi cero).
+final PumpAction pumpSpinner = pumpNTimes(2, const Duration(milliseconds: 150));

@@ -96,7 +96,7 @@ class SolScreenFrame extends StatelessWidget {
                   SolSpacing.screen,
                   0,
                   SolSpacing.screen,
-                  SolSpacing.lg,
+                  SolSpacing.xxl,
                 ),
                 child: SolAdaptiveBody(child: actionColumn),
               ),

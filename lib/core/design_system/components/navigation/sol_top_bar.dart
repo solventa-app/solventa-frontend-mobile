@@ -88,14 +88,18 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
                 const SizedBox(width: SolSpacing.xxs),
               ],
               Expanded(
-                child: Semantics(
-                  header: true,
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.solText.title.copyWith(
-                      color: colors.onSurface,
+                // Al 200 % el título se limita a 1,5× para no comerse la barra.
+                child: MediaQuery.withClampedTextScaling(
+                  maxScaleFactor: 1.5,
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                      title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.solText.title.copyWith(
+                        color: colors.onSurface,
+                      ),
                     ),
                   ),
                 ),
@@ -135,9 +139,19 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 // Figma deja el título casi tocando la píldora: 4 dp.
                 const SizedBox(width: SolSpacing.xs),
-                SolLocaleChip(label: localeLabel, onTap: onLocaleTap),
+                MediaQuery.withClampedTextScaling(
+                  maxScaleFactor: 1.3,
+                  child: SolLocaleChip(label: localeLabel, onTap: onLocaleTap),
+                ),
+                // Sin onProfileTap el avatar no es interactivo; se reserva
+                // el mismo hueco de 48 dp para no mover la píldora.
                 if (!isHome && showProfile)
-                  SolAvatar(onTap: onProfileTap ?? () {}),
+                  onProfileTap == null
+                      ? const SizedBox.square(
+                          dimension: SolSizes.minTouchTarget,
+                          child: Center(child: SolAvatar()),
+                        )
+                      : SolAvatar(onTap: onProfileTap),
               ],
             ),
           ),

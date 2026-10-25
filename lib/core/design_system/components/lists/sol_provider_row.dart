@@ -44,16 +44,23 @@ class SolProviderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final sol = context.solColors;
-    final (Color iconBg, Color iconFg, IconData icon) = switch (type) {
+    final (
+      Color iconBg,
+      Color iconFg,
+      IconData icon,
+      double iconSize,
+    ) = switch (type) {
       SolProviderType.medico => (
         sol.successContainer,
         sol.success,
         SolIcons.medical,
+        22.0, // 2018:80
       ),
       SolProviderType.mecanico => (
         sol.navIndicator,
         colors.primary,
         SolIcons.mechanic,
+        20.0,
       ),
     };
     final meta = '${type.label} · $distance · $eta';
@@ -63,7 +70,13 @@ class SolProviderRow extends StatelessWidget {
         width: SolSizes.providerIcon,
         height: SolSizes.providerIcon,
         decoration: BoxDecoration(color: iconBg, shape: BoxShape.circle),
-        child: Icon(icon, size: 20, fill: 1, color: iconFg),
+        child: Icon(
+          icon,
+          size: iconSize,
+          opticalSize: iconSize,
+          fill: 1,
+          color: iconFg,
+        ),
       ),
     );
     final texts = MergeSemantics(

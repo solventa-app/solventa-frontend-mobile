@@ -50,7 +50,11 @@ void main() {
           status: SolStatus.error,
           title: 'Sin permiso de cámara',
           message: 'Actívalo para capturar tu documento.',
-          action: SolLinkButton(label: 'Abrir Ajustes', onPressed: noop),
+          action: SolLinkButton(
+            label: 'Abrir Ajustes',
+            inline: true,
+            onPressed: noop,
+          ),
         ),
         'Banner info': const SolStatusBanner(
           status: SolStatus.info,
@@ -107,10 +111,10 @@ void main() {
     'cards',
     () => GoldenSheet(
       cases: {
-        'Tarjeta delineada (SG-01)': const SolCard(
+        'Tarjeta delineada (SG-01)': const SolCard.outlined(
           child: Text('Contenido de la tarjeta'),
         ),
-        'Tarjeta elevada (G-03)': SolCard.elevated(
+        'Tarjeta elevada (G-03)': SolCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -180,16 +184,16 @@ void main() {
               SolProviderRow(
                 name: 'Clínica Norte',
                 type: SolProviderType.medico,
-                distance: '1.2 km',
-                eta: '6 min',
+                distance: SolFormat.distanceKm(1.2),
+                eta: SolFormat.minutes(6),
                 onRequest: noop,
               ),
               const SolDivider(),
               SolProviderRow(
                 name: 'Taller AutoAyuda',
                 type: SolProviderType.mecanico,
-                distance: '2.0 km',
-                eta: '9 min',
+                distance: SolFormat.distanceKm(2),
+                eta: SolFormat.minutes(9),
                 onRequest: noop,
               ),
             ],
@@ -234,7 +238,7 @@ void main() {
         ),
       },
     ),
-    pumpBeforeTest: pumpOnce,
+    pumpBeforeTest: pumpSpinner,
   );
 
   solGoldenMatrix(

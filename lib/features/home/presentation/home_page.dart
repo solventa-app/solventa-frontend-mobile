@@ -34,11 +34,15 @@ class HomePage extends StatelessWidget {
             header: true,
             child: Text(
               'Hola, $userName',
-              style: context.solText.headline.copyWith(color: colors.onSurface),
+              // El Figma aplica -0,6 solo a este saludo (2001:183).
+              style: context.solText.headline.copyWith(
+                color: colors.onSurface,
+                letterSpacing: -0.6,
+              ),
             ),
           ),
           const SizedBox(height: SolSpacing.lg),
-          SolCard.elevated(
+          SolCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -51,7 +55,7 @@ class HomePage extends StatelessWidget {
                         color: context.solColors.warning,
                       ),
                     ),
-                    const SizedBox(width: SolSpacing.md),
+                    const SizedBox(width: SolSpacing.sm),
                     Expanded(
                       child: Text(
                         'Completa tu registro para activar tu cuenta',

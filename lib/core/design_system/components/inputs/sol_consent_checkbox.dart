@@ -40,7 +40,13 @@ class SolConsentCheckbox extends StatelessWidget {
             : Border.all(color: colors.onSurfaceVariant, width: 2),
       ),
       child: value
-          ? Icon(SolIcons.check, size: 16, weight: 700, color: colors.onPrimary)
+          ? Icon(
+              SolIcons.check,
+              size: 16,
+              opticalSize: 20,
+              weight: 700,
+              color: colors.onPrimary,
+            )
           : null,
     );
     return Semantics(

@@ -17,6 +17,7 @@ export 'icons/sol_icons.dart';
 export 'l10n/sol_formatters.dart';
 export 'l10n/sol_localizations.dart';
 export 'components/buttons/sol_button.dart';
+export 'components/buttons/sol_button_pair.dart';
 export 'components/buttons/sol_link_button.dart';
 export 'components/feedback/sol_demo_trigger.dart';
 export 'components/lists/sol_provider_row.dart';

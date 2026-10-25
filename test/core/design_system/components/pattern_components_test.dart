@@ -150,7 +150,7 @@ void main() {
         tester,
         Column(
           children: [
-            const SolCard(child: Text('Delineada')),
+            const SolCard.outlined(child: Text('Delineada')),
             SolActionTile(
               icon: SolIcons.assistanceActive,
               title: 'Solicitar asistencia en sitio',
@@ -170,6 +170,30 @@ void main() {
       final deco = box.decoration as BoxDecoration;
       expect(deco.borderRadius, SolRadius.cardAll);
       expect((deco.border! as Border).top.color, const Color(0xFFD9D9D9));
+      // Por defecto la tarjeta es elevada: sombra y sin borde.
+      await pumpSol(tester, const SolCard(child: Text('Elevada')));
+      final elevated =
+          tester
+                  .widget<DecoratedBox>(
+                    find
+                        .descendant(
+                          of: find.byType(SolCard),
+                          matching: find.byType(DecoratedBox),
+                        )
+                        .first,
+                  )
+                  .decoration
+              as BoxDecoration;
+      expect(elevated.border, isNull);
+      expect(elevated.boxShadow, isNotEmpty);
+      await pumpSol(
+        tester,
+        SolActionTile(
+          icon: SolIcons.assistanceActive,
+          title: 'Solicitar asistencia en sitio',
+          onTap: () => taps++,
+        ),
+      );
       await tester.tap(find.text('Solicitar asistencia en sitio'));
       expect(taps, 1);
       expect(

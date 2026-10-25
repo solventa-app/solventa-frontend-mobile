@@ -34,18 +34,66 @@ abstract final class SolBottomSheet {
   }
 }
 
+/// Fondo (mapa) que ocupa todo el alto libre y hoja fija pegada abajo, que
+/// toma solo el alto de su contenido (M06-01, Figma 2005:3).
+///
+/// La hoja se limita a [maxSheetFactor] del alto disponible real (no del de
+/// pantalla), así funciona también en ventanas partidas.
+class SolSheetLayout extends StatelessWidget {
+  const SolSheetLayout({
+    super.key,
+    required this.background,
+    required this.sheet,
+    this.maxSheetFactor = 0.6,
+  });
+
+  final Widget background;
+
+  /// Normalmente un [SolBottomSheetPanel].
+  final Widget sheet;
+  final double maxSheetFactor;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(child: background),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: constraints.maxHeight * maxSheetFactor,
+            ),
+            child: sheet,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// Hoja fija en pantalla (no modal), como la lista de prestadores de M06-01.
 ///
-/// Dentro de un Column, envuélvela en Flexible para que pueda hacer scroll.
+/// Va pegada a la barra inferior; úsala dentro de [SolSheetLayout]. Toma
+/// solo el alto de su contenido, hasta [maxHeightFactor] del alto de
+/// pantalla; si no alcanza, el contenido hace scroll dentro de la hoja.
 class SolBottomSheetPanel extends StatelessWidget {
-  const SolBottomSheetPanel({super.key, required this.child});
+  const SolBottomSheetPanel({
+    super.key,
+    required this.child,
+    this.maxHeightFactor = 0.6,
+  });
 
   final Widget child;
+
+  /// Fracción máxima del alto de pantalla que puede ocupar la hoja.
+  final double maxHeightFactor;
 
   @override
   Widget build(BuildContext context) {
     final sol = context.solColors;
-    return DecoratedBox(
+    final maxHeight = MediaQuery.sizeOf(context).height * maxHeightFactor;
+    final panel = DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: const BorderRadius.vertical(
@@ -87,6 +135,10 @@ class SolBottomSheetPanel extends StatelessWidget {
           ],
         ),
       ),
+    );
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxHeight),
+      child: panel,
     );
   }
 }

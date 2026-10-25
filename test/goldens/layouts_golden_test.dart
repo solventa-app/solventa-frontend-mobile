@@ -75,24 +75,17 @@ void main() {
         ],
       ),
       actions: [
-        Row(
-          children: [
-            Expanded(
-              child: SolButton.outlined(
-                label: 'Repetir',
-                icon: SolIcons.retry,
-                onPressed: noop,
-              ),
-            ),
-            const SizedBox(width: SolSpacing.lg),
-            Expanded(
-              child: SolButton.primary(
-                label: 'Capturar',
-                icon: SolIcons.camera,
-                onPressed: noop,
-              ),
-            ),
-          ],
+        SolButtonPair(
+          secondary: SolButton.outlined(
+            label: 'Repetir',
+            icon: SolIcons.retry,
+            onPressed: noop,
+          ),
+          primary: SolButton.primary(
+            label: 'Capturar',
+            icon: SolIcons.camera,
+            onPressed: noop,
+          ),
         ),
       ],
     );
@@ -104,28 +97,44 @@ void main() {
       return SolFlowScaffold(
         title: 'Ingresa tu PIN',
         anchorActions: false,
-        body: Column(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: const BoxDecoration(
-                color: SolColors.secondaryContainer,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(SolIcons.lock, color: SolColors.primary),
+        // 32 arriba (2018:528); contenedor de 360 como máximo (2018:527).
+        padding: const EdgeInsets.fromLTRB(
+          SolSpacing.screen,
+          SolSpacing.xxxl,
+          SolSpacing.screen,
+          SolSpacing.xxl,
+        ),
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 360),
+            child: Column(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: const BoxDecoration(
+                    color: SolColors.secondaryContainer,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(SolIcons.lock, color: SolColors.primary),
+                ),
+                const SizedBox(height: SolSpacing.lg),
+                // Título de 280 como máximo (2018:533).
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 280),
+                  child: const Text(
+                    'Ingresa el PIN o patrón de tu teléfono',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  ),
+                ),
+                const SizedBox(height: SolSpacing.xxxl),
+                const SolPinIndicator(filled: 4),
+                const SizedBox(height: SolSpacing.xxxl),
+                SolNumericKeypad(onDigit: (_) {}, onBackspace: noop),
+              ],
             ),
-            const SizedBox(height: SolSpacing.lg),
-            const Text(
-              'Ingresa el PIN o patrón de tu teléfono',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-            ),
-            const SizedBox(height: SolSpacing.xxxl),
-            const SolPinIndicator(filled: 4),
-            const SizedBox(height: SolSpacing.xxxl),
-            SolNumericKeypad(onDigit: (_) {}, onBackspace: noop),
-          ],
+          ),
         ),
         actions: [
           SolButton.primary(label: 'Ingresar', onPressed: noop),
@@ -164,7 +173,7 @@ void main() {
       message: 'Validando con el proveedor KYC/AML...',
     ),
     height: height,
-    pumpBeforeTest: pumpOnce,
+    pumpBeforeTest: pumpSpinner,
   );
 
   for (final (name, status, message, action) in [
@@ -204,39 +213,35 @@ void main() {
     return SolTopLevelScaffold(
       selectedIndex: 1,
       onDestinationSelected: (_) {},
-      body: Column(
-        children: [
-          const Expanded(flex: 45, child: ColoredBox(color: Color(0xFFDCE8DF))),
-          Flexible(
-            flex: 55,
-            child: SolBottomSheetPanel(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SolSectionHeader(
-                    title: 'Prestadores cercanos',
-                    count: '3 disponibles',
-                  ),
-                  SolProviderRow(
-                    name: 'Clínica Norte',
-                    type: SolProviderType.medico,
-                    distance: '1.2 km',
-                    eta: '6 min',
-                    onRequest: noop,
-                  ),
-                  const SolDivider(),
-                  SolProviderRow(
-                    name: 'Taller AutoAyuda',
-                    type: SolProviderType.mecanico,
-                    distance: '2.0 km',
-                    eta: '9 min',
-                    onRequest: noop,
-                  ),
-                ],
+      // Mapa flex-1 + hoja pegada a la barra inferior (2005:3).
+      body: SolSheetLayout(
+        background: const ColoredBox(color: Color(0xFFDCE8DF)),
+        sheet: SolBottomSheetPanel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SolSectionHeader(
+                title: 'Prestadores cercanos',
+                count: '3 disponibles',
               ),
-            ),
+              SolProviderRow(
+                name: 'Clínica Norte',
+                type: SolProviderType.medico,
+                distance: SolFormat.distanceKm(1.2),
+                eta: SolFormat.minutes(6),
+                onRequest: noop,
+              ),
+              const SolDivider(),
+              SolProviderRow(
+                name: 'Taller AutoAyuda',
+                type: SolProviderType.mecanico,
+                distance: SolFormat.distanceKm(2),
+                eta: SolFormat.minutes(9),
+                onRequest: noop,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }, height: height);

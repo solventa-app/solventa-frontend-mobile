@@ -41,7 +41,7 @@ class SolResultView extends StatelessWidget {
       liveRegion: true,
       label: '${s.semanticPrefix}. $message',
       excludeSemantics: action == null,
-      child: SolCard.elevated(
+      child: SolCard(
         padding: const EdgeInsets.all(SolSpacing.xxl),
         child: Column(
           children: [

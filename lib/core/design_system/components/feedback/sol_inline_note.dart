@@ -33,7 +33,9 @@ class SolInlineNote extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (icon != null) ...[
-            ExcludeSemantics(child: Icon(icon, size: 16, color: c)),
+            ExcludeSemantics(
+              child: Icon(icon, size: 16, opticalSize: 20, color: c),
+            ),
             const SizedBox(width: 6),
           ],
           Flexible(

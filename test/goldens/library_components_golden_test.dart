@@ -1,7 +1,6 @@
 @Tags(['golden'])
 library;
 
-import 'package:alchemist/alchemist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
@@ -57,7 +56,7 @@ void main() {
           ),
         },
       ),
-      pumpBeforeTest: pumpOnce,
+      pumpBeforeTest: pumpSpinner,
     );
   });
 
@@ -130,15 +129,15 @@ void main() {
           'Médico': SolProviderRow(
             name: 'Clínica Norte',
             type: SolProviderType.medico,
-            distance: '1.2 km',
-            eta: '6 min',
+            distance: SolFormat.distanceKm(1.2),
+            eta: SolFormat.minutes(6),
             onRequest: noop,
           ),
           'Mecánico': SolProviderRow(
             name: 'Taller AutoAyuda',
             type: SolProviderType.mecanico,
-            distance: '2.0 km',
-            eta: '9 min',
+            distance: SolFormat.distanceKm(2),
+            eta: SolFormat.minutes(9),
             onRequest: noop,
           ),
         },
