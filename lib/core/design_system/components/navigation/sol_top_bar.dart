@@ -133,7 +133,8 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
                     child: leading,
                   ),
                 ),
-                const SizedBox(width: SolSpacing.sm),
+                // Figma deja el título casi tocando la píldora: 4 dp.
+                const SizedBox(width: SolSpacing.xs),
                 SolLocaleChip(label: localeLabel, onTap: onLocaleTap),
                 if (!isHome && showProfile)
                   SolAvatar(onTap: onProfileTap ?? () {}),
