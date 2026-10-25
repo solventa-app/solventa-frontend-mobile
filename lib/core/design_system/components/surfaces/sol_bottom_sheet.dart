@@ -35,6 +35,8 @@ abstract final class SolBottomSheet {
 }
 
 /// Hoja fija en pantalla (no modal), como la lista de prestadores de M06-01.
+///
+/// Dentro de un Column, envuélvela en Flexible para que pueda hacer scroll.
 class SolBottomSheetPanel extends StatelessWidget {
   const SolBottomSheetPanel({super.key, required this.child});
 
@@ -79,7 +81,9 @@ class SolBottomSheetPanel extends StatelessWidget {
               ),
             ),
             const SizedBox(height: SolSpacing.md),
-            child,
+            // Si el alto no alcanza (texto grande, horizontal) el contenido
+            // hace scroll dentro de la hoja.
+            Flexible(child: SingleChildScrollView(child: child)),
           ],
         ),
       ),

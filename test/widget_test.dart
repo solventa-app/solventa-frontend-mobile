@@ -1,30 +1,34 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:solventa_mobile/main.dart';
+import 'package:solventa_mobile/app/solventa_app.dart';
+import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
+import 'package:solventa_mobile/features/home/presentation/home_page.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('La app arranca en Home G-03 con el tema de Solventa', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const SolventaApp());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Solventa'), findsOneWidget);
+    expect(find.text('Hola, María'), findsOneWidget);
+    expect(find.text('Completar registro'), findsOneWidget);
+    expect(find.byType(SolBottomNav), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    final context = tester.element(find.byType(HomePage));
+    expect(Theme.of(context).colorScheme.primary, const Color(0xFF1E4680));
+    expect(Localizations.localeOf(context), const Locale('es', 'CO'));
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Cerrar sesión pide confirmación', (tester) async {
+    await tester.pumpWidget(const SolventaApp());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cerrar sesión'));
+    await tester.pumpAndSettle();
+    expect(find.text('¿Quieres cerrar sesión?'), findsOneWidget);
+    await tester.tap(find.text('No, seguir aquí'));
+    await tester.pumpAndSettle();
+    expect(find.text('Hola, María'), findsOneWidget);
   });
 }
