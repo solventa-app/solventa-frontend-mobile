@@ -11,6 +11,7 @@ import '../features/onboarding/presentation/pages/m01_02_autorizacion_page.dart'
 import '../features/onboarding/presentation/pages/m01_03_documento_frente_page.dart';
 import '../features/onboarding/presentation/pages/m01_04_documento_reverso_page.dart';
 import '../features/onboarding/presentation/pages/m01_05_prueba_vida_page.dart';
+import '../features/onboarding/presentation/pages/m01_05b_cuenta_page.dart';
 import '../features/onboarding/presentation/pages/m01_06_verificando_page.dart';
 import '../features/onboarding/presentation/pages/m01_07_resultado_page.dart';
 import '../features/onboarding/presentation/pages/m01_08_biometria_page.dart';
@@ -46,6 +47,11 @@ GoRouter crearRouter() => GoRouter(
       path: OnboardingRoutes.pruebaVida,
       name: 'm01-05',
       builder: (_, _) => const M0105PruebaVidaPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.cuenta,
+      name: 'm01-05b',
+      builder: (_, _) => const M0105bCuentaPage(),
     ),
     GoRoute(
       path: OnboardingRoutes.verificando,

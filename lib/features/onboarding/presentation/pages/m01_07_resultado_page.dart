@@ -43,15 +43,25 @@ class M0107ResultadoPage extends ConsumerWidget {
         onAction: inicio,
         onBack: inicio,
       ),
+      EstadoVerificacion.rechazada when estado.intentosRestantes > 0 =>
+        SolResultScreen(
+          title: l10n.verificacionTitulo,
+          status: SolStatus.error,
+          message: _mensajeRechazo(l10n, estado.onboarding?.motivo),
+          actionLabel: l10n.reintentar,
+          onAction: () async {
+            if (await notifier.reintentarCaptura() && context.mounted) {
+              context.go(OnboardingRoutes.frente);
+            }
+          },
+          onBack: inicio,
+        ),
       EstadoVerificacion.rechazada => SolResultScreen(
         title: l10n.verificacionTitulo,
         status: SolStatus.error,
-        message: l10n.m0107cMensaje,
-        actionLabel: l10n.reintentar,
-        onAction: () {
-          notifier.reintentarCaptura();
-          context.go(OnboardingRoutes.frente);
-        },
+        message: l10n.m0107cSinIntentos,
+        actionLabel: l10n.irAlInicio,
+        onAction: inicio,
         onBack: inicio,
       ),
       _ => SolResultScreen(
@@ -65,3 +75,14 @@ class M0107ResultadoPage extends ConsumerWidget {
     };
   }
 }
+
+/// Texto del motivo de rechazo del contrato; ILEGIBLE y los desconocidos
+/// usan el mensaje general.
+String _mensajeRechazo(AppLocalizations l10n, String? motivo) =>
+    switch (motivo) {
+      'ROSTRO_NO_COINCIDE' => l10n.m0107cRostro,
+      'SUPLANTACION' => l10n.m0107cSuplantacion,
+      'MENOR_DE_EDAD' => l10n.m0107cMenor,
+      'DOCUMENTO_YA_REGISTRADO' => l10n.m0107cDocumentoRegistrado,
+      _ => l10n.m0107cMensaje,
+    };

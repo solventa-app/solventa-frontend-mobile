@@ -5,18 +5,21 @@ import 'dart:async';
 
 import 'package:alchemist/alchemist.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/errors/resultado.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
+import 'package:solventa_mobile/features/onboarding/domain/entities/onboarding.dart';
 import 'package:solventa_mobile/features/onboarding/domain/entities/verificacion_identidad.dart';
-import 'package:solventa_mobile/features/onboarding/domain/repositories/verificacion_repository.dart';
+import 'package:solventa_mobile/features/onboarding/domain/repositories/onboarding_repository.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_01_bienvenida_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_02_autorizacion_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_03_documento_frente_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_04_documento_reverso_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_05_prueba_vida_page.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_05b_cuenta_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_06_verificando_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_07_resultado_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_08_biometria_page.dart';
@@ -25,10 +28,13 @@ import 'package:solventa_mobile/features/onboarding/presentation/providers.dart'
 import 'golden_helpers.dart';
 
 /// Verificación que nunca termina: M01-06 queda cargando sin timers pendientes.
-class _NuncaTermina implements VerificacionRepository {
+class _NuncaTermina implements OnboardingRepository {
   @override
-  Future<Resultado<EstadoVerificacion>> verificar() =>
-      Completer<Resultado<EstadoVerificacion>>().future;
+  Future<Resultado<Onboarding>> consultar() =>
+      Completer<Resultado<Onboarding>>().future;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _EstadoFijo extends OnboardingNotifier {
@@ -48,7 +54,8 @@ void main() {
   Widget app(Widget page, Locale locale, [OnboardingState? estado]) {
     return ProviderScope(
       overrides: [
-        verificacionRepositoryProvider.overrideWithValue(_NuncaTermina()),
+        onboardingRepositoryProvider.overrideWithValue(_NuncaTermina()),
+        esperasVerificacionProvider.overrideWithValue(const [Duration.zero]),
         if (estado != null)
           onboardingProvider.overrideWith(() => _EstadoFijo(estado)),
       ],
@@ -56,7 +63,12 @@ void main() {
         builder: (context) => Localizations.override(
           context: context,
           locale: locale,
-          delegates: const [AppLocalizations.delegate],
+          delegates: const [
+            AppLocalizations.delegate,
+            // M01-05b tiene campos de texto, que piden los de Material.
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
           child: page,
         ),
       ),
@@ -95,6 +107,7 @@ void main() {
   pantalla('m01_03_documento_frente', const M0103DocumentoFrentePage());
   pantalla('m01_04_documento_reverso', const M0104DocumentoReversoPage());
   pantalla('m01_05_prueba_vida', const M0105PruebaVidaPage());
+  pantalla('m01_05b_cuenta', const M0105bCuentaPage());
   pantalla('m01_06_verificando', const M0106VerificandoPage());
   pantalla(
     'm01_07a_verificada',
@@ -109,7 +122,30 @@ void main() {
   pantalla(
     'm01_07c_rechazada',
     const M0107ResultadoPage(),
-    estado: const OnboardingState(verificacion: EstadoVerificacion.rechazada),
+    estado: const OnboardingState(
+      verificacion: EstadoVerificacion.rechazada,
+      onboarding: Onboarding(
+        id: 'o-1',
+        estado: EstadoOnboarding.rechazada,
+        motivo: 'ILEGIBLE',
+        intento: 1,
+        intentosRestantes: 2,
+      ),
+    ),
+  );
+  pantalla(
+    'm01_07c_sin_intentos',
+    const M0107ResultadoPage(),
+    estado: const OnboardingState(
+      verificacion: EstadoVerificacion.rechazada,
+      onboarding: Onboarding(
+        id: 'o-1',
+        estado: EstadoOnboarding.rechazada,
+        motivo: 'ROSTRO_NO_COINCIDE',
+        intento: 3,
+        intentosRestantes: 0,
+      ),
+    ),
   );
   pantalla('m01_08_biometria', const M0108BiometriaPage());
 }

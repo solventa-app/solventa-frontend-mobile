@@ -36,6 +36,7 @@ extension FallaTextoX on AppLocalizations {
   String falla(Falla f) => switch (f) {
     SinConexion() => fallaSinConexion,
     ServicioNoDisponible() => fallaServicio,
+    FallaNegocio(motivo: 'TOKEN_INVALIDO') => fallaRegistroVencido,
     _ => fallaGenerica,
   };
 }

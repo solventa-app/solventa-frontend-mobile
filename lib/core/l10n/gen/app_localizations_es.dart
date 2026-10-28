@@ -167,4 +167,73 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get localeChipSemantica =>
       'Idioma español, moneda pesos colombianos. Toca para cambiar a inglés.';
+
+  @override
+  String get m0105bTitulo => 'Crea tu cuenta';
+
+  @override
+  String get m0105bIntro =>
+      'Mientras verificamos tu identidad, crea la cuenta con la que vas a entrar a Solventa.';
+
+  @override
+  String get m0105bCorreo => 'Correo electrónico';
+
+  @override
+  String get m0105bContrasena => 'Clave';
+
+  @override
+  String get m0105bConfirmar => 'Confirma la clave';
+
+  @override
+  String get m0105bAyudaContrasena => 'Mínimo 8 caracteres.';
+
+  @override
+  String get m0105bErrorCorreo => 'Escribe un correo válido.';
+
+  @override
+  String get m0105bErrorContrasena =>
+      'La clave debe tener entre 8 y 128 caracteres.';
+
+  @override
+  String get m0105bErrorConfirmar => 'Las claves no coinciden.';
+
+  @override
+  String get m0105bCorreoRegistrado =>
+      'Ya hay una cuenta con este correo. Usa otro.';
+
+  @override
+  String get m0105bCrear => 'Crear cuenta';
+
+  @override
+  String get m0106Demora =>
+      'Está tardando más de lo normal. Puedes actualizar o volver más tarde: la verificación sigue.';
+
+  @override
+  String get actualizar => 'Actualizar';
+
+  @override
+  String get irAlInicio => 'Ir al inicio';
+
+  @override
+  String get m0107cRostro =>
+      'El rostro del video no coincide con el del documento.';
+
+  @override
+  String get m0107cSuplantacion =>
+      'No pudimos confirmar que la prueba de vida la hiciste tú, en vivo.';
+
+  @override
+  String get m0107cMenor =>
+      'Debes ser mayor de edad para tener una cuenta en Solventa.';
+
+  @override
+  String get m0107cDocumentoRegistrado =>
+      'Este documento ya tiene una cuenta en Solventa.';
+
+  @override
+  String get m0107cSinIntentos =>
+      'Ya no quedan intentos. Escríbenos a soporte para revisar tu caso.';
+
+  @override
+  String get fallaRegistroVencido => 'Tu registro venció. Empieza de nuevo.';
 }

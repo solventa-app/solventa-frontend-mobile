@@ -379,6 +379,126 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Idioma español, moneda pesos colombianos. Toca para cambiar a inglés.'**
   String get localeChipSemantica;
+
+  /// M01-05b: título
+  ///
+  /// In es, this message translates to:
+  /// **'Crea tu cuenta'**
+  String get m0105bTitulo;
+
+  /// M01-05b: texto de entrada
+  ///
+  /// In es, this message translates to:
+  /// **'Mientras verificamos tu identidad, crea la cuenta con la que vas a entrar a Solventa.'**
+  String get m0105bIntro;
+
+  /// M01-05b: campo correo
+  ///
+  /// In es, this message translates to:
+  /// **'Correo electrónico'**
+  String get m0105bCorreo;
+
+  /// M01-05b: campo clave
+  ///
+  /// In es, this message translates to:
+  /// **'Clave'**
+  String get m0105bContrasena;
+
+  /// M01-05b: campo confirmación
+  ///
+  /// In es, this message translates to:
+  /// **'Confirma la clave'**
+  String get m0105bConfirmar;
+
+  /// M01-05b: ayuda de la clave
+  ///
+  /// In es, this message translates to:
+  /// **'Mínimo 8 caracteres.'**
+  String get m0105bAyudaContrasena;
+
+  /// M01-05b: correo inválido
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un correo válido.'**
+  String get m0105bErrorCorreo;
+
+  /// M01-05b: clave corta o larga
+  ///
+  /// In es, this message translates to:
+  /// **'La clave debe tener entre 8 y 128 caracteres.'**
+  String get m0105bErrorContrasena;
+
+  /// M01-05b: confirmación distinta
+  ///
+  /// In es, this message translates to:
+  /// **'Las claves no coinciden.'**
+  String get m0105bErrorConfirmar;
+
+  /// M01-05b: CORREO_YA_REGISTRADO
+  ///
+  /// In es, this message translates to:
+  /// **'Ya hay una cuenta con este correo. Usa otro.'**
+  String get m0105bCorreoRegistrado;
+
+  /// M01-05b: botón
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta'**
+  String get m0105bCrear;
+
+  /// M01-06: tras las 3 consultas
+  ///
+  /// In es, this message translates to:
+  /// **'Está tardando más de lo normal. Puedes actualizar o volver más tarde: la verificación sigue.'**
+  String get m0106Demora;
+
+  /// Botón actualizar
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar'**
+  String get actualizar;
+
+  /// Botón ir al inicio
+  ///
+  /// In es, this message translates to:
+  /// **'Ir al inicio'**
+  String get irAlInicio;
+
+  /// M01-07c: ROSTRO_NO_COINCIDE
+  ///
+  /// In es, this message translates to:
+  /// **'El rostro del video no coincide con el del documento.'**
+  String get m0107cRostro;
+
+  /// M01-07c: SUPLANTACION
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos confirmar que la prueba de vida la hiciste tú, en vivo.'**
+  String get m0107cSuplantacion;
+
+  /// M01-07c: MENOR_DE_EDAD
+  ///
+  /// In es, this message translates to:
+  /// **'Debes ser mayor de edad para tener una cuenta en Solventa.'**
+  String get m0107cMenor;
+
+  /// M01-07c: DOCUMENTO_YA_REGISTRADO
+  ///
+  /// In es, this message translates to:
+  /// **'Este documento ya tiene una cuenta en Solventa.'**
+  String get m0107cDocumentoRegistrado;
+
+  /// M01-07c: sin intentos
+  ///
+  /// In es, this message translates to:
+  /// **'Ya no quedan intentos. Escríbenos a soporte para revisar tu caso.'**
+  String get m0107cSinIntentos;
+
+  /// Onboarding: TOKEN_INVALIDO
+  ///
+  /// In es, this message translates to:
+  /// **'Tu registro venció. Empieza de nuevo.'**
+  String get fallaRegistroVencido;
 }
 
 class _AppLocalizationsDelegate

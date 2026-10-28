@@ -17,6 +17,7 @@ class M0104DocumentoReversoPage extends ConsumerWidget {
     final l10n = context.l10n;
     final notifier = ref.read(onboardingProvider.notifier);
     final sol = context.solColors;
+    final ocupado = ref.watch(onboardingProvider.select((e) => e.ocupado));
     return SolFlowScaffold(
       title: l10n.m0103Titulo,
       anchorActions: false,
@@ -101,9 +102,11 @@ class M0104DocumentoReversoPage extends ConsumerWidget {
           primary: SolButton.primary(
             label: l10n.capturar,
             icon: SolIcons.camera,
-            onPressed: () {
-              notifier.capturarReverso();
-              context.push(OnboardingRoutes.pruebaVida);
+            loading: ocupado,
+            onPressed: () async {
+              if (await notifier.capturarReverso() && context.mounted) {
+                await context.push(OnboardingRoutes.pruebaVida);
+              }
             },
           ),
         ),

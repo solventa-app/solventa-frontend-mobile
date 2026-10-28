@@ -1,0 +1,137 @@
+# HU-M01: recorrido de onboarding del contrato v0.20. Todas, salvo IniciarOnboarding y las de sesión, van con la
+# cabecera `X-Onboarding-Token` (la agrega el datasource).
+
+fragment OnboardingCampos on Onboarding {
+  id
+  estado
+  motivo
+  intento
+  intentosRestantes
+}
+
+fragment ErrorOnboardingCampos on ErrorOnboarding {
+  codigo
+}
+
+# M01-02: al entrar a la autorización.
+mutation IniciarOnboarding($entrada: IniciarOnboardingInput!) {
+  iniciarOnboarding(entrada: $entrada) {
+    __typename
+    ... on InicioOnboarding {
+      token
+      tokenVenceEn
+      onboarding {
+        ...OnboardingCampos
+      }
+    }
+    ...ErrorOnboardingCampos
+  }
+}
+
+# M01-02 «Acepto»: consentimiento `onboarding-biometrico` (append-only) antes de cualquier captura.
+mutation RegistrarConsentimientoOnboarding($onboardingId: ID!, $versionTexto: String!) {
+  registrarConsentimientoOnboarding(onboardingId: $onboardingId, versionTexto: $versionTexto) {
+    __typename
+    ...OnboardingCampos
+    ...ErrorOnboardingCampos
+  }
+}
+
+# M01-03 a M01-05: URL firmada para una pieza; luego PUT directo y ConfirmarSubidaOnboarding.
+mutation SolicitarSubidaOnboarding(
+  $onboardingId: ID!
+  $paso: PasoOnboarding!
+  $tipoContenido: String!
+  $tamanoBytes: Int!
+) {
+  solicitarSubidaOnboarding(
+    onboardingId: $onboardingId
+    paso: $paso
+    tipoContenido: $tipoContenido
+    tamanoBytes: $tamanoBytes
+  ) {
+    __typename
+    ... on SubidaArchivo {
+      url
+      metodo
+      encabezados {
+        nombre
+        valor
+      }
+      archivo {
+        id
+      }
+    }
+    ...ErrorOnboardingCampos
+  }
+}
+
+mutation ConfirmarSubidaOnboarding($onboardingId: ID!, $archivoId: ID!) {
+  confirmarSubidaOnboarding(onboardingId: $onboardingId, archivoId: $archivoId) {
+    __typename
+    ...OnboardingCampos
+    ...ErrorOnboardingCampos
+  }
+}
+
+# M01-05b «Crea tu cuenta».
+mutation CrearCuentaOnboarding($onboardingId: ID!, $entrada: CuentaOnboardingInput!) {
+  crearCuentaOnboarding(onboardingId: $onboardingId, entrada: $entrada) {
+    __typename
+    ... on CuentaOnboarding {
+      sesion {
+        token
+        expiraEn
+      }
+      onboarding {
+        ...OnboardingCampos
+      }
+    }
+    ...ErrorOnboardingCampos
+  }
+}
+
+mutation EnviarVerificacion($onboardingId: ID!) {
+  enviarVerificacion(onboardingId: $onboardingId) {
+    __typename
+    ...OnboardingCampos
+    ...ErrorOnboardingCampos
+  }
+}
+
+# M01-07c «Intentar de nuevo».
+mutation ReintentarOnboarding($onboardingId: ID!) {
+  reintentarOnboarding(onboardingId: $onboardingId) {
+    __typename
+    ...OnboardingCampos
+    ...ErrorOnboardingCampos
+  }
+}
+
+# M01-06: lee el estado guardado (con el token del recorrido).
+query ConsultarOnboarding($id: ID!) {
+  onboarding(id: $id) {
+    ...OnboardingCampos
+  }
+}
+
+# Con la sesión de la cuenta: al abrir la app y en el home limitado.
+query MiVerificacion {
+  miVerificacion {
+    ...OnboardingCampos
+  }
+}
+
+# Tras VERIFICADA: el token deja de ser `verificacion-pendiente`.
+mutation ActualizarSesion {
+  actualizarSesion {
+    __typename
+    ... on Sesion {
+      token
+      expiraEn
+    }
+    ... on ErrorAutenticacion {
+      codigo
+    }
+  }
+}

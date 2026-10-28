@@ -4,27 +4,29 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/app/solventa_app.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 import 'package:solventa_mobile/features/onboarding/data/datasources/biometria_service.dart';
-import 'package:solventa_mobile/features/onboarding/data/datasources/fake_consentimiento_remote_datasource.dart';
-import 'package:solventa_mobile/features/onboarding/data/datasources/fake_verificacion_repository.dart';
+import 'package:solventa_mobile/features/onboarding/data/datasources/fake_onboarding_remote_datasource.dart';
+import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/providers.dart';
 
 import '../../helpers/sol_test_app.dart';
 
 void main() {
-  late FakeVerificacionRepository verificacion;
+  late FakeOnboardingRemoteDataSource bff;
 
   Future<void> abrir(WidgetTester tester, {bool biometria = true}) async {
-    verificacion = FakeVerificacionRepository(latencia: Duration.zero);
+    bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          consentimientoRemoteDataSourceProvider.overrideWithValue(
-            const FakeConsentimientoRemoteDataSource(latencia: Duration.zero),
-          ),
-          fakeVerificacionProvider.overrideWithValue(verificacion),
+          fakeOnboardingProvider.overrideWithValue(bff),
+          esperasVerificacionProvider.overrideWithValue(const [
+            Duration.zero,
+            Duration.zero,
+            Duration.zero,
+          ]),
           biometriaServiceProvider.overrideWithValue(
             FakeBiometriaService(activada: biometria),
           ),
@@ -49,6 +51,21 @@ void main() {
     await tester.tap(find.text('Capturar'));
     await tester.pumpAndSettle();
     expect(find.text('Prueba de vida'), findsOneWidget);
+  }
+
+  /// M01-05b: correo y clave, y sigue a M01-06.
+  Future<void> crearCuenta(
+    WidgetTester tester, {
+    String correo = 'maria@ejemplo.co',
+  }) async {
+    expect(find.text('Crea tu cuenta'), findsOneWidget);
+    final campos = find.byType(TextField);
+    await tester.enterText(campos.at(0), correo);
+    await tester.enterText(campos.at(1), 'clave-segura-1');
+    await tester.enterText(campos.at(2), 'clave-segura-1');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
   }
 
   testWidgets('M01-01 muestra los 3 pasos y un solo botón primario', (
@@ -89,6 +106,7 @@ void main() {
     await hastaPruebaDeVida(tester);
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
+    await crearCuenta(tester);
     expect(
       find.text('¡Identidad verificada! Bienvenido a Solventa.'),
       findsOneWidget,
@@ -106,6 +124,7 @@ void main() {
     await hastaPruebaDeVida(tester);
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
+    await crearCuenta(tester);
     await tester.tap(find.text('Ir a mi cuenta'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ya lo activé, continuar'));
@@ -122,6 +141,7 @@ void main() {
     await hastaPruebaDeVida(tester);
     await tester.tap(find.textContaining('queda en revisión'));
     await tester.pumpAndSettle();
+    await crearCuenta(tester);
     expect(
       find.text('Estamos revisando tu identidad, te avisamos.'),
       findsOneWidget,
@@ -135,6 +155,7 @@ void main() {
       await hastaPruebaDeVida(tester);
       await tester.tap(find.textContaining('es rechazado'));
       await tester.pumpAndSettle();
+      await crearCuenta(tester);
       expect(
         find.textContaining('No pudimos verificar tu documento'),
         findsOneWidget,
@@ -144,6 +165,40 @@ void main() {
       expect(find.text('Captura del documento'), findsOneWidget);
     },
   );
+
+  testWidgets('M01-05b: un correo ya registrado se marca en el campo', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await hastaPruebaDeVida(tester);
+    bff.cuenta = OnboardingFixtures.correoRegistrado;
+    await tester.tap(find.text('Continuar'));
+    await tester.pumpAndSettle();
+    await crearCuenta(tester);
+    expect(
+      find.text('Ya hay una cuenta con este correo. Usa otro.'),
+      findsOneWidget,
+    );
+    expect(find.text('Crea tu cuenta'), findsOneWidget);
+  });
+
+  testWidgets('M01-07c sin intentos manda a soporte, no a capturar', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await hastaPruebaDeVida(tester);
+    bff.resultado = OnboardingFixtures.onboarding(
+      estado: 'RECHAZADA',
+      motivo: 'ROSTRO_NO_COINCIDE',
+      intento: 3,
+      intentosRestantes: 0,
+    );
+    await tester.tap(find.text('Continuar'));
+    await tester.pumpAndSettle();
+    await crearCuenta(tester);
+    expect(find.textContaining('Ya no quedan intentos'), findsOneWidget);
+    expect(find.text('Reintentar'), findsNothing);
+  });
 
   testWidgets('la píldora de idioma cambia la app a inglés', (tester) async {
     await abrir(tester);
