@@ -1,0 +1,42 @@
+name: Sonar
+
+# Análisis de calidad en SonarQube Cloud (organización y proyecto en sonar-project.properties), con la
+# cobertura de `flutter test --coverage`. Automático solo en push a develop cuando cambia la app; a mano desde
+# Actions → Run workflow, sobre la rama que se elija. Necesita el secreto SONAR_TOKEN. Mismo patrón que el
+# repo de la web (.github/workflows/sonar.yml).
+on:
+  push:
+    branches: [develop]
+    paths: ['lib/**', 'test/**', 'pubspec.yaml', 'pubspec.lock', 'sonar-project.properties', '.github/workflows/sonar.yml']
+  workflow_dispatch:
+
+concurrency:
+  group: sonar-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Historial completo: con un clon superficial Sonar no puede atribuir el código nuevo.
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Cobertura (flutter test)
+        run: |
+          flutter pub get
+          flutter test --coverage
+      - name: Falla si no hay informe de cobertura
+        # Sin lcov Sonar publicaría 0 % de cobertura sin avisar.
+        run: test -s coverage/lcov.info
+      - uses: SonarSource/sonarqube-scan-action@v6
