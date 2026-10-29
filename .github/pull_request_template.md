@@ -10,7 +10,7 @@
 
 ## Lista de verificación (definición de hecho)
 
-- [ ] `dart format`, `flutter analyze` y `flutter test` en verde
+- [ ] `tool/verificar.sh` en verde dentro del devcontainer (formato, análisis y pruebas)
 - [ ] Probado en emulador/dispositivo y fiel al frame de Figma
 - [ ] Estados de carga, vacío, error y degradado cubiertos; sin errores técnicos para el usuario
 - [ ] Sin datos personales en almacenamiento no seguro, logs ni consola

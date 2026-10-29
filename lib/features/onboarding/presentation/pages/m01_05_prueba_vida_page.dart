@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../domain/entities/verificacion_identidad.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
-import '../../domain/entities/verificacion_identidad.dart';
 
 /// M01-05 · Prueba de vida (2001:502). Los disparadores de demo solo existen
 /// en debug y eligen el desenlace del fake de verificación.

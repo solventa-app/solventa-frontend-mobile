@@ -1,0 +1,5 @@
+{
+  "FLAVOR": "prod",
+  "API_ENV": "prod",
+  "API_BASE_URL": ""
+}

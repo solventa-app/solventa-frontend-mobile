@@ -1,7 +1,7 @@
 name: Título del PR
 
 # Conventional Commits con alcance y clave de Jira: tipo(alcance): KAN-N descripción.
-# Ver docs/convenciones.md de solventa-frontend-web.
+# El título es el mensaje del commit al hacer squash y decide la próxima versión (cliff.toml, docs/ci-cd.md).
 on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
@@ -11,8 +11,10 @@ permissions: {}
 jobs:
   titulo:
     name: Título del PR
-    # Dependabot usa su propio formato.
-    if: github.actor != 'dependabot[bot]'
+    # Dependabot usa su propio formato. Se compara el autor del PR, no github.actor: un "Update branch"
+    # (gh pr update-branch, o el botón en GitHub) dispara `synchronize` con el actor de quien lo pidió, no
+    # el de Dependabot, y github.actor != 'dependabot[bot]' dejaría de exentar el PR en ese caso.
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -20,11 +22,11 @@ jobs:
         env:
           TITULO: ${{ github.event.pull_request.title }}
         run: |
-          patron='^(feat|fix|refactor|test|docs|chore|ci)\((mobile|contrato|docs|ci)\): KAN-[0-9]+ .+'
+          patron='^(feat|fix|refactor|test|docs|chore|ci|infra)\((mobile|contrato|docs|ci)\): KAN-[0-9]+ .+'
           if ! printf '%s' "$TITULO" | grep -Eq "$patron"; then
             echo "::error title=Título del PR::Formato esperado: tipo(alcance): KAN-N descripción. Ej.: feat(mobile): KAN-24 login biométrico"
             echo "Recibido: $TITULO"
-            echo "Tipos: feat fix refactor test docs chore ci"
+            echo "Tipos: feat fix refactor test docs chore ci infra"
             echo "Alcances: mobile contrato docs ci"
             exit 1
           fi

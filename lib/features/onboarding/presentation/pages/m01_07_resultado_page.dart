@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../domain/entities/verificacion_identidad.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
-import '../../domain/entities/verificacion_identidad.dart';
 
 /// M01-07a · Identidad verificada (2001:570), M01-07b · En revisión
 /// (2001:605) y M01-07c · No pudimos verificarte (2001:640).

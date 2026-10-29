@@ -12,7 +12,6 @@ import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/features/onboarding/domain/entities/verificacion_identidad.dart';
 import 'package:solventa_mobile/features/onboarding/domain/repositories/verificacion_repository.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
-import 'package:solventa_mobile/features/onboarding/presentation/providers.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_01_bienvenida_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_02_autorizacion_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_03_documento_frente_page.dart';
@@ -21,6 +20,7 @@ import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_05_pr
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_06_verificando_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_07_resultado_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_08_biometria_page.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/providers.dart';
 
 import 'golden_helpers.dart';
 

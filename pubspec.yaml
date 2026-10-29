@@ -20,6 +20,9 @@ version: 1.0.0+1
 
 environment:
   sdk: ^3.13.7
+  # Versión exacta de Flutter del equipo y del CI. Debe ser igual a FLUTTER_VERSION en .devcontainer/Dockerfile
+  # (tool/verificar-versiones.sh lo revisa). pub solo rechaza versiones menores; el resto lo exige el script.
+  flutter: 3.47.8
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -57,8 +60,12 @@ dev_dependencies:
   build_runner: ^2.16.1
   mocktail: ^1.0.5
   http_mock_adapter: ^0.6.1
+  integration_test:
+    sdk: flutter
 flutter:
   generate: true
+  # `flutter run` y `flutter build` sin --flavor usan dev (docs/ci-cd.md, "Ambientes dev y prod").
+  default-flavor: dev
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

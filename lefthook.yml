@@ -1,0 +1,12 @@
+# Revisión antes de cada `git push`, dentro del devcontainer (tool/post-create.sh lo instala).
+# Es lo mismo que corre el job `mobile` del CI, así fallas en tu máquina y no esperando el CI.
+# Saltarlo una vez: LEFTHOOK=0 git push
+pre-push:
+  parallel: false
+  commands:
+    formato:
+      run: dart format --output=none --set-exit-if-changed .
+    analisis:
+      run: flutter analyze
+    pruebas:
+      run: flutter test

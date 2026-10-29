@@ -1,7 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="solventa_mobile"
+        android:label="${appName}"
         android:name="${applicationName}"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:usesCleartextTraffic="${usesCleartextTraffic}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

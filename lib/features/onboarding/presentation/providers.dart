@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/network_providers.dart';
+import '../data/datasources/biometria_service.dart';
 import '../data/datasources/consentimiento_remote_datasource.dart';
 import '../data/datasources/fake_consentimiento_remote_datasource.dart';
-import '../data/repositories/consentimiento_repository_impl.dart';
-import '../data/datasources/biometria_service.dart';
 import '../data/datasources/fake_verificacion_repository.dart';
+import '../data/repositories/consentimiento_repository_impl.dart';
 import '../domain/repositories/consentimiento_repository.dart';
 import '../domain/repositories/verificacion_repository.dart';
 
