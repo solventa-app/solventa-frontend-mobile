@@ -61,7 +61,9 @@ jobs:
         # `uses: dueño/accion@<sha de 40> # vX`, para que nadie cambie una acción por debajo. Dependabot las
         # sigue actualizando. Las acciones locales (./.github/actions/…) no aplican.
         run: |
-          sueltas=$(grep -rhoE 'uses: *[^ .][^ ]*@[^ ]+' .github/workflows .github/actions \
+          # Solo líneas que son un paso `uses:` (no comentarios ni este mismo mensaje de error).
+          sueltas=$(grep -rhE '^[[:space:]]*(- )?uses: *[^ .]' .github/workflows .github/actions \
+            | sed -E 's/^[[:space:]]*(- )?uses: *//; s/ *#.*$//' \
             | grep -vE '@[0-9a-f]{40}$' || true)
           if [ -n "$sueltas" ]; then
             echo "::error title=Acciones sin SHA::Fija estas acciones por SHA (uses: dueño/accion@<sha> # vX):"
