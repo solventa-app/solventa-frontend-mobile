@@ -1,0 +1,8 @@
+title = "Solventa mobile"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Catálogos de traducción: textos de pantalla, nunca secretos"
+paths = ['''lib/core/l10n/(arb|gen)/''']

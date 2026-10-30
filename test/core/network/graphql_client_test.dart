@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:solventa_mobile/core/network/graphql_client.dart';
 import 'package:solventa_mobile/core/network/network_exceptions.dart';
-import 'package:solventa_mobile/features/onboarding/data/graphql/registrar_consentimiento.graphql.dart';
+import 'package:solventa_mobile/features/onboarding/data/graphql/onboarding.graphql.dart';
 
 void main() {
   late Dio dio;
@@ -18,7 +18,7 @@ void main() {
       GraphqlClient(dio, leerToken: () async => token);
 
   Future<Map<String, dynamic>> ejecutar(GraphqlClient c) =>
-      c.ejecutar(documentNodeMutationRegistrarConsentimiento);
+      c.ejecutar(documentNodeMutationIniciarOnboarding);
 
   test('devuelve data y envía el JWT al canal /graphql/app', () async {
     Map<String, dynamic>? cabeceras;

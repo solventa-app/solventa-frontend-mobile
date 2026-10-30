@@ -8,16 +8,20 @@ contrato en `contrato/`) para que web y móvil se comporten igual ante el mismo 
 
 Todo este documento es **plan** salvo donde dice **hoy**.
 
-**Hoy** ya existe la capa data como ACL, con un ejemplo real (`registrarConsentimiento`, M01-02) en
-`lib/features/onboarding/`:
+**Hoy** ya existe la capa data como ACL, con el onboarding de HU-M01 completo contra el contrato v0.20 en
+`lib/features/onboarding/` (`onboarding.graphql`: iniciar, consentir, subir las cuatro piezas por URL firmada,
+crear la cuenta, enviar, consultar, reintentar y actualizar la sesión):
 
 - `lib/core/contrato/schema.graphql` y `tool/contrato.sh verificar|sincronizar`.
 - Codegen por operación (`graphql_codegen`, configurado en `build.yaml`).
 - `lib/core/network/` (`GraphqlClient`, providers con `API_ENV` y `API_BASE_URL`) y `lib/core/errors/` (`Falla`,
   `Resultado`, `guardarFallas`).
 - Entidad, mapper, datasource real y fake, fixtures, repositorio y sus pruebas, más `test/contract/fixtures_test.dart`.
+- Sesión en secure storage (`lib/core/sesion/`, en memoria con `API_ENV=mock`). El token del recorrido
+  (`X-Onboarding-Token`, 30 min) vive solo en memoria dentro del repositorio.
+- Subida directa al bucket con el PUT firmado (`SubidaArchivoService`); el BFF nunca recibe los bytes.
 
-**Plan**: interceptores de trazas y logs, sesión en secure storage, prefijo de datos por ambiente, `bootstrap.dart`
+**Plan**: interceptores de trazas y logs, prefijo de datos por ambiente, `bootstrap.dart`
 y los pasos de CI de la tabla del §6.
 
 ### Receta: agregar una operación
@@ -152,18 +156,15 @@ barrera para que el contrato no se rompa en silencio.
 dominio y la UI nunca ven un tipo generado.
 
 ```dart
-// lib/features/onboarding/data/mappers/consentimiento_mapper.dart
-Consentimiento consentimientoDesdeGql(Mutation$RegistrarConsentimiento$registrarConsentimiento g) =>
-    Consentimiento(
-      id: g.id,
-      venceEn: g.venceEn,                 // DateTime (scalar mapeado en build.yaml)
-      estado: switch (g.estado) {
-        Enum$EstadoConsentimiento.VIGENTE => EstadoConsentimiento.vigente,
-        Enum$EstadoConsentimiento.VENCIDO => EstadoConsentimiento.vencido,
-        Enum$EstadoConsentimiento.REVOCADO => EstadoConsentimiento.revocado,
-        Enum$EstadoConsentimiento.$unknown => EstadoConsentimiento.revocado, // valor nuevo del backend: el más seguro
-      },
-    );
+// lib/features/onboarding/data/mappers/onboarding_mapper.dart
+EstadoOnboarding estadoOnboardingDesdeGql(Enum$EstadoOnboarding e) => switch (e) {
+  Enum$EstadoOnboarding.INICIADO => EstadoOnboarding.iniciado,
+  Enum$EstadoOnboarding.EN_VERIFICACION => EstadoOnboarding.enVerificacion,
+  Enum$EstadoOnboarding.VERIFICADA => EstadoOnboarding.verificada,
+  Enum$EstadoOnboarding.RECHAZADA => EstadoOnboarding.rechazada,
+  Enum$EstadoOnboarding.EN_REVISION => EstadoOnboarding.enRevision,
+  Enum$EstadoOnboarding.$unknown => EstadoOnboarding.enRevision, // valor nuevo del backend: el más seguro
+};
 ```
 
 Reglas de mapeo:
@@ -250,13 +251,8 @@ siguen el contrato.
 - Simulan latencia (300–1500 ms) para que se vean los estados de carga, y se pueden configurar para devolver cada
   caso.
 - **Convenciones de demo** (como `999` / `000` en la web; **no** son del backend real) se documentan en una tabla en
-  la carpeta de fixtures de cada feature. Para HU-M01, por ejemplo:
-
-  | Si el documento termina en… | El fake devuelve |
-  |---|---|
-  | `000` | No pudimos verificarte (M01-07c) |
-  | `999` | En revisión (M01-07b) |
-  | otro | Identidad verificada (M01-07a) |
+  la carpeta de fixtures de cada feature. En HU-M01 los disparadores de M01-05 fijan el desenlace del fake
+  (`FakeOnboardingRemoteDataSource.resultado`): verificada, en revisión o rechazada por ILEGIBLE.
 
 - Los `SolDemoTrigger` del Figma (p. ej. «Simular que no reconoce la biometría») se conectan al fake en debug; en
   release no existen.
@@ -277,7 +273,7 @@ Reglas (ADR-06, las mismas que la web):
 3. El backend solo hace cambios **aditivos**; retirar algo es deprecar un sprint antes.
 4. Un cambio de contrato son **dos PRs enlazados**: el del backend y el gemelo aquí (sincronizar, codegen, fixtures,
    fakes y pantallas). La plantilla de PR ya lo pide.
-5. Si una HU necesita una operación que no existe (caso de HU-M01: hoy no hay operaciones de KYC), el móvil propone
+5. Si una HU necesita una operación que no existe (como pasó con HU-M01 hasta el contrato v0.20), el móvil propone
    el cambio al backend con la forma exacta de la operación, construye contra fixtures con esa forma y sincroniza
    cuando el PR del backend se fusiona.
 

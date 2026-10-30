@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/app_config.dart';
+import '../sesion/sesion_store.dart';
 import 'graphql_client.dart';
 
 /// Ambiente del backend (`API_ENV` de `config/*.json`): `mock`, `local`, `dev` o `prod`.
@@ -32,12 +33,18 @@ final dioProvider = Provider<Dio>((ref) {
   return dio;
 });
 
-/// Lector del JWT. Hoy no hay sesión en la app: devuelve `null` hasta que la
-/// feature de sesión lo sobrescriba con el de `flutter_secure_storage`.
-final lectorTokenProvider = Provider<LectorToken>(
+/// Dónde se guarda el JWT: almacenamiento seguro del dispositivo; con
+/// `API_ENV=mock`, solo memoria (sin backend no hay sesión real).
+final sesionStoreProvider = Provider<SesionStore>(
   (ref) =>
-      () async => null,
+      ref.watch(usarFakesProvider) ? MemoriaSesionStore() : SecureSesionStore(),
 );
+
+/// Lector del JWT de la sesión guardada (o `null` sin sesión).
+final lectorTokenProvider = Provider<LectorToken>((ref) {
+  final store = ref.watch(sesionStoreProvider);
+  return store.leer;
+});
 
 final graphqlClientProvider = Provider<GraphqlClient>(
   (ref) => GraphqlClient(

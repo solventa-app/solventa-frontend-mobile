@@ -195,5 +195,85 @@
   "localeChipSemantica": "Idioma español, moneda pesos colombianos. Toca para cambiar a inglés.",
   "@localeChipSemantica": {
     "description": "Lectura de TalkBack de la píldora de idioma"
+  },
+  "m0105bTitulo": "Crea tu cuenta",
+  "@m0105bTitulo": {
+    "description": "M01-05b: título"
+  },
+  "m0105bIntro": "Mientras verificamos tu identidad, crea la cuenta con la que vas a entrar a Solventa.",
+  "@m0105bIntro": {
+    "description": "M01-05b: texto de entrada"
+  },
+  "m0105bCorreo": "Correo electrónico",
+  "@m0105bCorreo": {
+    "description": "M01-05b: campo correo"
+  },
+  "m0105bContrasena": "Clave",
+  "@m0105bContrasena": {
+    "description": "M01-05b: campo clave"
+  },
+  "m0105bConfirmar": "Confirma la clave",
+  "@m0105bConfirmar": {
+    "description": "M01-05b: campo confirmación"
+  },
+  "m0105bAyudaContrasena": "Mínimo 8 caracteres.",
+  "@m0105bAyudaContrasena": {
+    "description": "M01-05b: ayuda de la clave"
+  },
+  "m0105bErrorCorreo": "Escribe un correo válido.",
+  "@m0105bErrorCorreo": {
+    "description": "M01-05b: correo inválido"
+  },
+  "m0105bErrorContrasena": "La clave debe tener entre 8 y 128 caracteres.",
+  "@m0105bErrorContrasena": {
+    "description": "M01-05b: clave corta o larga"
+  },
+  "m0105bErrorConfirmar": "Las claves no coinciden.",
+  "@m0105bErrorConfirmar": {
+    "description": "M01-05b: confirmación distinta"
+  },
+  "m0105bCorreoRegistrado": "Ya hay una cuenta con este correo. Usa otro.",
+  "@m0105bCorreoRegistrado": {
+    "description": "M01-05b: CORREO_YA_REGISTRADO"
+  },
+  "m0105bCrear": "Crear cuenta",
+  "@m0105bCrear": {
+    "description": "M01-05b: botón"
+  },
+  "m0106Demora": "Está tardando más de lo normal. Puedes actualizar o volver más tarde: la verificación sigue.",
+  "@m0106Demora": {
+    "description": "M01-06: tras las 3 consultas"
+  },
+  "actualizar": "Actualizar",
+  "@actualizar": {
+    "description": "Botón actualizar"
+  },
+  "irAlInicio": "Ir al inicio",
+  "@irAlInicio": {
+    "description": "Botón ir al inicio"
+  },
+  "m0107cRostro": "El rostro del video no coincide con el del documento.",
+  "@m0107cRostro": {
+    "description": "M01-07c: ROSTRO_NO_COINCIDE"
+  },
+  "m0107cSuplantacion": "No pudimos confirmar que la prueba de vida la hiciste tú, en vivo.",
+  "@m0107cSuplantacion": {
+    "description": "M01-07c: SUPLANTACION"
+  },
+  "m0107cMenor": "Debes ser mayor de edad para tener una cuenta en Solventa.",
+  "@m0107cMenor": {
+    "description": "M01-07c: MENOR_DE_EDAD"
+  },
+  "m0107cDocumentoRegistrado": "Este documento ya tiene una cuenta en Solventa.",
+  "@m0107cDocumentoRegistrado": {
+    "description": "M01-07c: DOCUMENTO_YA_REGISTRADO"
+  },
+  "m0107cSinIntentos": "Ya no quedan intentos. Escríbenos a soporte para revisar tu caso.",
+  "@m0107cSinIntentos": {
+    "description": "M01-07c: sin intentos"
+  },
+  "fallaRegistroVencido": "Tu registro venció. Empieza de nuevo.",
+  "@fallaRegistroVencido": {
+    "description": "Onboarding: TOKEN_INVALIDO"
   }
 }

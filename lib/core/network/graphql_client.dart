@@ -28,9 +28,13 @@ class GraphqlClient {
   ///
   /// No reintenta: las mutaciones pueden no ser idempotentes y el reintento
   /// lo decide el usuario con «Reintentar».
+  ///
+  /// [cabeceras] suma cabeceras propias de la operación (p. ej.
+  /// `X-Onboarding-Token` del onboarding, HU-M01).
   Future<Map<String, dynamic>> ejecutar(
     DocumentNode documento, {
     Map<String, dynamic> variables = const {},
+    Map<String, String> cabeceras = const {},
   }) async {
     final token = await leerToken?.call();
     final Response<Object?> respuesta;
@@ -42,7 +46,10 @@ class GraphqlClient {
           'variables': variables,
         },
         options: Options(
-          headers: {if (token != null) 'Authorization': 'Bearer $token'},
+          headers: {
+            ...cabeceras,
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
           // Los códigos se interpretan aquí, no como excepción de dio.
           validateStatus: (_) => true,
         ),

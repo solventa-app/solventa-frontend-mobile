@@ -165,4 +165,74 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get localeChipSemantica =>
       'English language, Colombian pesos. Tap to switch to Spanish.';
+
+  @override
+  String get m0105bTitulo => 'Create your account';
+
+  @override
+  String get m0105bIntro =>
+      'While we verify your identity, create the account you will use to sign in to Solventa.';
+
+  @override
+  String get m0105bCorreo => 'Email';
+
+  @override
+  String get m0105bContrasena => 'Password';
+
+  @override
+  String get m0105bConfirmar => 'Confirm your password';
+
+  @override
+  String get m0105bAyudaContrasena => 'At least 8 characters.';
+
+  @override
+  String get m0105bErrorCorreo => 'Enter a valid email.';
+
+  @override
+  String get m0105bErrorContrasena =>
+      'Your password must be 8 to 128 characters long.';
+
+  @override
+  String get m0105bErrorConfirmar => 'The passwords don\'t match.';
+
+  @override
+  String get m0105bCorreoRegistrado =>
+      'There is already an account with this email. Use another one.';
+
+  @override
+  String get m0105bCrear => 'Create account';
+
+  @override
+  String get m0106Demora =>
+      'This is taking longer than usual. You can refresh or come back later: the check keeps running.';
+
+  @override
+  String get actualizar => 'Refresh';
+
+  @override
+  String get irAlInicio => 'Go to home';
+
+  @override
+  String get m0107cRostro =>
+      'The face in the video doesn\'t match the one on the document.';
+
+  @override
+  String get m0107cSuplantacion =>
+      'We couldn\'t confirm that you took the liveness check yourself, live.';
+
+  @override
+  String get m0107cMenor =>
+      'You must be of legal age to have a Solventa account.';
+
+  @override
+  String get m0107cDocumentoRegistrado =>
+      'This document already has a Solventa account.';
+
+  @override
+  String get m0107cSinIntentos =>
+      'There are no attempts left. Contact support so we can review your case.';
+
+  @override
+  String get fallaRegistroVencido =>
+      'Your sign-up expired. Please start again.';
 }

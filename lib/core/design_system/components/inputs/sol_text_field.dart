@@ -30,6 +30,8 @@ class SolTextField extends StatefulWidget {
     this.inputFormatters,
     this.trailingIcon,
     this.focusNode,
+    this.obscureText = false,
+    this.autofillHints,
   });
 
   /// Selector de una opción («Tipo de asistencia · Médica»).
@@ -52,7 +54,9 @@ class SolTextField extends StatefulWidget {
        textInputAction = null,
        inputFormatters = null,
        trailingIcon = SolIcons.expandMore,
-       focusNode = null;
+       focusNode = null,
+       obscureText = false,
+       autofillHints = null;
 
   final String label;
   final TextEditingController? controller;
@@ -71,6 +75,10 @@ class SolTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final IconData? trailingIcon;
   final FocusNode? focusNode;
+
+  /// Claves: oculta el texto (y un campo así siempre es de una línea).
+  final bool obscureText;
+  final Iterable<String>? autofillHints;
 
   @override
   State<SolTextField> createState() => _SolTextFieldState();
@@ -137,8 +145,12 @@ class _SolTextFieldState extends State<SolTextField> {
       enabled: widget.enabled,
       onTap: widget.onTap,
       onChanged: widget.onChanged,
-      maxLines: widget.maxLines,
+      maxLines: widget.obscureText ? 1 : widget.maxLines,
       minLines: widget.minLines,
+      obscureText: widget.obscureText,
+      autocorrect: !widget.obscureText,
+      enableSuggestions: !widget.obscureText,
+      autofillHints: widget.autofillHints,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
       inputFormatters: widget.inputFormatters,

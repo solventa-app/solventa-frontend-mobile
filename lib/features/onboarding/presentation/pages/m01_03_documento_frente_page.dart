@@ -9,8 +9,8 @@ import '../onboarding_routes.dart';
 
 /// M01-03 · Captura de documento, frente (2001:330).
 ///
-/// La cámara real (paquete `camera`) llega en un PR aparte: hoy el visor se
-/// muestra vacío y «Capturar» registra la captura simulada.
+/// «Capturar» abre la cámara del sistema (`CapturaService`); la foto se sube
+/// en segundo plano apenas se toma y el visor queda como guía.
 class M0103DocumentoFrentePage extends ConsumerWidget {
   const M0103DocumentoFrentePage({super.key});
 
@@ -18,6 +18,7 @@ class M0103DocumentoFrentePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final notifier = ref.read(onboardingProvider.notifier);
+    final ocupado = ref.watch(onboardingProvider.select((e) => e.ocupado));
     return SolFlowScaffold(
       title: l10n.m0103Titulo,
       anchorActions: false,
@@ -48,9 +49,11 @@ class M0103DocumentoFrentePage extends ConsumerWidget {
           primary: SolButton.primary(
             label: l10n.capturar,
             icon: SolIcons.camera,
-            onPressed: () {
-              notifier.capturarFrente();
-              context.push(OnboardingRoutes.reverso);
+            loading: ocupado,
+            onPressed: () async {
+              if (await notifier.capturarFrente() && context.mounted) {
+                await context.push(OnboardingRoutes.reverso);
+              }
             },
           ),
         ),
