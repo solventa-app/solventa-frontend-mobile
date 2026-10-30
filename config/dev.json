@@ -1,5 +1,5 @@
 {
   "FLAVOR": "dev",
   "API_ENV": "dev",
-  "API_BASE_URL": ""
+  "API_BASE_URL": "https://solventa-gateway-btxoyawl.uc.gateway.dev"
 }
