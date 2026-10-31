@@ -272,6 +272,394 @@ const documentNodeFragmentErrorOnboardingCampos = DocumentNode(
   definitions: [fragmentDefinitionErrorOnboardingCampos],
 );
 
+class Fragment$UsuarioCampos {
+  Fragment$UsuarioCampos({
+    required this.id,
+    required this.usuario,
+    required this.rol,
+    required this.estado,
+    required this.creadoEn,
+    this.nombre,
+    required this.idioma,
+    required this.moneda,
+    required this.tieneContacto,
+    this.documentoEnmascarado,
+    this.$__typename = 'Usuario',
+  });
+
+  factory Fragment$UsuarioCampos.fromJson(Map<String, dynamic> json) {
+    final l$id = json['id'];
+    final l$usuario = json['usuario'];
+    final l$rol = json['rol'];
+    final l$estado = json['estado'];
+    final l$creadoEn = json['creadoEn'];
+    final l$nombre = json['nombre'];
+    final l$idioma = json['idioma'];
+    final l$moneda = json['moneda'];
+    final l$tieneContacto = json['tieneContacto'];
+    final l$documentoEnmascarado = json['documentoEnmascarado'];
+    final l$$__typename = json['__typename'];
+    return Fragment$UsuarioCampos(
+      id: (l$id as String),
+      usuario: (l$usuario as String),
+      rol: fromJson$Enum$RolUsuario((l$rol as String)),
+      estado: fromJson$Enum$EstadoUsuario((l$estado as String)),
+      creadoEn: DateTime.parse((l$creadoEn as String)),
+      nombre: (l$nombre as String?),
+      idioma: (l$idioma as String),
+      moneda: (l$moneda as String),
+      tieneContacto: (l$tieneContacto as bool),
+      documentoEnmascarado: (l$documentoEnmascarado as String?),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String id;
+
+  final String usuario;
+
+  final Enum$RolUsuario rol;
+
+  final Enum$EstadoUsuario estado;
+
+  final DateTime creadoEn;
+
+  final String? nombre;
+
+  final String idioma;
+
+  final String moneda;
+
+  final bool tieneContacto;
+
+  final String? documentoEnmascarado;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$id = id;
+    _resultData['id'] = l$id;
+    final l$usuario = usuario;
+    _resultData['usuario'] = l$usuario;
+    final l$rol = rol;
+    _resultData['rol'] = toJson$Enum$RolUsuario(l$rol);
+    final l$estado = estado;
+    _resultData['estado'] = toJson$Enum$EstadoUsuario(l$estado);
+    final l$creadoEn = creadoEn;
+    _resultData['creadoEn'] = l$creadoEn.toIso8601String();
+    final l$nombre = nombre;
+    _resultData['nombre'] = l$nombre;
+    final l$idioma = idioma;
+    _resultData['idioma'] = l$idioma;
+    final l$moneda = moneda;
+    _resultData['moneda'] = l$moneda;
+    final l$tieneContacto = tieneContacto;
+    _resultData['tieneContacto'] = l$tieneContacto;
+    final l$documentoEnmascarado = documentoEnmascarado;
+    _resultData['documentoEnmascarado'] = l$documentoEnmascarado;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$id = id;
+    final l$usuario = usuario;
+    final l$rol = rol;
+    final l$estado = estado;
+    final l$creadoEn = creadoEn;
+    final l$nombre = nombre;
+    final l$idioma = idioma;
+    final l$moneda = moneda;
+    final l$tieneContacto = tieneContacto;
+    final l$documentoEnmascarado = documentoEnmascarado;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$id,
+      l$usuario,
+      l$rol,
+      l$estado,
+      l$creadoEn,
+      l$nombre,
+      l$idioma,
+      l$moneda,
+      l$tieneContacto,
+      l$documentoEnmascarado,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Fragment$UsuarioCampos || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$id = id;
+    final lOther$id = other.id;
+    if (l$id != lOther$id) {
+      return false;
+    }
+    final l$usuario = usuario;
+    final lOther$usuario = other.usuario;
+    if (l$usuario != lOther$usuario) {
+      return false;
+    }
+    final l$rol = rol;
+    final lOther$rol = other.rol;
+    if (l$rol != lOther$rol) {
+      return false;
+    }
+    final l$estado = estado;
+    final lOther$estado = other.estado;
+    if (l$estado != lOther$estado) {
+      return false;
+    }
+    final l$creadoEn = creadoEn;
+    final lOther$creadoEn = other.creadoEn;
+    if (l$creadoEn != lOther$creadoEn) {
+      return false;
+    }
+    final l$nombre = nombre;
+    final lOther$nombre = other.nombre;
+    if (l$nombre != lOther$nombre) {
+      return false;
+    }
+    final l$idioma = idioma;
+    final lOther$idioma = other.idioma;
+    if (l$idioma != lOther$idioma) {
+      return false;
+    }
+    final l$moneda = moneda;
+    final lOther$moneda = other.moneda;
+    if (l$moneda != lOther$moneda) {
+      return false;
+    }
+    final l$tieneContacto = tieneContacto;
+    final lOther$tieneContacto = other.tieneContacto;
+    if (l$tieneContacto != lOther$tieneContacto) {
+      return false;
+    }
+    final l$documentoEnmascarado = documentoEnmascarado;
+    final lOther$documentoEnmascarado = other.documentoEnmascarado;
+    if (l$documentoEnmascarado != lOther$documentoEnmascarado) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const fragmentDefinitionUsuarioCampos = FragmentDefinitionNode(
+  name: NameNode(value: 'UsuarioCampos'),
+  typeCondition: TypeConditionNode(
+    on: NamedTypeNode(name: NameNode(value: 'Usuario'), isNonNull: false),
+  ),
+  directives: [],
+  selectionSet: SelectionSetNode(
+    selections: [
+      FieldNode(
+        name: NameNode(value: 'id'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'usuario'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'rol'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'estado'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'creadoEn'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'nombre'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'idioma'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'moneda'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'tieneContacto'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'documentoEnmascarado'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: '__typename'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+    ],
+  ),
+);
+const documentNodeFragmentUsuarioCampos = DocumentNode(
+  definitions: [fragmentDefinitionUsuarioCampos],
+);
+
+class Fragment$CodigoOnboardingCampos {
+  Fragment$CodigoOnboardingCampos({
+    required this.correoEnmascarado,
+    required this.venceEn,
+    this.$__typename = 'CodigoOnboardingEnviado',
+  });
+
+  factory Fragment$CodigoOnboardingCampos.fromJson(Map<String, dynamic> json) {
+    final l$correoEnmascarado = json['correoEnmascarado'];
+    final l$venceEn = json['venceEn'];
+    final l$$__typename = json['__typename'];
+    return Fragment$CodigoOnboardingCampos(
+      correoEnmascarado: (l$correoEnmascarado as String),
+      venceEn: DateTime.parse((l$venceEn as String)),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String correoEnmascarado;
+
+  final DateTime venceEn;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$correoEnmascarado = correoEnmascarado;
+    _resultData['correoEnmascarado'] = l$correoEnmascarado;
+    final l$venceEn = venceEn;
+    _resultData['venceEn'] = l$venceEn.toIso8601String();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$correoEnmascarado = correoEnmascarado;
+    final l$venceEn = venceEn;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$correoEnmascarado, l$venceEn, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Fragment$CodigoOnboardingCampos ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$correoEnmascarado = correoEnmascarado;
+    final lOther$correoEnmascarado = other.correoEnmascarado;
+    if (l$correoEnmascarado != lOther$correoEnmascarado) {
+      return false;
+    }
+    final l$venceEn = venceEn;
+    final lOther$venceEn = other.venceEn;
+    if (l$venceEn != lOther$venceEn) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const fragmentDefinitionCodigoOnboardingCampos = FragmentDefinitionNode(
+  name: NameNode(value: 'CodigoOnboardingCampos'),
+  typeCondition: TypeConditionNode(
+    on: NamedTypeNode(
+      name: NameNode(value: 'CodigoOnboardingEnviado'),
+      isNonNull: false,
+    ),
+  ),
+  directives: [],
+  selectionSet: SelectionSetNode(
+    selections: [
+      FieldNode(
+        name: NameNode(value: 'correoEnmascarado'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'venceEn'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: '__typename'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+    ],
+  ),
+);
+const documentNodeFragmentCodigoOnboardingCampos = DocumentNode(
+  definitions: [fragmentDefinitionCodigoOnboardingCampos],
+);
+
 class Variables$Mutation$IniciarOnboarding {
   factory Variables$Mutation$IniciarOnboarding({
     required Input$IniciarOnboardingInput entrada,
@@ -4908,6 +5296,2156 @@ class Mutation$ActualizarSesion$actualizarSesion$$ErrorAutenticacion
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Variables$Mutation$EnviarCodigoOnboarding {
+  factory Variables$Mutation$EnviarCodigoOnboarding({required String correo}) =>
+      Variables$Mutation$EnviarCodigoOnboarding._({r'correo': correo});
+
+  Variables$Mutation$EnviarCodigoOnboarding._(this._$data);
+
+  factory Variables$Mutation$EnviarCodigoOnboarding.fromJson(
+    Map<String, dynamic> data,
+  ) {
+    final result$data = <String, dynamic>{};
+    final l$correo = data['correo'];
+    result$data['correo'] = (l$correo as String);
+    return Variables$Mutation$EnviarCodigoOnboarding._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get correo => (_$data['correo'] as String);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$correo = correo;
+    result$data['correo'] = l$correo;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Variables$Mutation$EnviarCodigoOnboarding ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$correo = correo;
+    final lOther$correo = other.correo;
+    if (l$correo != lOther$correo) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$correo = correo;
+    return Object.hashAll([l$correo]);
+  }
+}
+
+class Mutation$EnviarCodigoOnboarding {
+  Mutation$EnviarCodigoOnboarding({
+    required this.enviarCodigoOnboarding,
+    this.$__typename = 'Mutation',
+  });
+
+  factory Mutation$EnviarCodigoOnboarding.fromJson(Map<String, dynamic> json) {
+    final l$enviarCodigoOnboarding = json['enviarCodigoOnboarding'];
+    final l$$__typename = json['__typename'];
+    return Mutation$EnviarCodigoOnboarding(
+      enviarCodigoOnboarding:
+          Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding.fromJson(
+            (l$enviarCodigoOnboarding as Map<String, dynamic>),
+          ),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding
+  enviarCodigoOnboarding;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$enviarCodigoOnboarding = enviarCodigoOnboarding;
+    _resultData['enviarCodigoOnboarding'] = l$enviarCodigoOnboarding.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$enviarCodigoOnboarding = enviarCodigoOnboarding;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$enviarCodigoOnboarding, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$EnviarCodigoOnboarding ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$enviarCodigoOnboarding = enviarCodigoOnboarding;
+    final lOther$enviarCodigoOnboarding = other.enviarCodigoOnboarding;
+    if (l$enviarCodigoOnboarding != lOther$enviarCodigoOnboarding) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeMutationEnviarCodigoOnboarding = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'EnviarCodigoOnboarding'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'correo')),
+          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'enviarCodigoOnboarding'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                name: NameNode(value: 'correo'),
+                value: VariableNode(name: NameNode(value: 'correo')),
+              ),
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(
+              selections: [
+                FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FragmentSpreadNode(
+                  name: NameNode(value: 'CodigoOnboardingCampos'),
+                  directives: [],
+                ),
+                FragmentSpreadNode(
+                  name: NameNode(value: 'ErrorOnboardingCampos'),
+                  directives: [],
+                ),
+              ],
+            ),
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+    fragmentDefinitionCodigoOnboardingCampos,
+    fragmentDefinitionErrorOnboardingCampos,
+  ],
+);
+
+class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding {
+  Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding({
+    required this.$__typename,
+  });
+
+  factory Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    switch (json["__typename"] as String) {
+      case "CodigoOnboardingEnviado":
+        return Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado.fromJson(
+          json,
+        );
+
+      case "ErrorOnboarding":
+        return Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding.fromJson(
+          json,
+        );
+
+      default:
+        final l$$__typename = json['__typename'];
+        return Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding(
+          $__typename: (l$$__typename as String),
+        );
+    }
+  }
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding
+    on Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding {
+  _T when<_T>({
+    required _T Function(
+      Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado,
+    )
+    codigoOnboardingEnviado,
+    required _T Function(
+      Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding,
+    )
+    errorOnboarding,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "CodigoOnboardingEnviado":
+        return codigoOnboardingEnviado(
+          this
+              as Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado,
+        );
+
+      case "ErrorOnboarding":
+        return errorOnboarding(
+          this
+              as Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding,
+        );
+
+      default:
+        return orElse();
+    }
+  }
+
+  _T maybeWhen<_T>({
+    _T Function(
+      Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado,
+    )?
+    codigoOnboardingEnviado,
+    _T Function(
+      Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding,
+    )?
+    errorOnboarding,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "CodigoOnboardingEnviado":
+        if (codigoOnboardingEnviado != null) {
+          return codigoOnboardingEnviado(
+            this
+                as Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado,
+          );
+        } else {
+          return orElse();
+        }
+
+      case "ErrorOnboarding":
+        if (errorOnboarding != null) {
+          return errorOnboarding(
+            this
+                as Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding,
+          );
+        } else {
+          return orElse();
+        }
+
+      default:
+        return orElse();
+    }
+  }
+}
+
+class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado
+    implements
+        Fragment$CodigoOnboardingCampos,
+        Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding {
+  Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado({
+    this.$__typename = 'CodigoOnboardingEnviado',
+    required this.correoEnmascarado,
+    required this.venceEn,
+  });
+
+  factory Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$$__typename = json['__typename'];
+    final l$correoEnmascarado = json['correoEnmascarado'];
+    final l$venceEn = json['venceEn'];
+    return Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado(
+      $__typename: (l$$__typename as String),
+      correoEnmascarado: (l$correoEnmascarado as String),
+      venceEn: DateTime.parse((l$venceEn as String)),
+    );
+  }
+
+  final String $__typename;
+
+  final String correoEnmascarado;
+
+  final DateTime venceEn;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    final l$correoEnmascarado = correoEnmascarado;
+    _resultData['correoEnmascarado'] = l$correoEnmascarado;
+    final l$venceEn = venceEn;
+    _resultData['venceEn'] = l$venceEn.toIso8601String();
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$$__typename = $__typename;
+    final l$correoEnmascarado = correoEnmascarado;
+    final l$venceEn = venceEn;
+    return Object.hashAll([l$$__typename, l$correoEnmascarado, l$venceEn]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$CodigoOnboardingEnviado ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    final l$correoEnmascarado = correoEnmascarado;
+    final lOther$correoEnmascarado = other.correoEnmascarado;
+    if (l$correoEnmascarado != lOther$correoEnmascarado) {
+      return false;
+    }
+    final l$venceEn = venceEn;
+    final lOther$venceEn = other.venceEn;
+    if (l$venceEn != lOther$venceEn) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
+    implements
+        Fragment$ErrorOnboardingCampos,
+        Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding {
+  Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding({
+    this.$__typename = 'ErrorOnboarding',
+    required this.codigo,
+  });
+
+  factory Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$$__typename = json['__typename'];
+    final l$codigo = json['codigo'];
+    return Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding(
+      $__typename: (l$$__typename as String),
+      codigo: (l$codigo as String),
+    );
+  }
+
+  final String $__typename;
+
+  final String codigo;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    final l$codigo = codigo;
+    _resultData['codigo'] = l$codigo;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$$__typename = $__typename;
+    final l$codigo = codigo;
+    return Object.hashAll([l$$__typename, l$codigo]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    final l$codigo = codigo;
+    final lOther$codigo = other.codigo;
+    if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Variables$Mutation$VerificarCodigoOnboarding {
+  factory Variables$Mutation$VerificarCodigoOnboarding({
+    required String correo,
+    required String codigo,
+  }) => Variables$Mutation$VerificarCodigoOnboarding._({
+    r'correo': correo,
+    r'codigo': codigo,
+  });
+
+  Variables$Mutation$VerificarCodigoOnboarding._(this._$data);
+
+  factory Variables$Mutation$VerificarCodigoOnboarding.fromJson(
+    Map<String, dynamic> data,
+  ) {
+    final result$data = <String, dynamic>{};
+    final l$correo = data['correo'];
+    result$data['correo'] = (l$correo as String);
+    final l$codigo = data['codigo'];
+    result$data['codigo'] = (l$codigo as String);
+    return Variables$Mutation$VerificarCodigoOnboarding._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get correo => (_$data['correo'] as String);
+
+  String get codigo => (_$data['codigo'] as String);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$correo = correo;
+    result$data['correo'] = l$correo;
+    final l$codigo = codigo;
+    result$data['codigo'] = l$codigo;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Variables$Mutation$VerificarCodigoOnboarding ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$correo = correo;
+    final lOther$correo = other.correo;
+    if (l$correo != lOther$correo) {
+      return false;
+    }
+    final l$codigo = codigo;
+    final lOther$codigo = other.codigo;
+    if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$correo = correo;
+    final l$codigo = codigo;
+    return Object.hashAll([l$correo, l$codigo]);
+  }
+}
+
+class Mutation$VerificarCodigoOnboarding {
+  Mutation$VerificarCodigoOnboarding({
+    required this.verificarCodigoOnboarding,
+    this.$__typename = 'Mutation',
+  });
+
+  factory Mutation$VerificarCodigoOnboarding.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$verificarCodigoOnboarding = json['verificarCodigoOnboarding'];
+    final l$$__typename = json['__typename'];
+    return Mutation$VerificarCodigoOnboarding(
+      verificarCodigoOnboarding:
+          Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding.fromJson(
+            (l$verificarCodigoOnboarding as Map<String, dynamic>),
+          ),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding
+  verificarCodigoOnboarding;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$verificarCodigoOnboarding = verificarCodigoOnboarding;
+    _resultData['verificarCodigoOnboarding'] = l$verificarCodigoOnboarding
+        .toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$verificarCodigoOnboarding = verificarCodigoOnboarding;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$verificarCodigoOnboarding, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$VerificarCodigoOnboarding ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$verificarCodigoOnboarding = verificarCodigoOnboarding;
+    final lOther$verificarCodigoOnboarding = other.verificarCodigoOnboarding;
+    if (l$verificarCodigoOnboarding != lOther$verificarCodigoOnboarding) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeMutationVerificarCodigoOnboarding = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'VerificarCodigoOnboarding'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'correo')),
+          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'codigo')),
+          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'verificarCodigoOnboarding'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                name: NameNode(value: 'correo'),
+                value: VariableNode(name: NameNode(value: 'correo')),
+              ),
+              ArgumentNode(
+                name: NameNode(value: 'codigo'),
+                value: VariableNode(name: NameNode(value: 'codigo')),
+              ),
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(
+              selections: [
+                FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FragmentSpreadNode(
+                  name: NameNode(value: 'CodigoOnboardingCampos'),
+                  directives: [],
+                ),
+                FragmentSpreadNode(
+                  name: NameNode(value: 'ErrorOnboardingCampos'),
+                  directives: [],
+                ),
+              ],
+            ),
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+    fragmentDefinitionCodigoOnboardingCampos,
+    fragmentDefinitionErrorOnboardingCampos,
+  ],
+);
+
+class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding {
+  Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding({
+    required this.$__typename,
+  });
+
+  factory Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    switch (json["__typename"] as String) {
+      case "CodigoOnboardingEnviado":
+        return Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado.fromJson(
+          json,
+        );
+
+      case "ErrorOnboarding":
+        return Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding.fromJson(
+          json,
+        );
+
+      default:
+        final l$$__typename = json['__typename'];
+        return Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding(
+          $__typename: (l$$__typename as String),
+        );
+    }
+  }
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding
+    on Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding {
+  _T when<_T>({
+    required _T Function(
+      Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado,
+    )
+    codigoOnboardingEnviado,
+    required _T Function(
+      Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding,
+    )
+    errorOnboarding,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "CodigoOnboardingEnviado":
+        return codigoOnboardingEnviado(
+          this
+              as Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado,
+        );
+
+      case "ErrorOnboarding":
+        return errorOnboarding(
+          this
+              as Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding,
+        );
+
+      default:
+        return orElse();
+    }
+  }
+
+  _T maybeWhen<_T>({
+    _T Function(
+      Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado,
+    )?
+    codigoOnboardingEnviado,
+    _T Function(
+      Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding,
+    )?
+    errorOnboarding,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "CodigoOnboardingEnviado":
+        if (codigoOnboardingEnviado != null) {
+          return codigoOnboardingEnviado(
+            this
+                as Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado,
+          );
+        } else {
+          return orElse();
+        }
+
+      case "ErrorOnboarding":
+        if (errorOnboarding != null) {
+          return errorOnboarding(
+            this
+                as Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding,
+          );
+        } else {
+          return orElse();
+        }
+
+      default:
+        return orElse();
+    }
+  }
+}
+
+class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado
+    implements
+        Fragment$CodigoOnboardingCampos,
+        Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding {
+  Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado({
+    this.$__typename = 'CodigoOnboardingEnviado',
+    required this.correoEnmascarado,
+    required this.venceEn,
+  });
+
+  factory Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$$__typename = json['__typename'];
+    final l$correoEnmascarado = json['correoEnmascarado'];
+    final l$venceEn = json['venceEn'];
+    return Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado(
+      $__typename: (l$$__typename as String),
+      correoEnmascarado: (l$correoEnmascarado as String),
+      venceEn: DateTime.parse((l$venceEn as String)),
+    );
+  }
+
+  final String $__typename;
+
+  final String correoEnmascarado;
+
+  final DateTime venceEn;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    final l$correoEnmascarado = correoEnmascarado;
+    _resultData['correoEnmascarado'] = l$correoEnmascarado;
+    final l$venceEn = venceEn;
+    _resultData['venceEn'] = l$venceEn.toIso8601String();
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$$__typename = $__typename;
+    final l$correoEnmascarado = correoEnmascarado;
+    final l$venceEn = venceEn;
+    return Object.hashAll([l$$__typename, l$correoEnmascarado, l$venceEn]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$CodigoOnboardingEnviado ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    final l$correoEnmascarado = correoEnmascarado;
+    final lOther$correoEnmascarado = other.correoEnmascarado;
+    if (l$correoEnmascarado != lOther$correoEnmascarado) {
+      return false;
+    }
+    final l$venceEn = venceEn;
+    final lOther$venceEn = other.venceEn;
+    if (l$venceEn != lOther$venceEn) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding
+    implements
+        Fragment$ErrorOnboardingCampos,
+        Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding {
+  Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding({
+    this.$__typename = 'ErrorOnboarding',
+    required this.codigo,
+  });
+
+  factory Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$$__typename = json['__typename'];
+    final l$codigo = json['codigo'];
+    return Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding(
+      $__typename: (l$$__typename as String),
+      codigo: (l$codigo as String),
+    );
+  }
+
+  final String $__typename;
+
+  final String codigo;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    final l$codigo = codigo;
+    _resultData['codigo'] = l$codigo;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$$__typename = $__typename;
+    final l$codigo = codigo;
+    return Object.hashAll([l$$__typename, l$codigo]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    final l$codigo = codigo;
+    final lOther$codigo = other.codigo;
+    if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Variables$Mutation$IniciarSesion {
+  factory Variables$Mutation$IniciarSesion({
+    required Input$CredencialesInput entrada,
+  }) => Variables$Mutation$IniciarSesion._({r'entrada': entrada});
+
+  Variables$Mutation$IniciarSesion._(this._$data);
+
+  factory Variables$Mutation$IniciarSesion.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$entrada = data['entrada'];
+    result$data['entrada'] = Input$CredencialesInput.fromJson(
+      (l$entrada as Map<String, dynamic>),
+    );
+    return Variables$Mutation$IniciarSesion._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$CredencialesInput get entrada =>
+      (_$data['entrada'] as Input$CredencialesInput);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$entrada = entrada;
+    result$data['entrada'] = l$entrada.toJson();
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Variables$Mutation$IniciarSesion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$entrada = entrada;
+    final lOther$entrada = other.entrada;
+    if (l$entrada != lOther$entrada) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$entrada = entrada;
+    return Object.hashAll([l$entrada]);
+  }
+}
+
+class Mutation$IniciarSesion {
+  Mutation$IniciarSesion({
+    required this.iniciarSesion,
+    this.$__typename = 'Mutation',
+  });
+
+  factory Mutation$IniciarSesion.fromJson(Map<String, dynamic> json) {
+    final l$iniciarSesion = json['iniciarSesion'];
+    final l$$__typename = json['__typename'];
+    return Mutation$IniciarSesion(
+      iniciarSesion: Mutation$IniciarSesion$iniciarSesion.fromJson(
+        (l$iniciarSesion as Map<String, dynamic>),
+      ),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Mutation$IniciarSesion$iniciarSesion iniciarSesion;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$iniciarSesion = iniciarSesion;
+    _resultData['iniciarSesion'] = l$iniciarSesion.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$iniciarSesion = iniciarSesion;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$iniciarSesion, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$IniciarSesion || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$iniciarSesion = iniciarSesion;
+    final lOther$iniciarSesion = other.iniciarSesion;
+    if (l$iniciarSesion != lOther$iniciarSesion) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeMutationIniciarSesion = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'IniciarSesion'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'entrada')),
+          type: NamedTypeNode(
+            name: NameNode(value: 'CredencialesInput'),
+            isNonNull: true,
+          ),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'iniciarSesion'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                name: NameNode(value: 'entrada'),
+                value: VariableNode(name: NameNode(value: 'entrada')),
+              ),
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(
+              selections: [
+                FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                InlineFragmentNode(
+                  typeCondition: TypeConditionNode(
+                    on: NamedTypeNode(
+                      name: NameNode(value: 'Sesion'),
+                      isNonNull: false,
+                    ),
+                  ),
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'token'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'expiraEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'usuario'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(
+                          selections: [
+                            FragmentSpreadNode(
+                              name: NameNode(value: 'UsuarioCampos'),
+                              directives: [],
+                            ),
+                            FieldNode(
+                              name: NameNode(value: '__typename'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                          ],
+                        ),
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+                InlineFragmentNode(
+                  typeCondition: TypeConditionNode(
+                    on: NamedTypeNode(
+                      name: NameNode(value: 'ErrorAutenticacion'),
+                      isNonNull: false,
+                    ),
+                  ),
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'mensaje'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'codigo'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+    fragmentDefinitionUsuarioCampos,
+  ],
+);
+
+class Mutation$IniciarSesion$iniciarSesion {
+  Mutation$IniciarSesion$iniciarSesion({required this.$__typename});
+
+  factory Mutation$IniciarSesion$iniciarSesion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    switch (json["__typename"] as String) {
+      case "Sesion":
+        return Mutation$IniciarSesion$iniciarSesion$$Sesion.fromJson(json);
+
+      case "ErrorAutenticacion":
+        return Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion.fromJson(
+          json,
+        );
+
+      default:
+        final l$$__typename = json['__typename'];
+        return Mutation$IniciarSesion$iniciarSesion(
+          $__typename: (l$$__typename as String),
+        );
+    }
+  }
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$IniciarSesion$iniciarSesion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Mutation$IniciarSesion$iniciarSesion
+    on Mutation$IniciarSesion$iniciarSesion {
+  _T when<_T>({
+    required _T Function(Mutation$IniciarSesion$iniciarSesion$$Sesion) sesion,
+    required _T Function(
+      Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion,
+    )
+    errorAutenticacion,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "Sesion":
+        return sesion(this as Mutation$IniciarSesion$iniciarSesion$$Sesion);
+
+      case "ErrorAutenticacion":
+        return errorAutenticacion(
+          this as Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion,
+        );
+
+      default:
+        return orElse();
+    }
+  }
+
+  _T maybeWhen<_T>({
+    _T Function(Mutation$IniciarSesion$iniciarSesion$$Sesion)? sesion,
+    _T Function(Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion)?
+    errorAutenticacion,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "Sesion":
+        if (sesion != null) {
+          return sesion(this as Mutation$IniciarSesion$iniciarSesion$$Sesion);
+        } else {
+          return orElse();
+        }
+
+      case "ErrorAutenticacion":
+        if (errorAutenticacion != null) {
+          return errorAutenticacion(
+            this as Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion,
+          );
+        } else {
+          return orElse();
+        }
+
+      default:
+        return orElse();
+    }
+  }
+}
+
+class Mutation$IniciarSesion$iniciarSesion$$Sesion
+    implements Mutation$IniciarSesion$iniciarSesion {
+  Mutation$IniciarSesion$iniciarSesion$$Sesion({
+    required this.token,
+    required this.expiraEn,
+    required this.usuario,
+    this.$__typename = 'Sesion',
+  });
+
+  factory Mutation$IniciarSesion$iniciarSesion$$Sesion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$token = json['token'];
+    final l$expiraEn = json['expiraEn'];
+    final l$usuario = json['usuario'];
+    final l$$__typename = json['__typename'];
+    return Mutation$IniciarSesion$iniciarSesion$$Sesion(
+      token: (l$token as String),
+      expiraEn: DateTime.parse((l$expiraEn as String)),
+      usuario: Fragment$UsuarioCampos.fromJson(
+        (l$usuario as Map<String, dynamic>),
+      ),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String token;
+
+  final DateTime expiraEn;
+
+  final Fragment$UsuarioCampos usuario;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$token = token;
+    _resultData['token'] = l$token;
+    final l$expiraEn = expiraEn;
+    _resultData['expiraEn'] = l$expiraEn.toIso8601String();
+    final l$usuario = usuario;
+    _resultData['usuario'] = l$usuario.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    final l$expiraEn = expiraEn;
+    final l$usuario = usuario;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$token, l$expiraEn, l$usuario, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$IniciarSesion$iniciarSesion$$Sesion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (l$token != lOther$token) {
+      return false;
+    }
+    final l$expiraEn = expiraEn;
+    final lOther$expiraEn = other.expiraEn;
+    if (l$expiraEn != lOther$expiraEn) {
+      return false;
+    }
+    final l$usuario = usuario;
+    final lOther$usuario = other.usuario;
+    if (l$usuario != lOther$usuario) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion
+    implements Mutation$IniciarSesion$iniciarSesion {
+  Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion({
+    required this.mensaje,
+    this.codigo,
+    this.$__typename = 'ErrorAutenticacion',
+  });
+
+  factory Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$mensaje = json['mensaje'];
+    final l$codigo = json['codigo'];
+    final l$$__typename = json['__typename'];
+    return Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion(
+      mensaje: (l$mensaje as String),
+      codigo: (l$codigo as String?),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String mensaje;
+
+  final String? codigo;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$mensaje = mensaje;
+    _resultData['mensaje'] = l$mensaje;
+    final l$codigo = codigo;
+    _resultData['codigo'] = l$codigo;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$mensaje = mensaje;
+    final l$codigo = codigo;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$mensaje, l$codigo, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$mensaje = mensaje;
+    final lOther$mensaje = other.mensaje;
+    if (l$mensaje != lOther$mensaje) {
+      return false;
+    }
+    final l$codigo = codigo;
+    final lOther$codigo = other.codigo;
+    if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$Yo {
+  Query$Yo({this.yo, this.$__typename = 'Query'});
+
+  factory Query$Yo.fromJson(Map<String, dynamic> json) {
+    final l$yo = json['yo'];
+    final l$$__typename = json['__typename'];
+    return Query$Yo(
+      yo: l$yo == null
+          ? null
+          : Fragment$UsuarioCampos.fromJson((l$yo as Map<String, dynamic>)),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Fragment$UsuarioCampos? yo;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$yo = yo;
+    _resultData['yo'] = l$yo?.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$yo = yo;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$yo, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$Yo || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$yo = yo;
+    final lOther$yo = other.yo;
+    if (l$yo != lOther$yo) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeQueryYo = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'Yo'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'yo'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(
+              selections: [
+                FragmentSpreadNode(
+                  name: NameNode(value: 'UsuarioCampos'),
+                  directives: [],
+                ),
+                FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+              ],
+            ),
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+    fragmentDefinitionUsuarioCampos,
+  ],
+);
+
+class Variables$Mutation$ActualizarPreferencias {
+  factory Variables$Mutation$ActualizarPreferencias({
+    required Input$PreferenciasInput entrada,
+  }) => Variables$Mutation$ActualizarPreferencias._({r'entrada': entrada});
+
+  Variables$Mutation$ActualizarPreferencias._(this._$data);
+
+  factory Variables$Mutation$ActualizarPreferencias.fromJson(
+    Map<String, dynamic> data,
+  ) {
+    final result$data = <String, dynamic>{};
+    final l$entrada = data['entrada'];
+    result$data['entrada'] = Input$PreferenciasInput.fromJson(
+      (l$entrada as Map<String, dynamic>),
+    );
+    return Variables$Mutation$ActualizarPreferencias._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  Input$PreferenciasInput get entrada =>
+      (_$data['entrada'] as Input$PreferenciasInput);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$entrada = entrada;
+    result$data['entrada'] = l$entrada.toJson();
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Variables$Mutation$ActualizarPreferencias ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$entrada = entrada;
+    final lOther$entrada = other.entrada;
+    if (l$entrada != lOther$entrada) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$entrada = entrada;
+    return Object.hashAll([l$entrada]);
+  }
+}
+
+class Mutation$ActualizarPreferencias {
+  Mutation$ActualizarPreferencias({
+    required this.actualizarPreferencias,
+    this.$__typename = 'Mutation',
+  });
+
+  factory Mutation$ActualizarPreferencias.fromJson(Map<String, dynamic> json) {
+    final l$actualizarPreferencias = json['actualizarPreferencias'];
+    final l$$__typename = json['__typename'];
+    return Mutation$ActualizarPreferencias(
+      actualizarPreferencias:
+          Mutation$ActualizarPreferencias$actualizarPreferencias.fromJson(
+            (l$actualizarPreferencias as Map<String, dynamic>),
+          ),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Mutation$ActualizarPreferencias$actualizarPreferencias
+  actualizarPreferencias;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$actualizarPreferencias = actualizarPreferencias;
+    _resultData['actualizarPreferencias'] = l$actualizarPreferencias.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$actualizarPreferencias = actualizarPreferencias;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$actualizarPreferencias, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$ActualizarPreferencias ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$actualizarPreferencias = actualizarPreferencias;
+    final lOther$actualizarPreferencias = other.actualizarPreferencias;
+    if (l$actualizarPreferencias != lOther$actualizarPreferencias) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeMutationActualizarPreferencias = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'ActualizarPreferencias'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'entrada')),
+          type: NamedTypeNode(
+            name: NameNode(value: 'PreferenciasInput'),
+            isNonNull: true,
+          ),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'actualizarPreferencias'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                name: NameNode(value: 'entrada'),
+                value: VariableNode(name: NameNode(value: 'entrada')),
+              ),
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(
+              selections: [
+                FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                InlineFragmentNode(
+                  typeCondition: TypeConditionNode(
+                    on: NamedTypeNode(
+                      name: NameNode(value: 'Usuario'),
+                      isNonNull: false,
+                    ),
+                  ),
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FragmentSpreadNode(
+                        name: NameNode(value: 'UsuarioCampos'),
+                        directives: [],
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+                InlineFragmentNode(
+                  typeCondition: TypeConditionNode(
+                    on: NamedTypeNode(
+                      name: NameNode(value: 'ErrorUsuario'),
+                      isNonNull: false,
+                    ),
+                  ),
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'mensaje'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+    fragmentDefinitionUsuarioCampos,
+  ],
+);
+
+class Mutation$ActualizarPreferencias$actualizarPreferencias {
+  Mutation$ActualizarPreferencias$actualizarPreferencias({
+    required this.$__typename,
+  });
+
+  factory Mutation$ActualizarPreferencias$actualizarPreferencias.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    switch (json["__typename"] as String) {
+      case "Usuario":
+        return Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario.fromJson(
+          json,
+        );
+
+      case "ErrorUsuario":
+        return Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario.fromJson(
+          json,
+        );
+
+      default:
+        final l$$__typename = json['__typename'];
+        return Mutation$ActualizarPreferencias$actualizarPreferencias(
+          $__typename: (l$$__typename as String),
+        );
+    }
+  }
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$ActualizarPreferencias$actualizarPreferencias ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Mutation$ActualizarPreferencias$actualizarPreferencias
+    on Mutation$ActualizarPreferencias$actualizarPreferencias {
+  _T when<_T>({
+    required _T Function(
+      Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario,
+    )
+    usuario,
+    required _T Function(
+      Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario,
+    )
+    errorUsuario,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "Usuario":
+        return usuario(
+          this
+              as Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario,
+        );
+
+      case "ErrorUsuario":
+        return errorUsuario(
+          this
+              as Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario,
+        );
+
+      default:
+        return orElse();
+    }
+  }
+
+  _T maybeWhen<_T>({
+    _T Function(
+      Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario,
+    )?
+    usuario,
+    _T Function(
+      Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario,
+    )?
+    errorUsuario,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "Usuario":
+        if (usuario != null) {
+          return usuario(
+            this
+                as Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario,
+          );
+        } else {
+          return orElse();
+        }
+
+      case "ErrorUsuario":
+        if (errorUsuario != null) {
+          return errorUsuario(
+            this
+                as Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario,
+          );
+        } else {
+          return orElse();
+        }
+
+      default:
+        return orElse();
+    }
+  }
+}
+
+class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
+    implements
+        Fragment$UsuarioCampos,
+        Mutation$ActualizarPreferencias$actualizarPreferencias {
+  Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario({
+    required this.id,
+    required this.usuario,
+    required this.rol,
+    required this.estado,
+    required this.creadoEn,
+    this.nombre,
+    required this.idioma,
+    required this.moneda,
+    required this.tieneContacto,
+    this.documentoEnmascarado,
+    this.$__typename = 'Usuario',
+  });
+
+  factory Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$id = json['id'];
+    final l$usuario = json['usuario'];
+    final l$rol = json['rol'];
+    final l$estado = json['estado'];
+    final l$creadoEn = json['creadoEn'];
+    final l$nombre = json['nombre'];
+    final l$idioma = json['idioma'];
+    final l$moneda = json['moneda'];
+    final l$tieneContacto = json['tieneContacto'];
+    final l$documentoEnmascarado = json['documentoEnmascarado'];
+    final l$$__typename = json['__typename'];
+    return Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario(
+      id: (l$id as String),
+      usuario: (l$usuario as String),
+      rol: fromJson$Enum$RolUsuario((l$rol as String)),
+      estado: fromJson$Enum$EstadoUsuario((l$estado as String)),
+      creadoEn: DateTime.parse((l$creadoEn as String)),
+      nombre: (l$nombre as String?),
+      idioma: (l$idioma as String),
+      moneda: (l$moneda as String),
+      tieneContacto: (l$tieneContacto as bool),
+      documentoEnmascarado: (l$documentoEnmascarado as String?),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String id;
+
+  final String usuario;
+
+  final Enum$RolUsuario rol;
+
+  final Enum$EstadoUsuario estado;
+
+  final DateTime creadoEn;
+
+  final String? nombre;
+
+  final String idioma;
+
+  final String moneda;
+
+  final bool tieneContacto;
+
+  final String? documentoEnmascarado;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$id = id;
+    _resultData['id'] = l$id;
+    final l$usuario = usuario;
+    _resultData['usuario'] = l$usuario;
+    final l$rol = rol;
+    _resultData['rol'] = toJson$Enum$RolUsuario(l$rol);
+    final l$estado = estado;
+    _resultData['estado'] = toJson$Enum$EstadoUsuario(l$estado);
+    final l$creadoEn = creadoEn;
+    _resultData['creadoEn'] = l$creadoEn.toIso8601String();
+    final l$nombre = nombre;
+    _resultData['nombre'] = l$nombre;
+    final l$idioma = idioma;
+    _resultData['idioma'] = l$idioma;
+    final l$moneda = moneda;
+    _resultData['moneda'] = l$moneda;
+    final l$tieneContacto = tieneContacto;
+    _resultData['tieneContacto'] = l$tieneContacto;
+    final l$documentoEnmascarado = documentoEnmascarado;
+    _resultData['documentoEnmascarado'] = l$documentoEnmascarado;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$id = id;
+    final l$usuario = usuario;
+    final l$rol = rol;
+    final l$estado = estado;
+    final l$creadoEn = creadoEn;
+    final l$nombre = nombre;
+    final l$idioma = idioma;
+    final l$moneda = moneda;
+    final l$tieneContacto = tieneContacto;
+    final l$documentoEnmascarado = documentoEnmascarado;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$id,
+      l$usuario,
+      l$rol,
+      l$estado,
+      l$creadoEn,
+      l$nombre,
+      l$idioma,
+      l$moneda,
+      l$tieneContacto,
+      l$documentoEnmascarado,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$id = id;
+    final lOther$id = other.id;
+    if (l$id != lOther$id) {
+      return false;
+    }
+    final l$usuario = usuario;
+    final lOther$usuario = other.usuario;
+    if (l$usuario != lOther$usuario) {
+      return false;
+    }
+    final l$rol = rol;
+    final lOther$rol = other.rol;
+    if (l$rol != lOther$rol) {
+      return false;
+    }
+    final l$estado = estado;
+    final lOther$estado = other.estado;
+    if (l$estado != lOther$estado) {
+      return false;
+    }
+    final l$creadoEn = creadoEn;
+    final lOther$creadoEn = other.creadoEn;
+    if (l$creadoEn != lOther$creadoEn) {
+      return false;
+    }
+    final l$nombre = nombre;
+    final lOther$nombre = other.nombre;
+    if (l$nombre != lOther$nombre) {
+      return false;
+    }
+    final l$idioma = idioma;
+    final lOther$idioma = other.idioma;
+    if (l$idioma != lOther$idioma) {
+      return false;
+    }
+    final l$moneda = moneda;
+    final lOther$moneda = other.moneda;
+    if (l$moneda != lOther$moneda) {
+      return false;
+    }
+    final l$tieneContacto = tieneContacto;
+    final lOther$tieneContacto = other.tieneContacto;
+    if (l$tieneContacto != lOther$tieneContacto) {
+      return false;
+    }
+    final l$documentoEnmascarado = documentoEnmascarado;
+    final lOther$documentoEnmascarado = other.documentoEnmascarado;
+    if (l$documentoEnmascarado != lOther$documentoEnmascarado) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario
+    implements Mutation$ActualizarPreferencias$actualizarPreferencias {
+  Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario({
+    required this.mensaje,
+    this.$__typename = 'ErrorUsuario',
+  });
+
+  factory Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$mensaje = json['mensaje'];
+    final l$$__typename = json['__typename'];
+    return Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario(
+      mensaje: (l$mensaje as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String mensaje;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$mensaje = mensaje;
+    _resultData['mensaje'] = l$mensaje;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$mensaje = mensaje;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$mensaje, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$mensaje = mensaje;
+    final lOther$mensaje = other.mensaje;
+    if (l$mensaje != lOther$mensaje) {
       return false;
     }
     final l$$__typename = $__typename;

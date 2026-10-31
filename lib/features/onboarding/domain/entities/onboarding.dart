@@ -42,3 +42,45 @@ final class Captura {
   final Uint8List bytes;
   final String tipoContenido;
 }
+
+/// Estado del código OTP de 6 dígitos enviado al correo en el onboarding.
+final class CodigoOnboarding {
+  const CodigoOnboarding({
+    required this.correoEnmascarado,
+    required this.expiraEn,
+    required this.intentosRestantes,
+    required this.verificado,
+  });
+
+  final String correoEnmascarado;
+  final String expiraEn;
+  final int intentosRestantes;
+  final bool verificado;
+}
+
+/// Perfil del usuario autenticado (`yo`).
+final class PerfilUsuario {
+  const PerfilUsuario({
+    required this.id,
+    required this.usuario,
+    required this.rol,
+    required this.estado,
+    required this.creadoEn,
+    required this.idioma,
+    required this.moneda,
+    this.nombre,
+    this.documentoEnmascarado,
+  });
+
+  final String id;
+  final String usuario;
+  final String? nombre;
+  final String rol;
+  final String estado;
+  final String? documentoEnmascarado;
+  final String creadoEn;
+  final String idioma;
+  final String moneda;
+
+  bool get verificado => estado == 'ACTIVO';
+}

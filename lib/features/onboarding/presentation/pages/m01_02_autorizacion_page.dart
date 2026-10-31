@@ -32,6 +32,13 @@ class M0102AutorizacionPage extends ConsumerWidget {
     return SolFlowScaffold(
       title: l10n.m0102Titulo,
       anchorActions: false,
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go(OnboardingRoutes.bienvenida);
+        }
+      },
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

@@ -34,7 +34,7 @@ implementarlo). Quien implemente algo del plan lo pasa a **hoy** en ese mismo PR
 ## 2. Estructura de carpetas
 
 ```
-config/                       plan · dart-defines por ambiente: local.json, mock.json, dev.json, prod.json
+config/                       hoy  · dart-defines por ambiente: local.json, mock.json, dev.json, prod.json
 assets/
   fonts/Inter/                hoy
   images/                     plan · WebP o SVG, nunca PNG pesados
@@ -42,16 +42,16 @@ lib/
   main.dart                   hoy · arranque único; el ambiente sale de --dart-define-from-file
   app/
     solventa_app.dart         hoy · MaterialApp: tema, locale, router
-    router.dart               plan · go_router con las rutas de todas las features
+    router.dart               hoy  · go_router con las rutas de todas las features (G-03, G-05, M01-01..M01-08)
     bootstrap.dart            plan · lee AppConfig, separa datos por ambiente, crea el ProviderScope
   core/
     contrato/                 hoy  · schema.graphql (copia del backend, no se edita) y schema.graphql.dart (generado)
-    config/                   plan · AppConfig: FLAVOR, API_ENV, API_BASE_URL (lo crea el PR de CI/CD)
+    config/                   hoy  · AppConfig: FLAVOR, API_ENV, API_BASE_URL, SENTRY_DSN
     network/                  hoy  · GraphqlClient sobre dio y providers de red
     errors/                   hoy  · Falla (sealed), Resultado<T> y guardarFallas
     storage/                  plan · secure storage y SQLite con prefijo por ambiente
-    log/                      plan · SolLog (docs/observabilidad.md)
-    l10n/                     plan · archivos .arb y código generado
+    log/                      hoy  · SolLog + limpiar.dart + Sentry (docs/observabilidad.md)
+    l10n/                     hoy  · archivos .arb (es/en), selector de 7 monedas y código generado
     design_system/            hoy  · tokens, tema, íconos, componentes y layouts (KAN-239)
   features/
     <feature>/

@@ -1,6 +1,6 @@
 # Logs y reporte de errores
 
-Cómo se registra lo que pasa en la app mientras se desarrolla, qué pasa cuando un usuario tiene un error en producción y cómo se reproduce, con captura o video de lo que falló. Todo está **pendiente** y el paso a paso para implementarlo, en web y en mobile, está en [`plan-sentry.md`](plan-sentry.md). Hoy la app no tiene logger ni reporte de errores (no hay `print`, `debugPrint` ni manejadores globales en `lib/`). El web tampoco.
+Cómo se registra lo que pasa en la app mientras se desarrolla, qué pasa cuando un usuario tiene un error en producción y cómo se reproduce, con captura o video de lo que falló. Está **implementado** tanto en mobile (`lib/core/log/sol_log.dart`, `lib/core/log/limpiar.dart`, `SentryMask` y subida de símbolos en CD) como en web (`apps/web/src/log.ts`, `apps/web/src/observabilidad/limpiar.ts`, `sentry-block` y plugin de Vite) con la organización `uniandes-xm` (`run code: b78bb726f4`). El detalle paso a paso está en [`plan-sentry.md`](plan-sentry.md).
 
 Reglas que no cambian:
 
@@ -22,7 +22,7 @@ Reglas que no cambian:
 
 ## Decisión: Sentry en mobile y en web
 
-**Decidido el 25 de octubre de 2026** (felipe); falta implementarlo. Un solo servicio para los dos canales, con capturas y video en ambos, en vez de Crashlytics en mobile (sin video) y otro servicio en web. Comparación que llevó a la decisión:
+**Decidido el 25 de octubre de 2026** (felipe) e **implementado en mobile y web** (organización `uniandes-xm`). Un solo servicio para los dos canales, con capturas y video en ambos, en vez de Crashlytics en mobile (sin video) y otro servicio en web. Comparación que llevó a la decisión:
 
 | | Sentry (mobile y web) | Crashlytics (mobile) + Sentry (web) |
 |---|---|---|

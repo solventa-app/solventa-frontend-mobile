@@ -1,13 +1,9 @@
-@Tags(['golden'])
-library;
-
 import 'dart:async';
 
 import 'package:alchemist/alchemist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/errors/resultado.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/features/onboarding/domain/entities/onboarding.dart';
@@ -20,10 +16,12 @@ import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_03_do
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_04_documento_reverso_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_05_prueba_vida_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_05b_cuenta_page.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_05c_codigo_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_06_verificando_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_07_resultado_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_08_biometria_page.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/providers.dart';
+import 'package:solventa_mobile/features/profile/presentation/profile_page.dart';
 
 import 'golden_helpers.dart';
 
@@ -32,6 +30,21 @@ class _NuncaTermina implements OnboardingRepository {
   @override
   Future<Resultado<Onboarding>> consultar() =>
       Completer<Resultado<Onboarding>>().future;
+
+  @override
+  Future<Resultado<PerfilUsuario?>> consultarPerfil() async => const Exito(
+    PerfilUsuario(
+      id: 'u-1',
+      usuario: 'maria@ejemplo.co',
+      nombre: 'María',
+      rol: 'CLIENTE',
+      estado: 'ACTIVO',
+      documentoEnmascarado: '••••••4050',
+      creadoEn: '2026-10-28T15:00:00Z',
+      idioma: 'ES',
+      moneda: 'COP',
+    ),
+  );
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
@@ -43,17 +56,27 @@ class _EstadoFijo extends OnboardingNotifier {
 
   @override
   OnboardingState build() => _estado;
+
+  @override
+  Future<void> cargarPerfilYEstado() async {}
 }
 
-/// Goldens de las pantallas de HU-M01 contra Figma: 360, 390 y 600 dp con
-/// texto al 100 %, y 360 / 390 dp con texto al 200 %, en español. En inglés,
-/// 390 dp al 100 %.
+/// Goldens de las pantallas de HU-M01 y Mi Perfil contra Figma: 360, 390 y
+/// 600 dp con texto al 100 %, y 360 / 390 dp con texto al 200 %, en español.
+/// En inglés, 390 dp al 100 %.
 void main() {
   const alto = 844.0;
 
-  Widget app(Widget page, Locale locale, [OnboardingState? estado]) {
+  Widget app(
+    Widget page,
+    Locale locale, [
+    OnboardingState? estado,
+    EstadoCamara? camara,
+  ]) {
     return ProviderScope(
       overrides: [
+        if (camara != null)
+          estadoCamaraForzadoProvider.overrideWithValue(camara),
         onboardingRepositoryProvider.overrideWithValue(_NuncaTermina()),
         esperasVerificacionProvider.overrideWithValue(const [Duration.zero]),
         if (estado != null)
@@ -75,7 +98,12 @@ void main() {
     );
   }
 
-  void pantalla(String id, Widget page, {OnboardingState? estado}) {
+  void pantalla(
+    String id,
+    Widget page, {
+    OnboardingState? estado,
+    EstadoCamara? camara,
+  }) {
     final casos = <(double, double, Locale)>[
       (360, 1, AppLocales.es),
       (390, 1, AppLocales.es),
@@ -92,7 +120,7 @@ void main() {
         textScaleFactor: escala,
         constraints: BoxConstraints.tight(Size(ancho, alto)),
         pumpBeforeTest: pumpSpinner,
-        builder: () => app(page, locale, estado),
+        builder: () => app(page, locale, estado, camara),
       );
     }
   }
@@ -106,8 +134,31 @@ void main() {
   );
   pantalla('m01_03_documento_frente', const M0103DocumentoFrentePage());
   pantalla('m01_04_documento_reverso', const M0104DocumentoReversoPage());
+  pantalla(
+    'm01_03_sin_permiso_camara',
+    const M0103DocumentoFrentePage(),
+    camara: EstadoCamara.sinPermiso,
+  );
+  pantalla(
+    'm01_05_camara_bloqueada',
+    const M0105PruebaVidaPage(),
+    camara: EstadoCamara.sinPermisoPermanente,
+  );
   pantalla('m01_05_prueba_vida', const M0105PruebaVidaPage());
   pantalla('m01_05b_cuenta', const M0105bCuentaPage());
+  pantalla(
+    'm01_05c_codigo_otp',
+    const M0105cCodigoPage(),
+    estado: const OnboardingState(
+      correoPendiente: 'maria@ejemplo.co',
+      codigoOnboarding: CodigoOnboarding(
+        correoEnmascarado: 'm•••@ejemplo.co',
+        expiraEn: '2026-10-31T21:00:00Z',
+        intentosRestantes: 5,
+        verificado: false,
+      ),
+    ),
+  );
   pantalla('m01_06_verificando', const M0106VerificandoPage());
   pantalla(
     'm01_07a_verificada',
@@ -148,4 +199,22 @@ void main() {
     ),
   );
   pantalla('m01_08_biometria', const M0108BiometriaPage());
+  pantalla(
+    'g05_mi_perfil',
+    const ProfilePage(),
+    estado: const OnboardingState(
+      verificacion: EstadoVerificacion.verificada,
+      perfil: PerfilUsuario(
+        id: 'u-1',
+        usuario: 'maria@ejemplo.co',
+        nombre: 'María',
+        rol: 'CLIENTE',
+        estado: 'ACTIVO',
+        documentoEnmascarado: '••••••4050',
+        creadoEn: '2026-10-28T15:00:00Z',
+        idioma: 'ES',
+        moneda: 'COP',
+      ),
+    ),
+  );
 }

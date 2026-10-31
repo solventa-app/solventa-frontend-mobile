@@ -1,5 +1,6 @@
 """
-Contrato GraphQL del BFF (v0, Sprint 1: HU-W01 y HU-W05; v0.20 suma el onboarding de HU-M01).
+Contrato GraphQL del BFF (v0, Sprint 1: HU-W01 y HU-W05; v0.20 suma el onboarding de HU-M01; v0.22, el estado del
+sistema de HU-W07. La API REST de los socios está aparte, en contracts/openapi/socios-v1.json).
 
 Este archivo es la FUENTE DE VERDAD del contrato con `solventa-frontend`.
 Reglas (ver contracts/README.md): solo cambios ADITIVOS; para quitar algo se marca @deprecated
@@ -292,6 +293,9 @@ type Propuesta {
   # Datos personales: solo para el ASESOR que la aceptó y el BACKOFFICE; null para el CLIENTE.
   nombreTitular: String # el nombre que capturó el asesor, o el de AUTH si el titular tiene cuenta
   nombreAsesor: String # solo para el BACKOFFICE; null si la aceptó el propio CLIENTE
+  # v0.22 (HU-W07): solo para el BACKOFFICE; el socio de distribución que la vendió por la API. Entonces
+  # `nombreAsesor` es null.
+  nombreSocio: String
 }
 
 type PaginaPropuestas {
@@ -353,6 +357,8 @@ type Poliza {
   prima: Monto!
   cobertura: Monto!
   documentoUrl: String! # ruta del BFF que entrega el PDF; solo el titular, su asesor o un BACKOFFICE
+  # v0.21 (HU-W04): ramo del producto. Hoy hay uno solo y lo pone el BFF por configuración (RAMO_POLIZA).
+  ramo: String!
 }
 
 # ---------- Firma y pago con el asesor o en la sesión del CLIENTE (v0.18, HU-W03 bloque 9) ----------
@@ -690,6 +696,11 @@ type CuentaOnboarding {
   onboarding: Onboarding!
 }
 
+type CodigoOnboardingEnviado {
+  correoEnmascarado: String!
+  venceEn: DateTime!
+}
+
 # `codigo` es estable: TOKEN_INVALIDO, SIN_CONSENTIMIENTO, ESTADO_INVALIDO, PIEZAS_INCOMPLETAS, SIN_INTENTOS,
 # SESION_CON_CUENTA, CORREO_YA_REGISTRADO, DATO_INVALIDO, JURISDICCION_NO_SOPORTADA, NO_DISPONIBLE (con reintento)
 # o un código del almacenamiento (TIPO_CONTENIDO_NO_ADMITIDO, TAMANO_NO_ADMITIDO, OBJETO_NO_SUBIDO, ...).
@@ -702,6 +713,7 @@ union ResultadoInicioOnboarding = InicioOnboarding | ErrorOnboarding
 union ResultadoOnboarding = Onboarding | ErrorOnboarding
 union ResultadoSubidaOnboarding = SubidaArchivo | ErrorOnboarding
 union ResultadoCuentaOnboarding = CuentaOnboarding | ErrorOnboarding
+union ResultadoCodigoOnboarding = CodigoOnboardingEnviado | ErrorOnboarding
 
 input IniciarOnboardingInput {
   jurisdiccion: String! = "CO"
@@ -711,6 +723,171 @@ input IniciarOnboardingInput {
 input CuentaOnboardingInput {
   correo: String! # con él inicia sesión; AUTH lo guarda cifrado
   clave: String!
+}
+# ---------- Siniestros (v0.21, HU-W04, servicio CLAIMS) ----------
+# Mesa de siniestros del BACKOFFICE: todas las operaciones exigen token de BACKOFFICE. Reemplaza al dummy
+# `siniestros.graphql` (mismos nombres, argumentos y campos). Derivar a perito deja el caso EN_REVISION: no hay
+# estado DERIVADO. Un caso derivado todavía se puede aprobar o rechazar; uno resuelto ya no admite cambios.
+enum EstadoSiniestro {
+  PENDIENTE
+  EN_REVISION
+  APROBADO
+  RECHAZADO
+}
+
+enum TipoEvidencia {
+  FOTO
+  DOCUMENTO
+}
+
+enum TipoResolucion {
+  APROBACION
+  RECHAZO
+  DERIVACION
+}
+
+enum MotivoRechazo {
+  EVIDENCIA_INSUFICIENTE
+  FUERA_DE_COBERTURA
+  POLIZA_NO_VIGENTE
+  INCONSISTENCIA_EN_RELATO
+  OTRO
+}
+
+type Asegurado {
+  nombre: String!
+  documento: String!
+}
+
+type Ubicacion {
+  descripcion: String!
+  ciudad: String!
+  latitud: Float!
+  longitud: Float!
+}
+
+type Evidencia {
+  id: ID!
+  tipo: TipoEvidencia!
+  titulo: String!
+  archivo: String!
+  # URL firmada de lectura del almacenamiento (vence en minutos); vacía si el archivo no está disponible.
+  url: String!
+  registradaEn: DateTime!
+  # La foto trae la ubicación donde se tomó (W04-14: saldrá del EXIF; hoy la fija la semilla).
+  geoetiquetada: Boolean!
+  nota: String
+}
+
+type Verificacion {
+  descripcion: String!
+  cumple: Boolean!
+}
+
+type Perito {
+  id: ID!
+  nombre: String!
+  ciudad: String!
+  red: String!
+  registro: String!
+  tiempoRespuestaDias: Int!
+  # Solo en `peritos(siniestroId)`: fecha límite del informe si se le deriva hoy.
+  vencimientoInforme: DateTime
+}
+
+type Resolucion {
+  tipo: TipoResolucion!
+  resueltaEn: DateTime!
+  notificacion: String!
+  motivo: MotivoRechazo
+  comentario: String
+  viaRecurso: String
+  indemnizacion: Monto
+  metodoTransferencia: String
+  plazoDispersion: String
+  perito: Perito
+  instrucciones: String
+  vencimientoInforme: DateTime
+}
+
+type Siniestro {
+  id: ID!
+  radicado: String!
+  estado: EstadoSiniestro!
+  asegurado: Asegurado!
+  poliza: Poliza!
+  coberturaAplicada: String!
+  entidadAcreedora: String!
+  ocurridoEn: DateTime!
+  notificadoEn: DateTime!
+  ubicacion: Ubicacion!
+  descripcion: String!
+  sumaReclamada: Monto!
+  venceDictamenEn: DateTime!
+  evidencias: [Evidencia!]!
+  verificaciones: [Verificacion!]!
+  resolucion: Resolucion
+}
+
+# Error de negocio en lenguaje del operador (caso ya resuelto, perito no disponible, texto de más de 500 caracteres,
+# orden de pago no registrada). Solo trae `mensaje`: la web distingue la union por la forma.
+type ErrorSiniestro {
+  mensaje: String!
+}
+
+union ResultadoResolucion = Siniestro | ErrorSiniestro
+
+# ---------- Estado del sistema (v0.22, HU-W07) ----------
+# Solo BACKOFFICE. Los pesos, los objetivos de latencia y los umbrales viven en contracts/salud.json. El socio ve una
+# versión sin micros internos en `GET /v1/estado` (contracts/openapi/socios-v1.json).
+
+enum ColorSalud {
+  VERDE # >= 90
+  AMARILLO # >= 70
+  ROJO
+}
+
+enum EstadoCircuito {
+  CERRADO
+  SEMIABIERTO
+  ABIERTO
+  DESCONOCIDO # el ACL no respondió
+}
+
+type SaludMicro {
+  nombre: String!
+  peso: Int!
+  porcentaje: Int! # 0 si /health no responde
+  color: ColorSalud!
+  responde: Boolean!
+  sinTrafico: Boolean! # sin peticiones en la ventana (p. ej. escalado a cero)
+  disponibilidad: Float # % de peticiones sin 5xx; null sin tráfico o sin métricas
+  latenciaMediaMs: Int
+  latenciaP95Ms: Int
+}
+
+type SaludExterna {
+  nombre: String! # el circuito del ACL: open-finance, open-data, firma, kyc, pasarela, notificaciones
+  estado: EstadoCircuito!
+}
+
+type SaludApi {
+  nombre: String! # COTIZACION o EMISION
+  porcentaje: Int!
+  color: ColorSalud! # ROJO si alguno de sus micros no responde
+  micros: [String!]!
+  externas: [SaludExterna!]!
+}
+
+type EstadoSistema {
+  porcentaje: Int! # promedio ponderado de los micros
+  color: ColorSalud! # no es VERDE si alguna API está en ROJO
+  disponibilidad: Float # del gateway (lo que vive el usuario); null sin métricas
+  latenciaMediaMs: Int
+  ventana: String! # 15m, 1h, 24h o 7d
+  calculadoEn: DateTime!
+  apis: [SaludApi!]!
+  micros: [SaludMicro!]!
 }
 
 type Query {
@@ -736,6 +913,15 @@ type Query {
   onboarding(id: ID!): Onboarding
   # Con sesión de CLIENTE (también la del scope `verificacion-pendiente`): el recorrido más reciente de su cuenta.
   miVerificacion: Onboarding
+  # ---------- v0.21 (HU-W04) ----------
+  # Mesa de siniestros, solo BACKOFFICE. `estado` null = todos, del más reciente al más antiguo.
+  siniestros(estado: EstadoSiniestro = null): [Siniestro!]!
+  siniestro(id: ID!): Siniestro
+  # Peritos disponibles para derivar este caso, cada uno con su fecha límite de informe si se le deriva hoy.
+  peritos(siniestroId: ID!): [Perito!]!
+  # ---------- v0.22 (HU-W07) ----------
+  # Solo BACKOFFICE. `ventana`: 15m, 1h, 24h o 7d.
+  estadoSistema(ventana: String = "1h"): EstadoSistema!
 }
 
 type Mutation {
@@ -808,6 +994,10 @@ type Mutation {
   ): ResultadoSubidaOnboarding!
   # Con `X-Onboarding-Token`, tras el PUT. Idempotente.
   confirmarSubidaOnboarding(onboardingId: ID!, archivoId: ID!): ResultadoOnboarding!
+  # Envía un código de 6 dígitos al correo para verificarlo en el onboarding (10 min, hasta 5 intentos).
+  enviarCodigoOnboarding(correo: String!): ResultadoCodigoOnboarding!
+  # Verifica el código de 6 dígitos enviado al correo en el onboarding.
+  verificarCodigoOnboarding(correo: String!, codigo: String!): ResultadoCodigoOnboarding!
   # Con `X-Onboarding-Token`. Crea la cuenta CLIENTE en PENDIENTE_VERIFICACION, la liga al recorrido y abre su sesión.
   crearCuentaOnboarding(onboardingId: ID!, entrada: CuentaOnboardingInput!): ResultadoCuentaOnboarding!
   # Con `X-Onboarding-Token` y las cuatro piezas confirmadas: responde EN_VERIFICACION y el resultado llega después
@@ -818,4 +1008,10 @@ type Mutation {
   # Con sesión (cualquier rol o scope): un token nuevo con los permisos del estado actual de la cuenta y la misma
   # expiración. Tras VERIFICADA, el token deja de ser `verificacion-pendiente`.
   actualizarSesion: ResultadoSesion!
+  # ---------- v0.21 (HU-W04): mesa de siniestros, solo BACKOFFICE ----------
+  # Aprobar registra la orden de pago de la indemnización en PAYMENTS (sin
+  # dispersión); si no se puede registrar, responde ErrorSiniestro y el caso sigue abierto.
+  aprobarSiniestro(id: ID!): ResultadoResolucion!
+  rechazarSiniestro(id: ID!, motivo: MotivoRechazo!, comentario: String = null): ResultadoResolucion!
+  derivarSiniestro(id: ID!, peritoId: ID!, instrucciones: String = null): ResultadoResolucion!
 }

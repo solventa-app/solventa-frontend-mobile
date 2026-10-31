@@ -33,3 +33,23 @@ Enum$PasoOnboarding pasoAGql(PasoOnboarding p) => switch (p) {
   PasoOnboarding.rostro => Enum$PasoOnboarding.ROSTRO,
   PasoOnboarding.video => Enum$PasoOnboarding.VIDEO,
 };
+
+CodigoOnboarding codigoOnboardingDesdeGql(Fragment$CodigoOnboardingCampos g) =>
+    CodigoOnboarding(
+      correoEnmascarado: g.correoEnmascarado,
+      expiraEn: g.venceEn.toIso8601String(),
+      intentosRestantes: 5,
+      verificado: true,
+    );
+
+PerfilUsuario perfilUsuarioDesdeGql(Fragment$UsuarioCampos g) => PerfilUsuario(
+  id: g.id,
+  usuario: g.usuario,
+  nombre: g.nombre,
+  rol: g.rol.name,
+  estado: g.estado.name,
+  documentoEnmascarado: g.documentoEnmascarado,
+  creadoEn: g.creadoEn.toIso8601String(),
+  idioma: g.idioma,
+  moneda: g.moneda,
+);

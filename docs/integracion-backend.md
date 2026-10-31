@@ -8,9 +8,10 @@ contrato en `contrato/`) para que web y móvil se comporten igual ante el mismo 
 
 Todo este documento es **plan** salvo donde dice **hoy**.
 
-**Hoy** ya existe la capa data como ACL, con el onboarding de HU-M01 completo contra el contrato v0.20 en
-`lib/features/onboarding/` (`onboarding.graphql`: iniciar, consentir, subir las cuatro piezas por URL firmada,
-crear la cuenta, enviar, consultar, reintentar y actualizar la sesión):
+**Hoy** ya existe la capa data como ACL, con el onboarding de HU-M01 completo contra el contrato v0.22 en
+`lib/features/onboarding/` (`onboarding.graphql`: iniciar, consentir, subir las cuatro piezas por URL firmada en paralelo,
+solicitar y verificar código OTP de 6 dígitos por correo, crear la cuenta idempotente, iniciar sesión, consultar `yo`,
+enviar, consultar, reintentar y actualizar la sesión):
 
 - `lib/core/contrato/schema.graphql` y `tool/contrato.sh verificar|sincronizar`.
 - Codegen por operación (`graphql_codegen`, configurado en `build.yaml`).

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sentry_dio/sentry_dio.dart';
 
 import '../config/app_config.dart';
 import '../sesion/sesion_store.dart';
@@ -29,6 +30,7 @@ final dioProvider = Provider<Dio>((ref) {
       responseType: ResponseType.json,
     ),
   );
+  dio.addSentry(captureFailedRequests: false);
   ref.onDispose(dio.close);
   return dio;
 });

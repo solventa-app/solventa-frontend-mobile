@@ -1,5 +1,6 @@
 {
   "FLAVOR": "prod",
   "API_ENV": "prod",
-  "API_BASE_URL": "https://solventa-gateway-btxoyawl.uc.gateway.dev"
+  "API_BASE_URL": "https://solventa-gateway-btxoyawl.uc.gateway.dev",
+  "SENTRY_DSN": ""
 }

@@ -1,4 +1,4 @@
-/// Respuestas de ejemplo del onboarding (contrato v0.20), con la forma exacta
+/// Respuestas de ejemplo del onboarding (contrato v0.21), con la forma exacta
 /// del BFF (el `data` de la respuesta GraphQL, con `__typename`). Las usan el
 /// fake (API_ENV=mock) y las pruebas; `test/contract/` comprueba que parsean.
 abstract final class OnboardingFixtures {
@@ -16,9 +16,44 @@ abstract final class OnboardingFixtures {
     'intentosRestantes': intentosRestantes,
   };
 
-  static Map<String, dynamic> error(String codigo) => {
+  static Map<String, dynamic> error(String codigo, [String? mensaje]) => {
     '__typename': 'ErrorOnboarding',
     'codigo': codigo,
+    'mensaje': ?mensaje,
+  };
+
+  static Map<String, dynamic> codigoEnviado({
+    String correoEnmascarado = 'm•••@ejemplo.co',
+    String venceEn = '2026-10-31T21:00:00.000Z',
+  }) => {
+    '__typename': 'CodigoOnboardingEnviado',
+    'correoEnmascarado': correoEnmascarado,
+    'venceEn': venceEn,
+  };
+
+  static Map<String, dynamic> usuario({
+    String id = 'usuario-demo-1',
+    String usuario = 'maria@ejemplo.co',
+    String? nombre = 'María',
+    String rol = 'CLIENTE',
+    String estado = 'ACTIVO',
+    String? documentoEnmascarado = '••••••4050',
+    String creadoEn = '2026-10-28T15:00:00.000Z',
+    String idioma = 'ES',
+    String moneda = 'COP',
+    bool tieneContacto = true,
+  }) => {
+    '__typename': 'Usuario',
+    'id': id,
+    'usuario': usuario,
+    'nombre': nombre,
+    'rol': rol,
+    'estado': estado,
+    'documentoEnmascarado': documentoEnmascarado,
+    'creadoEn': creadoEn,
+    'idioma': idioma,
+    'moneda': moneda,
+    'tieneContacto': tieneContacto,
   };
 
   static final iniciar = <String, dynamic>{
@@ -26,7 +61,7 @@ abstract final class OnboardingFixtures {
     'iniciarOnboarding': {
       '__typename': 'InicioOnboarding',
       'token': 'token-onboarding-demo',
-      'tokenVenceEn': '2026-10-28T15:30:00Z',
+      'tokenVenceEn': '2026-10-28T15:30:00.000Z',
       'onboarding': onboarding(),
     },
   };
@@ -65,7 +100,7 @@ abstract final class OnboardingFixtures {
       'sesion': {
         '__typename': 'Sesion',
         'token': 'jwt-demo-verificacion-pendiente',
-        'expiraEn': '2026-10-28T16:00:00Z',
+        'expiraEn': '2026-10-28T16:00:00.000Z',
       },
       'onboarding': onboarding(estado: 'EN_VERIFICACION'),
     },
@@ -73,7 +108,10 @@ abstract final class OnboardingFixtures {
 
   static final correoRegistrado = <String, dynamic>{
     '__typename': 'Mutation',
-    'crearCuentaOnboarding': error('CORREO_YA_REGISTRADO'),
+    'crearCuentaOnboarding': {
+      '__typename': 'ErrorOnboarding',
+      'codigo': 'CORREO_YA_REGISTRADO',
+    },
   };
 
   static final enviar = <String, dynamic>{
@@ -101,7 +139,48 @@ abstract final class OnboardingFixtures {
     'actualizarSesion': {
       '__typename': 'Sesion',
       'token': 'jwt-demo-completo',
-      'expiraEn': '2026-10-28T16:00:00Z',
+      'expiraEn': '2026-10-28T16:00:00.000Z',
     },
+  };
+
+  static final enviarCodigo = <String, dynamic>{
+    '__typename': 'Mutation',
+    'enviarCodigoOnboarding': codigoEnviado(),
+  };
+
+  static final verificarCodigo = <String, dynamic>{
+    '__typename': 'Mutation',
+    'verificarCodigoOnboarding': codigoEnviado(),
+  };
+
+  static final codigoInvalido = <String, dynamic>{
+    '__typename': 'Mutation',
+    'verificarCodigoOnboarding': {
+      '__typename': 'ErrorOnboarding',
+      'codigo': 'CODIGO_INVALIDO',
+    },
+  };
+
+  static final iniciarSesion = <String, dynamic>{
+    '__typename': 'Mutation',
+    'iniciarSesion': {
+      '__typename': 'Sesion',
+      'token': 'jwt-demo-completo',
+      'expiraEn': '2026-10-28T16:00:00.000Z',
+      'usuario': usuario(),
+    },
+  };
+
+  static Map<String, dynamic> yo([Map<String, dynamic>? u]) => {
+    '__typename': 'Query',
+    'yo': u ?? usuario(),
+  };
+
+  static Map<String, dynamic> actualizarPreferencias({
+    String idioma = 'ES',
+    String moneda = 'COP',
+  }) => {
+    '__typename': 'Mutation',
+    'actualizarPreferencias': usuario(idioma: idioma, moneda: moneda),
   };
 }

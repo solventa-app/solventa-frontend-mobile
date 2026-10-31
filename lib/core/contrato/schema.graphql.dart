@@ -2556,6 +2556,249 @@ Enum$TipoDocumentoOnboarding fromJson$Enum$TipoDocumentoOnboarding(
   }
 }
 
+enum Enum$EstadoSiniestro {
+  PENDIENTE,
+  EN_REVISION,
+  APROBADO,
+  RECHAZADO,
+  $unknown;
+
+  factory Enum$EstadoSiniestro.fromJson(String value) =>
+      fromJson$Enum$EstadoSiniestro(value);
+
+  String toJson() => toJson$Enum$EstadoSiniestro(this);
+}
+
+String toJson$Enum$EstadoSiniestro(Enum$EstadoSiniestro e) {
+  switch (e) {
+    case Enum$EstadoSiniestro.PENDIENTE:
+      return r'PENDIENTE';
+    case Enum$EstadoSiniestro.EN_REVISION:
+      return r'EN_REVISION';
+    case Enum$EstadoSiniestro.APROBADO:
+      return r'APROBADO';
+    case Enum$EstadoSiniestro.RECHAZADO:
+      return r'RECHAZADO';
+    case Enum$EstadoSiniestro.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$EstadoSiniestro fromJson$Enum$EstadoSiniestro(String value) {
+  switch (value) {
+    case r'PENDIENTE':
+      return Enum$EstadoSiniestro.PENDIENTE;
+    case r'EN_REVISION':
+      return Enum$EstadoSiniestro.EN_REVISION;
+    case r'APROBADO':
+      return Enum$EstadoSiniestro.APROBADO;
+    case r'RECHAZADO':
+      return Enum$EstadoSiniestro.RECHAZADO;
+    default:
+      return Enum$EstadoSiniestro.$unknown;
+  }
+}
+
+enum Enum$TipoEvidencia {
+  FOTO,
+  DOCUMENTO,
+  $unknown;
+
+  factory Enum$TipoEvidencia.fromJson(String value) =>
+      fromJson$Enum$TipoEvidencia(value);
+
+  String toJson() => toJson$Enum$TipoEvidencia(this);
+}
+
+String toJson$Enum$TipoEvidencia(Enum$TipoEvidencia e) {
+  switch (e) {
+    case Enum$TipoEvidencia.FOTO:
+      return r'FOTO';
+    case Enum$TipoEvidencia.DOCUMENTO:
+      return r'DOCUMENTO';
+    case Enum$TipoEvidencia.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoEvidencia fromJson$Enum$TipoEvidencia(String value) {
+  switch (value) {
+    case r'FOTO':
+      return Enum$TipoEvidencia.FOTO;
+    case r'DOCUMENTO':
+      return Enum$TipoEvidencia.DOCUMENTO;
+    default:
+      return Enum$TipoEvidencia.$unknown;
+  }
+}
+
+enum Enum$TipoResolucion {
+  APROBACION,
+  RECHAZO,
+  DERIVACION,
+  $unknown;
+
+  factory Enum$TipoResolucion.fromJson(String value) =>
+      fromJson$Enum$TipoResolucion(value);
+
+  String toJson() => toJson$Enum$TipoResolucion(this);
+}
+
+String toJson$Enum$TipoResolucion(Enum$TipoResolucion e) {
+  switch (e) {
+    case Enum$TipoResolucion.APROBACION:
+      return r'APROBACION';
+    case Enum$TipoResolucion.RECHAZO:
+      return r'RECHAZO';
+    case Enum$TipoResolucion.DERIVACION:
+      return r'DERIVACION';
+    case Enum$TipoResolucion.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoResolucion fromJson$Enum$TipoResolucion(String value) {
+  switch (value) {
+    case r'APROBACION':
+      return Enum$TipoResolucion.APROBACION;
+    case r'RECHAZO':
+      return Enum$TipoResolucion.RECHAZO;
+    case r'DERIVACION':
+      return Enum$TipoResolucion.DERIVACION;
+    default:
+      return Enum$TipoResolucion.$unknown;
+  }
+}
+
+enum Enum$MotivoRechazo {
+  EVIDENCIA_INSUFICIENTE,
+  FUERA_DE_COBERTURA,
+  POLIZA_NO_VIGENTE,
+  INCONSISTENCIA_EN_RELATO,
+  OTRO,
+  $unknown;
+
+  factory Enum$MotivoRechazo.fromJson(String value) =>
+      fromJson$Enum$MotivoRechazo(value);
+
+  String toJson() => toJson$Enum$MotivoRechazo(this);
+}
+
+String toJson$Enum$MotivoRechazo(Enum$MotivoRechazo e) {
+  switch (e) {
+    case Enum$MotivoRechazo.EVIDENCIA_INSUFICIENTE:
+      return r'EVIDENCIA_INSUFICIENTE';
+    case Enum$MotivoRechazo.FUERA_DE_COBERTURA:
+      return r'FUERA_DE_COBERTURA';
+    case Enum$MotivoRechazo.POLIZA_NO_VIGENTE:
+      return r'POLIZA_NO_VIGENTE';
+    case Enum$MotivoRechazo.INCONSISTENCIA_EN_RELATO:
+      return r'INCONSISTENCIA_EN_RELATO';
+    case Enum$MotivoRechazo.OTRO:
+      return r'OTRO';
+    case Enum$MotivoRechazo.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$MotivoRechazo fromJson$Enum$MotivoRechazo(String value) {
+  switch (value) {
+    case r'EVIDENCIA_INSUFICIENTE':
+      return Enum$MotivoRechazo.EVIDENCIA_INSUFICIENTE;
+    case r'FUERA_DE_COBERTURA':
+      return Enum$MotivoRechazo.FUERA_DE_COBERTURA;
+    case r'POLIZA_NO_VIGENTE':
+      return Enum$MotivoRechazo.POLIZA_NO_VIGENTE;
+    case r'INCONSISTENCIA_EN_RELATO':
+      return Enum$MotivoRechazo.INCONSISTENCIA_EN_RELATO;
+    case r'OTRO':
+      return Enum$MotivoRechazo.OTRO;
+    default:
+      return Enum$MotivoRechazo.$unknown;
+  }
+}
+
+enum Enum$ColorSalud {
+  VERDE,
+  AMARILLO,
+  ROJO,
+  $unknown;
+
+  factory Enum$ColorSalud.fromJson(String value) =>
+      fromJson$Enum$ColorSalud(value);
+
+  String toJson() => toJson$Enum$ColorSalud(this);
+}
+
+String toJson$Enum$ColorSalud(Enum$ColorSalud e) {
+  switch (e) {
+    case Enum$ColorSalud.VERDE:
+      return r'VERDE';
+    case Enum$ColorSalud.AMARILLO:
+      return r'AMARILLO';
+    case Enum$ColorSalud.ROJO:
+      return r'ROJO';
+    case Enum$ColorSalud.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$ColorSalud fromJson$Enum$ColorSalud(String value) {
+  switch (value) {
+    case r'VERDE':
+      return Enum$ColorSalud.VERDE;
+    case r'AMARILLO':
+      return Enum$ColorSalud.AMARILLO;
+    case r'ROJO':
+      return Enum$ColorSalud.ROJO;
+    default:
+      return Enum$ColorSalud.$unknown;
+  }
+}
+
+enum Enum$EstadoCircuito {
+  CERRADO,
+  SEMIABIERTO,
+  ABIERTO,
+  DESCONOCIDO,
+  $unknown;
+
+  factory Enum$EstadoCircuito.fromJson(String value) =>
+      fromJson$Enum$EstadoCircuito(value);
+
+  String toJson() => toJson$Enum$EstadoCircuito(this);
+}
+
+String toJson$Enum$EstadoCircuito(Enum$EstadoCircuito e) {
+  switch (e) {
+    case Enum$EstadoCircuito.CERRADO:
+      return r'CERRADO';
+    case Enum$EstadoCircuito.SEMIABIERTO:
+      return r'SEMIABIERTO';
+    case Enum$EstadoCircuito.ABIERTO:
+      return r'ABIERTO';
+    case Enum$EstadoCircuito.DESCONOCIDO:
+      return r'DESCONOCIDO';
+    case Enum$EstadoCircuito.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$EstadoCircuito fromJson$Enum$EstadoCircuito(String value) {
+  switch (value) {
+    case r'CERRADO':
+      return Enum$EstadoCircuito.CERRADO;
+    case r'SEMIABIERTO':
+      return Enum$EstadoCircuito.SEMIABIERTO;
+    case r'ABIERTO':
+      return Enum$EstadoCircuito.ABIERTO;
+    case r'DESCONOCIDO':
+      return Enum$EstadoCircuito.DESCONOCIDO;
+    default:
+      return Enum$EstadoCircuito.$unknown;
+  }
+}
+
 enum Enum$__TypeKind {
   SCALAR,
   OBJECT,
@@ -2756,4 +2999,6 @@ const possibleTypesMap = <String, Set<String>>{
   'ResultadoOnboarding': {'Onboarding', 'ErrorOnboarding'},
   'ResultadoSubidaOnboarding': {'SubidaArchivo', 'ErrorOnboarding'},
   'ResultadoCuentaOnboarding': {'CuentaOnboarding', 'ErrorOnboarding'},
+  'ResultadoCodigoOnboarding': {'CodigoOnboardingEnviado', 'ErrorOnboarding'},
+  'ResultadoResolucion': {'Siniestro', 'ErrorSiniestro'},
 };

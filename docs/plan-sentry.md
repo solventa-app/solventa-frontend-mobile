@@ -4,7 +4,7 @@ Guía para quien implemente el reporte de errores en `solventa-frontend-web` (Vu
 
 ## Estado y entrega
 
-Sentry **no está implementado** en ningún repo: no hay SDK, DSN, logger ni pantalla con código de soporte. Esta guía es la entrega para quien lo implemente, y está escrita sobre el código actual de los dos repos (rutas y nombres verificados).
+Sentry **ya está implementado en código** en ambos repos (`solventa-frontend-web` y `solventa-frontend-mobile`) bajo la organización `uniandes-xm` (`run code: b78bb726f4`): SDK, `limpiar`, logger (`log.ts` / `SolLog`), código de soporte con botón de copiar, pantallas enmascaradas (`sentry-block` / `SentryMask`) y subida de source maps / símbolos en el deploy. Esta guía es la entrega para quien lo implemente, y está escrita sobre el código actual de los dos repos (rutas y nombres verificados).
 
 | Ya está listo | Dónde |
 |---|---|

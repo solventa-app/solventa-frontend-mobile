@@ -1,7 +1,7 @@
 import '../../../../core/errors/resultado.dart';
 import '../entities/onboarding.dart';
 
-/// Recorrido de onboarding contra el BFF (contrato v0.20).
+/// Recorrido de onboarding y cuenta de la app contra el BFF (contrato v0.21).
 ///
 /// El repositorio guarda en memoria el id del recorrido y su token
 /// (`X-Onboarding-Token`, 30 min): no salen de aquí ni se persisten. Los
@@ -19,10 +19,34 @@ abstract interface class OnboardingRepository {
   /// Con las cuatro piezas: responde EN_VERIFICACION y el resultado llega después.
   Future<Resultado<Onboarding>> enviarVerificacion();
 
-  /// M01-05b: crea la cuenta y guarda su sesión.
+  /// Envía un código OTP de 6 dígitos al correo (inicia recorrido si no existe).
+  Future<Resultado<CodigoOnboarding>> enviarCodigo({required String correo});
+
+  /// Verifica el código OTP de 6 dígitos enviado al correo.
+  Future<Resultado<CodigoOnboarding>> verificarCodigo({
+    required String correo,
+    required String codigo,
+  });
+
+  /// M01-05b / inicio: crea la cuenta y guarda su sesión.
   Future<Resultado<Onboarding>> crearCuenta({
     required String correo,
     required String clave,
+  });
+
+  /// Inicia sesión con usuario/correo y clave en el canal app.
+  Future<Resultado<PerfilUsuario>> iniciarSesion({
+    required String usuario,
+    required String clave,
+  });
+
+  /// Devuelve el perfil del usuario autenticado (`yo`).
+  Future<Resultado<PerfilUsuario?>> consultarPerfil();
+
+  /// Actualiza el idioma y moneda preferidos del usuario.
+  Future<Resultado<PerfilUsuario>> actualizarPreferencias({
+    required String idioma,
+    required String moneda,
   });
 
   /// El estado guardado del recorrido (con el token o, si venció, con la sesión).
@@ -33,4 +57,7 @@ abstract interface class OnboardingRepository {
 
   /// M01-07c «Intentar de nuevo»: vuelve a INICIADO y pide las cuatro piezas.
   Future<Resultado<Onboarding>> reintentar();
+
+  /// Cierra la sesión actual borrando el token y el recorrido en memoria.
+  Future<void> cerrarSesion();
 }

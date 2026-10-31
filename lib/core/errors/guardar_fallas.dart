@@ -1,3 +1,4 @@
+import '../log/sol_log.dart';
 import '../network/network_exceptions.dart';
 import 'falla.dart';
 import 'resultado.dart';
@@ -18,10 +19,29 @@ const _mensajesSinPermiso = {'No tienes permiso para esta operación.'};
 Future<Resultado<T>> guardarFallas<T>(Future<T> Function() operacion) async {
   try {
     return Exito(await operacion());
-  } on ErrorCliente catch (e) {
-    return Fracaso(fallaDesdeErrorCliente(e));
-  } catch (e) {
+  } on ErrorCliente catch (e, st) {
+    final falla = fallaDesdeErrorCliente(e);
+    if (falla is Inesperada) {
+      SolLog.severe(
+        'Falla inesperada de cliente (${e.runtimeType})',
+        error: e.runtimeType.toString(),
+        stackTrace: st,
+        codigo: e is ErrorGraphql ? e.codigo : null,
+      );
+    } else {
+      SolLog.info(
+        'Falla esperada de red/sesión (${falla.runtimeType})',
+        codigo: e is ErrorGraphql ? e.codigo : null,
+      );
+    }
+    return Fracaso(falla);
+  } catch (e, st) {
     // TypeError o FormatException del fromJson: la respuesta no cumple el contrato.
+    SolLog.severe(
+      'Falla inesperada al procesar respuesta (${e.runtimeType})',
+      error: e.runtimeType.toString(),
+      stackTrace: st,
+    );
     return Fracaso(Inesperada(e));
   }
 }

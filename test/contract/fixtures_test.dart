@@ -68,9 +68,33 @@ void main() {
           OnboardingFixtures.sesionActualizada,
           (j) => Mutation$ActualizarSesion.fromJson(j).toJson(),
         ),
+        'enviarCodigoOnboarding': (
+          OnboardingFixtures.enviarCodigo,
+          (j) => Mutation$EnviarCodigoOnboarding.fromJson(j).toJson(),
+        ),
+        'verificarCodigoOnboarding': (
+          OnboardingFixtures.verificarCodigo,
+          (j) => Mutation$VerificarCodigoOnboarding.fromJson(j).toJson(),
+        ),
+        'verificarCodigoOnboarding · código inválido': (
+          OnboardingFixtures.codigoInvalido,
+          (j) => Mutation$VerificarCodigoOnboarding.fromJson(j).toJson(),
+        ),
+        'iniciarSesion': (
+          OnboardingFixtures.iniciarSesion,
+          (j) => Mutation$IniciarSesion.fromJson(j).toJson(),
+        ),
+        'yo': (OnboardingFixtures.yo(), (j) => Query$Yo.fromJson(j).toJson()),
+        'actualizarPreferencias': (
+          OnboardingFixtures.actualizarPreferencias(
+            idioma: 'EN',
+            moneda: 'USD',
+          ),
+          (j) => Mutation$ActualizarPreferencias.fromJson(j).toJson(),
+        ),
       };
 
-  group('onboarding (v0.20)', () {
+  group('onboarding (v0.21)', () {
     casos.forEach((nombre, caso) {
       final (json, parsear) = caso;
       test(nombre, () {
