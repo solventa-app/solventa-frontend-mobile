@@ -21,7 +21,7 @@ Estado de cada pieza:
 | | Firebase Test Lab manual (`test-lab.yml`): Robo test e `integration_test` en teléfonos reales | Listo, falta cuenta |
 | Merge a `main` | `cd.yml`: versión calculada sola, build prod firmado con R8 y Dart ofuscado, GitHub Release `v<versión>+<build>` con APK, AAB, mapping y símbolos | Hoy |
 | Manual | `rollback.yml` (recompila un tag anterior con build nuevo), `cd.yml` desde otra rama (compila sin publicar), `imagen-devcontainer.yml` | Hoy |
-| Sonar | SonarCloud con la cobertura | Pendiente (lo monta quien lo hizo en web y backend) |
+| | `sonar.yml`: SonarCloud con la cobertura de `flutter test`; en PRs (decora el PR y evalúa el quality gate) y en push a `develop` cuando cambia `lib/`, `test/` o `pubspec.*`. Se salta en PRs de forks y de Dependabot (sin secretos) | Hoy |
 | Sentry | Reporte de errores con replay enmascarado | Pendiente: [`plan-sentry.md`](plan-sentry.md) |
 
 ## Flujo de ramas
@@ -118,7 +118,7 @@ Dispositivos por defecto de `test-lab.yml`: Pixel 6 (API 33) y Pixel 5 (API 30).
 | Trivy | Vulnerabilidades de la imagen del devcontainer | `imagen-devcontainer.yml`, informativo | Hoy |
 | Dependabot | PRs con versiones nuevas o vulnerables de pub, acciones e imagen base | `.github/dependabot.yml`, hacia `develop` | Hoy |
 | Endurecimiento del APK | R8, Dart ofuscado en prod, sin copia de seguridad (`allowBackup="false"` y `data_extraction_rules.xml`), sin tráfico en claro en prod | Ver la sección siguiente | Hoy |
-| SonarCloud | Calidad y SAST | | Pendiente |
+| SonarCloud | Calidad y SAST | `sonar.yml`, proyecto `global-spark_solventa-frontend-mobile` | Hoy |
 | Secret scanning y push protection | Funciones de GitHub | Settings → Code security | Configuración pendiente |
 
 Regla: nada secreto en el código ni en `config/*.json`. Todo lo que entra con `--dart-define` queda dentro del APK.
@@ -187,7 +187,7 @@ Flavors de Android + `--dart-define-from-file`:
 | `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS`, `ANDROID_KEY_PASSWORD` | Hoy en el repo; moverlos al environment `production` | Firmar prod | Hoy |
 | `ANDROID_DEV_KEYSTORE_BASE64`, `ANDROID_DEV_KEYSTORE_PASSWORD`, `ANDROID_DEV_KEY_ALIAS`, `ANDROID_DEV_KEY_PASSWORD` | Environment `dev` | Firmar dev con una llave compartida, para que cada build de dev se instale encima del anterior. Sin ellos se firma con la de debug | Falta crearlos |
 | `FIREBASE_SERVICE_ACCOUNT` (secreto), `FIREBASE_APP_ID_DEV`, `FIREBASE_PROJECT_ID` (variables) | Environment `dev` | App Distribution y Test Lab | Falta cuenta |
-| `SONAR_TOKEN` | Repo | SonarCloud | Pendiente |
+| `SONAR_TOKEN` | Repo | SonarCloud | Hoy |
 | `SENTRY_AUTH_TOKEN` | Environment `production` | Subir símbolos a Sentry | Pendiente |
 
 ## Versionado
