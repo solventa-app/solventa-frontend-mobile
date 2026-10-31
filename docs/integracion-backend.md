@@ -66,9 +66,9 @@ Notas:
   cambia la URL a `http://localhost:8080` en una copia local (no la subas).
 - Para depurar directo contra el BFF sin gateway, el puerto es `8000` (igual que en la web).
 - El flavor `dev` permite tráfico sin TLS (lo configura el PR de CI/CD con `manifestPlaceholders`); `prod` no.
-- El backend hoy solo tiene **local** y **staging** (ADR-07). Mientras no exista producción, `config/prod.json`
-  queda con `API_BASE_URL` vacío y la app de prod no arranca contra ningún backend; si el equipo decide que la
-  entrega del curso apunte a staging, se escribe aquí y en `docs/ci-cd.md`.
+- El backend hoy solo tiene **local** y **staging** (ADR-07). Para la entrega y evaluación, tanto `config/dev.json`
+  como `config/prod.json` apuntan al gateway de staging (`https://solventa-gateway-btxoyawl.uc.gateway.dev`),
+  de modo que tanto el APK de dev en App Distribution como el APK de release en GitHub Releases se conectan a staging.
 - **No hay ambiente QA**: QA instala el build `dev` desde Firebase App Distribution (grupo `qa`).
 
 ### Claves de `config/*.json`
