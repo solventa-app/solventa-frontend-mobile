@@ -43,9 +43,11 @@ final camaraEnVivoHabilitadaProvider = Provider<bool>(
   (ref) => !esEntornoDePruebas,
 );
 
-/// Captura de respaldo (sin cámara) permitida con `API_ENV=mock` o `local`.
+/// Captura de respaldo (sin cámara) permitida solo con `API_ENV=mock`. En
+/// `local`, `dev` y `prod` nunca se sube una captura inventada: si no hay
+/// cámara o permiso, el visor lo explica y la persona no puede continuar.
 final respaldoCapturaPermitidoProvider = Provider<bool>(
-  (ref) => const {'mock', 'local'}.contains(ref.watch(apiEnvProvider)),
+  (ref) => ref.watch(apiEnvProvider) == 'mock',
 );
 
 final capturaServiceProvider = Provider<CapturaService>(

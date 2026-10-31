@@ -184,14 +184,15 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
   }
 
   /// Android exige soltar la cámara al ir al fondo; al volver (también desde
-  /// los ajustes del sistema tras conceder el permiso) se reabre.
+  /// los ajustes del sistema tras conceder el permiso) se reabre. Al volver no
+  /// se vuelve a mostrar el diálogo de permiso: solo se revisa si ya se dio.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.inactive ||
         state == AppLifecycleState.paused) {
       unawaited(_liberar());
     } else if (state == AppLifecycleState.resumed && _controller == null) {
-      unawaited(_iniciarCamaraSiAplica());
+      unawaited(_iniciarCamaraSiAplica(pedirPermiso: false));
     }
   }
 
@@ -199,13 +200,30 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
     if (mounted) setState(() => _estado = estado);
   }
 
-  Future<void> _iniciarCamaraSiAplica() async {
+  /// [pedirPermiso] muestra el diálogo del sistema si aún no hay permiso
+  /// (al entrar y con «Permitir cámara»). Si la persona lo negó para siempre,
+  /// Android no vuelve a preguntar y el visor ofrece «Abrir ajustes».
+  Future<void> _iniciarCamaraSiAplica({bool pedirPermiso = true}) async {
     if (!mounted || _iniciando) return;
     final forzado = ref.read(estadoCamaraForzadoProvider);
     if (forzado != null) return _fijar(forzado);
     if (!ref.read(camaraEnVivoHabilitadaProvider)) return;
     _iniciando = true;
     try {
+      var permiso = await Permission.camera.status;
+      if (!_concedido(permiso) && pedirPermiso) {
+        permiso = await Permission.camera.request();
+      }
+      if (!mounted) return;
+      if (!_concedido(permiso)) {
+        // Al volver de ajustes sin cambiar nada se conserva el aviso actual.
+        if (!pedirPermiso && _estado != EstadoCamara.iniciando) return;
+        return _fijar(
+          permiso.isPermanentlyDenied || permiso.isRestricted
+              ? EstadoCamara.sinPermisoPermanente
+              : EstadoCamara.sinPermiso,
+        );
+      }
       final camaras = await availableCameras();
       if (!mounted) return;
       if (camaras.isEmpty) return _fijar(EstadoCamara.sinCamara);
@@ -223,7 +241,11 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
       await ctrl.initialize();
-      if (!mounted) {
+      // Si la app se fue al fondo mientras abría, se suelta y se reabre al volver.
+      final enPrimerPlano =
+          WidgetsBinding.instance.lifecycleState == null ||
+          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
+      if (!mounted || !enPrimerPlano) {
         await ctrl.dispose();
         return;
       }
@@ -243,6 +265,8 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
       _iniciando = false;
     }
   }
+
+  static bool _concedido(PermissionStatus p) => p.isGranted || p.isLimited;
 
   Future<void> _liberar() async {
     final ctrl = _controller;

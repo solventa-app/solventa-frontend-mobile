@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../domain/entities/onboarding.dart';
 
@@ -120,6 +121,31 @@ Future<void> borrarTemporal(String ruta) async {
     final archivo = File(ruta);
     if (archivo.existsSync()) await archivo.delete();
   } catch (_) {}
+}
+
+/// Borra de la caché privada de la app las fotos (`.jpg`) y videos (`.mp4`)
+/// que el plugin de cámara pudo dejar, por ejemplo si la app se cerró entre
+/// `takePicture()` y la lectura de los bytes. Se llama al terminar el
+/// onboarding y al cerrar sesión. Mejor esfuerzo: nunca lanza.
+Future<void> limpiarCacheCapturas({
+  Future<Directory> Function() directorio = getTemporaryDirectory,
+}) async {
+  try {
+    final dir = await directorio();
+    if (!dir.existsSync()) return;
+    await for (final entrada in dir.list(recursive: true)) {
+      if (entrada is File && _esCaptura(entrada.path)) {
+        await borrarTemporal(entrada.path);
+      }
+    }
+  } catch (_) {}
+}
+
+bool _esCaptura(String ruta) {
+  final nombre = ruta.toLowerCase();
+  return nombre.endsWith('.jpg') ||
+      nombre.endsWith('.jpeg') ||
+      nombre.endsWith('.mp4');
 }
 
 /// Para pruebas y como respaldo cuando el emulador no tiene cámara activa.

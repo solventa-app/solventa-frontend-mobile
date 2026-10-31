@@ -122,6 +122,14 @@ abstract interface class VerificacionRepository {
   casos de demo que los mocks de la web.
 - **Modelos**: los del BFF son los **tipos generados** de las operaciones GraphQL (no se escriben a mano). Los de
   SQLite son las clases que genere `drift`. No heredan de las entidades: se convierten con un **mapper**.
+- **Cámara y permisos** (`captura_service.dart`, `SolLiveCameraFrame`): la app solo pide `CAMERA` (el video va sin
+  audio: el `RECORD_AUDIO` y el `WRITE_EXTERNAL_STORAGE` que trae el plugin de cámara se quitan del manifest final con
+  `tools:node="remove"`). El permiso se maneja con `permission_handler`: si se niega, el marco
+  muestra «Necesitamos acceso a tu cámara» con «Permitir cámara»; si se negó para siempre, «Abrir ajustes», y al
+  volver a la app la cámara se reintenta sola. La captura falsa existe solo con `API_ENV=mock`: en `local`, `dev` y
+  `prod` nunca se sube una captura inventada. Los archivos que deja el plugin se borran apenas se leen sus bytes y la
+  caché se limpia al terminar el onboarding y al cerrar sesión (datos biométricos, Ley 1581). La cámara se suelta
+  al pasar la app al fondo y se reabre al volver (`WidgetsBindingObserver`).
 - **Mappers**: funciones puras `tipoGenerado → entidad` con su prueba unitaria. Aquí se resuelven enums
   desconocidos, nulos y formatos (fechas ISO, dinero como texto).
 - **Repositorio impl**: elige datasource (remoto, caché local), mapea y convierte excepciones en `Falla`. Nunca deja

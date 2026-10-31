@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/falla.dart';
 import '../../../core/errors/resultado.dart';
+import '../data/datasources/captura_service.dart';
 import '../data/fixtures/onboarding_fixtures.dart';
 import '../domain/entities/onboarding.dart';
 import '../domain/entities/verificacion_identidad.dart';
@@ -487,6 +488,7 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
   Future<void> cerrarSesion() async {
     _capturasEnMemoria.clear();
     _subidas.clear();
+    unawaited(limpiarCacheCapturas());
     await ref.read(onboardingRepositoryProvider).cerrarSesion();
     state = const OnboardingState();
   }
@@ -541,8 +543,13 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
         state = state.copyWith(onboarding: valor);
         return false;
       case Exito(:final valor):
+        // Con resultado ya no hace falta ningún archivo de captura en disco.
+        unawaited(limpiarCacheCapturas());
         PerfilUsuario? nuevoPerfil = state.perfil;
         if (valor.estado == EstadoOnboarding.verificada) {
+          // Onboarding terminado: tampoco se guardan en memoria.
+          _capturasEnMemoria.clear();
+          _subidas.clear();
           // Sin esto el token sigue siendo `verificacion-pendiente`. Si falla,
           // la app lo vuelve a pedir al abrir; no bloquea el resultado.
           await repo.actualizarSesion();
