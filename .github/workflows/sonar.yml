@@ -1,10 +1,14 @@
 name: Sonar
 
 # Análisis de calidad en SonarQube Cloud (organización y proyecto en sonar-project.properties), con la
-# cobertura de `flutter test --coverage`, que corre en el mismo devcontainer que el CI. Automático solo en
-# push a develop cuando cambia la app; a mano desde Actions → Run workflow, sobre la rama que se elija.
-# Necesita el secreto SONAR_TOKEN. Mismo patrón que el repo de la web (.github/workflows/sonar.yml).
+# cobertura de `flutter test --coverage`, que corre en el mismo devcontainer que el CI. Automático en
+# PRs hacia develop/release/main (decora el PR y evalúa el quality gate) y en push a develop, siempre que
+# cambie la app; a mano desde Actions → Run workflow, sobre la rama que se elija.
+# Necesita el secreto SONAR_TOKEN. Los PRs de forks y de Dependabot no reciben secretos: ahí se salta. Mismo patrón que el repo de la web (.github/workflows/sonar.yml).
 on:
+  pull_request:
+    branches: [develop, 'release/**', main]
+    paths: ['lib/**', 'test/**', 'pubspec.yaml', 'pubspec.lock', 'sonar-project.properties', '.github/workflows/sonar.yml']
   push:
     branches: [develop]
     paths: ['lib/**', 'test/**', 'pubspec.yaml', 'pubspec.lock', 'sonar-project.properties', '.github/workflows/sonar.yml']
@@ -19,6 +23,8 @@ permissions:
 
 jobs:
   sonar:
+    # Sin SONAR_TOKEN (PR de fork o de Dependabot) el análisis no puede autenticarse: se salta en vez de fallar.
+    if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:

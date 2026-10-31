@@ -23,7 +23,7 @@ Mapa: [`README.md`](README.md).
 
 ## Estado
 
-- Hoy: devcontainer obligatorio, flavors dev/prod, CI completo en el contenedor, seguridad (gitleaks, actionlint, osv-scanner, MobSF, Trivy), emuladores, CD con versión automática, R8 y Dart ofuscado, Release y rollback.
+- Hoy: devcontainer obligatorio, flavors dev/prod, CI completo en el contenedor, Sonar en PRs y develop, seguridad (gitleaks, actionlint, osv-scanner, MobSF, Trivy), emuladores, CD con versión automática, R8 y Dart ofuscado, Release y rollback.
 - Listo, falta cuenta: Firebase App Distribution y Test Lab. Google Play queda para el futuro (sin tienda por ahora).
-- Pendiente: Sonar (lo monta quien lo hizo en web y backend) y Sentry ([`docs/plan-sentry.md`](docs/plan-sentry.md)).
+- Pendiente: Sentry ([`docs/plan-sentry.md`](docs/plan-sentry.md)).
 - Las librerías de las HU móviles (`local_auth`, `flutter_secure_storage`, `camera`, `geolocator`, `google_maps_flutter`, `firebase_messaging`) todavía no están en `pubspec.yaml`.
