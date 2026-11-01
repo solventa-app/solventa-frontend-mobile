@@ -345,7 +345,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get fallaEsperaRequerida => 'Please wait a moment before requesting another code.';
+  String get fallaEsperaRequerida =>
+      'Please wait a moment before requesting another code.';
 
   @override
   String get m0105bReqLargo => 'Between 8 and 128 characters';
@@ -357,7 +358,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0105bReqMinuscula => 'One lowercase letter';
 
   @override
-  String get m0105bReqEspecial => 'One special character (for example ! ? @ # €)';
+  String get m0105bReqEspecial =>
+      'One special character (for example ! ? @ # €)';
 
   @override
   String get otpReenviado => 'We sent a new code to your email.';

@@ -11,7 +11,12 @@ void main() {
   });
 
   test('claves globales que cumplen (Unicode)', () {
-    for (final c in ['Contraseña¿1', 'Ñandú€uno', 'Zażółć gęślą', 'Straße-Ä1']) {
+    for (final c in [
+      'Contraseña¿1',
+      'Ñandú€uno',
+      'Zażółć gęślą',
+      'Straße-Ä1',
+    ]) {
       expect(ReglaClave.evaluar(c).cumple, isTrue, reason: c);
     }
   });

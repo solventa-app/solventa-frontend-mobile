@@ -108,8 +108,9 @@ class _M0105cCodigoPageState extends ConsumerState<M0105cCodigoPage> {
         _reenviado = true;
       });
       _iniciarEspera();
-    } else if (ref.read(onboardingProvider).falla
-        case FallaNegocio(motivo: 'ESPERA_REQUERIDA')) {
+    } else if (ref.read(onboardingProvider).falla case FallaNegocio(
+      motivo: 'ESPERA_REQUERIDA',
+    )) {
       // El backend aún exige esperar: se vuelve a bloquear el botón.
       _iniciarEspera();
     }

@@ -19,10 +19,7 @@ import '../onboarding_routes.dart';
 /// - **Iniciar sesión**: correo + clave existentes para recuperar la cuenta y
 ///   volver al Home.
 class M0105bCuentaPage extends ConsumerStatefulWidget {
-  const M0105bCuentaPage({
-    super.key,
-    this.modoInicialLogin = false,
-  });
+  const M0105bCuentaPage({super.key, this.modoInicialLogin = false});
 
   final bool modoInicialLogin;
 

@@ -149,7 +149,8 @@ void main() {
   testWidgets('desenlace «en revisión» llega a M01-07b', (tester) async {
     await abrir(tester);
     await hastaPruebaDeVida(tester);
-    await tester.tap(find.textContaining('queda en revisión'));
+    bff.resultado = OnboardingFixtures.onboarding(estado: 'EN_REVISION');
+    await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
     expect(
       find.text('Estamos revisando tu identidad, te avisamos.'),
@@ -162,7 +163,13 @@ void main() {
     (tester) async {
       await abrir(tester);
       await hastaPruebaDeVida(tester);
-      await tester.tap(find.textContaining('es rechazado'));
+      bff.resultado = OnboardingFixtures.onboarding(
+        estado: 'RECHAZADA',
+        motivo: 'DOCUMENTO_ILEGIBLE',
+        intento: 1,
+        intentosRestantes: 2,
+      );
+      await tester.tap(find.text('Continuar'));
       await tester.pumpAndSettle();
       expect(
         find.textContaining('No pudimos verificar tu documento'),
