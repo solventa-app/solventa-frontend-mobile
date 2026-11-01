@@ -1,7 +1,22 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <!-- El plugin de cámara los declara, pero el video se graba sin audio y las
+         capturas van a la caché privada: se quitan del manifest final. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
     <application
-        android:label="solventa_mobile"
+        android:label="${appName}"
         android:name="${applicationName}"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:usesCleartextTraffic="${usesCleartextTraffic}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

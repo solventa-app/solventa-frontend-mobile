@@ -1,30 +1,62 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solventa_mobile/app/solventa_app.dart';
+import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
+import 'package:solventa_mobile/features/home/presentation/home_page.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/pages/m01_05b_cuenta_page.dart';
 
-import 'package:solventa_mobile/main.dart';
+class _SesionActivaNotifier extends OnboardingNotifier {
+  @override
+  OnboardingState build() => const OnboardingState(cuentaCreada: true);
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets(
+    'La app arranca en Crea tu cuenta (M01-05b) con el tema de Solventa',
+    (tester) async {
+      await tester.pumpWidget(const ProviderScope(child: SolventaApp()));
+      await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      expect(find.text('Crea tu cuenta'), findsOneWidget);
+      expect(find.text('Crear cuenta'), findsOneWidget);
+      expect(find.byType(M0105bCuentaPage), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      final context = tester.element(find.byType(M0105bCuentaPage));
+      expect(Theme.of(context).colorScheme.primary, const Color(0xFF1E4680));
+      expect(Localizations.localeOf(context), const Locale('es', 'CO'));
+    },
+  );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
+  testWidgets(
+    'Con sesión activa, Home G-03 muestra bienvenida y cerrar sesión pide confirmación',
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            onboardingProvider.overrideWith(_SesionActivaNotifier.new),
+          ],
+          child: const SolventaApp(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Solventa'), findsOneWidget);
+      expect(find.text('Bienvenido a Solventa'), findsOneWidget);
+      expect(find.text('Completar registro'), findsOneWidget);
+      expect(find.byType(SolBottomNav), findsOneWidget);
+
+      final context = tester.element(find.byType(HomePage));
+      expect(Theme.of(context).colorScheme.primary, const Color(0xFF1E4680));
+      expect(Localizations.localeOf(context), const Locale('es', 'CO'));
+
+      await tester.tap(find.text('Cerrar sesión'));
+      await tester.pumpAndSettle();
+      expect(find.text('¿Quieres cerrar sesión?'), findsOneWidget);
+      await tester.tap(find.text('No, seguir aquí'));
+      await tester.pumpAndSettle();
+      expect(find.text('Bienvenido a Solventa'), findsOneWidget);
+    },
+  );
 }

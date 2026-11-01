@@ -1,0 +1,82 @@
+name: Test Lab
+
+# Firebase Test Lab en teléfonos reales: Robo test (un robot recorre la app solo) e integration_test/.
+# Manual, en cada release/sprint-N (docs/ci-cd.md, "Granja de dispositivos"). El resultado se anota en
+# docs/evidencias/. Se salta solo mientras no exista FIREBASE_SERVICE_ACCOUNT.
+on:
+  workflow_dispatch:
+    inputs:
+      dispositivos:
+        description: >-
+          Dispositivos separados por espacio (model=…,version=…). Conviene sumar un Samsung de la lista vigente:
+          gcloud firebase test android models list --filter=form=PHYSICAL
+        required: false
+        default: "model=oriole,version=33 model=redfin,version=30"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  test-lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: dev
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: ¿Firebase configurado?
+        id: firebase
+        env:
+          CUENTA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PROYECTO: ${{ vars.FIREBASE_PROJECT_ID }}
+        run: |
+          if [ -n "$CUENTA" ] && [ -n "$PROYECTO" ]; then
+            echo "listo=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error title=Test Lab::Falta FIREBASE_SERVICE_ACCOUNT o FIREBASE_PROJECT_ID (docs/ci-cd.md, 'Pasos manuales')."
+            exit 1
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # APK de la app y APK de pruebas instrumentadas (integration_test/ a través de MainActivityTest).
+      - name: Compilar APKs
+        uses: ./.github/actions/devcontainer
+        with:
+          run: >-
+            flutter build apk --debug --flavor dev --dart-define-from-file=config/mock.json &&
+            mkdir -p dist && cp build/app/outputs/flutter-apk/app-dev-debug.apk dist/robo.apk &&
+            cd android &&
+            ./gradlew app:assembleDevDebugAndroidTest &&
+            ./gradlew app:assembleDevDebug -Ptarget=integration_test/app_test.dart
+
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+
+      - name: Robo test
+        env:
+          PROYECTO: ${{ vars.FIREBASE_PROJECT_ID }}
+          DISPOSITIVOS: ${{ inputs.dispositivos }}
+        run: |
+          args=()
+          for d in $DISPOSITIVOS; do args+=(--device "$d"); done
+          gcloud firebase test android run --project "$PROYECTO" --type robo \
+            --app dist/robo.apk \
+            --timeout 5m "${args[@]}"
+
+      - name: integration_test
+        env:
+          PROYECTO: ${{ vars.FIREBASE_PROJECT_ID }}
+          DISPOSITIVOS: ${{ inputs.dispositivos }}
+        run: |
+          args=()
+          for d in $DISPOSITIVOS; do args+=(--device "$d"); done
+          gcloud firebase test android run --project "$PROYECTO" --type instrumentation \
+            --app build/app/outputs/apk/dev/debug/app-dev-debug.apk \
+            --test build/app/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk \
+            --timeout 5m "${args[@]}"

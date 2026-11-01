@@ -1,0 +1,291 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/design_system/solventa_ui.dart';
+import '../../../../core/errors/falla.dart';
+import '../../../../core/l10n/l10n.dart';
+import '../../../../core/network/network_providers.dart';
+import '../onboarding_notifier.dart';
+import '../onboarding_routes.dart';
+
+/// M01-05b · Crea tu cuenta o Inicia sesión (plan de HU-M01).
+///
+/// Permite:
+/// - **Crear cuenta**: correo + clave + confirmación. Si se activa desde el
+///   inicio o con el enlace de verificación por correo, envía un código OTP de
+///   6 dígitos a `M0105cCodigoPage`; en el flujo continuo tras la prueba de
+///   vida crea la cuenta directamente y sigue a `M01-06`.
+/// - **Iniciar sesión**: correo + clave existentes para recuperar la cuenta y
+///   volver al Home.
+class M0105bCuentaPage extends ConsumerStatefulWidget {
+  const M0105bCuentaPage({
+    super.key,
+    this.modoInicialLogin = false,
+    this.exigirCodigoOtp = false,
+  });
+
+  final bool modoInicialLogin;
+  final bool exigirCodigoOtp;
+
+  @override
+  ConsumerState<M0105bCuentaPage> createState() => _M0105bCuentaPageState();
+}
+
+class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
+  static final _correoValido = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+  final _correo = TextEditingController();
+  final _clave = TextEditingController();
+  final _confirmacion = TextEditingController();
+  bool _validar = false;
+  late bool _modoLogin = widget.modoInicialLogin;
+
+  @override
+  void dispose() {
+    _correo.dispose();
+    _clave.dispose();
+    _confirmacion.dispose();
+    super.dispose();
+  }
+
+  String? _errorCorreo(AppLocalizations l10n) =>
+      _correoValido.hasMatch(_correo.text.trim())
+      ? null
+      : l10n.m0105bErrorCorreo;
+
+  /// Misma regla que AUTH (`validar_clave`): entre 8 y 128 caracteres.
+  bool get _claveCumpleLargo =>
+      _clave.text.length >= 8 && _clave.text.length <= 128;
+
+  String? _errorClave(AppLocalizations l10n) {
+    final n = _clave.text.length;
+    // Al iniciar sesión no se exigen las reglas de longitud de la creación:
+    // la clave existente la valida el servidor.
+    if (_modoLogin) return n > 0 ? null : l10n.m0105bErrorContrasenaLogin;
+    return n >= 8 && n <= 128 ? null : l10n.m0105bErrorContrasena;
+  }
+
+  String? _errorConfirmacion(AppLocalizations l10n) =>
+      _confirmacion.text == _clave.text ? null : l10n.m0105bErrorConfirmar;
+
+  Future<void> _enviar(AppLocalizations l10n) async {
+    setState(() => _validar = true);
+    if (_errorCorreo(l10n) != null || _errorClave(l10n) != null) {
+      return;
+    }
+    if (!_modoLogin && _errorConfirmacion(l10n) != null) {
+      return;
+    }
+    final notifier = ref.read(onboardingProvider.notifier);
+    final correoLimpio = _correo.text.trim();
+    final claveTexto = _clave.text;
+
+    if (_modoLogin) {
+      final ok = await notifier.iniciarSesion(
+        correo: correoLimpio,
+        clave: claveTexto,
+      );
+      if (ok && mounted) context.go('/');
+      return;
+    }
+
+    if (_exigirOtp) {
+      final ok = await notifier.solicitarCodigoCorreo(
+        correo: correoLimpio,
+        clave: claveTexto,
+      );
+      if (ok && mounted) await context.push(OnboardingRoutes.codigoCorreo);
+      return;
+    }
+
+    final ok = await notifier.crearCuenta(
+      correo: correoLimpio,
+      clave: claveTexto,
+    );
+    if (ok && mounted) context.go('/');
+  }
+
+  Future<void> _enviarConOtp(AppLocalizations l10n) async {
+    setState(() => _validar = true);
+    if (_errorCorreo(l10n) != null ||
+        _errorClave(l10n) != null ||
+        _errorConfirmacion(l10n) != null) {
+      return;
+    }
+    final ok = await ref
+        .read(onboardingProvider.notifier)
+        .solicitarCodigoCorreo(correo: _correo.text.trim(), clave: _clave.text);
+    if (ok && mounted) await context.push(OnboardingRoutes.codigoCorreo);
+  }
+
+  /// Con backend real el correo se verifica siempre con el código (OTP).
+  bool get _exigirOtp => widget.exigirCodigoOtp || !ref.read(usarFakesProvider);
+
+  void _alternarModo() {
+    ref.read(onboardingProvider.notifier).limpiarFalla();
+    // Crear cuenta e iniciar sesión no comparten lo escrito ni sus errores.
+    _correo.clear();
+    _clave.clear();
+    _confirmacion.clear();
+    setState(() {
+      _modoLogin = !_modoLogin;
+      _validar = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final estado = ref.watch(onboardingProvider);
+    final falla = estado.falla;
+    final correoRegistrado =
+        falla is FallaNegocio && falla.motivo == 'CORREO_YA_REGISTRADO';
+
+    final puedeVolver = Navigator.maybeOf(context)?.canPop() ?? false;
+
+    return SolFlowScaffold(
+      title: _modoLogin ? l10n.cuentaTituloIngresar : l10n.m0105bTitulo,
+      anchorActions: false,
+      showBack: puedeVolver,
+      showProfile: false,
+      onBack: puedeVolver ? () => context.pop() : null,
+      body: AutofillGroup(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              _modoLogin ? l10n.cuentaIntroIngresar : l10n.m0105bIntro,
+              style: context.solText.body.copyWith(
+                color: context.colors.onSurface,
+              ),
+            ),
+            const SizedBox(height: SolSpacing.xl),
+            SolTextField(
+              label: l10n.m0105bCorreo,
+              controller: _correo,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              autofillHints: const [AutofillHints.email],
+              onChanged: (_) => setState(() {}),
+              errorText: correoRegistrado
+                  ? l10n.m0105bCorreoRegistrado
+                  : _validar
+                  ? _errorCorreo(l10n)
+                  : null,
+            ),
+            const SizedBox(height: SolSpacing.lg),
+            SolTextField(
+              label: l10n.m0105bContrasena,
+              controller: _clave,
+              obscureText: true,
+              textInputAction: _modoLogin
+                  ? TextInputAction.done
+                  : TextInputAction.next,
+              autofillHints: [
+                _modoLogin ? AutofillHints.password : AutofillHints.newPassword,
+              ],
+              onChanged: (_) => setState(() {}),
+              errorText: _validar ? _errorClave(l10n) : null,
+            ),
+            if (!_modoLogin) ...[
+              const SizedBox(height: SolSpacing.xs),
+              _RequisitoClave(
+                texto: l10n.m0105bAyudaContrasena,
+                estado: _claveCumpleLargo
+                    ? l10n.m0105bRequisitoCumplido
+                    : l10n.m0105bRequisitoPendiente,
+                cumplido: _claveCumpleLargo,
+              ),
+              const SizedBox(height: SolSpacing.lg),
+              SolTextField(
+                label: l10n.m0105bConfirmar,
+                controller: _confirmacion,
+                obscureText: true,
+                textInputAction: TextInputAction.done,
+                onChanged: (_) => setState(() {}),
+                errorText: _validar ? _errorConfirmacion(l10n) : null,
+              ),
+            ],
+            if (falla != null && !correoRegistrado) ...[
+              const SizedBox(height: SolSpacing.lg),
+              SolStatusBanner(
+                status: SolStatus.error,
+                title: l10n.falla(falla),
+              ),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        SolButton.primary(
+          label: _modoLogin ? l10n.cuentaBotonIngresar : l10n.m0105bCrear,
+          loading: estado.ocupado,
+          onPressed: () => _enviar(l10n),
+        ),
+        const SizedBox(height: SolSpacing.sm),
+        Center(
+          child: SolLinkButton(
+            label: _modoLogin
+                ? l10n.cuentaCambiarACrear
+                : l10n.cuentaCambiarAIngresar,
+            onPressed: estado.ocupado ? null : _alternarModo,
+          ),
+        ),
+        // Atajo de demo: solo con API_ENV=mock (en local/dev/prod el OTP es obligatorio).
+        if (!_modoLogin && !_exigirOtp)
+          SolDemoTrigger(
+            label: l10n.otpTitulo,
+            center: true,
+            onTap: () => _enviarConOtp(l10n),
+          ),
+      ],
+    );
+  }
+}
+
+/// Requisito de la clave con ✓ cuando se cumple (no solo color: ícono y texto).
+class _RequisitoClave extends StatelessWidget {
+  const _RequisitoClave({
+    required this.texto,
+    required this.estado,
+    required this.cumplido,
+  });
+
+  final String texto;
+
+  /// Lo que lee el lector de pantalla junto al requisito («cumplido» / «pendiente»).
+  final String estado;
+  final bool cumplido;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final color = cumplido ? colors.primary : colors.onSurfaceVariant;
+    return Semantics(
+      label: '$texto, $estado',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.only(left: SolSpacing.xs),
+        child: Row(
+          children: [
+            ExcludeSemantics(
+              child: Icon(
+                cumplido ? SolIcons.success : SolIcons.pendingRegistration,
+                size: 16,
+                color: color,
+              ),
+            ),
+            const SizedBox(width: SolSpacing.xs),
+            Expanded(
+              child: Text(
+                texto,
+                style: context.solText.note.copyWith(color: color),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

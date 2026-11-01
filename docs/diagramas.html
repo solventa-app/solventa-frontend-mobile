@@ -1,0 +1,100 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Abrir en el navegador. Mismo contenido que docs/diagramas.md. Los diagramas los dibuja Mermaid desde el CDN. -->
+<title>Flujo CI/CD Solventa mobile</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono&display=swap">
+<style>
+/* Layout: una columna de lectura; cada diagrama en su propio panel desplazable */
+:root{--bg:#f6f7f4;--fg:#1d2420;--muted:#5b665f;--panel:#ffffff;--line:#d9ded8;--accent:#1f6f54;
+--display:"Fraunces",Georgia,serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141916;--fg:#e4eae5;--muted:#9aa69e;--panel:#1c231f;--line:#2e3832;--accent:#5fc49b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141916;--fg:#e4eae5;--muted:#9aa69e;--panel:#1c231f;--line:#2e3832;--accent:#5fc49b;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+main{max-width:1100px;margin:0 auto;display:grid;gap:40px}
+h1{font:600 clamp(28px,5vw,40px)/1.15 var(--display);margin:0;text-wrap:balance}
+h2{font:600 24px/1.2 var(--display);margin:0 0 8px;text-wrap:balance}
+p,li{max-width:68ch;color:var(--fg)} .muted{color:var(--muted)}
+code{font-family:var(--mono);font-size:.9em}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto}
+.tag{font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+ol,ul{padding-left:20px;display:grid;gap:4px}
+</style>
+<main>
+<header><div class="tag">solventa-frontend-mobile · Android</div><h1>Cómo viaja el código de tu máquina al teléfono</h1>
+<p class="muted">Lo que deja el primer PR de mobile: devcontainer obligatorio, flavors dev y prod, checks de cada PR, builds de develop y main, pruebas en emuladores y teléfonos reales, seguridad, versionado y rollback. Firebase ya está en los workflows y se saltan solos hasta que existan las cuentas.</p></header>
+<section><h2>1 · Correr el proyecto en local</h2><p class="muted">Todo corre dentro del devcontainer. Fuera solo quedan el emulador y el teléfono, conectados por el servidor adb de tu máquina.</p><div class="panel"><pre class="mermaid">flowchart LR
+  subgraph Maquina["Tu máquina (Windows, Mac o Linux)"]
+    VS["VS Code + Dev Containers"]
+    EMU["Emulador<br/>(Android Studio → Device Manager)"]
+    TEL["Teléfono por USB<br/>(depuración USB activa)"]
+    ADB["Servidor adb<br/>Mac: adb start-server<br/>Windows/Linux: adb -a nodaemon server start"]
+    EMU --- ADB
+    TEL --- ADB
+  end
+  subgraph Contenedor["Devcontainer (misma imagen que el CI)"]
+    SDK["Flutter 3.47.8 · Dart 3.13.7<br/>JDK 17 · Android SDK 36 · NDK"]
+    RUN["flutter run<br/>(flavor dev por defecto)"]
+    CHK["tool/verificar.sh<br/>formato · análisis · pruebas"]
+    HOOK["lefthook pre-push<br/>(lo mismo, antes de cada push)"]
+  end
+  VS -- "Reopen in Container" --> Contenedor
+  RUN -- "ADB_SERVER_SOCKET<br/>host.docker.internal:5037" --> ADB
+  CHK --> HOOK
+  HOOK -- "git push" --> GH["GitHub: abrir PR"]
+</pre></div><ol><li>VS Code → <b>Reopen in Container</b>.</li><li>Abre el emulador o conecta el teléfono. En una terminal de tu máquina: en Mac <code>adb start-server</code>; en Windows y Linux <code>adb kill-server &amp;&amp; adb -a nodaemon server start</code>.</li><li>En el contenedor: <code>flutter devices</code> y <code>flutter run</code> (usa dev).</li><li>Antes del PR: <code>tool/verificar.sh</code>; el hook de pre-push lo corre solo.</li></ol></section>
+<section><h2>2 · CI/CD de punta a punta</h2><p class="muted">Del PR a develop hasta el APK firmado del Release, con el sprint en medio.</p><div class="panel"><pre class="mermaid">flowchart TD
+  DEV["Rama feat|fix|chore/KAN-N-…"] -->|PR| PRD{{"PR a develop"}}
+  subgraph ChecksPR["Checks de cada PR (develop o main)"]
+    C1["mobile (en el devcontainer)<br/>versiones · format · analyze<br/>unit + widget + goldens · cobertura<br/>APK dev en release (R8)"]
+    C2["Título del PR · Nombre de rama"]
+    C3["Seguridad: gitleaks · actionlint · SHA<br/>osv-scanner (informativo)"]
+  end
+  PRD --> ChecksPR
+  ChecksPR -->|"1 aprobación + squash"| D[("develop")]
+
+  subgraph Develop["Cada merge a develop"]
+    D1["APK Solventa Dev firmado<br/>versión 1.3.0-dev.N"]
+    D2["App Distribution → grupo qa"]
+    D3["MobSF sobre el APK<br/>(reporte PDF/JSON)"]
+    D4["Emuladores: integration_test<br/>teléfono pequeño API 28<br/>teléfono grande API 34 · tablet API 34"]
+    D1 --> D2
+    D1 --> D3
+  end
+  D --> Develop
+
+  D -->|"fin de sprint"| REL["release/sprint-N<br/>(solo fix|chore)"]
+  REL --> EXP["Sesión exploratoria<br/>docs/evidencias/EXP-sprint-N.md"]
+  REL --> TL["Test Lab (manual)<br/>Robo test + integration_test<br/>en teléfonos reales"]
+  REL -->|"PR + merge commit"| M[("main")]
+  HOT["hotfix/KAN-N-…"] -->|PR| M
+
+  subgraph CD["Cada merge a main (cd.yml)"]
+    P1["Versión desde los títulos de PR<br/>git-cliff: feat → menor, fix → parche"]
+    P2["Build prod en el devcontainer<br/>firmado · R8 · --obfuscate<br/>--split-debug-info"]
+    P3["GitHub Release v1.3.0+57<br/>APK · AAB · mapping · símbolos"]
+    P4["Instalar el APK del Release<br/>(sin tienda por ahora)"]
+    P1 --> P2 --> P3 --> P4
+  end
+  M --> CD
+  M -->|"reintegración"| D
+
+  RB["rollback.yml (manual)<br/>tag viejo → build nuevo<br/>rollback-1.2.0+58"] --> P4
+</pre></div><ul><li><b>Versión</b>: sale de los títulos de los PR (feat sube la menor, fix el parche). El build siempre crece, también en un rollback.</li><li><b>Prod</b>: firmado, con R8 y Dart ofuscado. El Release guarda el mapping y los símbolos para leer los errores.</li><li><b>Rollback</b>: recompila un tag viejo con un build nuevo, porque Android no deja bajar de versión.</li></ul></section>
+<section><h2>3 · Pruebas: qué corre y dónde</h2><p class="muted">Cada nivel atrapa lo que el anterior no ve. Lo manual queda como evidencia en el repo.</p><div class="panel"><pre class="mermaid">flowchart LR
+  subgraph CadaPR["Cada PR · en el devcontainer"]
+    U["Unitarias y de widget"]
+    G["Goldens en varios tamaños<br/>y escalas de texto"]
+    A["Accesibilidad<br/>meetsGuideline"]
+  end
+  subgraph CadaDevelop["Cada merge a develop · runner con KVM"]
+    E["integration_test<br/>3 emuladores"]
+  end
+  subgraph CadaRelease["Cada release/sprint-N"]
+    T["Test Lab<br/>Robo + integration_test<br/>teléfonos reales"]
+    X["Exploratoria manual<br/>checklist de 10 puntos"]
+  end
+  CadaPR --> CadaDevelop --> CadaRelease
+  CadaRelease --> EV["docs/evidencias/<br/>hallazgos → Jira"]
+</pre></div><ul><li><b>Seguridad</b> en cada PR: gitleaks en todo el historial, actionlint, acciones fijadas por SHA y osv-scanner. MobSF corre sobre el APK de develop.</li><li><b>Exploratoria</b>: una sesión por sprint con el checklist de 10 puntos. Los hallazgos medios y altos van a Jira.</li></ul></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script><script>mermaid.initialize({startOnLoad:true,theme:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"default"});</script></html>

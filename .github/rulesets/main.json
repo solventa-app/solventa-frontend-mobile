@@ -6,7 +6,6 @@
   "rules": [
     { "type": "deletion" },
     { "type": "non_fast_forward" },
-    { "type": "required_linear_history" },
     {
       "type": "pull_request",
       "parameters": {
@@ -25,7 +24,9 @@
         "required_status_checks": [
           { "context": "mobile" },
           { "context": "Título del PR" },
-          { "context": "Nombre de rama" }
+          { "context": "Nombre de rama" },
+          { "context": "Secretos (gitleaks)" },
+          { "context": "Workflows (actionlint)" }
         ]
       }
     }

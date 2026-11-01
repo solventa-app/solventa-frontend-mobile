@@ -1,0 +1,46 @@
+name: Sonar
+
+# Análisis de calidad en SonarQube Cloud (organización y proyecto en sonar-project.properties), con la
+# cobertura de `flutter test --coverage`, que corre en el mismo devcontainer que el CI. Automático en
+# PRs hacia develop/release/main (decora el PR y evalúa el quality gate) y en push a develop, siempre que
+# cambie la app; a mano desde Actions → Run workflow, sobre la rama que se elija.
+# Necesita el secreto SONAR_TOKEN. Los PRs de forks y de Dependabot no reciben secretos: ahí se salta. Mismo patrón que el repo de la web (.github/workflows/sonar.yml).
+on:
+  pull_request:
+    branches: [develop, 'release/**', main]
+    paths: ['lib/**', 'test/**', 'pubspec.yaml', 'pubspec.lock', 'sonar-project.properties', '.github/workflows/sonar.yml']
+  push:
+    branches: [develop]
+    paths: ['lib/**', 'test/**', 'pubspec.yaml', 'pubspec.lock', 'sonar-project.properties', '.github/workflows/sonar.yml']
+  workflow_dispatch:
+
+concurrency:
+  group: sonar-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  sonar:
+    # Sin SONAR_TOKEN (PR de fork o de Dependabot) el análisis no puede autenticarse: se salta en vez de fallar.
+    if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write # la acción del devcontainer publica la imagen en GHCR
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Historial completo: con un clon superficial Sonar no puede atribuir el código nuevo.
+          fetch-depth: 0
+      - uses: ./.github/actions/devcontainer
+        with:
+          run: flutter pub get && flutter test --coverage
+      - name: Falla si no hay informe de cobertura
+        # Sin lcov Sonar publicaría 0 % de cobertura sin avisar.
+        run: test -s coverage/lcov.info
+      - uses: SonarSource/sonarqube-scan-action@4d1dc0c91ee400dcf8a6dddf2f705ac36542e304 # v8

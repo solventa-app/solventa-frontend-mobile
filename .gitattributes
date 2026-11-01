@@ -1,0 +1,11 @@
+# LF siempre: con CRLF (Git en Windows fuera del contenedor) fallan `dart format` y los scripts de tool/.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.webp binary
+*.ttf binary
+*.otf binary
+*.jar binary
+*.jks binary
+*.keystore binary

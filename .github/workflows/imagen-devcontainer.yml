@@ -1,0 +1,53 @@
+name: Imagen del devcontainer
+
+# Publica la imagen de .devcontainer/ en GHCR como `latest` y con la versión de Flutter, para que el primer
+# "Reopen in Container" de cada persona la descargue en vez de compilarla (devcontainer.json usa cacheFrom).
+# Los demás workflows publican su propia etiqueta por contenido (.github/actions/devcontainer).
+# Trivy revisa las vulnerabilidades de la imagen (informativo, como en solventa-backend).
+on:
+  push:
+    branches: [develop]
+    paths: [".devcontainer/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: imagen-devcontainer
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  imagen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Construir
+        id: imagen
+        uses: ./.github/actions/devcontainer
+        with:
+          run: flutter --version
+
+      - name: Publicar latest y versión de Flutter
+        env:
+          IMAGEN: ${{ steps.imagen.outputs.image }}
+        run: |
+          base="${IMAGEN%:*}"
+          version=$(sed -n 's/^ARG FLUTTER_VERSION=//p' .devcontainer/Dockerfile)
+          for etiqueta in latest "$version"; do
+            docker tag "$IMAGEN" "$base:$etiqueta"
+            docker push "$base:$etiqueta"
+          done
+
+      - name: Escanear imagen (Trivy, informativo)
+        continue-on-error: true
+        env:
+          IMAGEN: ${{ steps.imagen.outputs.image }}
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:0.76.1 image --scanners vuln --severity HIGH,CRITICAL --exit-code 0 "$IMAGEN"

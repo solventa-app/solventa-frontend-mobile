@@ -1,8 +1,8 @@
 {
-  "name": "tags de sprint",
+  "name": "tags de sprint y de versión",
   "target": "tag",
   "enforcement": "active",
-  "conditions": { "ref_name": { "include": ["refs/tags/sprint-*"], "exclude": [] } },
+  "conditions": { "ref_name": { "include": ["refs/tags/sprint-*", "refs/tags/v*"], "exclude": [] } },
   "rules": [
     { "type": "deletion" },
     { "type": "non_fast_forward" },

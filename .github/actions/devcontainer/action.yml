@@ -1,0 +1,65 @@
+name: Correr en el devcontainer
+description: >-
+  Construye (o reutiliza) la imagen de .devcontainer/ y corre un comando dentro, igual que en local.
+  La imagen se publica en GHCR con una etiqueta que depende del contenido de .devcontainer/, así cada
+  cambio de versión arma una imagen nueva y el resto de las veces solo se descarga.
+
+inputs:
+  run:
+    description: Comando a correr dentro del contenedor, desde la raíz del repo.
+    required: true
+  carpeta:
+    description: Carpeta del repo con el .devcontainer/ (rollback.yml compila un tag viejo en una subcarpeta).
+    required: false
+    default: "."
+  env:
+    description: Variables de entorno a pasar al contenedor (una por línea, NOMBRE o NOMBRE=valor).
+    required: false
+    default: ""
+
+outputs:
+  image:
+    description: Imagen usada (con etiqueta).
+    value: ${{ steps.etiqueta.outputs.image }}
+
+runs:
+  using: composite
+  steps:
+    - name: Liberar espacio en el runner
+      # La imagen pesa unos 5 GB; el runner trae ~14 GB libres y herramientas que no usamos.
+      shell: bash
+      run: |
+        sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost /usr/local/lib/android /opt/hostedtoolcache/CodeQL
+        df -h / | tail -1
+
+    - name: Etiqueta de la imagen
+      id: etiqueta
+      shell: bash
+      working-directory: ${{ inputs.carpeta }}
+      run: |
+        version=$(sed -n 's/^ARG FLUTTER_VERSION=//p' .devcontainer/Dockerfile)
+        huella=$(cat .devcontainer/Dockerfile .devcontainer/devcontainer.json | sha256sum | cut -c1-12)
+        echo "name=ghcr.io/${GITHUB_REPOSITORY,,}-dev" >> "$GITHUB_OUTPUT"
+        echo "tag=${version}-${huella}" >> "$GITHUB_OUTPUT"
+        echo "image=ghcr.io/${GITHUB_REPOSITORY,,}-dev:${version}-${huella}" >> "$GITHUB_OUTPUT"
+
+    - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+
+    - uses: devcontainers/ci@513af61f4de4f75d37e4438f184ba4358f0fc1ca # v0.3.1900000450
+      with:
+        subFolder: ${{ inputs.carpeta }}
+        imageName: ${{ steps.etiqueta.outputs.name }}
+        imageTag: ${{ steps.etiqueta.outputs.tag }}
+        cacheFrom: |
+          ${{ steps.etiqueta.outputs.image }}
+          ${{ steps.etiqueta.outputs.name }}:latest
+        # Dependabot corre con un token de solo lectura: usa la imagen pero no la publica.
+        push: ${{ github.actor == 'dependabot[bot]' && 'never' || 'always' }}
+        runCmd: ${{ inputs.run }}
+        env: |
+          CI=true
+          ${{ inputs.env }}
