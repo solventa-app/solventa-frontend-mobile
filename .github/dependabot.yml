@@ -1,6 +1,14 @@
 version: 2
 updates:
-  - { package-ecosystem: pub, directory: /, target-branch: develop, schedule: { interval: weekly } }
+  # permission_handler 13.x exige compilar con Android API 37 y el devcontainer trae android-36 (#31). Se quita
+  # este ignore cuando se suba el Android SDK del devcontainer (docs/entorno-local.md).
+  - package-ecosystem: pub
+    directory: /
+    target-branch: develop
+    schedule: { interval: weekly }
+    ignore:
+      - dependency-name: permission_handler
+        update-types: ["version-update:semver-major"]
   - { package-ecosystem: github-actions, directory: /, target-branch: develop, schedule: { interval: monthly } }
   # Imagen base del devcontainer (ubuntu fijada por digest). Flutter y el Android SDK se suben a mano (docs/entorno-local.md).
   - { package-ecosystem: docker, directory: /.devcontainer, target-branch: develop, schedule: { interval: monthly } }
