@@ -3,7 +3,7 @@
 # releases_linux.json), `environment.flutter` en pubspec.yaml y regenerar goldens, en un PR propio.
 #
 # Siempre amd64 (lo fija devcontainer.json): el Android SDK no publica binarios para Linux ARM. En Mac con chip M corre con Rosetta.
-FROM ubuntu:24.04@sha256:68ee22004a9109b44973313b02ff7b1de250f1de0f5ecb628d73f579aaff33ac
+FROM ubuntu:26.04@sha256:6a06111c3b0a8600feadb270aec771dc239bf407b25625f93f44ab00e11f4d3c
 
 ARG FLUTTER_VERSION=3.47.8
 ARG FLUTTER_SHA256=baf7dcc5a3dbba60fe863bf493a6cf203195621f7786eaa5a1bba02cd0d87dd2
