@@ -13,6 +13,8 @@ class SolFlowScaffold extends StatelessWidget {
     this.actions = const [],
     this.anchorActions = true,
     this.onBack,
+    this.showBack = true,
+    this.showProfile = true,
     this.onLocaleTap,
     this.onProfileTap,
     this.padding,
@@ -31,6 +33,8 @@ class SolFlowScaffold extends StatelessWidget {
 
   /// Si se da, intercepta la flecha y el atrás del sistema (PopScope).
   final VoidCallback? onBack;
+  final bool showBack;
+  final bool showProfile;
   final VoidCallback? onLocaleTap;
   final VoidCallback? onProfileTap;
   final EdgeInsets? padding;
@@ -41,6 +45,8 @@ class SolFlowScaffold extends StatelessWidget {
       topBar: SolTopBar.flow(
         title: title,
         onBack: onBack,
+        showBack: showBack && onBack != null,
+        showProfile: showProfile,
         onLocaleTap: onLocaleTap,
         onProfileTap: onProfileTap,
       ),

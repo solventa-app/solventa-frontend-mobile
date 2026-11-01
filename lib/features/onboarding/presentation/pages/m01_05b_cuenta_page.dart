@@ -96,7 +96,7 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
       correo: correoLimpio,
       clave: claveTexto,
     );
-    if (ok && mounted) context.go(OnboardingRoutes.verificando);
+    if (ok && mounted) context.go('/');
   }
 
   Future<void> _enviarConOtp(AppLocalizations l10n) async {
@@ -131,16 +131,14 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
     final correoRegistrado =
         falla is FallaNegocio && falla.motivo == 'CORREO_YA_REGISTRADO';
 
+    final puedeVolver = Navigator.maybeOf(context)?.canPop() ?? false;
+
     return SolFlowScaffold(
       title: _modoLogin ? l10n.cuentaTituloIngresar : l10n.m0105bTitulo,
       anchorActions: false,
-      onBack: () {
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.go('/');
-        }
-      },
+      showBack: puedeVolver,
+      showProfile: false,
+      onBack: puedeVolver ? () => context.pop() : null,
       body: AutofillGroup(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

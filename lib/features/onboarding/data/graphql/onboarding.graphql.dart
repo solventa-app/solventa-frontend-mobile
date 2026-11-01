@@ -6224,6 +6224,585 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
   }
 }
 
+class Variables$Mutation$RegistrarCuenta {
+  factory Variables$Mutation$RegistrarCuenta({
+    required String correo,
+    required String clave,
+    required String codigo,
+  }) => Variables$Mutation$RegistrarCuenta._({
+    r'correo': correo,
+    r'clave': clave,
+    r'codigo': codigo,
+  });
+
+  Variables$Mutation$RegistrarCuenta._(this._$data);
+
+  factory Variables$Mutation$RegistrarCuenta.fromJson(
+    Map<String, dynamic> data,
+  ) {
+    final result$data = <String, dynamic>{};
+    final l$correo = data['correo'];
+    result$data['correo'] = (l$correo as String);
+    final l$clave = data['clave'];
+    result$data['clave'] = (l$clave as String);
+    final l$codigo = data['codigo'];
+    result$data['codigo'] = (l$codigo as String);
+    return Variables$Mutation$RegistrarCuenta._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get correo => (_$data['correo'] as String);
+
+  String get clave => (_$data['clave'] as String);
+
+  String get codigo => (_$data['codigo'] as String);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$correo = correo;
+    result$data['correo'] = l$correo;
+    final l$clave = clave;
+    result$data['clave'] = l$clave;
+    final l$codigo = codigo;
+    result$data['codigo'] = l$codigo;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Variables$Mutation$RegistrarCuenta ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$correo = correo;
+    final lOther$correo = other.correo;
+    if (l$correo != lOther$correo) {
+      return false;
+    }
+    final l$clave = clave;
+    final lOther$clave = other.clave;
+    if (l$clave != lOther$clave) {
+      return false;
+    }
+    final l$codigo = codigo;
+    final lOther$codigo = other.codigo;
+    if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$correo = correo;
+    final l$clave = clave;
+    final l$codigo = codigo;
+    return Object.hashAll([l$correo, l$clave, l$codigo]);
+  }
+}
+
+class Mutation$RegistrarCuenta {
+  Mutation$RegistrarCuenta({
+    required this.registrarCuenta,
+    this.$__typename = 'Mutation',
+  });
+
+  factory Mutation$RegistrarCuenta.fromJson(Map<String, dynamic> json) {
+    final l$registrarCuenta = json['registrarCuenta'];
+    final l$$__typename = json['__typename'];
+    return Mutation$RegistrarCuenta(
+      registrarCuenta: Mutation$RegistrarCuenta$registrarCuenta.fromJson(
+        (l$registrarCuenta as Map<String, dynamic>),
+      ),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Mutation$RegistrarCuenta$registrarCuenta registrarCuenta;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$registrarCuenta = registrarCuenta;
+    _resultData['registrarCuenta'] = l$registrarCuenta.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$registrarCuenta = registrarCuenta;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$registrarCuenta, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$RegistrarCuenta ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$registrarCuenta = registrarCuenta;
+    final lOther$registrarCuenta = other.registrarCuenta;
+    if (l$registrarCuenta != lOther$registrarCuenta) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeMutationRegistrarCuenta = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'RegistrarCuenta'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'correo')),
+          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'clave')),
+          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'codigo')),
+          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'registrarCuenta'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                name: NameNode(value: 'correo'),
+                value: VariableNode(name: NameNode(value: 'correo')),
+              ),
+              ArgumentNode(
+                name: NameNode(value: 'clave'),
+                value: VariableNode(name: NameNode(value: 'clave')),
+              ),
+              ArgumentNode(
+                name: NameNode(value: 'codigo'),
+                value: VariableNode(name: NameNode(value: 'codigo')),
+              ),
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(
+              selections: [
+                FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                InlineFragmentNode(
+                  typeCondition: TypeConditionNode(
+                    on: NamedTypeNode(
+                      name: NameNode(value: 'Sesion'),
+                      isNonNull: false,
+                    ),
+                  ),
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'token'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'expiraEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'usuario'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(
+                          selections: [
+                            FragmentSpreadNode(
+                              name: NameNode(value: 'UsuarioCampos'),
+                              directives: [],
+                            ),
+                            FieldNode(
+                              name: NameNode(value: '__typename'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                          ],
+                        ),
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+                InlineFragmentNode(
+                  typeCondition: TypeConditionNode(
+                    on: NamedTypeNode(
+                      name: NameNode(value: 'ErrorAutenticacion'),
+                      isNonNull: false,
+                    ),
+                  ),
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'mensaje'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'codigo'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+    fragmentDefinitionUsuarioCampos,
+  ],
+);
+
+class Mutation$RegistrarCuenta$registrarCuenta {
+  Mutation$RegistrarCuenta$registrarCuenta({required this.$__typename});
+
+  factory Mutation$RegistrarCuenta$registrarCuenta.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    switch (json["__typename"] as String) {
+      case "Sesion":
+        return Mutation$RegistrarCuenta$registrarCuenta$$Sesion.fromJson(json);
+
+      case "ErrorAutenticacion":
+        return Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion.fromJson(
+          json,
+        );
+
+      default:
+        final l$$__typename = json['__typename'];
+        return Mutation$RegistrarCuenta$registrarCuenta(
+          $__typename: (l$$__typename as String),
+        );
+    }
+  }
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$RegistrarCuenta$registrarCuenta ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+extension UtilityExtension$Mutation$RegistrarCuenta$registrarCuenta
+    on Mutation$RegistrarCuenta$registrarCuenta {
+  _T when<_T>({
+    required _T Function(Mutation$RegistrarCuenta$registrarCuenta$$Sesion)
+    sesion,
+    required _T Function(
+      Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion,
+    )
+    errorAutenticacion,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "Sesion":
+        return sesion(this as Mutation$RegistrarCuenta$registrarCuenta$$Sesion);
+
+      case "ErrorAutenticacion":
+        return errorAutenticacion(
+          this as Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion,
+        );
+
+      default:
+        return orElse();
+    }
+  }
+
+  _T maybeWhen<_T>({
+    _T Function(Mutation$RegistrarCuenta$registrarCuenta$$Sesion)? sesion,
+    _T Function(Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion)?
+    errorAutenticacion,
+    required _T Function() orElse,
+  }) {
+    switch ($__typename) {
+      case "Sesion":
+        if (sesion != null) {
+          return sesion(
+            this as Mutation$RegistrarCuenta$registrarCuenta$$Sesion,
+          );
+        } else {
+          return orElse();
+        }
+
+      case "ErrorAutenticacion":
+        if (errorAutenticacion != null) {
+          return errorAutenticacion(
+            this
+                as Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion,
+          );
+        } else {
+          return orElse();
+        }
+
+      default:
+        return orElse();
+    }
+  }
+}
+
+class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
+    implements Mutation$RegistrarCuenta$registrarCuenta {
+  Mutation$RegistrarCuenta$registrarCuenta$$Sesion({
+    required this.token,
+    required this.expiraEn,
+    required this.usuario,
+    this.$__typename = 'Sesion',
+  });
+
+  factory Mutation$RegistrarCuenta$registrarCuenta$$Sesion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$token = json['token'];
+    final l$expiraEn = json['expiraEn'];
+    final l$usuario = json['usuario'];
+    final l$$__typename = json['__typename'];
+    return Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
+      token: (l$token as String),
+      expiraEn: DateTime.parse((l$expiraEn as String)),
+      usuario: Fragment$UsuarioCampos.fromJson(
+        (l$usuario as Map<String, dynamic>),
+      ),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String token;
+
+  final DateTime expiraEn;
+
+  final Fragment$UsuarioCampos usuario;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$token = token;
+    _resultData['token'] = l$token;
+    final l$expiraEn = expiraEn;
+    _resultData['expiraEn'] = l$expiraEn.toIso8601String();
+    final l$usuario = usuario;
+    _resultData['usuario'] = l$usuario.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$token = token;
+    final l$expiraEn = expiraEn;
+    final l$usuario = usuario;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$token, l$expiraEn, l$usuario, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$RegistrarCuenta$registrarCuenta$$Sesion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$token = token;
+    final lOther$token = other.token;
+    if (l$token != lOther$token) {
+      return false;
+    }
+    final l$expiraEn = expiraEn;
+    final lOther$expiraEn = other.expiraEn;
+    if (l$expiraEn != lOther$expiraEn) {
+      return false;
+    }
+    final l$usuario = usuario;
+    final lOther$usuario = other.usuario;
+    if (l$usuario != lOther$usuario) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion
+    implements Mutation$RegistrarCuenta$registrarCuenta {
+  Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion({
+    required this.mensaje,
+    this.codigo,
+    this.$__typename = 'ErrorAutenticacion',
+  });
+
+  factory Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$mensaje = json['mensaje'];
+    final l$codigo = json['codigo'];
+    final l$$__typename = json['__typename'];
+    return Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion(
+      mensaje: (l$mensaje as String),
+      codigo: (l$codigo as String?),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String mensaje;
+
+  final String? codigo;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$mensaje = mensaje;
+    _resultData['mensaje'] = l$mensaje;
+    final l$codigo = codigo;
+    _resultData['codigo'] = l$codigo;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$mensaje = mensaje;
+    final l$codigo = codigo;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$mensaje, l$codigo, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$mensaje = mensaje;
+    final lOther$mensaje = other.mensaje;
+    if (l$mensaje != lOther$mensaje) {
+      return false;
+    }
+    final l$codigo = codigo;
+    final lOther$codigo = other.codigo;
+    if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
 class Variables$Mutation$IniciarSesion {
   factory Variables$Mutation$IniciarSesion({
     required Input$CredencialesInput entrada,

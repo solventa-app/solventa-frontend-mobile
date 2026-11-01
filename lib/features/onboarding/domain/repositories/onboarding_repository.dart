@@ -34,6 +34,13 @@ abstract interface class OnboardingRepository {
     required String clave,
   });
 
+  /// Registra una cuenta con OTP validado (sin requerir token de onboarding).
+  Future<Resultado<PerfilUsuario>> registrarCuenta({
+    required String correo,
+    required String clave,
+    required String codigo,
+  });
+
   /// Inicia sesión con usuario/correo y clave en el canal app.
   Future<Resultado<PerfilUsuario>> iniciarSesion({
     required String usuario,

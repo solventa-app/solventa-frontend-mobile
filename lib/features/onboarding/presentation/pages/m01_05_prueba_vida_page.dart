@@ -30,14 +30,10 @@ class M0105PruebaVidaPage extends ConsumerWidget {
       if (escenario != null) notifier.simular(escenario);
       if (await notifier.completarPruebaDeVida() && context.mounted) {
         final actual = ref.read(onboardingProvider);
-        if (actual.cuentaCreada) {
-          if (actual.verificacion != null) {
-            context.go(OnboardingRoutes.resultado);
-          } else {
-            context.go(OnboardingRoutes.verificando);
-          }
+        if (actual.verificacion != null) {
+          context.go(OnboardingRoutes.resultado);
         } else {
-          context.go(OnboardingRoutes.cuenta);
+          context.go(OnboardingRoutes.verificando);
         }
       }
     }

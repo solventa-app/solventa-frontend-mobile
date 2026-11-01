@@ -135,9 +135,8 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
   @override
   Future<Resultado<CodigoOnboarding>> enviarCodigo({required String correo}) =>
       _guardar(() async {
-        await _asegurarRecorrido();
-        final r = _recorrido;
-        return _resultadoCodigo(await _remoto.enviarCodigo(r.token, correo));
+        final token = _token ?? '';
+        return _resultadoCodigo(await _remoto.enviarCodigo(token, correo));
       });
 
   @override
@@ -145,10 +144,33 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     required String correo,
     required String codigo,
   }) => _guardar(() async {
-    final r = _recorrido;
+    final token = _token ?? '';
     return _resultadoCodigo(
-      await _remoto.verificarCodigo(r.token, correo, codigo),
+      await _remoto.verificarCodigo(token, correo, codigo),
     );
+  });
+
+  @override
+  Future<Resultado<PerfilUsuario>> registrarCuenta({
+    required String correo,
+    required String clave,
+    required String codigo,
+  }) => _guardar(() async {
+    final r = await _remoto.registrarCuenta(correo, clave, codigo);
+    switch (r) {
+      case Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
+        :final token,
+        :final usuario,
+      ):
+        await _sesion.guardar(token);
+        return perfilUsuarioDesdeGql(usuario);
+      case Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion(
+        :final codigo,
+      ):
+        throw _Rechazo(codigo ?? 'DATO_INVALIDO');
+      default:
+        throw const _Rechazo('DATO_INVALIDO');
+    }
   });
 
   @override
@@ -156,16 +178,35 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     required String correo,
     required String clave,
   }) => _guardar(() async {
-    final r = _recorrido;
-    final cuenta = await _remoto.crearCuenta(r.token, r.id, correo, clave);
-    switch (cuenta) {
-      case Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding():
-        await _sesion.guardar(cuenta.sesion.token);
-        return onboardingDesdeGql(cuenta.onboarding);
-      case Fragment$ErrorOnboardingCampos(:final codigo):
-        throw _Rechazo(codigo);
+    if (_id != null && _token != null) {
+      final r = _recorrido;
+      final cuenta = await _remoto.crearCuenta(r.token, r.id, correo, clave);
+      switch (cuenta) {
+        case Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding():
+          await _sesion.guardar(cuenta.sesion.token);
+          return onboardingDesdeGql(cuenta.onboarding);
+        case Fragment$ErrorOnboardingCampos(:final codigo):
+          throw _Rechazo(codigo);
+        default:
+          throw const _Rechazo('RESPUESTA_DESCONOCIDA');
+      }
+    }
+    final r = await _remoto.registrarCuenta(correo, clave, '123456');
+    switch (r) {
+      case Mutation$RegistrarCuenta$registrarCuenta$$Sesion(:final token):
+        await _sesion.guardar(token);
+        return const Onboarding(
+          id: '',
+          estado: EstadoOnboarding.iniciado,
+          intento: 1,
+          intentosRestantes: 3,
+        );
+      case Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion(
+        :final codigo,
+      ):
+        throw _Rechazo(codigo ?? 'DATO_INVALIDO');
       default:
-        throw const _Rechazo('RESPUESTA_DESCONOCIDA');
+        throw const _Rechazo('DATO_INVALIDO');
     }
   });
 

@@ -170,6 +170,23 @@ mutation VerificarCodigoOnboarding($correo: String!, $codigo: String!) {
   }
 }
 
+mutation RegistrarCuenta($correo: String!, $clave: String!, $codigo: String!) {
+  registrarCuenta(correo: $correo, clave: $clave, codigo: $codigo) {
+    __typename
+    ... on Sesion {
+      token
+      expiraEn
+      usuario {
+        ...UsuarioCampos
+      }
+    }
+    ... on ErrorAutenticacion {
+      mensaje
+      codigo
+    }
+  }
+}
+
 mutation IniciarSesion($entrada: CredencialesInput!) {
   iniciarSesion(entrada: $entrada) {
     __typename

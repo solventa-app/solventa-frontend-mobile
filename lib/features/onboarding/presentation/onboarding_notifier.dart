@@ -356,7 +356,7 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     return solicitarCodigoCorreo(correo: correo, clave: clave);
   }
 
-  /// Verifica el código de 6 dígitos y, si es válido, crea la cuenta en estado
+  /// Valida el código de 6 dígitos y registra la cuenta del usuario en
   /// `PENDIENTE_VERIFICACION`.
   Future<bool> verificarCodigoYCrearCuenta(String codigo) async {
     final correo = state.correoPendiente;
@@ -364,27 +364,17 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     if (correo == null || clave == null || state.ocupado) return false;
     state = state.copyWith(ocupado: true, limpiarFalla: true);
     final repo = ref.read(onboardingRepositoryProvider);
-    final rCodigo = await repo.verificarCodigo(correo: correo, codigo: codigo);
-    switch (rCodigo) {
-      case Fracaso(:final falla):
-        state = state.copyWith(ocupado: false, falla: falla);
-        return false;
-      case Exito(:final valor):
-        state = state.copyWith(codigoOnboarding: valor);
-    }
-    final rCuenta = await repo.crearCuenta(correo: correo, clave: clave);
+    final rCuenta = await repo.registrarCuenta(
+      correo: correo,
+      clave: clave,
+      codigo: codigo,
+    );
     switch (rCuenta) {
       case Exito(:final valor):
-        final rPerfil = await repo.consultarPerfil();
-        final perfil = switch (rPerfil) {
-          Exito(:final valor) => valor,
-          _ => null,
-        };
         state = state.copyWith(
           ocupado: false,
-          onboarding: valor,
           cuentaCreada: true,
-          perfil: perfil,
+          perfil: valor,
           limpiarCredencialesPendientes: true,
         );
         return true;
