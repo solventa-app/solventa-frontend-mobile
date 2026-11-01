@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/network/network_providers.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
 
@@ -82,7 +83,7 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
       return;
     }
 
-    if (widget.exigirCodigoOtp) {
+    if (_exigirOtp) {
       final ok = await notifier.solicitarCodigoCorreo(
         correo: correoLimpio,
         clave: claveTexto,
@@ -110,6 +111,9 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
         .solicitarCodigoCorreo(correo: _correo.text.trim(), clave: _clave.text);
     if (ok && mounted) await context.push(OnboardingRoutes.codigoCorreo);
   }
+
+  /// Con backend real el correo se verifica siempre con el código (OTP).
+  bool get _exigirOtp => widget.exigirCodigoOtp || !ref.read(usarFakesProvider);
 
   void _alternarModo() {
     ref.read(onboardingProvider.notifier).limpiarFalla();
@@ -212,7 +216,8 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
             onPressed: estado.ocupado ? null : _alternarModo,
           ),
         ),
-        if (!_modoLogin && !widget.exigirCodigoOtp)
+        // Atajo de demo: solo con API_ENV=mock (en local/dev/prod el OTP es obligatorio).
+        if (!_modoLogin && !_exigirOtp)
           SolDemoTrigger(
             label: l10n.otpTitulo,
             center: true,

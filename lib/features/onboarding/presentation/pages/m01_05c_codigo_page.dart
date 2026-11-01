@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/network/network_providers.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
 
@@ -158,14 +159,15 @@ class _M0105cCodigoPageState extends ConsumerState<M0105cCodigoPage> {
             onPressed: estado.ocupado ? null : _reenviar,
           ),
         ),
-        SolDemoTrigger(
-          label: l10n.otpDemoAutocompletar,
-          center: true,
-          onTap: () {
-            setState(() => _codigo = '123456');
-            _verificar();
-          },
-        ),
+        if (ref.watch(usarFakesProvider))
+          SolDemoTrigger(
+            label: l10n.otpDemoAutocompletar,
+            center: true,
+            onTap: () {
+              setState(() => _codigo = '123456');
+              _verificar();
+            },
+          ),
       ],
     );
   }
