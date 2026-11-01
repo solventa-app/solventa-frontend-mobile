@@ -108,14 +108,6 @@
   "@m0105Instruccion": {
     "description": "M01-05 instrucción"
   },
-  "m0105DemoRevision": "Simular que la identidad queda en revisión",
-  "@m0105DemoRevision": {
-    "description": "Disparador de demo (solo debug)"
-  },
-  "m0105DemoRechazo": "Simular que el documento es rechazado",
-  "@m0105DemoRechazo": {
-    "description": "Disparador de demo (solo debug)"
-  },
   "verificacionTitulo": "Verificación",
   "@verificacionTitulo": {
     "description": "M01-06/07 barra superior"
@@ -228,7 +220,7 @@
   "@m0105bErrorCorreo": {
     "description": "M01-05b: correo inválido"
   },
-  "m0105bErrorContrasena": "La clave debe tener entre 8 y 128 caracteres.",
+  "m0105bErrorContrasena": "La clave debe cumplir todos los requisitos.",
   "@m0105bErrorContrasena": {
     "description": "M01-05b: clave corta o larga"
   },
@@ -325,8 +317,20 @@
   },
   "otpVerificar": "Verificar código",
   "otpReenviar": "Enviar otro código",
+  "otpReenviarEn": "Reenviar en {tiempo}",
+  "@otpReenviarEn": {
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "fallaEsperaRequerida": "Espera un momento antes de pedir otro código.",
+  "m0105bReqLargo": "Entre 8 y 128 caracteres",
+  "m0105bReqMayuscula": "Una letra mayúscula",
+  "m0105bReqMinuscula": "Una letra minúscula",
+  "m0105bReqEspecial": "Un carácter especial (por ejemplo ! ¿ @ # €)",
   "otpReenviado": "Te enviamos un código nuevo a tu correo.",
-  "otpDemoAutocompletar": "Simular código válido (123456)",
   "homeSaludoBienvenida": "Bienvenido a Solventa",
   "homeSaludoHola": "Hola, {nombre}",
   "@homeSaludoHola": {
@@ -374,7 +378,7 @@
   "perfilPendiente": "Verificación pendiente",
   "perfilSuspendida": "Cuenta suspendida",
   "perfilDatos": "Datos de la cuenta",
-  "perfilUsuario": "Correo / Usuario",
+  "perfilUsuario": "Correo",
   "perfilNombre": "Nombre",
   "perfilNombrePendiente": "Pendiente de verificación de documento",
   "perfilRol": "Rol",

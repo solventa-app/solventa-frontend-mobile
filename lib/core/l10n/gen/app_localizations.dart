@@ -248,18 +248,6 @@ abstract class AppLocalizations {
   /// **'Gira tu rostro lentamente dentro del marco (cámara frontal)'**
   String get m0105Instruccion;
 
-  /// Disparador de demo (solo debug)
-  ///
-  /// In es, this message translates to:
-  /// **'Simular que la identidad queda en revisión'**
-  String get m0105DemoRevision;
-
-  /// Disparador de demo (solo debug)
-  ///
-  /// In es, this message translates to:
-  /// **'Simular que el documento es rechazado'**
-  String get m0105DemoRechazo;
-
   /// M01-06/07 barra superior
   ///
   /// In es, this message translates to:
@@ -437,7 +425,7 @@ abstract class AppLocalizations {
   /// M01-05b: clave corta o larga
   ///
   /// In es, this message translates to:
-  /// **'La clave debe tener entre 8 y 128 caracteres.'**
+  /// **'La clave debe cumplir todos los requisitos.'**
   String get m0105bErrorContrasena;
 
   /// M01-05b: clave vacía al iniciar sesión
@@ -680,17 +668,47 @@ abstract class AppLocalizations {
   /// **'Enviar otro código'**
   String get otpReenviar;
 
+  /// No description provided for @otpReenviarEn.
+  ///
+  /// In es, this message translates to:
+  /// **'Reenviar en {tiempo}'**
+  String otpReenviarEn(String tiempo);
+
+  /// No description provided for @fallaEsperaRequerida.
+  ///
+  /// In es, this message translates to:
+  /// **'Espera un momento antes de pedir otro código.'**
+  String get fallaEsperaRequerida;
+
+  /// No description provided for @m0105bReqLargo.
+  ///
+  /// In es, this message translates to:
+  /// **'Entre 8 y 128 caracteres'**
+  String get m0105bReqLargo;
+
+  /// No description provided for @m0105bReqMayuscula.
+  ///
+  /// In es, this message translates to:
+  /// **'Una letra mayúscula'**
+  String get m0105bReqMayuscula;
+
+  /// No description provided for @m0105bReqMinuscula.
+  ///
+  /// In es, this message translates to:
+  /// **'Una letra minúscula'**
+  String get m0105bReqMinuscula;
+
+  /// No description provided for @m0105bReqEspecial.
+  ///
+  /// In es, this message translates to:
+  /// **'Un carácter especial (por ejemplo ! ¿ @ # €)'**
+  String get m0105bReqEspecial;
+
   /// No description provided for @otpReenviado.
   ///
   /// In es, this message translates to:
   /// **'Te enviamos un código nuevo a tu correo.'**
   String get otpReenviado;
-
-  /// No description provided for @otpDemoAutocompletar.
-  ///
-  /// In es, this message translates to:
-  /// **'Simular código válido (123456)'**
-  String get otpDemoAutocompletar;
 
   /// No description provided for @homeSaludoBienvenida.
   ///
@@ -935,7 +953,7 @@ abstract class AppLocalizations {
   /// No description provided for @perfilUsuario.
   ///
   /// In es, this message translates to:
-  /// **'Correo / Usuario'**
+  /// **'Correo'**
   String get perfilUsuario;
 
   /// No description provided for @perfilNombre.

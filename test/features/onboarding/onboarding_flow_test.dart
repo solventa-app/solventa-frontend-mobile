@@ -14,18 +14,26 @@ import '../../helpers/sol_test_app.dart';
 void main() {
   late FakeOnboardingRemoteDataSource bff;
 
-  /// M01-05b: correo y clave, y sigue a M01-06.
+  /// M01-05b: correo y clave (cumple la regla de T17), luego el código real
+  /// de M01-05c (el fake espera 123456), y sigue al inicio.
   Future<void> crearCuenta(
     WidgetTester tester, {
     String correo = 'maria@ejemplo.co',
+    bool conCodigo = true,
   }) async {
     expect(find.text('Crea tu cuenta'), findsOneWidget);
     final campos = find.byType(TextField);
     await tester.enterText(campos.at(0), correo);
-    await tester.enterText(campos.at(1), 'clave-segura-1');
-    await tester.enterText(campos.at(2), 'clave-segura-1');
+    await tester.enterText(campos.at(1), 'Clave-segura-1');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
+    if (!conCodigo) return;
+    expect(find.text('Verifica tu correo'), findsOneWidget);
+    for (final d in ['1', '2', '3', '4', '5', '6']) {
+      await tester.tap(find.text(d));
+      await tester.pump();
+    }
     await tester.pumpAndSettle();
   }
 
@@ -141,7 +149,8 @@ void main() {
   testWidgets('desenlace «en revisión» llega a M01-07b', (tester) async {
     await abrir(tester);
     await hastaPruebaDeVida(tester);
-    await tester.tap(find.textContaining('queda en revisión'));
+    bff.resultado = OnboardingFixtures.onboarding(estado: 'EN_REVISION');
+    await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
     expect(
       find.text('Estamos revisando tu identidad, te avisamos.'),
@@ -154,7 +163,13 @@ void main() {
     (tester) async {
       await abrir(tester);
       await hastaPruebaDeVida(tester);
-      await tester.tap(find.textContaining('es rechazado'));
+      bff.resultado = OnboardingFixtures.onboarding(
+        estado: 'RECHAZADA',
+        motivo: 'DOCUMENTO_ILEGIBLE',
+        intento: 1,
+        intentosRestantes: 2,
+      );
+      await tester.tap(find.text('Continuar'));
       await tester.pumpAndSettle();
       expect(
         find.textContaining('No pudimos verificar tu documento'),
@@ -170,7 +185,12 @@ void main() {
     tester,
   ) async {
     bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
-    bff.cuenta = OnboardingFixtures.correoRegistrado;
+    bff.respuestaEnviarCodigo = {
+      '__typename': 'Mutation',
+      'enviarCodigoOnboarding': OnboardingFixtures.error(
+        'CORREO_YA_REGISTRADO',
+      ),
+    };
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -185,7 +205,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await crearCuenta(tester);
+    await crearCuenta(tester, conCodigo: false);
     expect(
       find.text('Ya hay una cuenta con este correo. Inicia sesión.'),
       findsOneWidget,
@@ -247,18 +267,17 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    final campos = find.byType(TextField);
-    await tester.enterText(campos.at(0), 'maria@ejemplo.co');
-    await tester.enterText(campos.at(1), 'clave-segura-1');
-    await tester.enterText(campos.at(2), 'clave-segura-1');
-    await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('Verifica tu correo'));
-    await tester.pumpAndSettle();
+    await crearCuenta(tester, conCodigo: false);
     expect(find.text('Verifica tu correo'), findsOneWidget);
-    final demoBtn = find.textContaining('Simular código válido');
-    await tester.ensureVisible(demoBtn);
-    await tester.pumpAndSettle();
-    await tester.tap(demoBtn);
+    // El reenvío espera 60 s: arranca bloqueado y sin atajos de demostración.
+    expect(find.text('Reenviar en 1:00'), findsOneWidget);
+    expect(find.textContaining('Simular'), findsNothing);
+    await tester.pump(const Duration(seconds: 61));
+    expect(find.text('Enviar otro código'), findsOneWidget);
+    for (final d in ['1', '2', '3', '4', '5', '6']) {
+      await tester.tap(find.text(d));
+      await tester.pump();
+    }
     await tester.pumpAndSettle();
     expect(find.text('Completar registro'), findsOneWidget);
   });

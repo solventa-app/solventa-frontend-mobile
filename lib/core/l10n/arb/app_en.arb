@@ -25,8 +25,6 @@
   "m0104Calidad": "Good focus and lighting",
   "m0105Titulo": "Liveness check",
   "m0105Instruccion": "Slowly turn your face inside the frame (front camera)",
-  "m0105DemoRevision": "Simulate identity under review",
-  "m0105DemoRechazo": "Simulate rejected document",
   "verificacionTitulo": "Verification",
   "m0106Validando": "Checking with the KYC/AML provider...",
   "m0107aMensaje": "Identity verified! Welcome to Solventa.",
@@ -56,7 +54,7 @@
   "m0105bRequisitoPendiente": "not met yet",
   "m0105bAyudaContrasena": "8 to 128 characters.",
   "m0105bErrorCorreo": "Enter a valid email.",
-  "m0105bErrorContrasena": "Your password must be 8 to 128 characters long.",
+  "m0105bErrorContrasena": "Your password must meet all the requirements.",
   "m0105bErrorContrasenaLogin": "Enter your password.",
   "m0105bErrorConfirmar": "The passwords don't match.",
   "m0105bCorreoRegistrado": "There is already an account with this email. Sign in.",
@@ -97,8 +95,20 @@
   "otpIntentosRestantes": "Attempts remaining: {intentos}",
   "otpVerificar": "Verify code",
   "otpReenviar": "Send another code",
+  "otpReenviarEn": "Resend in {tiempo}",
+  "@otpReenviarEn": {
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "fallaEsperaRequerida": "Please wait a moment before requesting another code.",
+  "m0105bReqLargo": "Between 8 and 128 characters",
+  "m0105bReqMayuscula": "One uppercase letter",
+  "m0105bReqMinuscula": "One lowercase letter",
+  "m0105bReqEspecial": "One special character (for example ! ? @ # €)",
   "otpReenviado": "We sent a new code to your email.",
-  "otpDemoAutocompletar": "Simulate valid code (123456)",
   "homeSaludoBienvenida": "Welcome to Solventa",
   "homeSaludoHola": "Hello, {nombre}",
   "homePendienteTexto": "Complete your registration to activate your account",
@@ -139,7 +149,7 @@
   "perfilPendiente": "Verification pending",
   "perfilSuspendida": "Suspended account",
   "perfilDatos": "Account details",
-  "perfilUsuario": "Email / Username",
+  "perfilUsuario": "Email",
   "perfilNombre": "Name",
   "perfilNombrePendiente": "Pending document verification",
   "perfilRol": "Role",

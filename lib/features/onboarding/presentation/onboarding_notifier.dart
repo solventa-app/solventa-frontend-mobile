@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/errors/falla.dart';
 import '../../../core/errors/resultado.dart';
 import '../data/datasources/captura_service.dart';
-import '../data/fixtures/onboarding_fixtures.dart';
 import '../domain/entities/onboarding.dart';
 import '../domain/entities/verificacion_identidad.dart';
 import 'providers.dart';
@@ -494,23 +493,6 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     _epocaSesion++;
     await ref.read(onboardingRepositoryProvider).cerrarSesion();
     state = const OnboardingState(sesionCerrada: true);
-  }
-
-  /// Disparadores de demo de M01-05 (solo debug, con el fake).
-  void simular(EstadoVerificacion escenario) {
-    ref.read(fakeOnboardingProvider).resultado = switch (escenario) {
-      EstadoVerificacion.verificada => OnboardingFixtures.onboarding(
-        estado: 'VERIFICADA',
-      ),
-      EstadoVerificacion.enRevision => OnboardingFixtures.onboarding(
-        estado: 'EN_REVISION',
-        motivo: 'PROVEEDOR_NO_DISPONIBLE',
-      ),
-      EstadoVerificacion.rechazada => OnboardingFixtures.onboarding(
-        estado: 'RECHAZADA',
-        motivo: 'ILEGIBLE',
-      ),
-    };
   }
 
   /// M01-06: consulta a los 3, 8 y 20 s y para. Si no llegó, `consultasAgotadas`.
