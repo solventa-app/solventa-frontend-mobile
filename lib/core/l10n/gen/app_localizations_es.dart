@@ -236,4 +236,333 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get fallaRegistroVencido => 'Tu registro venció. Empieza de nuevo.';
+
+  @override
+  String get fallaAlmacenamiento =>
+      'El servicio de almacenamiento de documentos no está disponible en este momento. Intenta de nuevo.';
+
+  @override
+  String get fallaObjetoNoSubido =>
+      'No pudimos recibir tu archivo completo. Revisa tu conexión y toca Reintentar envío.';
+
+  @override
+  String get fallaTamanoNoAdmitido =>
+      'El archivo supera el peso máximo permitido (5 MB foto de documento, 2 MB selfie, 15 MB video).';
+
+  @override
+  String get fallaTipoNoAdmitido =>
+      'El formato del archivo no es compatible (usa JPEG para fotos y MP4 para video).';
+
+  @override
+  String get fallaPiezasIncompletas =>
+      'Falta confirmar alguna de las capturas. Toca Reintentar envío para completar la subida.';
+
+  @override
+  String get fallaSinConsentimiento =>
+      'Debes aceptar la autorización de tratamiento de datos personales para continuar.';
+
+  @override
+  String get fallaProveedorNoDisponible =>
+      'El proveedor de verificación de identidad está tardando en responder. Reintenta en unos segundos.';
+
+  @override
+  String get fallaCodigoInvalido =>
+      'El código ingresado no es correcto. Revísalo e intenta de nuevo.';
+
+  @override
+  String get fallaCodigoVencido =>
+      'El código venció. Solicita uno nuevo para continuar.';
+
+  @override
+  String get fallaIntentosAgotados =>
+      'Agotaste los intentos de este código o verificación. Solicita uno nuevo.';
+
+  @override
+  String get fallaCredencialesInvalidas =>
+      'El correo o la clave no son correctos. Revísalos e intenta de nuevo.';
+
+  @override
+  String get fallaSesionVencida =>
+      'Tu sesión venció. Inicia sesión nuevamente.';
+
+  @override
+  String get fallaSinPermiso =>
+      'No tienes permiso para realizar esta operación.';
+
+  @override
+  String get cuentaModoCrear => 'Crear cuenta';
+
+  @override
+  String get cuentaModoIngresar => 'Iniciar sesión';
+
+  @override
+  String get cuentaTituloIngresar => 'Inicia sesión';
+
+  @override
+  String get cuentaIntroCrear =>
+      'Ingresa tu correo electrónico y crea tu clave para empezar en Solventa. Te enviaremos un código de 6 dígitos para confirmar tu correo.';
+
+  @override
+  String get cuentaIntroIngresar =>
+      'Ingresa con el correo y la clave de tu cuenta en Solventa.';
+
+  @override
+  String get cuentaBotonIngresar => 'Ingresar';
+
+  @override
+  String get cuentaCambiarAIngresar => '¿Ya tienes cuenta? Inicia sesión';
+
+  @override
+  String get cuentaCambiarACrear => '¿No tienes cuenta? Crear cuenta';
+
+  @override
+  String get otpTitulo => 'Verifica tu correo';
+
+  @override
+  String otpInstruccion(String correo) {
+    return 'Ingresa el código de 6 dígitos que enviamos a $correo.';
+  }
+
+  @override
+  String get otpVence => 'El código vence en 10 minutos.';
+
+  @override
+  String otpIntentosRestantes(int intentos) {
+    return 'Intentos restantes: $intentos';
+  }
+
+  @override
+  String get otpVerificar => 'Verificar código';
+
+  @override
+  String get otpReenviar => 'Enviar otro código';
+
+  @override
+  String get otpReenviado => 'Te enviamos un código nuevo a tu correo.';
+
+  @override
+  String get otpDemoAutocompletar => 'Simular código válido (123456)';
+
+  @override
+  String get homeSaludoBienvenida => 'Bienvenido a Solventa';
+
+  @override
+  String homeSaludoHola(String nombre) {
+    return 'Hola, $nombre';
+  }
+
+  @override
+  String get homePendienteTexto =>
+      'Completa tu registro para activar tu cuenta';
+
+  @override
+  String get homePendienteBoton => 'Completar registro';
+
+  @override
+  String get homeEnRevisionTitulo => 'Estamos revisando tu identidad';
+
+  @override
+  String get homeEnRevisionTexto =>
+      'Validamos tus documentos y prueba de vida con nuestro proveedor KYC/AML. Te avisaremos apenas esté lista.';
+
+  @override
+  String get homeEnRevisionBoton => 'Consultar estado';
+
+  @override
+  String get homeRechazadaTitulo => 'No pudimos verificar tu identidad';
+
+  @override
+  String get homeRechazadaBoton => 'Reintentar verificación';
+
+  @override
+  String get homeVerificadaTitulo => 'Identidad verificada';
+
+  @override
+  String get homeVerificadaTexto =>
+      'Tu cuenta está activa y protegida con validación biométrica.';
+
+  @override
+  String get homeAsistenciaTile => 'Solicitar asistencia en sitio';
+
+  @override
+  String get homeBilleteraNota => 'Billetera y estado de póliza — próximamente';
+
+  @override
+  String get navInicio => 'Inicio';
+
+  @override
+  String get navAsistencia => 'Asistencia';
+
+  @override
+  String get navPerfil => 'Mi perfil';
+
+  @override
+  String get navCerrarSesion => 'Cerrar sesión';
+
+  @override
+  String get preferenciasModalTitulo => 'Idioma y moneda';
+
+  @override
+  String get preferenciasModalSubtitulo =>
+      'Selecciona el idioma de la aplicación y la moneda de visualización.';
+
+  @override
+  String get preferenciasIdiomaLabel => 'Idioma';
+
+  @override
+  String get preferenciasIdiomaEs => 'Español (ES)';
+
+  @override
+  String get preferenciasIdiomaEn => 'English (EN)';
+
+  @override
+  String get preferenciasMonedaLabel => 'Moneda';
+
+  @override
+  String get preferenciasListo => 'Listo';
+
+  @override
+  String get monedaNombreCOP => 'Peso colombiano (COP)';
+
+  @override
+  String get monedaNombreMXN => 'Peso mexicano (MXN)';
+
+  @override
+  String get monedaNombreBRL => 'Real brasileño (BRL)';
+
+  @override
+  String get monedaNombreCLP => 'Peso chileno (CLP)';
+
+  @override
+  String get monedaNombrePEN => 'Sol peruano (PEN)';
+
+  @override
+  String get monedaNombreUSD => 'Dólar estadounidense (USD)';
+
+  @override
+  String get monedaNombreEUR => 'Euro (EUR)';
+
+  @override
+  String get perfilTitulo => 'Mi perfil';
+
+  @override
+  String get perfilSubtitulo => 'Tu cuenta en Solventa';
+
+  @override
+  String get perfilSoloLectura => 'Solo lectura';
+
+  @override
+  String get perfilCargando => 'Cargando tu perfil…';
+
+  @override
+  String get perfilError => 'No pudimos cargar tu perfil en este momento.';
+
+  @override
+  String get perfilActiva => 'Cuenta activa';
+
+  @override
+  String get perfilPendiente => 'Verificación pendiente';
+
+  @override
+  String get perfilSuspendida => 'Cuenta suspendida';
+
+  @override
+  String get perfilDatos => 'Datos de la cuenta';
+
+  @override
+  String get perfilUsuario => 'Correo / Usuario';
+
+  @override
+  String get perfilNombre => 'Nombre';
+
+  @override
+  String get perfilNombrePendiente => 'Pendiente de verificación de documento';
+
+  @override
+  String get perfilRol => 'Rol';
+
+  @override
+  String get perfilRolCliente => 'Cliente';
+
+  @override
+  String get perfilDocumento => 'Documento';
+
+  @override
+  String get perfilRegistro => 'Fecha de registro';
+
+  @override
+  String get perfilPreferencias => 'Preferencias';
+
+  @override
+  String get perfilPreferenciasTexto =>
+      'Idioma y moneda con los que se abre la app cada vez que inicias sesión.';
+
+  @override
+  String get perfilGuardarPreferencias => 'Guardar preferencias';
+
+  @override
+  String get perfilPreferenciasGuardadas => 'Preferencias guardadas.';
+
+  @override
+  String get perfilNotaLegal =>
+      'Los datos de tu cuenta provienen de tu documento verificado y son de solo lectura. Tus datos personales se tratan conforme a la Ley 1581 de 2012 de Habeas Data.';
+
+  @override
+  String get cerrarSesionTitulo => '¿Quieres cerrar sesión?';
+
+  @override
+  String get cerrarSesionMensaje =>
+      'Tendrás que ingresar de nuevo para usar Solventa.';
+
+  @override
+  String get cerrarSesionConfirmar => 'Sí, cerrar sesión';
+
+  @override
+  String get cerrarSesionCancelar => 'No, seguir aquí';
+
+  @override
+  String get camaraEnVivoListo => 'Cámara activa en el visor';
+
+  @override
+  String get camaraReintentarEnvio => 'Reintentar envío';
+
+  @override
+  String get m0108DemoActivar =>
+      'Simular huella/rostro activado en el emulador';
+
+  @override
+  String soporteCodigoTexto(String codigo) {
+    return 'Si escribes a soporte, comparte este código: $codigo';
+  }
+
+  @override
+  String get soporteCopiarCodigo => 'Copiar código de soporte';
+
+  @override
+  String get soporteCodigoCopiado => 'Código copiado al portapapeles.';
+
+  @override
+  String get camaraPermisoTitulo => 'Necesitamos acceso a tu cámara';
+
+  @override
+  String get camaraPermisoTexto =>
+      'La usamos solo para tomar las fotos de tu documento y la prueba de vida. No guardamos nada en tu teléfono.';
+
+  @override
+  String get camaraPermitir => 'Permitir cámara';
+
+  @override
+  String get camaraPermisoBloqueado =>
+      'Bloqueaste el acceso a la cámara. Actívalo en Ajustes → Permisos → Cámara y vuelve aquí.';
+
+  @override
+  String get camaraAbrirAjustes => 'Abrir ajustes';
+
+  @override
+  String get camaraNoDisponible =>
+      'No encontramos una cámara disponible en este dispositivo.';
+
+  @override
+  String get fallaCamaraNoDisponible =>
+      'No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.';
 }

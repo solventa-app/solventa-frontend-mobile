@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import '../core/design_system/solventa_ui.dart';
 import '../core/l10n/l10n.dart';
+import '../features/profile/presentation/sol_preferencias_sheet.dart';
 import 'router.dart';
 
-/// Raíz de la app: tema M3 de Solventa, idioma (es-CO / en) y rutas.
+/// Raíz de la app: tema M3 de Solventa, idioma (`es-CO` / `en`), moneda
+/// (`COP`, `MXN`, `BRL`, `CLP`, `PEN`, `USD`, `EUR`) y rutas.
 class SolventaApp extends ConsumerStatefulWidget {
   const SolventaApp({super.key});
 
@@ -26,6 +28,10 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
   @override
   Widget build(BuildContext context) {
     final locale = ref.watch(localeProvider);
+    final moneda = ref.watch(monedaProvider);
+    final codigoIdioma = locale.languageCode.toUpperCase();
+    final etiquetaChip = '$codigoIdioma · $moneda';
+
     return MaterialApp.router(
       title: 'Solventa',
       debugShowCheckedModeBanner: false,
@@ -41,9 +47,16 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
       builder: (context, child) {
         final l10n = context.l10n;
         return SolLocaleScope(
-          label: l10n.localeChip,
+          label: etiquetaChip,
           semanticLabel: l10n.localeChipSemantica,
-          onTap: ref.read(localeProvider.notifier).alternar,
+          onTap: () {
+            ref.read(localeProvider.notifier).alternar();
+            final navContext =
+                _router.routerDelegate.navigatorKey.currentContext;
+            if (navContext != null) {
+              SolPreferenciasSheet.show(navContext);
+            }
+          },
           child: child ?? const SizedBox.shrink(),
         );
       },

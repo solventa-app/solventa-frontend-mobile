@@ -26,6 +26,19 @@ final class FakeOnboardingRemoteDataSource
   /// Respuesta de `crearCuentaOnboarding` (p. ej. el correo ya registrado).
   Map<String, dynamic> cuenta = OnboardingFixtures.cuenta;
 
+  /// Respuesta de `enviarCodigoOnboarding`.
+  Map<String, dynamic> respuestaEnviarCodigo = OnboardingFixtures.enviarCodigo;
+
+  /// Respuesta de `verificarCodigoOnboarding`.
+  Map<String, dynamic> respuestaVerificarCodigo =
+      OnboardingFixtures.verificarCodigo;
+
+  /// Código OTP válido esperado en modo fake (`123456` por defecto).
+  String codigoEsperado = '123456';
+
+  /// Usuario actual devuelto por `yo`.
+  Map<String, dynamic> usuarioActual = OnboardingFixtures.usuario();
+
   final operaciones = <String>[];
 
   Future<Map<String, dynamic>> _responder(
@@ -78,9 +91,16 @@ final class FakeOnboardingRemoteDataSource
     String id,
     String correo,
     String clave,
-  ) async => Mutation$CrearCuentaOnboarding.fromJson(
-    await _responder('cuenta', cuenta),
-  ).crearCuentaOnboarding;
+  ) async {
+    usuarioActual = OnboardingFixtures.usuario(
+      usuario: correo,
+      nombre: null,
+      estado: 'PENDIENTE_VERIFICACION',
+    );
+    return Mutation$CrearCuentaOnboarding.fromJson(
+      await _responder('cuenta', cuenta),
+    ).crearCuentaOnboarding;
+  }
 
   @override
   Future<Mutation$EnviarVerificacion$enviarVerificacion> enviarVerificacion(
@@ -125,11 +145,67 @@ final class FakeOnboardingRemoteDataSource
       ).miVerificacion;
 
   @override
-  Future<Mutation$ActualizarSesion$actualizarSesion> actualizarSesion() async =>
-      Mutation$ActualizarSesion.fromJson(
-        await _responder(
-          'actualizarSesion',
-          OnboardingFixtures.sesionActualizada,
+  Future<Mutation$ActualizarSesion$actualizarSesion> actualizarSesion() async {
+    usuarioActual = OnboardingFixtures.usuario(
+      usuario: (usuarioActual['usuario'] as String?) ?? 'maria@ejemplo.co',
+      nombre: 'María',
+      estado: 'ACTIVO',
+    );
+    return Mutation$ActualizarSesion.fromJson(
+      await _responder(
+        'actualizarSesion',
+        OnboardingFixtures.sesionActualizada,
+      ),
+    ).actualizarSesion;
+  }
+
+  @override
+  Future<Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding> enviarCodigo(
+    String token,
+    String correo,
+  ) async => Mutation$EnviarCodigoOnboarding.fromJson(
+    await _responder('enviarCodigo', respuestaEnviarCodigo),
+  ).enviarCodigoOnboarding;
+
+  @override
+  Future<Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding>
+  verificarCodigo(String token, String correo, String codigo) async {
+    final json = codigo.trim() == codigoEsperado
+        ? respuestaVerificarCodigo
+        : OnboardingFixtures.codigoInvalido;
+    return Mutation$VerificarCodigoOnboarding.fromJson(
+      await _responder('verificarCodigo', json),
+    ).verificarCodigoOnboarding;
+  }
+
+  @override
+  Future<Mutation$IniciarSesion$iniciarSesion> iniciarSesion(
+    String usuario,
+    String clave,
+  ) async {
+    usuarioActual = OnboardingFixtures.usuario(usuario: usuario);
+    return Mutation$IniciarSesion.fromJson(
+      await _responder('iniciarSesion', OnboardingFixtures.iniciarSesion),
+    ).iniciarSesion;
+  }
+
+  @override
+  Future<Fragment$UsuarioCampos?> yo() async => Query$Yo.fromJson(
+    await _responder('yo', OnboardingFixtures.yo(usuarioActual)),
+  ).yo;
+
+  @override
+  Future<Mutation$ActualizarPreferencias$actualizarPreferencias>
+  actualizarPreferencias(String idioma, String moneda) async {
+    usuarioActual = {...usuarioActual, 'idioma': idioma, 'moneda': moneda};
+    return Mutation$ActualizarPreferencias.fromJson(
+      await _responder(
+        'actualizarPreferencias',
+        OnboardingFixtures.actualizarPreferencias(
+          idioma: idioma,
+          moneda: moneda,
         ),
-      ).actualizarSesion;
+      ),
+    ).actualizarPreferencias;
+  }
 }

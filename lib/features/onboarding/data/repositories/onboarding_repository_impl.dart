@@ -17,7 +17,12 @@ final class _Rechazo implements Exception {
 }
 
 /// Códigos de `ErrorOnboarding` que tiene sentido reintentar tal cual.
-const _reintentables = {'NO_DISPONIBLE', 'OBJETO_NO_SUBIDO'};
+const _reintentables = {
+  'NO_DISPONIBLE',
+  'ALMACENAMIENTO_NO_DISPONIBLE',
+  'OBJETO_NO_SUBIDO',
+  'PROVEEDOR_NO_DISPONIBLE',
+};
 
 final class OnboardingRepositoryImpl implements OnboardingRepository {
   OnboardingRepositoryImpl(
@@ -54,28 +59,37 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     _ => throw const _Rechazo('RESPUESTA_DESCONOCIDA'),
   };
 
+  CodigoOnboarding _resultadoCodigo(Object r) => switch (r) {
+    Fragment$CodigoOnboardingCampos() => codigoOnboardingDesdeGql(r),
+    Fragment$ErrorOnboardingCampos(:final codigo) => throw _Rechazo(codigo),
+    _ => throw const _Rechazo('RESPUESTA_DESCONOCIDA'),
+  };
+
   ({String id, String token}) get _recorrido {
     final id = _id, token = _token;
     if (id == null || token == null) throw const _Rechazo('TOKEN_INVALIDO');
     return (id: id, token: token);
   }
 
+  Future<void> _asegurarRecorrido() async {
+    if (_id != null && _token != null) return;
+    final inicio = await _remoto.iniciar(tipoDocumento);
+    switch (inicio) {
+      case Mutation$IniciarOnboarding$iniciarOnboarding$$InicioOnboarding():
+        _id = inicio.onboarding.id;
+        _token = inicio.token;
+      case Fragment$ErrorOnboardingCampos(:final codigo):
+        throw _Rechazo(codigo);
+      default:
+        throw const _Rechazo('RESPUESTA_DESCONOCIDA');
+    }
+  }
+
   @override
   Future<Resultado<Onboarding>> iniciarConConsentimiento({
     required String versionTexto,
   }) => _guardar(() async {
-    if (_id == null) {
-      final inicio = await _remoto.iniciar(tipoDocumento);
-      switch (inicio) {
-        case Mutation$IniciarOnboarding$iniciarOnboarding$$InicioOnboarding():
-          _id = inicio.onboarding.id;
-          _token = inicio.token;
-        case Fragment$ErrorOnboardingCampos(:final codigo):
-          throw _Rechazo(codigo);
-        default:
-          throw const _Rechazo('RESPUESTA_DESCONOCIDA');
-      }
-    }
+    await _asegurarRecorrido();
     final r = _recorrido;
     return _resultado(
       await _remoto.registrarConsentimiento(r.token, r.id, versionTexto),
@@ -119,6 +133,25 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
   });
 
   @override
+  Future<Resultado<CodigoOnboarding>> enviarCodigo({required String correo}) =>
+      _guardar(() async {
+        await _asegurarRecorrido();
+        final r = _recorrido;
+        return _resultadoCodigo(await _remoto.enviarCodigo(r.token, correo));
+      });
+
+  @override
+  Future<Resultado<CodigoOnboarding>> verificarCodigo({
+    required String correo,
+    required String codigo,
+  }) => _guardar(() async {
+    final r = _recorrido;
+    return _resultadoCodigo(
+      await _remoto.verificarCodigo(r.token, correo, codigo),
+    );
+  });
+
+  @override
   Future<Resultado<Onboarding>> crearCuenta({
     required String correo,
     required String clave,
@@ -134,6 +167,47 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
       default:
         throw const _Rechazo('RESPUESTA_DESCONOCIDA');
     }
+  });
+
+  @override
+  Future<Resultado<PerfilUsuario>> iniciarSesion({
+    required String usuario,
+    required String clave,
+  }) => _guardar(() async {
+    final r = await _remoto.iniciarSesion(usuario, clave);
+    switch (r) {
+      case Mutation$IniciarSesion$iniciarSesion$$Sesion(
+        :final token,
+        :final usuario,
+      ):
+        await _sesion.guardar(token);
+        return perfilUsuarioDesdeGql(usuario);
+      case Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion(
+        :final codigo,
+      ):
+        throw _Rechazo(codigo ?? 'CREDENCIALES_INVALIDAS');
+      default:
+        throw const _Rechazo('CREDENCIALES_INVALIDAS');
+    }
+  });
+
+  @override
+  Future<Resultado<PerfilUsuario?>> consultarPerfil() => _guardar(() async {
+    final u = await _remoto.yo();
+    return u == null ? null : perfilUsuarioDesdeGql(u);
+  });
+
+  @override
+  Future<Resultado<PerfilUsuario>> actualizarPreferencias({
+    required String idioma,
+    required String moneda,
+  }) => _guardar(() async {
+    final codigoIdioma = idioma.toUpperCase() == 'EN' ? 'EN' : 'ES';
+    final r = await _remoto.actualizarPreferencias(codigoIdioma, moneda);
+    if (r is Fragment$UsuarioCampos) {
+      return perfilUsuarioDesdeGql(r as Fragment$UsuarioCampos);
+    }
+    throw const _Rechazo('PREFERENCIAS_INVALIDAS');
   });
 
   @override
@@ -168,4 +242,11 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     final r = _recorrido;
     return _resultado(await _remoto.reintentar(r.token, r.id));
   });
+
+  @override
+  Future<void> cerrarSesion() async {
+    _id = null;
+    _token = null;
+    await _sesion.borrar();
+  }
 }

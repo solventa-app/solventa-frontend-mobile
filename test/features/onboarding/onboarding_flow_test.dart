@@ -182,6 +182,32 @@ void main() {
     expect(find.text('Crea tu cuenta'), findsOneWidget);
   });
 
+  testWidgets('M01-05c: verifica código OTP de 6 dígitos enviado al correo', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await hastaPruebaDeVida(tester);
+    await tester.tap(find.text('Continuar'));
+    await tester.pumpAndSettle();
+    final campos = find.byType(TextField);
+    await tester.enterText(campos.at(0), 'maria@ejemplo.co');
+    await tester.enterText(campos.at(1), 'clave-segura-1');
+    await tester.enterText(campos.at(2), 'clave-segura-1');
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Verifica tu correo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Verifica tu correo'), findsOneWidget);
+    final demoBtn = find.textContaining('Simular código válido');
+    await tester.ensureVisible(demoBtn);
+    await tester.pumpAndSettle();
+    await tester.tap(demoBtn);
+    await tester.pumpAndSettle();
+    expect(
+      find.text('¡Identidad verificada! Bienvenido a Solventa.'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('M01-07c sin intentos manda a soporte, no a capturar', (
     tester,
   ) async {
@@ -200,13 +226,22 @@ void main() {
     expect(find.text('Reintentar'), findsNothing);
   });
 
-  testWidgets('la píldora de idioma cambia la app a inglés', (tester) async {
-    await abrir(tester);
-    await tester.tap(find.byType(SolLocaleChip));
-    await tester.pumpAndSettle();
-    expect(find.text('Welcome to Solventa'), findsOneWidget);
-    expect(find.text('EN · COP'), findsOneWidget);
-  });
+  testWidgets(
+    'la píldora de idioma cambia la app a inglés y abre el selector de moneda',
+    (tester) async {
+      await abrir(tester);
+      await tester.tap(find.byType(SolLocaleChip));
+      await tester.pumpAndSettle();
+      expect(find.text('EN · COP'), findsWidgets);
+      expect(find.text('Language & currency'), findsOneWidget);
+      await tester.tap(find.text('USD'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+      expect(find.text('Welcome to Solventa'), findsOneWidget);
+      expect(find.text('EN · USD'), findsOneWidget);
+    },
+  );
 
   testWidgets('accesibilidad de M01-01 y M01-02', (tester) async {
     await abrir(tester);

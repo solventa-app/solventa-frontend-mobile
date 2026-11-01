@@ -1,16 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
+import 'app/router.dart';
 import 'app/solventa_app.dart';
+import 'core/config/app_config.dart';
 import 'core/design_system/solventa_ui.dart';
+import 'core/log/limpiar.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SolLocalizations.init();
   // Edge-to-edge (Android 15): las barras del sistema son transparentes y
   // los layouts aplican SafeArea.
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -20,5 +26,34 @@ void main() {
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
-  runApp(const ProviderScope(child: SolventaApp()));
+  if (AppConfig.sentryDsn.isEmpty) {
+    runApp(SentryWidget(child: const ProviderScope(child: SolventaApp())));
+    return;
+  }
+  await SentryFlutter.init(
+    (o) {
+      o.dsn = AppConfig.sentryDsn; // vacío = no envía
+      o.environment = AppConfig.flavor;
+      o.sendDefaultPii = false;
+      o.maxRequestBodySize = MaxRequestBodySize.never;
+      o.attachScreenshot = true;
+      o.screenshotQuality = SentryScreenshotQuality.low;
+      o.beforeCaptureScreenshot = (_, _, debounce) {
+        if (debounce) return false;
+        return !esRutaSinCaptura(rutaActualObservada);
+      };
+      o.tracesSampleRate = 0.1;
+      o.tracePropagationTargets
+        ..clear()
+        ..addAll([if (AppConfig.apiBaseUrl.isNotEmpty) AppConfig.apiBaseUrl]);
+      o.replay.sessionSampleRate = 0;
+      o.replay.onErrorSampleRate = 1.0;
+      o.privacy.maskAllText = true;
+      o.privacy.maskAllImages = true;
+      o.beforeSend = limpiar;
+      o.beforeBreadcrumb = (b, _) => b?.category == 'ui.input' ? null : b;
+    },
+    appRunner: () =>
+        runApp(SentryWidget(child: const ProviderScope(child: SolventaApp()))),
+  );
 }

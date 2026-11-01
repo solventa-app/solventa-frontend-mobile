@@ -61,99 +61,110 @@ class SolCameraFrame extends StatelessWidget {
       container: true,
       label: [?label, viewfinderLabel, instruction].join('. '),
       excludeSemantics: true,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: height, maxWidth: 328),
-        child: DecoratedBox(
-          decoration: const BoxDecoration(
-            borderRadius: SolRadius.cardAll,
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x1A000000),
-                offset: Offset(0, 4),
-                blurRadius: 6,
-                spreadRadius: -1,
-              ),
-              BoxShadow(
-                color: Color(0x1A000000),
-                offset: Offset(0, 2),
-                blurRadius: 4,
-                spreadRadius: -2,
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: SolRadius.cardAll,
-            child: ColoredBox(
-              color: sol.cameraViewport,
-              child: Stack(
-                children: [
-                  if (preview != null) Positioned.fill(child: preview!),
-                  if (back) const Positioned.fill(child: _GridOverlay()),
-                  if (shape == SolCameraFrameShape.document)
-                    const Positioned.fill(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color(0x0DFFFFFF),
-                              Color(0x00FFFFFF),
-                              Color(0x99000000),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: height, maxWidth: 328),
+          child: DecoratedBox(
+            decoration: const BoxDecoration(
+              borderRadius: SolRadius.cardAll,
+              boxShadow: [
+                BoxShadow(
+                  color: Color(0x1A000000),
+                  offset: Offset(0, 4),
+                  blurRadius: 6,
+                  spreadRadius: -1,
+                ),
+                BoxShadow(
+                  color: Color(0x1A000000),
+                  offset: Offset(0, 2),
+                  blurRadius: 4,
+                  spreadRadius: -2,
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: SolRadius.cardAll,
+              child: ColoredBox(
+                color: sol.cameraViewport,
+                child: Stack(
+                  children: [
+                    if (preview != null) Positioned.fill(child: preview!),
+                    if (back) const Positioned.fill(child: _GridOverlay()),
+                    if (shape == SolCameraFrameShape.document)
+                      const Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Color(0x0DFFFFFF),
+                                Color(0x00FFFFFF),
+                                Color(0x99000000),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(SolSpacing.lg),
+                      // El texto superpuesto se limita a 1,3× para que la guía
+                      // siga visible con texto grande.
+                      child: SizedBox(
+                        height: height - SolSpacing.lg * 2,
+                        child: MediaQuery.withClampedTextScaling(
+                          maxScaleFactor: 1.3,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              if (label != null)
+                                Center(
+                                  child: _LabelPill(
+                                    label: label!,
+                                    icon: labelIcon,
+                                  ),
+                                )
+                              else
+                                const SizedBox.shrink(),
+                              Flexible(
+                                child: Center(
+                                  child: switch (shape) {
+                                    SolCameraFrameShape.document =>
+                                      const _DocumentGuide(),
+                                    SolCameraFrameShape.documentBack =>
+                                      _DocumentBackGuide(label: guideLabel),
+                                    SolCameraFrameShape.face =>
+                                      const _FaceGuide(),
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: SolSpacing.xs,
+                                ),
+                                child: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxWidth: shape == SolCameraFrameShape.face
+                                        ? 240
+                                        : double.infinity,
+                                  ),
+                                  child: Text(
+                                    instruction,
+                                    textAlign: TextAlign.center,
+                                    style: context.solText.body.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ),
                     ),
-                  Padding(
-                    padding: const EdgeInsets.all(SolSpacing.lg),
-                    // El texto superpuesto se limita a 1,3× para que la guía
-                    // siga visible con texto grande.
-                    child: SizedBox(
-                      height: height - SolSpacing.lg * 2,
-                      child: MediaQuery.withClampedTextScaling(
-                        maxScaleFactor: 1.3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            if (label != null)
-                              _LabelPill(label: label!, icon: labelIcon)
-                            else
-                              const SizedBox.shrink(),
-                            Flexible(
-                              child: switch (shape) {
-                                SolCameraFrameShape.document =>
-                                  const _DocumentGuide(),
-                                SolCameraFrameShape.documentBack =>
-                                  _DocumentBackGuide(label: guideLabel),
-                                SolCameraFrameShape.face => const _FaceGuide(),
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: SolSpacing.xs,
-                              ),
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxWidth: shape == SolCameraFrameShape.face
-                                      ? 240
-                                      : double.infinity,
-                                ),
-                                child: Text(
-                                  instruction,
-                                  textAlign: TextAlign.center,
-                                  style: context.solText.body.copyWith(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

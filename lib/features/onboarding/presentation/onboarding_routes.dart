@@ -1,4 +1,4 @@
-/// Rutas de HU-M01. El nombre es el id del plano de Figma.
+/// Rutas de HU-M01 y cuenta de Solventa. El nombre es el id del plano de Figma.
 abstract final class OnboardingRoutes {
   static const bienvenida = '/onboarding';
   static const autorizacion = '/onboarding/autorizacion';
@@ -6,7 +6,9 @@ abstract final class OnboardingRoutes {
   static const reverso = '/onboarding/documento/reverso';
   static const pruebaVida = '/onboarding/prueba-de-vida';
   static const cuenta = '/onboarding/cuenta';
+  static const codigoCorreo = '/onboarding/codigo-correo';
   static const verificando = '/onboarding/verificando';
   static const resultado = '/onboarding/resultado';
   static const biometria = '/onboarding/biometria';
+  static const perfil = '/perfil';
 }

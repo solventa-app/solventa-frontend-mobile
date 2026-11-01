@@ -9,7 +9,7 @@ import '../data/datasources/subida_archivo_service.dart';
 import '../data/repositories/onboarding_repository_impl.dart';
 import '../domain/repositories/onboarding_repository.dart';
 
-/// Con `API_ENV=mock` el fake del BFF; si no, el real (contrato v0.20).
+/// Con `API_ENV=mock` el fake del BFF; si no, el real (contrato v0.21).
 final fakeOnboardingProvider = Provider<FakeOnboardingRemoteDataSource>(
   (ref) => FakeOnboardingRemoteDataSource(),
 );
@@ -35,11 +35,40 @@ final onboardingRepositoryProvider = Provider<OnboardingRepository>(
   ),
 );
 
-final capturaServiceProvider = Provider<CapturaService>(
-  (ref) => ref.watch(usarFakesProvider)
-      ? const FakeCapturaService()
-      : CamaraCapturaService(),
+/// Indica si el visor de cámara en vivo debe inicializarse dentro del marco.
+/// En el emulador o teléfono se activa siempre (tanto en `local.json` como en
+/// `mock.json`); solo se desactiva durante `flutter test` para mantener las
+/// pruebas y goldens deterministas.
+final camaraEnVivoHabilitadaProvider = Provider<bool>(
+  (ref) => !esEntornoDePruebas,
 );
+
+/// Captura de respaldo (sin cámara) permitida solo con `API_ENV=mock`. En
+/// `local`, `dev` y `prod` nunca se sube una captura inventada: si no hay
+/// cámara o permiso, el visor lo explica y la persona no puede continuar.
+final respaldoCapturaPermitidoProvider = Provider<bool>(
+  (ref) => ref.watch(apiEnvProvider) == 'mock',
+);
+
+final capturaServiceProvider = Provider<CapturaService>(
+  (ref) => ref.watch(camaraEnVivoHabilitadaProvider)
+      ? CamaraCapturaService(
+          permitirRespaldo: ref.watch(respaldoCapturaPermitidoProvider),
+        )
+      : const FakeCapturaService(),
+);
+
+/// Estado del visor de cámara.
+enum EstadoCamara {
+  iniciando,
+  lista,
+  sinPermiso,
+  sinPermisoPermanente,
+  sinCamara,
+}
+
+/// Solo para pruebas y goldens: fija el estado del visor sin abrir la cámara.
+final estadoCamaraForzadoProvider = Provider<EstadoCamara?>((ref) => null);
 
 /// Cuándo consulta M01-06 el resultado: a los 3, 8 y 20 s (Didit tarda de 2 a
 /// 5 s). Después para y ofrece «Actualizar»: no sondea sin fin.
@@ -52,5 +81,7 @@ final esperasVerificacionProvider = Provider<List<Duration>>(
 );
 
 final biometriaServiceProvider = Provider<BiometriaService>(
-  (ref) => FakeBiometriaService(),
+  (ref) => ref.watch(usarFakesProvider)
+      ? FakeBiometriaService()
+      : LocalAuthBiometriaService(),
 );

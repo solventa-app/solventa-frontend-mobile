@@ -275,5 +275,152 @@
   "fallaRegistroVencido": "Tu registro venció. Empieza de nuevo.",
   "@fallaRegistroVencido": {
     "description": "Onboarding: TOKEN_INVALIDO"
+  },
+  "fallaAlmacenamiento": "El servicio de almacenamiento de documentos no está disponible en este momento. Intenta de nuevo.",
+  "fallaObjetoNoSubido": "No pudimos recibir tu archivo completo. Revisa tu conexión y toca Reintentar envío.",
+  "fallaTamanoNoAdmitido": "El archivo supera el peso máximo permitido (5 MB foto de documento, 2 MB selfie, 15 MB video).",
+  "fallaTipoNoAdmitido": "El formato del archivo no es compatible (usa JPEG para fotos y MP4 para video).",
+  "fallaPiezasIncompletas": "Falta confirmar alguna de las capturas. Toca Reintentar envío para completar la subida.",
+  "fallaSinConsentimiento": "Debes aceptar la autorización de tratamiento de datos personales para continuar.",
+  "fallaProveedorNoDisponible": "El proveedor de verificación de identidad está tardando en responder. Reintenta en unos segundos.",
+  "fallaCodigoInvalido": "El código ingresado no es correcto. Revísalo e intenta de nuevo.",
+  "fallaCodigoVencido": "El código venció. Solicita uno nuevo para continuar.",
+  "fallaIntentosAgotados": "Agotaste los intentos de este código o verificación. Solicita uno nuevo.",
+  "fallaCredencialesInvalidas": "El correo o la clave no son correctos. Revísalos e intenta de nuevo.",
+  "fallaSesionVencida": "Tu sesión venció. Inicia sesión nuevamente.",
+  "fallaSinPermiso": "No tienes permiso para realizar esta operación.",
+  "cuentaModoCrear": "Crear cuenta",
+  "cuentaModoIngresar": "Iniciar sesión",
+  "cuentaTituloIngresar": "Inicia sesión",
+  "cuentaIntroCrear": "Ingresa tu correo electrónico y crea tu clave para empezar en Solventa. Te enviaremos un código de 6 dígitos para confirmar tu correo.",
+  "cuentaIntroIngresar": "Ingresa con el correo y la clave de tu cuenta en Solventa.",
+  "cuentaBotonIngresar": "Ingresar",
+  "cuentaCambiarAIngresar": "¿Ya tienes cuenta? Inicia sesión",
+  "cuentaCambiarACrear": "¿No tienes cuenta? Crear cuenta",
+  "otpTitulo": "Verifica tu correo",
+  "otpInstruccion": "Ingresa el código de 6 dígitos que enviamos a {correo}.",
+  "@otpInstruccion": {
+    "placeholders": {
+      "correo": {
+        "type": "String"
+      }
+    }
+  },
+  "otpVence": "El código vence en 10 minutos.",
+  "otpIntentosRestantes": "Intentos restantes: {intentos}",
+  "@otpIntentosRestantes": {
+    "placeholders": {
+      "intentos": {
+        "type": "int"
+      }
+    }
+  },
+  "otpVerificar": "Verificar código",
+  "otpReenviar": "Enviar otro código",
+  "otpReenviado": "Te enviamos un código nuevo a tu correo.",
+  "otpDemoAutocompletar": "Simular código válido (123456)",
+  "homeSaludoBienvenida": "Bienvenido a Solventa",
+  "homeSaludoHola": "Hola, {nombre}",
+  "@homeSaludoHola": {
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "homePendienteTexto": "Completa tu registro para activar tu cuenta",
+  "homePendienteBoton": "Completar registro",
+  "homeEnRevisionTitulo": "Estamos revisando tu identidad",
+  "homeEnRevisionTexto": "Validamos tus documentos y prueba de vida con nuestro proveedor KYC/AML. Te avisaremos apenas esté lista.",
+  "homeEnRevisionBoton": "Consultar estado",
+  "homeRechazadaTitulo": "No pudimos verificar tu identidad",
+  "homeRechazadaBoton": "Reintentar verificación",
+  "homeVerificadaTitulo": "Identidad verificada",
+  "homeVerificadaTexto": "Tu cuenta está activa y protegida con validación biométrica.",
+  "homeAsistenciaTile": "Solicitar asistencia en sitio",
+  "homeBilleteraNota": "Billetera y estado de póliza — próximamente",
+  "navInicio": "Inicio",
+  "navAsistencia": "Asistencia",
+  "navPerfil": "Mi perfil",
+  "navCerrarSesion": "Cerrar sesión",
+  "preferenciasModalTitulo": "Idioma y moneda",
+  "preferenciasModalSubtitulo": "Selecciona el idioma de la aplicación y la moneda de visualización.",
+  "preferenciasIdiomaLabel": "Idioma",
+  "preferenciasIdiomaEs": "Español (ES)",
+  "preferenciasIdiomaEn": "English (EN)",
+  "preferenciasMonedaLabel": "Moneda",
+  "preferenciasListo": "Listo",
+  "monedaNombreCOP": "Peso colombiano (COP)",
+  "monedaNombreMXN": "Peso mexicano (MXN)",
+  "monedaNombreBRL": "Real brasileño (BRL)",
+  "monedaNombreCLP": "Peso chileno (CLP)",
+  "monedaNombrePEN": "Sol peruano (PEN)",
+  "monedaNombreUSD": "Dólar estadounidense (USD)",
+  "monedaNombreEUR": "Euro (EUR)",
+  "perfilTitulo": "Mi perfil",
+  "perfilSubtitulo": "Tu cuenta en Solventa",
+  "perfilSoloLectura": "Solo lectura",
+  "perfilCargando": "Cargando tu perfil…",
+  "perfilError": "No pudimos cargar tu perfil en este momento.",
+  "perfilActiva": "Cuenta activa",
+  "perfilPendiente": "Verificación pendiente",
+  "perfilSuspendida": "Cuenta suspendida",
+  "perfilDatos": "Datos de la cuenta",
+  "perfilUsuario": "Correo / Usuario",
+  "perfilNombre": "Nombre",
+  "perfilNombrePendiente": "Pendiente de verificación de documento",
+  "perfilRol": "Rol",
+  "perfilRolCliente": "Cliente",
+  "perfilDocumento": "Documento",
+  "perfilRegistro": "Fecha de registro",
+  "perfilPreferencias": "Preferencias",
+  "perfilPreferenciasTexto": "Idioma y moneda con los que se abre la app cada vez que inicias sesión.",
+  "perfilGuardarPreferencias": "Guardar preferencias",
+  "perfilPreferenciasGuardadas": "Preferencias guardadas.",
+  "perfilNotaLegal": "Los datos de tu cuenta provienen de tu documento verificado y son de solo lectura. Tus datos personales se tratan conforme a la Ley 1581 de 2012 de Habeas Data.",
+  "cerrarSesionTitulo": "¿Quieres cerrar sesión?",
+  "cerrarSesionMensaje": "Tendrás que ingresar de nuevo para usar Solventa.",
+  "cerrarSesionConfirmar": "Sí, cerrar sesión",
+  "cerrarSesionCancelar": "No, seguir aquí",
+  "camaraEnVivoListo": "Cámara activa en el visor",
+  "camaraReintentarEnvio": "Reintentar envío",
+  "m0108DemoActivar": "Simular huella/rostro activado en el emulador",
+  "soporteCodigoTexto": "Si escribes a soporte, comparte este código: {codigo}",
+  "@soporteCodigoTexto": {
+    "placeholders": {
+      "codigo": {
+        "type": "String"
+      }
+    }
+  },
+  "soporteCopiarCodigo": "Copiar código de soporte",
+  "soporteCodigoCopiado": "Código copiado al portapapeles.",
+  "camaraPermisoTitulo": "Necesitamos acceso a tu cámara",
+  "@camaraPermisoTitulo": {
+    "description": "Marco de captura sin permiso de cámara: título"
+  },
+  "camaraPermisoTexto": "La usamos solo para tomar las fotos de tu documento y la prueba de vida. No guardamos nada en tu teléfono.",
+  "@camaraPermisoTexto": {
+    "description": "Marco de captura sin permiso de cámara: explicación"
+  },
+  "camaraPermitir": "Permitir cámara",
+  "@camaraPermitir": {
+    "description": "Botón para volver a pedir el permiso de cámara"
+  },
+  "camaraPermisoBloqueado": "Bloqueaste el acceso a la cámara. Actívalo en Ajustes → Permisos → Cámara y vuelve aquí.",
+  "@camaraPermisoBloqueado": {
+    "description": "Permiso de cámara denegado para siempre"
+  },
+  "camaraAbrirAjustes": "Abrir ajustes",
+  "@camaraAbrirAjustes": {
+    "description": "Botón que abre los ajustes de la app"
+  },
+  "camaraNoDisponible": "No encontramos una cámara disponible en este dispositivo.",
+  "@camaraNoDisponible": {
+    "description": "El dispositivo no tiene cámara utilizable"
+  },
+  "fallaCamaraNoDisponible": "No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.",
+  "@fallaCamaraNoDisponible": {
+    "description": "Falla al capturar sin cámara activa"
   }
 }

@@ -11,7 +11,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('la app arranca sin errores', (tester) async {
-    app.main();
+    await app.main();
     await tester.pumpAndSettle();
 
     expect(find.byType(WidgetsApp), findsOneWidget);

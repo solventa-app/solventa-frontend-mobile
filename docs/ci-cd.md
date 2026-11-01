@@ -22,7 +22,7 @@ Estado de cada pieza:
 | Merge a `main` | `cd.yml`: versión calculada sola, build prod firmado con R8 y Dart ofuscado, GitHub Release `v<versión>+<build>` con APK, AAB, mapping y símbolos | Hoy |
 | Manual | `rollback.yml` (recompila un tag anterior con build nuevo), `cd.yml` desde otra rama (compila sin publicar), `imagen-devcontainer.yml` | Hoy |
 | | `sonar.yml`: SonarCloud con la cobertura de `flutter test`; en PRs (decora el PR y evalúa el quality gate) y en push a `develop` cuando cambia `lib/`, `test/` o `pubspec.*`. Se salta en PRs de forks y de Dependabot (sin secretos) | Hoy |
-| Sentry | Reporte de errores con replay enmascarado | Pendiente: [`plan-sentry.md`](plan-sentry.md) |
+| Sentry | Reporte de errores con replay enmascarado y subida de símbolos en `cd.yml` / `rollback.yml` | Hoy (listo en código; falta `SENTRY_AUTH_TOKEN` en GitHub): [`plan-sentry.md`](plan-sentry.md) |
 
 ## Flujo de ramas
 
@@ -188,7 +188,7 @@ Flavors de Android + `--dart-define-from-file`:
 | `ANDROID_DEV_KEYSTORE_BASE64`, `ANDROID_DEV_KEYSTORE_PASSWORD`, `ANDROID_DEV_KEY_ALIAS`, `ANDROID_DEV_KEY_PASSWORD` | Environment `dev` | Firmar dev con una llave compartida, para que cada build de dev se instale encima del anterior. Sin ellos se firma con la de debug | Falta crearlos |
 | `FIREBASE_SERVICE_ACCOUNT` (secreto), `FIREBASE_APP_ID_DEV`, `FIREBASE_PROJECT_ID` (variables) | Environment `dev` | App Distribution y Test Lab | Falta cuenta |
 | `SONAR_TOKEN` | Repo | SonarCloud | Hoy |
-| `SENTRY_AUTH_TOKEN` | Environment `production` | Subir símbolos a Sentry | Pendiente |
+| `SENTRY_AUTH_TOKEN` | Environment `production` | Subir símbolos a Sentry (`uniandes-xm`) | Listo en `cd.yml` y `rollback.yml`, falta secreto |
 
 ## Versionado
 

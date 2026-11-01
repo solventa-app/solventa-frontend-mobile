@@ -135,3 +135,72 @@ mutation ActualizarSesion {
     }
   }
 }
+
+fragment UsuarioCampos on Usuario {
+  id
+  usuario
+  rol
+  estado
+  creadoEn
+  nombre
+  idioma
+  moneda
+  tieneContacto
+  documentoEnmascarado
+}
+
+fragment CodigoOnboardingCampos on CodigoOnboardingEnviado {
+  correoEnmascarado
+  venceEn
+}
+
+mutation EnviarCodigoOnboarding($correo: String!) {
+  enviarCodigoOnboarding(correo: $correo) {
+    __typename
+    ...CodigoOnboardingCampos
+    ...ErrorOnboardingCampos
+  }
+}
+
+mutation VerificarCodigoOnboarding($correo: String!, $codigo: String!) {
+  verificarCodigoOnboarding(correo: $correo, codigo: $codigo) {
+    __typename
+    ...CodigoOnboardingCampos
+    ...ErrorOnboardingCampos
+  }
+}
+
+mutation IniciarSesion($entrada: CredencialesInput!) {
+  iniciarSesion(entrada: $entrada) {
+    __typename
+    ... on Sesion {
+      token
+      expiraEn
+      usuario {
+        ...UsuarioCampos
+      }
+    }
+    ... on ErrorAutenticacion {
+      mensaje
+      codigo
+    }
+  }
+}
+
+query Yo {
+  yo {
+    ...UsuarioCampos
+  }
+}
+
+mutation ActualizarPreferencias($entrada: PreferenciasInput!) {
+  actualizarPreferencias(entrada: $entrada) {
+    __typename
+    ... on Usuario {
+      ...UsuarioCampos
+    }
+    ... on ErrorUsuario {
+      mensaje
+    }
+  }
+}

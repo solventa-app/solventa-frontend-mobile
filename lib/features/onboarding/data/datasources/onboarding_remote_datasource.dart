@@ -2,8 +2,9 @@ import '../../../../core/contrato/schema.graphql.dart';
 import '../../../../core/network/graphql_client.dart';
 import '../graphql/onboarding.graphql.dart';
 
-/// Acceso al BFF para el onboarding (contrato v0.20). Devuelve los tipos
-/// generados; el repositorio los mapea. [token] es el `X-Onboarding-Token`.
+/// Acceso al BFF para el onboarding y sesión de la app (contrato v0.21).
+/// Devuelve los tipos generados; el repositorio los mapea. [token] es el
+/// `X-Onboarding-Token`.
 abstract interface class OnboardingRemoteDataSource {
   Future<Mutation$IniciarOnboarding$iniciarOnboarding> iniciar(
     Enum$TipoDocumentoOnboarding tipoDocumento,
@@ -50,6 +51,29 @@ abstract interface class OnboardingRemoteDataSource {
   Future<Fragment$OnboardingCampos?> miVerificacion();
 
   Future<Mutation$ActualizarSesion$actualizarSesion> actualizarSesion();
+
+  /// Envía un código OTP de 6 dígitos al correo durante el onboarding.
+  Future<Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding> enviarCodigo(
+    String token,
+    String correo,
+  );
+
+  /// Verifica el código OTP de 6 dígitos enviado al correo.
+  Future<Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding>
+  verificarCodigo(String token, String correo, String codigo);
+
+  /// Inicia sesión con usuario/correo y clave en el canal app.
+  Future<Mutation$IniciarSesion$iniciarSesion> iniciarSesion(
+    String usuario,
+    String clave,
+  );
+
+  /// Devuelve el usuario autenticado (`yo`).
+  Future<Fragment$UsuarioCampos?> yo();
+
+  /// Actualiza el idioma y moneda preferidos del usuario.
+  Future<Mutation$ActualizarPreferencias$actualizarPreferencias>
+  actualizarPreferencias(String idioma, String moneda);
 }
 
 /// Implementación real contra `POST /graphql/app`.
@@ -197,5 +221,68 @@ final class GqlOnboardingRemoteDataSource
   Future<Mutation$ActualizarSesion$actualizarSesion> actualizarSesion() async {
     final data = await _cliente.ejecutar(documentNodeMutationActualizarSesion);
     return Mutation$ActualizarSesion.fromJson(data).actualizarSesion;
+  }
+
+  @override
+  Future<Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding> enviarCodigo(
+    String token,
+    String correo,
+  ) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationEnviarCodigoOnboarding,
+      variables: Variables$Mutation$EnviarCodigoOnboarding(correo: correo)
+          .toJson(),
+      cabeceras: _con(token),
+    );
+    return Mutation$EnviarCodigoOnboarding.fromJson(data)
+        .enviarCodigoOnboarding;
+  }
+
+  @override
+  Future<Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding>
+  verificarCodigo(String token, String correo, String codigo) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationVerificarCodigoOnboarding,
+      variables: Variables$Mutation$VerificarCodigoOnboarding(
+        correo: correo,
+        codigo: codigo,
+      ).toJson(),
+      cabeceras: _con(token),
+    );
+    return Mutation$VerificarCodigoOnboarding.fromJson(data)
+        .verificarCodigoOnboarding;
+  }
+
+  @override
+  Future<Mutation$IniciarSesion$iniciarSesion> iniciarSesion(
+    String usuario,
+    String clave,
+  ) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationIniciarSesion,
+      variables: Variables$Mutation$IniciarSesion(
+        entrada: Input$CredencialesInput(usuario: usuario, clave: clave),
+      ).toJson(),
+    );
+    return Mutation$IniciarSesion.fromJson(data).iniciarSesion;
+  }
+
+  @override
+  Future<Fragment$UsuarioCampos?> yo() async {
+    final data = await _cliente.ejecutar(documentNodeQueryYo);
+    return Query$Yo.fromJson(data).yo;
+  }
+
+  @override
+  Future<Mutation$ActualizarPreferencias$actualizarPreferencias>
+  actualizarPreferencias(String idioma, String moneda) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationActualizarPreferencias,
+      variables: Variables$Mutation$ActualizarPreferencias(
+        entrada: Input$PreferenciasInput(idioma: idioma, moneda: moneda),
+      ).toJson(),
+    );
+    return Mutation$ActualizarPreferencias.fromJson(data)
+        .actualizarPreferencias;
   }
 }

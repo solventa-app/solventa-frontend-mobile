@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../onboarding_routes.dart';
 import '../providers.dart';
 
 /// M01-08 · Activa tu biometría (2001:673). Sin huella o rostro activado la
@@ -38,6 +39,13 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage> {
     return SolFlowScaffold(
       title: l10n.m0108Titulo,
       anchorActions: false,
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go(OnboardingRoutes.resultado);
+        }
+      },
       body: Column(
         children: [
           ExcludeSemantics(

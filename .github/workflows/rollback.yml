@@ -28,6 +28,8 @@ jobs:
     permissions:
       contents: write
       packages: write
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -60,6 +62,14 @@ jobs:
         with:
           carpeta: restaurar
           run: tool/build-prod.sh ${{ steps.version.outputs.nombre }} ${{ steps.version.outputs.build }}
+
+      - name: Subir símbolos a Sentry
+        if: env.SENTRY_AUTH_TOKEN != ''
+        uses: ./.github/actions/devcontainer
+        with:
+          carpeta: restaurar
+          env: SENTRY_AUTH_TOKEN
+          run: dart run sentry_dart_plugin
 
       - name: Crear Release de rollback
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3

@@ -47,6 +47,14 @@ dependencies:
   go_router: ^18.1.1
   flutter_secure_storage: ^11.2.0
   image_picker: ^1.2.4
+  camera: ^0.12.2
+  permission_handler: ^12.0.1
+  path_provider: ^2.1.6
+  local_auth: ^3.0.2
+  shared_preferences: ^2.5.6
+  sentry_flutter: ^10.2.0
+  sentry_dio: ^10.2.0
+  logging: ^1.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -64,6 +72,7 @@ dev_dependencies:
   http_mock_adapter: ^0.6.1
   integration_test:
     sdk: flutter
+  sentry_dart_plugin: ^3.4.0
 flutter:
   generate: true
   # `flutter run` y `flutter build` sin --flavor usan dev (docs/ci-cd.md, "Ambientes dev y prod").
@@ -117,3 +126,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+sentry:
+  project: solventa-mobile
+  org: uniandes-xm
+  upload_debug_symbols: true
+  upload_source_maps: false
+  symbols_path: build-symbols
+  ignore_missing: true

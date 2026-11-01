@@ -25,6 +25,10 @@ abstract final class AppConfig {
   /// emulador).
   static const String apiBaseUrl = String.fromEnvironment('API_BASE_URL');
 
+  /// DSN de `solventa-mobile` en Sentry (`uniandes-xm`). Vacío = Sentry no
+  /// envía nada (pruebas, mock, local).
+  static const String sentryDsn = String.fromEnvironment('SENTRY_DSN');
+
   static bool get isDev => flavor == 'dev';
   static bool get isProd => flavor == 'prod';
 }
