@@ -3,8 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/app/solventa_app.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
 
 import '../../helpers/sol_test_app.dart';
+
+class _LoggedInNotifier extends OnboardingNotifier {
+  @override
+  OnboardingState build() => const OnboardingState(cuentaCreada: true);
+}
 
 void main() {
   testWidgets('La galería muestra todas las secciones sin errores', (
@@ -31,7 +37,12 @@ void main() {
   testWidgets('En debug, un toque largo en el wordmark abre la galería', (
     tester,
   ) async {
-    await tester.pumpWidget(const ProviderScope(child: SolventaApp()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [onboardingProvider.overrideWith(_LoggedInNotifier.new)],
+        child: const SolventaApp(),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.longPress(find.text('Solventa'));
     // La galería tiene indicadores de carga infinitos: no se usa

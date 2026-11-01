@@ -5,6 +5,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/network/network_providers.dart';
 import '../../domain/entities/verificacion_identidad.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
@@ -29,14 +30,10 @@ class M0105PruebaVidaPage extends ConsumerWidget {
       if (escenario != null) notifier.simular(escenario);
       if (await notifier.completarPruebaDeVida() && context.mounted) {
         final actual = ref.read(onboardingProvider);
-        if (actual.cuentaCreada) {
-          if (actual.verificacion != null) {
-            context.go(OnboardingRoutes.resultado);
-          } else {
-            context.go(OnboardingRoutes.verificando);
-          }
+        if (actual.verificacion != null) {
+          context.go(OnboardingRoutes.resultado);
         } else {
-          context.go(OnboardingRoutes.cuenta);
+          context.go(OnboardingRoutes.verificando);
         }
       }
     }
@@ -85,16 +82,18 @@ class M0105PruebaVidaPage extends ConsumerWidget {
             loading: estado.ocupado,
             onPressed: ir,
           ),
-          SolDemoTrigger(
-            label: l10n.m0105DemoRevision,
-            center: true,
-            onTap: () => ir(EstadoVerificacion.enRevision),
-          ),
-          SolDemoTrigger(
-            label: l10n.m0105DemoRechazo,
-            center: true,
-            onTap: () => ir(EstadoVerificacion.rechazada),
-          ),
+          if (ref.watch(usarFakesProvider)) ...[
+            SolDemoTrigger(
+              label: l10n.m0105DemoRevision,
+              center: true,
+              onTap: () => ir(EstadoVerificacion.enRevision),
+            ),
+            SolDemoTrigger(
+              label: l10n.m0105DemoRechazo,
+              center: true,
+              onTap: () => ir(EstadoVerificacion.rechazada),
+            ),
+          ],
         ],
       ),
     );

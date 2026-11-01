@@ -141,18 +141,22 @@ class _RootShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
     final estado = ref.watch(onboardingProvider);
+
+    // Sin sesión o cuenta creada, la pantalla de entrada es Crea tu cuenta / Inicia sesión.
+    if (!estado.cuentaCreada) {
+      return const M0105bCuentaPage();
+    }
+
+    final l10n = context.l10n;
     final notifier = ref.read(onboardingProvider.notifier);
 
     final verificado = estado.verificacion == EstadoVerificacion.verificada;
     final nombre = verificado
         ? (estado.perfil?.nombre?.trim().isNotEmpty ?? false)
               ? estado.perfil!.nombre!
-              : 'María'
-        : estado.cuentaCreada
-        ? (estado.perfil?.nombre?.trim() ?? '')
-        : 'María';
+              : ''
+        : '';
 
     Future<void> confirmarCierreSesion() async {
       final confirmar = await SolConfirmDialog.show(

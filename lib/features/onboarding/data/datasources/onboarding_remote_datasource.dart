@@ -34,6 +34,13 @@ abstract interface class OnboardingRemoteDataSource {
     String clave,
   );
 
+  /// Registra una cuenta con correo, clave y código OTP sin token de onboarding.
+  Future<Mutation$RegistrarCuenta$registrarCuenta> registrarCuenta(
+    String correo,
+    String clave,
+    String codigo,
+  );
+
   Future<Mutation$EnviarVerificacion$enviarVerificacion> enviarVerificacion(
     String token,
     String id,
@@ -171,6 +178,23 @@ final class GqlOnboardingRemoteDataSource
       cabeceras: _con(token),
     );
     return Mutation$CrearCuentaOnboarding.fromJson(data).crearCuentaOnboarding;
+  }
+
+  @override
+  Future<Mutation$RegistrarCuenta$registrarCuenta> registrarCuenta(
+    String correo,
+    String clave,
+    String codigo,
+  ) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationRegistrarCuenta,
+      variables: Variables$Mutation$RegistrarCuenta(
+        correo: correo,
+        clave: clave,
+        codigo: codigo,
+      ).toJson(),
+    );
+    return Mutation$RegistrarCuenta.fromJson(data).registrarCuenta;
   }
 
   @override

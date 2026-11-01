@@ -4,23 +4,27 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
-import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
 import '../widgets/onboarding_widgets.dart';
 
-/// M01-01 · Bienvenida (2005:702). Pantalla de entrada: barra «Inicio», sin flecha.
+/// M01-01 · Bienvenida e introducción a la verificación de identidad.
 class M0101BienvenidaPage extends ConsumerWidget {
   const M0101BienvenidaPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final cuentaCreada = ref.watch(
-      onboardingProvider.select((e) => e.cuentaCreada),
-    );
     final pasos = [l10n.m0101Paso1, l10n.m0101Paso2, l10n.m0101Paso3];
-    return SolEntryScaffold(
-      backgroundColor: context.colors.surface,
+    return SolFlowScaffold(
+      title: 'Solventa',
+      showProfile: false,
+      onBack: () {
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/');
+        }
+      },
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -58,12 +62,6 @@ class M0101BienvenidaPage extends ConsumerWidget {
           label: l10n.m0101Empezar,
           onPressed: () => context.push(OnboardingRoutes.autorizacion),
         ),
-        if (!cuentaCreada)
-          SolDemoTrigger(
-            label: l10n.cuentaCambiarAIngresar,
-            center: true,
-            onTap: () => context.push(OnboardingRoutes.cuenta),
-          ),
       ],
     );
   }

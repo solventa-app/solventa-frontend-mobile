@@ -103,6 +103,39 @@ final class FakeOnboardingRemoteDataSource
   }
 
   @override
+  Future<Mutation$RegistrarCuenta$registrarCuenta> registrarCuenta(
+    String correo,
+    String clave,
+    String codigo,
+  ) async {
+    if (cuenta.containsKey('crearCuentaOnboarding')) {
+      final mapa = cuenta['crearCuentaOnboarding'] as Map<String, dynamic>;
+      if (mapa['__typename'] == 'ErrorOnboarding') {
+        return Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion(
+          mensaje: 'Ya hay una cuenta con este correo.',
+          codigo: mapa['codigo'] as String?,
+        );
+      }
+    }
+    if (codigo.trim() != codigoEsperado) {
+      return Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion(
+        mensaje: 'El código no es correcto o venció.',
+        codigo: 'CODIGO_INVALIDO',
+      );
+    }
+    usuarioActual = OnboardingFixtures.usuario(
+      usuario: correo,
+      nombre: null,
+      estado: 'PENDIENTE_VERIFICACION',
+    );
+    return Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
+      token: 'fake-jwt-token-onboarding',
+      expiraEn: DateTime.now().add(const Duration(hours: 1)),
+      usuario: Fragment$UsuarioCampos.fromJson(usuarioActual),
+    );
+  }
+
+  @override
   Future<Mutation$EnviarVerificacion$enviarVerificacion> enviarVerificacion(
     String token,
     String id,

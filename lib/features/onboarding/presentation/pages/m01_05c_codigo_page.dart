@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/network/network_providers.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
 
@@ -12,7 +13,7 @@ import '../onboarding_routes.dart';
 /// Usa los componentes de autenticación del sistema de diseño:
 /// [SolPinIndicator] con 6 posiciones y [SolNumericKeypad].
 class M0105cCodigoPage extends ConsumerStatefulWidget {
-  const M0105cCodigoPage({super.key, this.irAlInicioAlTerminar = false});
+  const M0105cCodigoPage({super.key, this.irAlInicioAlTerminar = true});
 
   /// `true` cuando viene desde la creación de cuenta inicial; `false` cuando
   /// viene desde el paso M01-05b previo a M01-06.
@@ -91,6 +92,7 @@ class _M0105cCodigoPageState extends ConsumerState<M0105cCodigoPage> {
     return SolFlowScaffold(
       title: l10n.otpTitulo,
       anchorActions: false,
+      showProfile: false,
       onBack: () {
         if (context.canPop()) {
           context.pop();
@@ -158,14 +160,15 @@ class _M0105cCodigoPageState extends ConsumerState<M0105cCodigoPage> {
             onPressed: estado.ocupado ? null : _reenviar,
           ),
         ),
-        SolDemoTrigger(
-          label: l10n.otpDemoAutocompletar,
-          center: true,
-          onTap: () {
-            setState(() => _codigo = '123456');
-            _verificar();
-          },
-        ),
+        if (ref.watch(usarFakesProvider))
+          SolDemoTrigger(
+            label: l10n.otpDemoAutocompletar,
+            center: true,
+            onTap: () {
+              setState(() => _codigo = '123456');
+              _verificar();
+            },
+          ),
       ],
     );
   }

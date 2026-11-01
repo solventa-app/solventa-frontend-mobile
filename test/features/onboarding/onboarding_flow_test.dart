@@ -13,6 +13,21 @@ import '../../helpers/sol_test_app.dart';
 void main() {
   late FakeOnboardingRemoteDataSource bff;
 
+  /// M01-05b: correo y clave, y sigue a M01-06.
+  Future<void> crearCuenta(
+    WidgetTester tester, {
+    String correo = 'maria@ejemplo.co',
+  }) async {
+    expect(find.text('Crea tu cuenta'), findsOneWidget);
+    final campos = find.byType(TextField);
+    await tester.enterText(campos.at(0), correo);
+    await tester.enterText(campos.at(1), 'clave-segura-1');
+    await tester.enterText(campos.at(2), 'clave-segura-1');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
+  }
+
   Future<void> abrir(WidgetTester tester, {bool biometria = true}) async {
     bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
     tester.view.physicalSize = const Size(390, 844);
@@ -35,6 +50,9 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    if (find.text('Crea tu cuenta').evaluate().isNotEmpty) {
+      await crearCuenta(tester);
+    }
     await tester.tap(find.text('Completar registro'));
     await tester.pumpAndSettle();
   }
@@ -51,21 +69,6 @@ void main() {
     await tester.tap(find.text('Capturar'));
     await tester.pumpAndSettle();
     expect(find.text('Prueba de vida'), findsOneWidget);
-  }
-
-  /// M01-05b: correo y clave, y sigue a M01-06.
-  Future<void> crearCuenta(
-    WidgetTester tester, {
-    String correo = 'maria@ejemplo.co',
-  }) async {
-    expect(find.text('Crea tu cuenta'), findsOneWidget);
-    final campos = find.byType(TextField);
-    await tester.enterText(campos.at(0), correo);
-    await tester.enterText(campos.at(1), 'clave-segura-1');
-    await tester.enterText(campos.at(2), 'clave-segura-1');
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Crear cuenta'));
-    await tester.pumpAndSettle();
   }
 
   testWidgets('M01-01 muestra los 3 pasos y un solo botón primario', (
@@ -106,7 +109,6 @@ void main() {
     await hastaPruebaDeVida(tester);
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
-    await crearCuenta(tester);
     expect(
       find.text('¡Identidad verificada! Bienvenido a Solventa.'),
       findsOneWidget,
@@ -124,7 +126,6 @@ void main() {
     await hastaPruebaDeVida(tester);
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
-    await crearCuenta(tester);
     await tester.tap(find.text('Ir a mi cuenta'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ya lo activé, continuar'));
@@ -141,7 +142,6 @@ void main() {
     await hastaPruebaDeVida(tester);
     await tester.tap(find.textContaining('queda en revisión'));
     await tester.pumpAndSettle();
-    await crearCuenta(tester);
     expect(
       find.text('Estamos revisando tu identidad, te avisamos.'),
       findsOneWidget,
@@ -155,7 +155,6 @@ void main() {
       await hastaPruebaDeVida(tester);
       await tester.tap(find.textContaining('es rechazado'));
       await tester.pumpAndSettle();
-      await crearCuenta(tester);
       expect(
         find.textContaining('No pudimos verificar tu documento'),
         findsOneWidget,
@@ -169,10 +168,21 @@ void main() {
   testWidgets('M01-05b: un correo ya registrado se marca en el campo', (
     tester,
   ) async {
-    await abrir(tester);
-    await hastaPruebaDeVida(tester);
+    bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
     bff.cuenta = OnboardingFixtures.correoRegistrado;
-    await tester.tap(find.text('Continuar'));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          fakeOnboardingProvider.overrideWithValue(bff),
+          esperasVerificacionProvider.overrideWithValue(const [
+            Duration.zero,
+            Duration.zero,
+            Duration.zero,
+          ]),
+        ],
+        child: const SolventaApp(),
+      ),
+    );
     await tester.pumpAndSettle();
     await crearCuenta(tester);
     expect(
@@ -185,9 +195,20 @@ void main() {
   testWidgets('M01-05c: verifica código OTP de 6 dígitos enviado al correo', (
     tester,
   ) async {
-    await abrir(tester);
-    await hastaPruebaDeVida(tester);
-    await tester.tap(find.text('Continuar'));
+    bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          fakeOnboardingProvider.overrideWithValue(bff),
+          esperasVerificacionProvider.overrideWithValue(const [
+            Duration.zero,
+            Duration.zero,
+            Duration.zero,
+          ]),
+        ],
+        child: const SolventaApp(),
+      ),
+    );
     await tester.pumpAndSettle();
     final campos = find.byType(TextField);
     await tester.enterText(campos.at(0), 'maria@ejemplo.co');
@@ -202,10 +223,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(demoBtn);
     await tester.pumpAndSettle();
-    expect(
-      find.text('¡Identidad verificada! Bienvenido a Solventa.'),
-      findsOneWidget,
-    );
+    expect(find.text('Completar registro'), findsOneWidget);
   });
 
   testWidgets('M01-07c sin intentos manda a soporte, no a capturar', (
@@ -221,7 +239,6 @@ void main() {
     );
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
-    await crearCuenta(tester);
     expect(find.textContaining('Ya no quedan intentos'), findsOneWidget);
     expect(find.text('Reintentar'), findsNothing);
   });
