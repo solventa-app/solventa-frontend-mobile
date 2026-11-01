@@ -118,7 +118,7 @@ Dispositivos por defecto de `test-lab.yml`: Pixel 6 (API 33) y Pixel 5 (API 30).
 | Trivy | Vulnerabilidades de la imagen del devcontainer | `imagen-devcontainer.yml`, informativo | Hoy |
 | Dependabot | PRs con versiones nuevas o vulnerables de pub, acciones e imagen base | `.github/dependabot.yml`, hacia `develop` | Hoy |
 | Endurecimiento del APK | R8, Dart ofuscado en prod, sin copia de seguridad (`allowBackup="false"` y `data_extraction_rules.xml`), sin tráfico en claro en prod | Ver la sección siguiente | Hoy |
-| SonarCloud | Calidad y SAST | `sonar.yml`, proyecto `global-spark_solventa-frontend-mobile` | Hoy |
+| SonarCloud | Calidad y SAST | `sonar.yml`, proyecto `global-spark_solventa-mobile` | Hoy |
 | Secret scanning y push protection | Funciones de GitHub | Settings → Code security | Configuración pendiente |
 
 Regla: nada secreto en el código ni en `config/*.json`. Todo lo que entra con `--dart-define` queda dentro del APK.
