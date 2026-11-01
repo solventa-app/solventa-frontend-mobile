@@ -413,7 +413,7 @@ abstract class AppLocalizations {
   /// M01-05b: ayuda de la clave
   ///
   /// In es, this message translates to:
-  /// **'Mínimo 8 caracteres.'**
+  /// **'Entre 8 y 128 caracteres.'**
   String get m0105bAyudaContrasena;
 
   /// M01-05b: correo inválido
@@ -443,7 +443,7 @@ abstract class AppLocalizations {
   /// M01-05b: CORREO_YA_REGISTRADO
   ///
   /// In es, this message translates to:
-  /// **'Ya hay una cuenta con este correo. Usa otro.'**
+  /// **'Ya hay una cuenta con este correo. Inicia sesión.'**
   String get m0105bCorreoRegistrado;
 
   /// M01-05b: botón

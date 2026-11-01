@@ -20,6 +20,8 @@ abstract final class SolIcons {
   static const IconData language = Symbols.language;
   static const IconData profile = Symbols.person;
   static const IconData lock = Symbols.lock;
+  static const IconData visibility = Symbols.visibility;
+  static const IconData visibilityOff = Symbols.visibility_off;
   static const IconData backspace = Symbols.backspace;
 
   // Prestadores.

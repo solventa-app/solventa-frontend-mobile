@@ -145,7 +145,7 @@ class _RootShell extends ConsumerWidget {
 
     // Sin sesión o cuenta creada, la pantalla de entrada es Crea tu cuenta / Inicia sesión.
     if (!estado.cuentaCreada) {
-      return const M0105bCuentaPage();
+      return M0105bCuentaPage(modoInicialLogin: estado.sesionCerrada);
     }
 
     final l10n = context.l10n;

@@ -216,7 +216,7 @@
   "@m0105bConfirmar": {
     "description": "M01-05b: campo confirmación"
   },
-  "m0105bAyudaContrasena": "Mínimo 8 caracteres.",
+  "m0105bAyudaContrasena": "Entre 8 y 128 caracteres.",
   "@m0105bAyudaContrasena": {
     "description": "M01-05b: ayuda de la clave"
   },
@@ -236,7 +236,7 @@
   "@m0105bErrorConfirmar": {
     "description": "M01-05b: confirmación distinta"
   },
-  "m0105bCorreoRegistrado": "Ya hay una cuenta con este correo. Usa otro.",
+  "m0105bCorreoRegistrado": "Ya hay una cuenta con este correo. Inicia sesión.",
   "@m0105bCorreoRegistrado": {
     "description": "M01-05b: CORREO_YA_REGISTRADO"
   },

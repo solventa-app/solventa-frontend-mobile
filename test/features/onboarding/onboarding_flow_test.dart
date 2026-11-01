@@ -6,6 +6,7 @@ import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 import 'package:solventa_mobile/features/onboarding/data/datasources/biometria_service.dart';
 import 'package:solventa_mobile/features/onboarding/data/datasources/fake_onboarding_remote_datasource.dart';
 import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/providers.dart';
 
 import '../../helpers/sol_test_app.dart';
@@ -186,10 +187,46 @@ void main() {
     await tester.pumpAndSettle();
     await crearCuenta(tester);
     expect(
-      find.text('Ya hay una cuenta con este correo. Usa otro.'),
+      find.text('Ya hay una cuenta con este correo. Inicia sesión.'),
       findsOneWidget,
     );
     expect(find.text('Crea tu cuenta'), findsOneWidget);
+  });
+
+  testWidgets('M01-05b: crear cuenta e iniciar sesión no comparten campos', (
+    tester,
+  ) async {
+    bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [fakeOnboardingProvider.overrideWithValue(bff)],
+        child: const SolventaApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await crearCuenta(tester);
+    final contenedor = ProviderScope.containerOf(
+      tester.element(find.byType(SolventaApp)),
+    );
+    await contenedor.read(onboardingProvider.notifier).cerrarSesion();
+    await tester.pumpAndSettle();
+    // Tras cerrar sesión la entrada abre en «Inicia sesión».
+    expect(find.text('¿No tienes cuenta? Crear cuenta'), findsOneWidget);
+    await tester.enterText(find.byType(TextField).at(0), 'a@b.co');
+    await tester.enterText(find.byType(TextField).at(1), 'x');
+    // Con una clave corta, iniciar sesión no aplica el largo de la creación.
+    await tester.tap(find.text('¿No tienes cuenta? Crear cuenta'));
+    await tester.pumpAndSettle();
+    final campos = find.byType(TextField);
+    expect(tester.widget<TextField>(campos.at(0)).controller!.text, isEmpty);
+    expect(tester.widget<TextField>(campos.at(1)).controller!.text, isEmpty);
+    expect(tester.widget<TextField>(campos.at(1)).obscureText, isTrue);
+    await tester.tap(find.byTooltip('Mostrar clave').first);
+    await tester.pump();
+    expect(tester.widget<TextField>(campos.at(1)).obscureText, isFalse);
   });
 
   testWidgets('M01-05c: verifica código OTP de 6 dígitos enviado al correo', (
