@@ -191,23 +191,9 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
           throw const _Rechazo('RESPUESTA_DESCONOCIDA');
       }
     }
-    final r = await _remoto.registrarCuenta(correo, clave, '123456');
-    switch (r) {
-      case Mutation$RegistrarCuenta$registrarCuenta$$Sesion(:final token):
-        await _sesion.guardar(token);
-        return const Onboarding(
-          id: '',
-          estado: EstadoOnboarding.iniciado,
-          intento: 1,
-          intentosRestantes: 3,
-        );
-      case Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion(
-        :final codigo,
-      ):
-        throw _Rechazo(codigo ?? 'DATO_INVALIDO');
-      default:
-        throw const _Rechazo('DATO_INVALIDO');
-    }
+    // Sin recorrido de onboarding no hay cuenta que crear aquí: el registro
+    // con correo pasa siempre por el código real (registrarCuenta).
+    throw const _Rechazo('TOKEN_INVALIDO');
   });
 
   @override

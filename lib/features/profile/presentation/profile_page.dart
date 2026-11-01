@@ -81,13 +81,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final nombreMostrado = (perfil?.nombre?.trim().isNotEmpty ?? false)
         ? perfil!.nombre!.trim()
         : l10n.perfilNombrePendiente;
-    final correoMostrado =
-        perfil?.usuario ?? estado.correoPendiente ?? 'maria@ejemplo.co';
+    final correoMostrado = perfil?.usuario ?? estado.correoPendiente ?? '—';
     final verificado =
         (perfil?.verificado ?? false) ||
         estado.onboarding?.estado == EstadoOnboarding.verificada;
-    final documento = perfil?.documentoEnmascarado ?? '••••••4050';
-    final fechaRegistro = (perfil?.creadoEn ?? '2026-10-28').split('T').first;
+    // Sin documento de relleno: lo enmascara el backend (T24) o se ve «—».
+    final documento = (perfil?.documentoEnmascarado?.trim().isNotEmpty ?? false)
+        ? perfil!.documentoEnmascarado!.trim()
+        : '—';
+    final fechaRegistro = (perfil?.creadoEn ?? '—').split('T').first;
 
     final contenido = SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(
@@ -241,18 +243,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   const SolDivider(),
                   const SizedBox(height: SolSpacing.md),
                   _DatoLectura(
-                    etiqueta: l10n.perfilUsuario,
-                    valor: correoMostrado,
-                  ),
-                  const SizedBox(height: SolSpacing.md),
-                  _DatoLectura(
                     etiqueta: l10n.perfilNombre,
                     valor: nombreMostrado,
                   ),
                   const SizedBox(height: SolSpacing.md),
                   _DatoLectura(
                     etiqueta: l10n.perfilDocumento,
-                    valor: verificado ? documento : '—',
+                    valor: documento,
+                  ),
+                  const SizedBox(height: SolSpacing.md),
+                  // Correo: solo lectura, el del propio usuario (T10/T24).
+                  _DatoLectura(
+                    etiqueta: l10n.perfilUsuario,
+                    valor: correoMostrado,
                   ),
                   const SizedBox(height: SolSpacing.md),
                   _DatoLectura(
@@ -419,9 +422,23 @@ class _DatoLectura extends StatelessWidget {
             borderRadius: SolRadius.fieldAll,
             border: Border.all(color: colors.outline),
           ),
-          child: Text(
-            valor,
-            style: context.solText.body.copyWith(color: colors.onSurface),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  valor,
+                  style: context.solText.body.copyWith(color: colors.onSurface),
+                ),
+              ),
+              // Solo lectura: no hay edición en ningún lado (T24).
+              ExcludeSemantics(
+                child: Icon(
+                  SolIcons.lock,
+                  size: 16,
+                  color: colors.onSurfaceVariant,
+                ),
+              ),
+            ],
           ),
         ),
       ],

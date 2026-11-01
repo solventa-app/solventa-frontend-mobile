@@ -137,6 +137,8 @@ extension FallaTextoX on AppLocalizations {
     FallaNegocio(motivo: 'CODIGO_INVALIDO') => fallaCodigoInvalido,
     FallaNegocio(motivo: 'CODIGO_VENCIDO') => fallaCodigoVencido,
     FallaNegocio(motivo: 'INTENTOS_AGOTADOS') => fallaIntentosAgotados,
+    FallaNegocio(motivo: 'ESPERA_REQUERIDA') => fallaEsperaRequerida,
+    FallaNegocio(motivo: 'CLAVE_DEBIL') => m0105bErrorContrasena,
     FallaNegocio(motivo: 'CREDENCIALES_INVALIDAS') =>
       fallaCredencialesInvalidas,
     FallaNegocio(motivo: 'CAMARA_NO_DISPONIBLE') => fallaCamaraNoDisponible,
