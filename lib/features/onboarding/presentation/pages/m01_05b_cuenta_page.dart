@@ -56,6 +56,9 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
 
   String? _errorClave(AppLocalizations l10n) {
     final n = _clave.text.length;
+    // Al iniciar sesión no se exigen las reglas de longitud de la creación:
+    // la clave existente la valida el servidor.
+    if (_modoLogin) return n > 0 ? null : l10n.m0105bErrorContrasenaLogin;
     return n >= 8 && n <= 128 ? null : l10n.m0105bErrorContrasena;
   }
 
@@ -117,6 +120,10 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
 
   void _alternarModo() {
     ref.read(onboardingProvider.notifier).limpiarFalla();
+    // Crear cuenta e iniciar sesión no comparten lo escrito ni sus errores.
+    _correo.clear();
+    _clave.clear();
+    _confirmacion.clear();
     setState(() {
       _modoLogin = !_modoLogin;
       _validar = false;

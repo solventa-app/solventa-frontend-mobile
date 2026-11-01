@@ -195,6 +195,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'La clave debe tener entre 8 y 128 caracteres.';
 
   @override
+  String get m0105bErrorContrasenaLogin => 'Ingresa tu clave.';
+
+  @override
   String get m0105bErrorConfirmar => 'Las claves no coinciden.';
 
   @override

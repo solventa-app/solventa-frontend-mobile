@@ -228,6 +228,10 @@
   "@m0105bErrorContrasena": {
     "description": "M01-05b: clave corta o larga"
   },
+  "m0105bErrorContrasenaLogin": "Ingresa tu clave.",
+  "@m0105bErrorContrasenaLogin": {
+    "description": "M01-05b: clave vacía al iniciar sesión"
+  },
   "m0105bErrorConfirmar": "Las claves no coinciden.",
   "@m0105bErrorConfirmar": {
     "description": "M01-05b: confirmación distinta"

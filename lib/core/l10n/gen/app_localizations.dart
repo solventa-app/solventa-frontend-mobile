@@ -428,6 +428,12 @@ abstract class AppLocalizations {
   /// **'La clave debe tener entre 8 y 128 caracteres.'**
   String get m0105bErrorContrasena;
 
+  /// M01-05b: clave vacía al iniciar sesión
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa tu clave.'**
+  String get m0105bErrorContrasenaLogin;
+
   /// M01-05b: confirmación distinta
   ///
   /// In es, this message translates to:

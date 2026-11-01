@@ -193,6 +193,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your password must be 8 to 128 characters long.';
 
   @override
+  String get m0105bErrorContrasenaLogin => 'Enter your password.';
+
+  @override
   String get m0105bErrorConfirmar => 'The passwords don\'t match.';
 
   @override
