@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/log/sol_log.dart';
 import '../providers.dart';
 
 /// Paso numerado de M01-01 (2005:732): tarjeta con borde, número en círculo.
@@ -242,11 +244,17 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
       );
       await ctrl.initialize();
       // Si la app se fue al fondo mientras abría, se suelta y se reabre al volver.
+      // `inactive` NO cuenta como fondo: es el estado que deja el diálogo de
+      // permiso por un instante; soltar ahí la cámara antes de mostrar la vista
+      // previa hacía fallar el plugin (`releaseFlutterSurfaceTexture`). Si la app
+      // de verdad se va al fondo, `didChangeAppLifecycleState` la suelta.
+      final estadoApp = WidgetsBinding.instance.lifecycleState;
       final enPrimerPlano =
-          WidgetsBinding.instance.lifecycleState == null ||
-          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
+          estadoApp == null ||
+          estadoApp == AppLifecycleState.resumed ||
+          estadoApp == AppLifecycleState.inactive;
       if (!mounted || !enPrimerPlano) {
-        await ctrl.dispose();
+        await _soltar(ctrl);
         return;
       }
       _controller = ctrl;
@@ -268,6 +276,20 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
 
   static bool _concedido(PermissionStatus p) => p.isGranted || p.isLimited;
 
+  /// Suelta el controlador sin dejar escapar el error del plugin: si la vista
+  /// previa nunca llegó a crearse, Android lanza `IllegalStateException` al
+  /// liberar su textura, y eso no debe tumbar la pantalla ni llegar a Sentry
+  /// como excepción sin manejar.
+  static Future<void> _soltar(CameraController ctrl) async {
+    try {
+      await ctrl.dispose();
+    } on PlatformException catch (e) {
+      SolLog.warning('camara: no se pudo soltar', codigo: e.code);
+    } on CameraException catch (e) {
+      SolLog.warning('camara: no se pudo soltar', codigo: e.code);
+    }
+  }
+
   Future<void> _liberar() async {
     final ctrl = _controller;
     if (ctrl == null) return;
@@ -276,7 +298,7 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
       ref.read(capturaServiceProvider).vincularControladorEnVivo(null);
     } catch (_) {}
     if (mounted) setState(() => _estado = EstadoCamara.iniciando);
-    await ctrl.dispose();
+    await _soltar(ctrl);
   }
 
   @override
@@ -287,7 +309,7 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
       try {
         ref.read(capturaServiceProvider).vincularControladorEnVivo(null);
       } catch (_) {}
-      unawaited(ctrl.dispose());
+      unawaited(_soltar(ctrl));
     }
     super.dispose();
   }
