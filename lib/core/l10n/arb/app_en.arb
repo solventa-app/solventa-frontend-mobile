@@ -52,6 +52,8 @@
   "m0105bCorreo": "Email",
   "m0105bContrasena": "Password",
   "m0105bConfirmar": "Confirm your password",
+  "m0105bRequisitoCumplido": "met",
+  "m0105bRequisitoPendiente": "not met yet",
   "m0105bAyudaContrasena": "8 to 128 characters.",
   "m0105bErrorCorreo": "Enter a valid email.",
   "m0105bErrorContrasena": "Your password must be 8 to 128 characters long.",

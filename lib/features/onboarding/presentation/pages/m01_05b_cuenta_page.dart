@@ -192,6 +192,9 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
               const SizedBox(height: SolSpacing.xs),
               _RequisitoClave(
                 texto: l10n.m0105bAyudaContrasena,
+                estado: _claveCumpleLargo
+                    ? l10n.m0105bRequisitoCumplido
+                    : l10n.m0105bRequisitoPendiente,
                 cumplido: _claveCumpleLargo,
               ),
               const SizedBox(height: SolSpacing.lg),
@@ -243,34 +246,45 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
 
 /// Requisito de la clave con ✓ cuando se cumple (no solo color: ícono y texto).
 class _RequisitoClave extends StatelessWidget {
-  const _RequisitoClave({required this.texto, required this.cumplido});
+  const _RequisitoClave({
+    required this.texto,
+    required this.estado,
+    required this.cumplido,
+  });
 
   final String texto;
+
+  /// Lo que lee el lector de pantalla junto al requisito («cumplido» / «pendiente»).
+  final String estado;
   final bool cumplido;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final color = cumplido ? colors.primary : colors.onSurfaceVariant;
-    return Padding(
-      padding: const EdgeInsets.only(left: SolSpacing.xs),
-      child: Row(
-        children: [
-          ExcludeSemantics(
-            child: Icon(
-              cumplido ? SolIcons.success : SolIcons.pendingRegistration,
-              size: 16,
-              color: color,
+    return Semantics(
+      label: '$texto, $estado',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.only(left: SolSpacing.xs),
+        child: Row(
+          children: [
+            ExcludeSemantics(
+              child: Icon(
+                cumplido ? SolIcons.success : SolIcons.pendingRegistration,
+                size: 16,
+                color: color,
+              ),
             ),
-          ),
-          const SizedBox(width: SolSpacing.xs),
-          Expanded(
-            child: Text(
-              texto,
-              style: context.solText.note.copyWith(color: color),
+            const SizedBox(width: SolSpacing.xs),
+            Expanded(
+              child: Text(
+                texto,
+                style: context.solText.note.copyWith(color: color),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

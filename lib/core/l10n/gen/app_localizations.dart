@@ -410,6 +410,18 @@ abstract class AppLocalizations {
   /// **'Confirma la clave'**
   String get m0105bConfirmar;
 
+  /// M01-05b: requisito de la clave cumplido (lector de pantalla)
+  ///
+  /// In es, this message translates to:
+  /// **'cumplido'**
+  String get m0105bRequisitoCumplido;
+
+  /// M01-05b: requisito de la clave pendiente (lector de pantalla)
+  ///
+  /// In es, this message translates to:
+  /// **'pendiente'**
+  String get m0105bRequisitoPendiente;
+
   /// M01-05b: ayuda de la clave
   ///
   /// In es, this message translates to:

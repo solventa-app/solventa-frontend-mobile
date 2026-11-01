@@ -185,6 +185,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0105bConfirmar => 'Confirma la clave';
 
   @override
+  String get m0105bRequisitoCumplido => 'cumplido';
+
+  @override
+  String get m0105bRequisitoPendiente => 'pendiente';
+
+  @override
   String get m0105bAyudaContrasena => 'Entre 8 y 128 caracteres.';
 
   @override

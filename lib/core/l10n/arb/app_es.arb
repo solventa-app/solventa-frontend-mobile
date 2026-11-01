@@ -216,6 +216,10 @@
   "@m0105bConfirmar": {
     "description": "M01-05b: campo confirmación"
   },
+  "m0105bRequisitoCumplido": "cumplido",
+  "@m0105bRequisitoCumplido": {"description": "M01-05b: requisito de la clave cumplido (lector de pantalla)"},
+  "m0105bRequisitoPendiente": "pendiente",
+  "@m0105bRequisitoPendiente": {"description": "M01-05b: requisito de la clave pendiente (lector de pantalla)"},
   "m0105bAyudaContrasena": "Entre 8 y 128 caracteres.",
   "@m0105bAyudaContrasena": {
     "description": "M01-05b: ayuda de la clave"

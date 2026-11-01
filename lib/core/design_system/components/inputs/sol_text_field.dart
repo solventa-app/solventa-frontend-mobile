@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../icons/sol_icons.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_radius.dart';
+import '../../tokens/sol_sizes.dart';
 import '../../tokens/sol_spacing.dart';
 
 /// Campo de texto de Solventa (M06-02): etiqueta 11 sp dentro del campo,
@@ -219,7 +220,10 @@ class _SolTextFieldState extends State<SolTextField> {
               ),
               iconSize: SolSpacing.xl,
               color: colors.onSurfaceVariant,
-              constraints: const BoxConstraints.tightFor(width: 40, height: 40),
+              constraints: const BoxConstraints.tightFor(
+                width: SolSizes.minTouchTarget,
+                height: SolSizes.minTouchTarget,
+              ),
               padding: EdgeInsets.zero,
             )
           else if (widget.trailingIcon != null)

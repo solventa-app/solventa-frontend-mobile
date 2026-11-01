@@ -183,6 +183,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0105bConfirmar => 'Confirm your password';
 
   @override
+  String get m0105bRequisitoCumplido => 'met';
+
+  @override
+  String get m0105bRequisitoPendiente => 'not met yet';
+
+  @override
   String get m0105bAyudaContrasena => '8 to 128 characters.';
 
   @override
