@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/l10n/l10n.dart';
-import '../../../../core/network/network_providers.dart';
+import '../../domain/regla_clave.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
 
@@ -22,11 +22,9 @@ class M0105bCuentaPage extends ConsumerStatefulWidget {
   const M0105bCuentaPage({
     super.key,
     this.modoInicialLogin = false,
-    this.exigirCodigoOtp = false,
   });
 
   final bool modoInicialLogin;
-  final bool exigirCodigoOtp;
 
   @override
   ConsumerState<M0105bCuentaPage> createState() => _M0105bCuentaPageState();
@@ -37,7 +35,6 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
 
   final _correo = TextEditingController();
   final _clave = TextEditingController();
-  final _confirmacion = TextEditingController();
   bool _validar = false;
   late bool _modoLogin = widget.modoInicialLogin;
 
@@ -45,7 +42,6 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
   void dispose() {
     _correo.dispose();
     _clave.dispose();
-    _confirmacion.dispose();
     super.dispose();
   }
 
@@ -54,27 +50,21 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
       ? null
       : l10n.m0105bErrorCorreo;
 
-  /// Misma regla que AUTH (`validar_clave`): entre 8 y 128 caracteres.
-  bool get _claveCumpleLargo =>
-      _clave.text.length >= 8 && _clave.text.length <= 128;
+  /// Misma regla que AUTH (`validar_clave`, T17).
+  ReglaClave get _regla => ReglaClave.evaluar(_clave.text);
 
   String? _errorClave(AppLocalizations l10n) {
-    final n = _clave.text.length;
     // Al iniciar sesión no se exigen las reglas de longitud de la creación:
     // la clave existente la valida el servidor.
-    if (_modoLogin) return n > 0 ? null : l10n.m0105bErrorContrasenaLogin;
-    return n >= 8 && n <= 128 ? null : l10n.m0105bErrorContrasena;
+    if (_modoLogin) {
+      return _clave.text.isNotEmpty ? null : l10n.m0105bErrorContrasenaLogin;
+    }
+    return _regla.cumple ? null : l10n.m0105bErrorContrasena;
   }
-
-  String? _errorConfirmacion(AppLocalizations l10n) =>
-      _confirmacion.text == _clave.text ? null : l10n.m0105bErrorConfirmar;
 
   Future<void> _enviar(AppLocalizations l10n) async {
     setState(() => _validar = true);
     if (_errorCorreo(l10n) != null || _errorClave(l10n) != null) {
-      return;
-    }
-    if (!_modoLogin && _errorConfirmacion(l10n) != null) {
       return;
     }
     final notifier = ref.read(onboardingProvider.notifier);
@@ -90,44 +80,19 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
       return;
     }
 
-    if (_exigirOtp) {
-      final ok = await notifier.solicitarCodigoCorreo(
-        correo: correoLimpio,
-        clave: claveTexto,
-      );
-      if (ok && mounted) await context.push(OnboardingRoutes.codigoCorreo);
-      return;
-    }
-
-    final ok = await notifier.crearCuenta(
+    // El correo se verifica siempre con el código real enviado por correo.
+    final ok = await notifier.solicitarCodigoCorreo(
       correo: correoLimpio,
       clave: claveTexto,
     );
-    if (ok && mounted) context.go('/');
-  }
-
-  Future<void> _enviarConOtp(AppLocalizations l10n) async {
-    setState(() => _validar = true);
-    if (_errorCorreo(l10n) != null ||
-        _errorClave(l10n) != null ||
-        _errorConfirmacion(l10n) != null) {
-      return;
-    }
-    final ok = await ref
-        .read(onboardingProvider.notifier)
-        .solicitarCodigoCorreo(correo: _correo.text.trim(), clave: _clave.text);
     if (ok && mounted) await context.push(OnboardingRoutes.codigoCorreo);
   }
-
-  /// Con backend real el correo se verifica siempre con el código (OTP).
-  bool get _exigirOtp => widget.exigirCodigoOtp || !ref.read(usarFakesProvider);
 
   void _alternarModo() {
     ref.read(onboardingProvider.notifier).limpiarFalla();
     // Crear cuenta e iniciar sesión no comparten lo escrito ni sus errores.
     _correo.clear();
     _clave.clear();
-    _confirmacion.clear();
     setState(() {
       _modoLogin = !_modoLogin;
       _validar = false;
@@ -179,9 +144,7 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
               label: l10n.m0105bContrasena,
               controller: _clave,
               obscureText: true,
-              textInputAction: _modoLogin
-                  ? TextInputAction.done
-                  : TextInputAction.next,
+              textInputAction: TextInputAction.done,
               autofillHints: [
                 _modoLogin ? AutofillHints.password : AutofillHints.newPassword,
               ],
@@ -191,20 +154,32 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
             if (!_modoLogin) ...[
               const SizedBox(height: SolSpacing.xs),
               _RequisitoClave(
-                texto: l10n.m0105bAyudaContrasena,
-                estado: _claveCumpleLargo
+                texto: l10n.m0105bReqLargo,
+                estado: _regla.largo
                     ? l10n.m0105bRequisitoCumplido
                     : l10n.m0105bRequisitoPendiente,
-                cumplido: _claveCumpleLargo,
+                cumplido: _regla.largo,
               ),
-              const SizedBox(height: SolSpacing.lg),
-              SolTextField(
-                label: l10n.m0105bConfirmar,
-                controller: _confirmacion,
-                obscureText: true,
-                textInputAction: TextInputAction.done,
-                onChanged: (_) => setState(() {}),
-                errorText: _validar ? _errorConfirmacion(l10n) : null,
+              _RequisitoClave(
+                texto: l10n.m0105bReqMayuscula,
+                estado: _regla.mayuscula
+                    ? l10n.m0105bRequisitoCumplido
+                    : l10n.m0105bRequisitoPendiente,
+                cumplido: _regla.mayuscula,
+              ),
+              _RequisitoClave(
+                texto: l10n.m0105bReqMinuscula,
+                estado: _regla.minuscula
+                    ? l10n.m0105bRequisitoCumplido
+                    : l10n.m0105bRequisitoPendiente,
+                cumplido: _regla.minuscula,
+              ),
+              _RequisitoClave(
+                texto: l10n.m0105bReqEspecial,
+                estado: _regla.especial
+                    ? l10n.m0105bRequisitoCumplido
+                    : l10n.m0105bRequisitoPendiente,
+                cumplido: _regla.especial,
               ),
             ],
             if (falla != null && !correoRegistrado) ...[
@@ -221,7 +196,7 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
         SolButton.primary(
           label: _modoLogin ? l10n.cuentaBotonIngresar : l10n.m0105bCrear,
           loading: estado.ocupado,
-          onPressed: () => _enviar(l10n),
+          onPressed: _modoLogin || _regla.cumple ? () => _enviar(l10n) : null,
         ),
         const SizedBox(height: SolSpacing.sm),
         Center(
@@ -232,13 +207,6 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
             onPressed: estado.ocupado ? null : _alternarModo,
           ),
         ),
-        // Atajo de demo: solo con API_ENV=mock (en local/dev/prod el OTP es obligatorio).
-        if (!_modoLogin && !_exigirOtp)
-          SolDemoTrigger(
-            label: l10n.otpTitulo,
-            center: true,
-            onTap: () => _enviarConOtp(l10n),
-          ),
       ],
     );
   }

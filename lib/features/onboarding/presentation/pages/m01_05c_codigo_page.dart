@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
+import '../../../../core/errors/falla.dart';
 import '../../../../core/l10n/l10n.dart';
-import '../../../../core/network/network_providers.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
 
@@ -26,6 +28,37 @@ class M0105cCodigoPage extends ConsumerStatefulWidget {
 class _M0105cCodigoPageState extends ConsumerState<M0105cCodigoPage> {
   String _codigo = '';
   bool _reenviado = false;
+
+  /// Espera mínima entre envíos. El backend la exige también y manda los
+  /// segundos restantes (`ESPERA_REQUERIDA`); este valor es solo el de partida.
+  static const _esperaReenvio = 60;
+  int _segundosRestantes = _esperaReenvio;
+  Timer? _reloj;
+
+  @override
+  void initState() {
+    super.initState();
+    _iniciarEspera();
+  }
+
+  @override
+  void dispose() {
+    _reloj?.cancel();
+    super.dispose();
+  }
+
+  void _iniciarEspera([int segundos = _esperaReenvio]) {
+    _reloj?.cancel();
+    setState(() => _segundosRestantes = segundos);
+    _reloj = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (!mounted) return t.cancel();
+      setState(() => _segundosRestantes--);
+      if (_segundosRestantes <= 0) t.cancel();
+    });
+  }
+
+  String _formatoEspera(int s) =>
+      '${s ~/ 60}:${(s % 60).toString().padLeft(2, '0')}';
 
   void _onDigit(int digito) {
     if (_codigo.length >= 6) return;
@@ -74,6 +107,11 @@ class _M0105cCodigoPageState extends ConsumerState<M0105cCodigoPage> {
         _codigo = '';
         _reenviado = true;
       });
+      _iniciarEspera();
+    } else if (ref.read(onboardingProvider).falla
+        case FallaNegocio(motivo: 'ESPERA_REQUERIDA')) {
+      // El backend aún exige esperar: se vuelve a bloquear el botón.
+      _iniciarEspera();
     }
   }
 
@@ -156,19 +194,14 @@ class _M0105cCodigoPageState extends ConsumerState<M0105cCodigoPage> {
         const SizedBox(height: SolSpacing.sm),
         Center(
           child: SolLinkButton(
-            label: l10n.otpReenviar,
-            onPressed: estado.ocupado ? null : _reenviar,
+            label: _segundosRestantes > 0
+                ? l10n.otpReenviarEn(_formatoEspera(_segundosRestantes))
+                : l10n.otpReenviar,
+            onPressed: estado.ocupado || _segundosRestantes > 0
+                ? null
+                : _reenviar,
           ),
         ),
-        if (ref.watch(usarFakesProvider))
-          SolDemoTrigger(
-            label: l10n.otpDemoAutocompletar,
-            center: true,
-            onTap: () {
-              setState(() => _codigo = '123456');
-              _verificar();
-            },
-          ),
       ],
     );
   }

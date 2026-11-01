@@ -92,12 +92,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Slowly turn your face inside the frame (front camera)';
 
   @override
-  String get m0105DemoRevision => 'Simulate identity under review';
-
-  @override
-  String get m0105DemoRechazo => 'Simulate rejected document';
-
-  @override
   String get verificacionTitulo => 'Verification';
 
   @override
@@ -196,7 +190,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0105bErrorContrasena =>
-      'Your password must be 8 to 128 characters long.';
+      'Your password must meet all the requirements.';
 
   @override
   String get m0105bErrorContrasenaLogin => 'Enter your password.';
@@ -346,10 +340,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get otpReenviar => 'Send another code';
 
   @override
-  String get otpReenviado => 'We sent a new code to your email.';
+  String otpReenviarEn(String tiempo) {
+    return 'Resend in $tiempo';
+  }
 
   @override
-  String get otpDemoAutocompletar => 'Simulate valid code (123456)';
+  String get fallaEsperaRequerida => 'Please wait a moment before requesting another code.';
+
+  @override
+  String get m0105bReqLargo => 'Between 8 and 128 characters';
+
+  @override
+  String get m0105bReqMayuscula => 'One uppercase letter';
+
+  @override
+  String get m0105bReqMinuscula => 'One lowercase letter';
+
+  @override
+  String get m0105bReqEspecial => 'One special character (for example ! ? @ # €)';
+
+  @override
+  String get otpReenviado => 'We sent a new code to your email.';
 
   @override
   String get homeSaludoBienvenida => 'Welcome to Solventa';
@@ -478,7 +489,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get perfilDatos => 'Account details';
 
   @override
-  String get perfilUsuario => 'Email / Username';
+  String get perfilUsuario => 'Email';
 
   @override
   String get perfilNombre => 'Name';
