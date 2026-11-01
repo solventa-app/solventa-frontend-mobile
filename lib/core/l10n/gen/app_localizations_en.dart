@@ -183,7 +183,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0105bConfirmar => 'Confirm your password';
 
   @override
-  String get m0105bAyudaContrasena => 'At least 8 characters.';
+  String get m0105bRequisitoCumplido => 'met';
+
+  @override
+  String get m0105bRequisitoPendiente => 'not met yet';
+
+  @override
+  String get m0105bAyudaContrasena => '8 to 128 characters.';
 
   @override
   String get m0105bErrorCorreo => 'Enter a valid email.';
@@ -193,11 +199,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your password must be 8 to 128 characters long.';
 
   @override
+  String get m0105bErrorContrasenaLogin => 'Enter your password.';
+
+  @override
   String get m0105bErrorConfirmar => 'The passwords don\'t match.';
 
   @override
   String get m0105bCorreoRegistrado =>
-      'There is already an account with this email. Use another one.';
+      'There is already an account with this email. Sign in.';
 
   @override
   String get m0105bCrear => 'Create account';

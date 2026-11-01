@@ -31,6 +31,7 @@ final class OnboardingState {
     this.codigoOnboarding,
     this.cuentaCreada = false,
     this.perfil,
+    this.sesionCerrada = false,
   });
 
   final bool consentimientoMarcado;
@@ -63,6 +64,9 @@ final class OnboardingState {
 
   /// Perfil actual del usuario (`yo`).
   final PerfilUsuario? perfil;
+
+  /// El usuario acaba de cerrar sesión: la pantalla de entrada abre en «Inicia sesión».
+  final bool sesionCerrada;
 
   /// Intentos que quedan tras un rechazo (0: ya no se puede repetir).
   int get intentosRestantes => onboarding?.intentosRestantes ?? 0;
@@ -99,6 +103,7 @@ final class OnboardingState {
     CodigoOnboarding? codigoOnboarding,
     bool? cuentaCreada,
     PerfilUsuario? perfil,
+    bool? sesionCerrada,
     bool limpiarFalla = false,
     bool limpiarVerificacion = false,
     bool limpiarCredencialesPendientes = false,
@@ -129,6 +134,7 @@ final class OnboardingState {
         : codigoOnboarding ?? this.codigoOnboarding,
     cuentaCreada: cuentaCreada ?? this.cuentaCreada,
     perfil: limpiarPerfil ? null : perfil ?? this.perfil,
+    sesionCerrada: sesionCerrada ?? this.sesionCerrada,
   );
 }
 
@@ -143,6 +149,9 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
 
   /// Subidas en curso o completadas.
   final _subidas = <PasoOnboarding, Future<Resultado<Onboarding>>>{};
+
+  /// Sube al cerrar sesión: una consulta que vuelve después no revive la cuenta.
+  int _epocaSesion = 0;
 
   @override
   OnboardingState build() => const OnboardingState();
@@ -456,11 +465,14 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
   /// Refresca el perfil (`yo`) y el estado de `miVerificacion`.
   Future<void> cargarPerfilYEstado() async {
     final repo = ref.read(onboardingRepositoryProvider);
+    final epoca = _epocaSesion;
     final rPerfil = await repo.consultarPerfil();
+    if (epoca != _epocaSesion) return;
     if (rPerfil case Exito(:final valor) when valor != null) {
       state = state.copyWith(perfil: valor, cuentaCreada: true);
     }
     final rOnb = await repo.consultar();
+    if (epoca != _epocaSesion) return;
     if (rOnb case Exito(:final valor)) {
       state = state.copyWith(
         onboarding: valor,
@@ -479,8 +491,9 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     _capturasEnMemoria.clear();
     _subidas.clear();
     unawaited(limpiarCacheCapturas());
+    _epocaSesion++;
     await ref.read(onboardingRepositoryProvider).cerrarSesion();
-    state = const OnboardingState();
+    state = const OnboardingState(sesionCerrada: true);
   }
 
   /// Disparadores de demo de M01-05 (solo debug, con el fake).

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../icons/sol_icons.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_radius.dart';
+import '../../tokens/sol_sizes.dart';
 import '../../tokens/sol_spacing.dart';
 
 /// Campo de texto de Solventa (M06-02): etiqueta 11 sp dentro del campo,
@@ -88,6 +89,9 @@ class _SolTextFieldState extends State<SolTextField> {
   FocusNode? _ownFocus;
   TextEditingController? _ownController;
 
+  /// Solo con `obscureText`: la clave arranca oculta y el ojo la muestra.
+  bool _oculto = true;
+
   FocusNode get _focus => widget.focusNode ?? (_ownFocus ??= FocusNode());
   TextEditingController get _controller =>
       widget.controller ??
@@ -110,6 +114,8 @@ class _SolTextFieldState extends State<SolTextField> {
   }
 
   void _onFocus() => setState(() {});
+
+  bool get _ocultar => widget.obscureText && _oculto;
 
   @override
   void dispose() {
@@ -145,9 +151,9 @@ class _SolTextFieldState extends State<SolTextField> {
       enabled: widget.enabled,
       onTap: widget.onTap,
       onChanged: widget.onChanged,
-      maxLines: widget.obscureText ? 1 : widget.maxLines,
+      maxLines: _ocultar ? 1 : widget.maxLines,
       minLines: widget.minLines,
-      obscureText: widget.obscureText,
+      obscureText: _ocultar,
       autocorrect: !widget.obscureText,
       enableSuggestions: !widget.obscureText,
       autofillHints: widget.autofillHints,
@@ -205,7 +211,22 @@ class _SolTextFieldState extends State<SolTextField> {
               ],
             ),
           ),
-          if (widget.trailingIcon != null)
+          if (widget.obscureText && widget.enabled)
+            IconButton(
+              onPressed: () => setState(() => _oculto = !_oculto),
+              tooltip: _oculto ? 'Mostrar clave' : 'Ocultar clave',
+              icon: Icon(
+                _oculto ? SolIcons.visibility : SolIcons.visibilityOff,
+              ),
+              iconSize: SolSpacing.xl,
+              color: colors.onSurfaceVariant,
+              constraints: const BoxConstraints.tightFor(
+                width: SolSizes.minTouchTarget,
+                height: SolSizes.minTouchTarget,
+              ),
+              padding: EdgeInsets.zero,
+            )
+          else if (widget.trailingIcon != null)
             ExcludeSemantics(
               child: Icon(
                 widget.trailingIcon,

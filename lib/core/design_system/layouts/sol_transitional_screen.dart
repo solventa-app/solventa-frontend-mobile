@@ -39,13 +39,15 @@ class SolTransitionalScreen extends StatelessWidget {
           SolSpacing.screen,
           SolSpacing.xxxl,
         ),
+        centerBody: true,
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SolLoadingState(message: message),
+            SolLoadingState(message: message, center: true),
             if (footer != null) ...[
               const SizedBox(height: SolSpacing.sm),
-              footer!,
+              SizedBox(width: double.infinity, child: footer!),
             ],
           ],
         ),

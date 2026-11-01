@@ -185,7 +185,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0105bConfirmar => 'Confirma la clave';
 
   @override
-  String get m0105bAyudaContrasena => 'Mínimo 8 caracteres.';
+  String get m0105bRequisitoCumplido => 'cumplido';
+
+  @override
+  String get m0105bRequisitoPendiente => 'pendiente';
+
+  @override
+  String get m0105bAyudaContrasena => 'Entre 8 y 128 caracteres.';
 
   @override
   String get m0105bErrorCorreo => 'Escribe un correo válido.';
@@ -195,11 +201,14 @@ class AppLocalizationsEs extends AppLocalizations {
       'La clave debe tener entre 8 y 128 caracteres.';
 
   @override
+  String get m0105bErrorContrasenaLogin => 'Ingresa tu clave.';
+
+  @override
   String get m0105bErrorConfirmar => 'Las claves no coinciden.';
 
   @override
   String get m0105bCorreoRegistrado =>
-      'Ya hay una cuenta con este correo. Usa otro.';
+      'Ya hay una cuenta con este correo. Inicia sesión.';
 
   @override
   String get m0105bCrear => 'Crear cuenta';

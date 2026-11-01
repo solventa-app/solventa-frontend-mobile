@@ -28,6 +28,7 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
     this.showBack = true,
     this.showProfile = true,
     this.onProfileTap,
+    this.onHomeTap,
     this.localeLabel,
     this.onLocaleTap,
   }) : type = SolTopBarType.flow,
@@ -44,7 +45,8 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
        onBack = null,
        showBack = false,
        showProfile = false,
-       onProfileTap = null;
+       onProfileTap = null,
+       onHomeTap = null;
 
   final SolTopBarType type;
   final String title;
@@ -52,6 +54,9 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBack;
   final bool showProfile;
   final VoidCallback? onProfileTap;
+
+  /// Si se da, en lugar del avatar va una casita que lleva al Home (Mi perfil).
+  final VoidCallback? onHomeTap;
   final String? localeLabel;
   final VoidCallback? onLocaleTap;
 
@@ -112,7 +117,9 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
     // área táctil del avatar absorbe 8 dp del margen derecho.
     final padding = EdgeInsetsDirectional.only(
       start: isHome ? SolSpacing.lg : (hasBack ? SolSpacing.xs : SolSpacing.lg),
-      end: !isHome && showProfile ? SolSpacing.sm : SolSpacing.lg,
+      end: !isHome && (showProfile || onHomeTap != null)
+          ? SolSpacing.sm
+          : SolSpacing.lg,
     );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -145,7 +152,20 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 // Sin onProfileTap el avatar no es interactivo; se reserva
                 // el mismo hueco de 48 dp para no mover la píldora.
-                if (!isHome && showProfile)
+                if (!isHome && onHomeTap != null)
+                  IconButton(
+                    onPressed: onHomeTap,
+                    tooltip: 'Inicio',
+                    icon: const Icon(SolIcons.home),
+                    iconSize: SolSizes.icon,
+                    color: colors.onSurface,
+                    constraints: const BoxConstraints.tightFor(
+                      width: SolSizes.minTouchTarget,
+                      height: SolSizes.minTouchTarget,
+                    ),
+                    padding: EdgeInsets.zero,
+                  )
+                else if (!isHome && showProfile)
                   onProfileTap == null
                       ? const SizedBox.square(
                           dimension: SolSizes.minTouchTarget,

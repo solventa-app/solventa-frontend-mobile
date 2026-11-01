@@ -54,8 +54,15 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
       ? null
       : l10n.m0105bErrorCorreo;
 
+  /// Misma regla que AUTH (`validar_clave`): entre 8 y 128 caracteres.
+  bool get _claveCumpleLargo =>
+      _clave.text.length >= 8 && _clave.text.length <= 128;
+
   String? _errorClave(AppLocalizations l10n) {
     final n = _clave.text.length;
+    // Al iniciar sesión no se exigen las reglas de longitud de la creación:
+    // la clave existente la valida el servidor.
+    if (_modoLogin) return n > 0 ? null : l10n.m0105bErrorContrasenaLogin;
     return n >= 8 && n <= 128 ? null : l10n.m0105bErrorContrasena;
   }
 
@@ -117,6 +124,10 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
 
   void _alternarModo() {
     ref.read(onboardingProvider.notifier).limpiarFalla();
+    // Crear cuenta e iniciar sesión no comparten lo escrito ni sus errores.
+    _correo.clear();
+    _clave.clear();
+    _confirmacion.clear();
     setState(() {
       _modoLogin = !_modoLogin;
       _validar = false;
@@ -174,11 +185,18 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
               autofillHints: [
                 _modoLogin ? AutofillHints.password : AutofillHints.newPassword,
               ],
-              helperText: _modoLogin ? null : l10n.m0105bAyudaContrasena,
               onChanged: (_) => setState(() {}),
               errorText: _validar ? _errorClave(l10n) : null,
             ),
             if (!_modoLogin) ...[
+              const SizedBox(height: SolSpacing.xs),
+              _RequisitoClave(
+                texto: l10n.m0105bAyudaContrasena,
+                estado: _claveCumpleLargo
+                    ? l10n.m0105bRequisitoCumplido
+                    : l10n.m0105bRequisitoPendiente,
+                cumplido: _claveCumpleLargo,
+              ),
               const SizedBox(height: SolSpacing.lg),
               SolTextField(
                 label: l10n.m0105bConfirmar,
@@ -222,6 +240,52 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
             onTap: () => _enviarConOtp(l10n),
           ),
       ],
+    );
+  }
+}
+
+/// Requisito de la clave con ✓ cuando se cumple (no solo color: ícono y texto).
+class _RequisitoClave extends StatelessWidget {
+  const _RequisitoClave({
+    required this.texto,
+    required this.estado,
+    required this.cumplido,
+  });
+
+  final String texto;
+
+  /// Lo que lee el lector de pantalla junto al requisito («cumplido» / «pendiente»).
+  final String estado;
+  final bool cumplido;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final color = cumplido ? colors.primary : colors.onSurfaceVariant;
+    return Semantics(
+      label: '$texto, $estado',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.only(left: SolSpacing.xs),
+        child: Row(
+          children: [
+            ExcludeSemantics(
+              child: Icon(
+                cumplido ? SolIcons.success : SolIcons.pendingRegistration,
+                size: 16,
+                color: color,
+              ),
+            ),
+            const SizedBox(width: SolSpacing.xs),
+            Expanded(
+              child: Text(
+                texto,
+                style: context.solText.note.copyWith(color: color),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

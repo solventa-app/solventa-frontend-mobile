@@ -17,6 +17,7 @@ class SolFlowScaffold extends StatelessWidget {
     this.showProfile = true,
     this.onLocaleTap,
     this.onProfileTap,
+    this.onHomeTap,
     this.padding,
   });
 
@@ -37,6 +38,9 @@ class SolFlowScaffold extends StatelessWidget {
   final bool showProfile;
   final VoidCallback? onLocaleTap;
   final VoidCallback? onProfileTap;
+
+  /// Casita al Home en lugar del avatar (Mi perfil).
+  final VoidCallback? onHomeTap;
   final EdgeInsets? padding;
 
   @override
@@ -49,6 +53,7 @@ class SolFlowScaffold extends StatelessWidget {
         showProfile: showProfile,
         onLocaleTap: onLocaleTap,
         onProfileTap: onProfileTap,
+        onHomeTap: onHomeTap,
       ),
       body: body,
       actions: actions,

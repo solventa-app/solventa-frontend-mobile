@@ -410,10 +410,22 @@ abstract class AppLocalizations {
   /// **'Confirma la clave'**
   String get m0105bConfirmar;
 
+  /// M01-05b: requisito de la clave cumplido (lector de pantalla)
+  ///
+  /// In es, this message translates to:
+  /// **'cumplido'**
+  String get m0105bRequisitoCumplido;
+
+  /// M01-05b: requisito de la clave pendiente (lector de pantalla)
+  ///
+  /// In es, this message translates to:
+  /// **'pendiente'**
+  String get m0105bRequisitoPendiente;
+
   /// M01-05b: ayuda de la clave
   ///
   /// In es, this message translates to:
-  /// **'Mínimo 8 caracteres.'**
+  /// **'Entre 8 y 128 caracteres.'**
   String get m0105bAyudaContrasena;
 
   /// M01-05b: correo inválido
@@ -428,6 +440,12 @@ abstract class AppLocalizations {
   /// **'La clave debe tener entre 8 y 128 caracteres.'**
   String get m0105bErrorContrasena;
 
+  /// M01-05b: clave vacía al iniciar sesión
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa tu clave.'**
+  String get m0105bErrorContrasenaLogin;
+
   /// M01-05b: confirmación distinta
   ///
   /// In es, this message translates to:
@@ -437,7 +455,7 @@ abstract class AppLocalizations {
   /// M01-05b: CORREO_YA_REGISTRADO
   ///
   /// In es, this message translates to:
-  /// **'Ya hay una cuenta con este correo. Usa otro.'**
+  /// **'Ya hay una cuenta con este correo. Inicia sesión.'**
   String get m0105bCorreoRegistrado;
 
   /// M01-05b: botón
