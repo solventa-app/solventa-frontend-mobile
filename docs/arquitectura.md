@@ -76,7 +76,13 @@ test/
   goldens/                    hoy
 ```
 
-Hoy existen `lib/features/home/presentation/` y `lib/features/assistance/presentation/` solo con la pantalla, sin
+`lib/features/assistance/` (HU-M06) ya tiene sus tres capas: mapa con `flutter_map` y teselas de OpenStreetMap
+(`MAP_TILE_URL`), ubicación con `geolocator` y ruta en la app de mapas del teléfono con `url_launcher` (intent `geo:`,
+que abre Google Maps, Waze o el selector). Los prestadores son un **dato maestro**: la app guarda una copia del catálogo
+(`SharedPreferences`, no es dato personal), la revisa con el backend cada 7 días por versión y calcula en el teléfono
+los 3 más cercanos (`domain/cercania.dart`); la ubicación no sale del teléfono para listar. Contrato y semilla para el
+backend: [`hu-m06-backend.md`](hu-m06-backend.md). Mientras el contrato no tenga `catalogoPrestadores` usa su fake
+(con la misma semilla) en todos los ambientes. Hoy existe `lib/features/home/presentation/` solo con la pantalla, sin
 `domain` ni `data`: no consumen datos todavía. Cuando lo hagan, se completan con esta estructura.
 
 **Nombres.** Archivos en `snake_case`, clases en `PascalCase`. El código y los identificadores van en inglés

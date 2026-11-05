@@ -184,5 +184,82 @@
   "camaraPermisoBloqueado": "You blocked camera access. Turn it on in Settings → Permissions → Camera and come back.",
   "camaraAbrirAjustes": "Open settings",
   "camaraNoDisponible": "We couldn't find an available camera on this device.",
-  "fallaCamaraNoDisponible": "We couldn't use the camera. Check the camera permission and try again."
+  "fallaCamaraNoDisponible": "We couldn't use the camera. Check the camera permission and try again.",
+  "m0601Titulo": "Nearby providers",
+  "@m0601Titulo": {
+    "description": "M06-01 encabezado de la hoja"
+  },
+  "m0601Disponibles": "{cantidad} available",
+  "@m0601Disponibles": {
+    "description": "M06-01 píldora del encabezado",
+    "placeholders": {
+      "cantidad": {
+        "type": "int"
+      }
+    }
+  },
+  "m0601Solicitar": "Request",
+  "@m0601Solicitar": {
+    "description": "M06-01 botón de cada fila"
+  },
+  "m0601TipoMedico": "Medical",
+  "@m0601TipoMedico": {
+    "description": "M06-01 especialidad médica"
+  },
+  "m0601TipoMecanico": "Mechanic",
+  "@m0601TipoMecanico": {
+    "description": "M06-01 especialidad mecánica"
+  },
+  "m0601Buscando": "Looking for providers near you…",
+  "@m0601Buscando": {
+    "description": "M06-01 cargando"
+  },
+  "m0601SinPrestadores": "There are no providers available near you right now.",
+  "@m0601SinPrestadores": {
+    "description": "M06-01 lista vacía"
+  },
+  "m0601SinPermiso": "We need your location to show you the nearest providers.",
+  "@m0601SinPermiso": {
+    "description": "M06-01 sin permiso de ubicación"
+  },
+  "m0601GpsApagado": "Your location is turned off. Turn it on to see nearby providers.",
+  "@m0601GpsApagado": {
+    "description": "M06-01 GPS apagado"
+  },
+  "m0601PermitirUbicacion": "Allow location",
+  "@m0601PermitirUbicacion": {
+    "description": "M06-01 reintentar permiso"
+  },
+  "m0601AbrirAjustes": "Open settings",
+  "@m0601AbrirAjustes": {
+    "description": "M06-01 abrir ajustes"
+  },
+  "m0601Reintentar": "Try again",
+  "@m0601Reintentar": {
+    "description": "M06-01 reintentar"
+  },
+  "m0601TuUbicacion": "Your location",
+  "@m0601TuUbicacion": {
+    "description": "M06-01 lectura del pin del cliente"
+  },
+  "m0601ComoLlegar": "Directions to {nombre}, {tiempo}",
+  "@m0601ComoLlegar": {
+    "description": "M06-01 lectura del pin de prestador; abre la app de mapas",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      },
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601RutaNoDisponible": "We couldn't find a maps app to open the route.",
+  "@m0601RutaNoDisponible": {
+    "description": "M06-01 sin app de mapas"
+  },
+  "m0601Atribucion": "© OpenStreetMap contributors",
+  "@m0601Atribucion": {
+    "description": "M06-01 atribución del mapa"
+  }
 }

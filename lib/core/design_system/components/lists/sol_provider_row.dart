@@ -27,10 +27,14 @@ class SolProviderRow extends StatelessWidget {
     required this.eta,
     required this.onRequest,
     this.requestLabel = 'Solicitar',
+    this.typeLabel,
   });
 
   final String name;
   final SolProviderType type;
+
+  /// Especialidad ya traducida (catálogo de la app). Por defecto, [type.label].
+  final String? typeLabel;
 
   /// Texto ya formateado, p. ej. `1.2 km` o `SolFormat.distanceKm(1.2)`.
   final String distance;
@@ -63,7 +67,7 @@ class SolProviderRow extends StatelessWidget {
         20.0,
       ),
     };
-    final meta = '${type.label} · $distance · $eta';
+    final meta = '${typeLabel ?? type.label} · $distance · $eta';
 
     final iconBadge = ExcludeSemantics(
       child: Container(
