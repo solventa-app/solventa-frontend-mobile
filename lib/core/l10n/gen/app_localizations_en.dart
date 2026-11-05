@@ -642,4 +642,134 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0601Atribucion => '© OpenStreetMap contributors';
+
+  @override
+  String get homeReportarTile => 'Report a claim';
+
+  @override
+  String get m05Titulo => 'Report a claim';
+
+  @override
+  String get m05Continuar => 'Continue';
+
+  @override
+  String get m05Reintentar => 'Try again';
+
+  @override
+  String get m0501Poliza => 'Which policy?';
+
+  @override
+  String m0501PolizaNumero(String numero) {
+    return 'Policy $numero';
+  }
+
+  @override
+  String m0501Vigencia(String fecha) {
+    return 'Valid until $fecha';
+  }
+
+  @override
+  String get m0501Cargando => 'Looking for your policies…';
+
+  @override
+  String get m0501SinPolizas => 'You have no issued policies to report on.';
+
+  @override
+  String get m0501Fecha => 'When did it happen?';
+
+  @override
+  String get m0501FechaFuera =>
+      'That date is outside the policy\'s coverage period.';
+
+  @override
+  String get m0502Titulo => 'Photos of the damage';
+
+  @override
+  String get m0502Instruccion =>
+      'Take 1 to 3 photos of the damage. Each photo records where you took it.';
+
+  @override
+  String get m0502Tomar => 'Take photo';
+
+  @override
+  String m0502Contador(int cantidad) {
+    return '$cantidad of 3 photos';
+  }
+
+  @override
+  String m0502Quitar(int numero) {
+    return 'Remove photo $numero';
+  }
+
+  @override
+  String get m0502Ubicada => 'Location ready: your photos are geotagged.';
+
+  @override
+  String get m0502SinUbicacion =>
+      'We need your location to place the claim. Turn it on to continue.';
+
+  @override
+  String get m0502PermitirUbicacion => 'Allow location';
+
+  @override
+  String get m0502AbrirAjustes => 'Open settings';
+
+  @override
+  String get m0502CamaraNoDisponible =>
+      'We couldn\'t use the camera. Check the camera permission and try again.';
+
+  @override
+  String get m0502Visor => 'Camera viewfinder';
+
+  @override
+  String get m0503Titulo => 'What happened?';
+
+  @override
+  String get m0503Relato => 'Tell us what happened';
+
+  @override
+  String get m0503RelatoAyuda => '10 to 1000 characters.';
+
+  @override
+  String get m0503Lugar => 'Where did it happen?';
+
+  @override
+  String get m0503LugarAyuda => 'Address or landmark.';
+
+  @override
+  String get m0503Ciudad => 'City';
+
+  @override
+  String get m0503Requerido => 'Fill in this field.';
+
+  @override
+  String get m0503Enviar => 'Send report';
+
+  @override
+  String get m0504Titulo => 'Sending your report';
+
+  @override
+  String get m0504Mensaje =>
+      'We\'re uploading your photos and registering your case…';
+
+  @override
+  String get m0505Exito => 'We received your report';
+
+  @override
+  String m0505ExitoMensaje(String radicado, String fecha) {
+    return 'Your case $radicado is pending review. We\'ll get back to you by $fecha.';
+  }
+
+  @override
+  String get m0505Error => 'We couldn\'t send your report';
+
+  @override
+  String get m0505VolverInicio => 'Back to home';
+
+  @override
+  String get m0505Revisar => 'Review the report';
+
+  @override
+  String get m0505FotoNoConfirmada =>
+      'One of the photos didn\'t upload correctly. Please take it again.';
 }

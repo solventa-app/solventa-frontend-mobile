@@ -643,4 +643,136 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0601Atribucion => '© colaboradores de OpenStreetMap';
+
+  @override
+  String get homeReportarTile => 'Reportar un siniestro';
+
+  @override
+  String get m05Titulo => 'Reportar siniestro';
+
+  @override
+  String get m05Continuar => 'Continuar';
+
+  @override
+  String get m05Reintentar => 'Reintentar';
+
+  @override
+  String get m0501Poliza => '¿Sobre qué póliza?';
+
+  @override
+  String m0501PolizaNumero(String numero) {
+    return 'Póliza $numero';
+  }
+
+  @override
+  String m0501Vigencia(String fecha) {
+    return 'Vigente hasta el $fecha';
+  }
+
+  @override
+  String get m0501Cargando => 'Buscando tus pólizas…';
+
+  @override
+  String get m0501SinPolizas =>
+      'No tienes pólizas emitidas sobre las que reportar.';
+
+  @override
+  String get m0501Fecha => '¿Cuándo pasó?';
+
+  @override
+  String get m0501FechaFuera =>
+      'Esa fecha está fuera de la vigencia de la póliza.';
+
+  @override
+  String get m0502Titulo => 'Fotos del daño';
+
+  @override
+  String get m0502Instruccion =>
+      'Toma de 1 a 3 fotos del daño. Cada foto guarda dónde la tomaste.';
+
+  @override
+  String get m0502Tomar => 'Tomar foto';
+
+  @override
+  String m0502Contador(int cantidad) {
+    return '$cantidad de 3 fotos';
+  }
+
+  @override
+  String m0502Quitar(int numero) {
+    return 'Quitar la foto $numero';
+  }
+
+  @override
+  String get m0502Ubicada =>
+      'Ubicación lista: tus fotos quedan geoetiquetadas.';
+
+  @override
+  String get m0502SinUbicacion =>
+      'Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.';
+
+  @override
+  String get m0502PermitirUbicacion => 'Permitir ubicación';
+
+  @override
+  String get m0502AbrirAjustes => 'Abrir ajustes';
+
+  @override
+  String get m0502CamaraNoDisponible =>
+      'No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.';
+
+  @override
+  String get m0502Visor => 'Visor de la cámara';
+
+  @override
+  String get m0503Titulo => '¿Qué pasó?';
+
+  @override
+  String get m0503Relato => 'Cuéntanos qué pasó';
+
+  @override
+  String get m0503RelatoAyuda => 'De 10 a 1000 caracteres.';
+
+  @override
+  String get m0503Lugar => '¿Dónde pasó?';
+
+  @override
+  String get m0503LugarAyuda => 'Dirección o punto de referencia.';
+
+  @override
+  String get m0503Ciudad => 'Ciudad';
+
+  @override
+  String get m0503Requerido => 'Completa este campo.';
+
+  @override
+  String get m0503Enviar => 'Enviar reporte';
+
+  @override
+  String get m0504Titulo => 'Enviando tu reporte';
+
+  @override
+  String get m0504Mensaje =>
+      'Estamos subiendo tus fotos y registrando tu caso…';
+
+  @override
+  String get m0505Exito => 'Recibimos tu reporte';
+
+  @override
+  String m0505ExitoMensaje(String radicado, String fecha) {
+    return 'Tu caso $radicado quedó pendiente de revisión. Te daremos una respuesta a más tardar el $fecha.';
+  }
+
+  @override
+  String get m0505Error => 'No pudimos enviar tu reporte';
+
+  @override
+  String get m0505VolverInicio => 'Volver al inicio';
+
+  @override
+  String get m0505Revisar => 'Revisar el reporte';
+
+  @override
+  String get m0505FotoNoConfirmada =>
+      'Una de las fotos no se subió bien. Tómala de nuevo.';
 }

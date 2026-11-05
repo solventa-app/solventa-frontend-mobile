@@ -1,19 +1,6 @@
-/// Punto geográfico en grados decimales (WGS84).
-final class Coordenada {
-  const Coordenada(this.latitud, this.longitud);
+import '../../../../core/ubicacion/coordenada.dart';
 
-  final double latitud;
-  final double longitud;
-
-  @override
-  bool operator ==(Object other) =>
-      other is Coordenada &&
-      other.latitud == latitud &&
-      other.longitud == longitud;
-
-  @override
-  int get hashCode => Object.hash(latitud, longitud);
-}
+export '../../../../core/ubicacion/coordenada.dart';
 
 /// Especialidad del prestador (M06-01).
 enum TipoPrestador { medico, mecanico }

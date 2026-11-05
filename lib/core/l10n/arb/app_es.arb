@@ -515,5 +515,185 @@
   "m0601Atribucion": "© colaboradores de OpenStreetMap",
   "@m0601Atribucion": {
     "description": "M06-01 atribución del mapa"
+  },
+  "homeReportarTile": "Reportar un siniestro",
+  "@homeReportarTile": {
+    "description": "Inicio: entrada a HU-M05"
+  },
+  "m05Titulo": "Reportar siniestro",
+  "@m05Titulo": {
+    "description": "M05 título de la barra"
+  },
+  "m05Continuar": "Continuar",
+  "@m05Continuar": {
+    "description": "M05 botón continuar"
+  },
+  "m05Reintentar": "Reintentar",
+  "@m05Reintentar": {
+    "description": "M05 reintentar"
+  },
+  "m0501Poliza": "¿Sobre qué póliza?",
+  "@m0501Poliza": {
+    "description": "M05-01 sección póliza"
+  },
+  "m0501PolizaNumero": "Póliza {numero}",
+  "@m0501PolizaNumero": {
+    "description": "M05-01 fila de póliza",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Vigencia": "Vigente hasta el {fecha}",
+  "@m0501Vigencia": {
+    "description": "M05-01 vigencia de la póliza",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Cargando": "Buscando tus pólizas…",
+  "@m0501Cargando": {
+    "description": "M05-01 cargando"
+  },
+  "m0501SinPolizas": "No tienes pólizas emitidas sobre las que reportar.",
+  "@m0501SinPolizas": {
+    "description": "M05-01 sin pólizas"
+  },
+  "m0501Fecha": "¿Cuándo pasó?",
+  "@m0501Fecha": {
+    "description": "M05-01 campo fecha"
+  },
+  "m0501FechaFuera": "Esa fecha está fuera de la vigencia de la póliza.",
+  "@m0501FechaFuera": {
+    "description": "M05-01 fecha fuera de vigencia"
+  },
+  "m0502Titulo": "Fotos del daño",
+  "@m0502Titulo": {
+    "description": "M05-02 título"
+  },
+  "m0502Instruccion": "Toma de 1 a 3 fotos del daño. Cada foto guarda dónde la tomaste.",
+  "@m0502Instruccion": {
+    "description": "M05-02 instrucción"
+  },
+  "m0502Tomar": "Tomar foto",
+  "@m0502Tomar": {
+    "description": "M05-02 botón de captura"
+  },
+  "m0502Contador": "{cantidad} de 3 fotos",
+  "@m0502Contador": {
+    "description": "M05-02 contador de fotos",
+    "placeholders": {
+      "cantidad": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Quitar": "Quitar la foto {numero}",
+  "@m0502Quitar": {
+    "description": "M05-02 lectura del botón quitar",
+    "placeholders": {
+      "numero": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Ubicada": "Ubicación lista: tus fotos quedan geoetiquetadas.",
+  "@m0502Ubicada": {
+    "description": "M05-02 ubicación obtenida"
+  },
+  "m0502SinUbicacion": "Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.",
+  "@m0502SinUbicacion": {
+    "description": "M05-02 sin permiso de ubicación"
+  },
+  "m0502PermitirUbicacion": "Permitir ubicación",
+  "@m0502PermitirUbicacion": {
+    "description": "M05-02 reintentar permiso"
+  },
+  "m0502AbrirAjustes": "Abrir ajustes",
+  "@m0502AbrirAjustes": {
+    "description": "M05-02 abrir ajustes"
+  },
+  "m0502CamaraNoDisponible": "No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.",
+  "@m0502CamaraNoDisponible": {
+    "description": "M05-02 sin cámara"
+  },
+  "m0502Visor": "Visor de la cámara",
+  "@m0502Visor": {
+    "description": "M05-02 lectura del visor"
+  },
+  "m0503Titulo": "¿Qué pasó?",
+  "@m0503Titulo": {
+    "description": "M05-03 título"
+  },
+  "m0503Relato": "Cuéntanos qué pasó",
+  "@m0503Relato": {
+    "description": "M05-03 campo relato"
+  },
+  "m0503RelatoAyuda": "De 10 a 1000 caracteres.",
+  "@m0503RelatoAyuda": {
+    "description": "M05-03 ayuda del relato"
+  },
+  "m0503Lugar": "¿Dónde pasó?",
+  "@m0503Lugar": {
+    "description": "M05-03 campo lugar"
+  },
+  "m0503LugarAyuda": "Dirección o punto de referencia.",
+  "@m0503LugarAyuda": {
+    "description": "M05-03 ayuda del lugar"
+  },
+  "m0503Ciudad": "Ciudad",
+  "@m0503Ciudad": {
+    "description": "M05-03 campo ciudad"
+  },
+  "m0503Requerido": "Completa este campo.",
+  "@m0503Requerido": {
+    "description": "M05-03 campo obligatorio"
+  },
+  "m0503Enviar": "Enviar reporte",
+  "@m0503Enviar": {
+    "description": "M05-03 botón enviar"
+  },
+  "m0504Titulo": "Enviando tu reporte",
+  "@m0504Titulo": {
+    "description": "M05-04 título"
+  },
+  "m0504Mensaje": "Estamos subiendo tus fotos y registrando tu caso…",
+  "@m0504Mensaje": {
+    "description": "M05-04 mensaje"
+  },
+  "m0505Exito": "Recibimos tu reporte",
+  "@m0505Exito": {
+    "description": "M05-05 título de éxito"
+  },
+  "m0505ExitoMensaje": "Tu caso {radicado} quedó pendiente de revisión. Te daremos una respuesta a más tardar el {fecha}.",
+  "@m0505ExitoMensaje": {
+    "description": "M05-05 mensaje de éxito",
+    "placeholders": {
+      "radicado": {
+        "type": "String"
+      },
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505Error": "No pudimos enviar tu reporte",
+  "@m0505Error": {
+    "description": "M05-05 título de error"
+  },
+  "m0505VolverInicio": "Volver al inicio",
+  "@m0505VolverInicio": {
+    "description": "M05-05 volver al inicio"
+  },
+  "m0505Revisar": "Revisar el reporte",
+  "@m0505Revisar": {
+    "description": "M05-05 volver a corregir"
+  },
+  "m0505FotoNoConfirmada": "Una de las fotos no se subió bien. Tómala de nuevo.",
+  "@m0505FotoNoConfirmada": {
+    "description": "M05-05 foto sin confirmar"
   }
 }

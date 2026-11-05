@@ -7,6 +7,13 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../core/design_system/solventa_ui.dart';
 import '../core/l10n/l10n.dart';
 import '../features/assistance/presentation/pages/m06_01_prestadores_page.dart';
+import '../features/claims/presentation/pages/m05_01_poliza_page.dart';
+import '../features/claims/presentation/pages/m05_02_fotos_page.dart';
+import '../features/claims/presentation/pages/m05_03_relato_page.dart';
+import '../features/claims/presentation/pages/m05_04_enviando_page.dart';
+import '../features/claims/presentation/pages/m05_05_resultado_page.dart';
+import '../features/claims/presentation/providers.dart';
+import '../features/claims/presentation/reporte_routes.dart';
 import '../features/home/presentation/home_page.dart';
 import '../features/onboarding/domain/entities/verificacion_identidad.dart';
 import '../features/onboarding/presentation/onboarding_notifier.dart';
@@ -128,6 +135,31 @@ GoRouter crearRouter() => GoRouter(
       name: 'g-05',
       builder: (_, _) => const ProfilePage(),
     ),
+    GoRoute(
+      path: ReporteRoutes.poliza,
+      name: 'm05-01',
+      builder: (_, _) => const M0501PolizaPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.fotos,
+      name: 'm05-02',
+      builder: (_, _) => const M0502FotosPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.relato,
+      name: 'm05-03',
+      builder: (_, _) => const M0503RelatoPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.enviando,
+      name: 'm05-04',
+      builder: (_, _) => const M0504EnviandoPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.resultado,
+      name: 'm05-05',
+      builder: (_, _) => const M0505ResultadoPage(),
+    ),
     if (kDebugMode)
       GoRoute(
         path: SolGalleryPage.routeName,
@@ -193,6 +225,13 @@ class _RootShell extends ConsumerWidget {
             ? () => context.push(OnboardingRoutes.perfil)
             : null,
         onRequestAssistance: () {},
+        // HU-M05: solo con la identidad verificada (el BFF lo exige igual).
+        onReportClaim: verificado
+            ? () {
+                ref.read(reporteProvider.notifier).reiniciar();
+                context.push(ReporteRoutes.poliza);
+              }
+            : null,
       ),
       // «Solicitar» abrirá M06-02 (formulario) en KAN-265.
       assistance: M0601PrestadoresPage(onSolicitar: (_) {}),

@@ -261,5 +261,185 @@
   "m0601Atribucion": "© OpenStreetMap contributors",
   "@m0601Atribucion": {
     "description": "M06-01 atribución del mapa"
+  },
+  "homeReportarTile": "Report a claim",
+  "@homeReportarTile": {
+    "description": "Inicio: entrada a HU-M05"
+  },
+  "m05Titulo": "Report a claim",
+  "@m05Titulo": {
+    "description": "M05 título de la barra"
+  },
+  "m05Continuar": "Continue",
+  "@m05Continuar": {
+    "description": "M05 botón continuar"
+  },
+  "m05Reintentar": "Try again",
+  "@m05Reintentar": {
+    "description": "M05 reintentar"
+  },
+  "m0501Poliza": "Which policy?",
+  "@m0501Poliza": {
+    "description": "M05-01 sección póliza"
+  },
+  "m0501PolizaNumero": "Policy {numero}",
+  "@m0501PolizaNumero": {
+    "description": "M05-01 fila de póliza",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Vigencia": "Valid until {fecha}",
+  "@m0501Vigencia": {
+    "description": "M05-01 vigencia de la póliza",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Cargando": "Looking for your policies…",
+  "@m0501Cargando": {
+    "description": "M05-01 cargando"
+  },
+  "m0501SinPolizas": "You have no issued policies to report on.",
+  "@m0501SinPolizas": {
+    "description": "M05-01 sin pólizas"
+  },
+  "m0501Fecha": "When did it happen?",
+  "@m0501Fecha": {
+    "description": "M05-01 campo fecha"
+  },
+  "m0501FechaFuera": "That date is outside the policy's coverage period.",
+  "@m0501FechaFuera": {
+    "description": "M05-01 fecha fuera de vigencia"
+  },
+  "m0502Titulo": "Photos of the damage",
+  "@m0502Titulo": {
+    "description": "M05-02 título"
+  },
+  "m0502Instruccion": "Take 1 to 3 photos of the damage. Each photo records where you took it.",
+  "@m0502Instruccion": {
+    "description": "M05-02 instrucción"
+  },
+  "m0502Tomar": "Take photo",
+  "@m0502Tomar": {
+    "description": "M05-02 botón de captura"
+  },
+  "m0502Contador": "{cantidad} of 3 photos",
+  "@m0502Contador": {
+    "description": "M05-02 contador de fotos",
+    "placeholders": {
+      "cantidad": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Quitar": "Remove photo {numero}",
+  "@m0502Quitar": {
+    "description": "M05-02 lectura del botón quitar",
+    "placeholders": {
+      "numero": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Ubicada": "Location ready: your photos are geotagged.",
+  "@m0502Ubicada": {
+    "description": "M05-02 ubicación obtenida"
+  },
+  "m0502SinUbicacion": "We need your location to place the claim. Turn it on to continue.",
+  "@m0502SinUbicacion": {
+    "description": "M05-02 sin permiso de ubicación"
+  },
+  "m0502PermitirUbicacion": "Allow location",
+  "@m0502PermitirUbicacion": {
+    "description": "M05-02 reintentar permiso"
+  },
+  "m0502AbrirAjustes": "Open settings",
+  "@m0502AbrirAjustes": {
+    "description": "M05-02 abrir ajustes"
+  },
+  "m0502CamaraNoDisponible": "We couldn't use the camera. Check the camera permission and try again.",
+  "@m0502CamaraNoDisponible": {
+    "description": "M05-02 sin cámara"
+  },
+  "m0502Visor": "Camera viewfinder",
+  "@m0502Visor": {
+    "description": "M05-02 lectura del visor"
+  },
+  "m0503Titulo": "What happened?",
+  "@m0503Titulo": {
+    "description": "M05-03 título"
+  },
+  "m0503Relato": "Tell us what happened",
+  "@m0503Relato": {
+    "description": "M05-03 campo relato"
+  },
+  "m0503RelatoAyuda": "10 to 1000 characters.",
+  "@m0503RelatoAyuda": {
+    "description": "M05-03 ayuda del relato"
+  },
+  "m0503Lugar": "Where did it happen?",
+  "@m0503Lugar": {
+    "description": "M05-03 campo lugar"
+  },
+  "m0503LugarAyuda": "Address or landmark.",
+  "@m0503LugarAyuda": {
+    "description": "M05-03 ayuda del lugar"
+  },
+  "m0503Ciudad": "City",
+  "@m0503Ciudad": {
+    "description": "M05-03 campo ciudad"
+  },
+  "m0503Requerido": "Fill in this field.",
+  "@m0503Requerido": {
+    "description": "M05-03 campo obligatorio"
+  },
+  "m0503Enviar": "Send report",
+  "@m0503Enviar": {
+    "description": "M05-03 botón enviar"
+  },
+  "m0504Titulo": "Sending your report",
+  "@m0504Titulo": {
+    "description": "M05-04 título"
+  },
+  "m0504Mensaje": "We're uploading your photos and registering your case…",
+  "@m0504Mensaje": {
+    "description": "M05-04 mensaje"
+  },
+  "m0505Exito": "We received your report",
+  "@m0505Exito": {
+    "description": "M05-05 título de éxito"
+  },
+  "m0505ExitoMensaje": "Your case {radicado} is pending review. We'll get back to you by {fecha}.",
+  "@m0505ExitoMensaje": {
+    "description": "M05-05 mensaje de éxito",
+    "placeholders": {
+      "radicado": {
+        "type": "String"
+      },
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505Error": "We couldn't send your report",
+  "@m0505Error": {
+    "description": "M05-05 título de error"
+  },
+  "m0505VolverInicio": "Back to home",
+  "@m0505VolverInicio": {
+    "description": "M05-05 volver al inicio"
+  },
+  "m0505Revisar": "Review the report",
+  "@m0505Revisar": {
+    "description": "M05-05 volver a corregir"
+  },
+  "m0505FotoNoConfirmada": "One of the photos didn't upload correctly. Please take it again.",
+  "@m0505FotoNoConfirmada": {
+    "description": "M05-05 foto sin confirmar"
   }
 }
