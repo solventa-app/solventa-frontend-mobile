@@ -144,10 +144,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Sin huella o rostro activado en el equipo, la app no puede usarse — es un requisito, no una opción.';
 
   @override
-  String get m0108NoActivada =>
-      'Aún no detectamos huella o rostro en tu teléfono.';
-
-  @override
   String get fallaSinConexion =>
       'No tienes conexión. Revisa tu internet e intenta de nuevo.';
 
@@ -587,4 +583,26 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get fallaCamaraNoDisponible =>
       'No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.';
+
+  @override
+  String get biometriaMotivo => 'Confirma que eres tú para entrar a Solventa';
+
+  @override
+  String get m0108SoloPin =>
+      'Tu teléfono no tiene huella ni rostro registrados. Puedes continuar con el PIN del teléfono, aunque te recomendamos registrar tu huella.';
+
+  @override
+  String get m0108SinBloqueo =>
+      'Tu teléfono no tiene bloqueo de pantalla. Activa un PIN, patrón o huella en los ajustes para proteger tu cuenta.';
+
+  @override
+  String get m0108NoDisponible =>
+      'No pudimos consultar la seguridad de tu teléfono. Intenta de nuevo.';
+
+  @override
+  String get m0108NoReconocido => 'No te reconocimos. Intenta de nuevo.';
+
+  @override
+  String get m0108BloqueoTemporal =>
+      'Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.';
 }

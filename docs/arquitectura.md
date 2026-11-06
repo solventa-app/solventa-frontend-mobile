@@ -49,6 +49,7 @@ lib/
     config/                   hoy  · AppConfig: FLAVOR, API_ENV, API_BASE_URL, SENTRY_DSN
     network/                  hoy  · GraphqlClient sobre dio (con renovación silenciosa de la sesión) y providers de red
     sesion/                   hoy  · GestorSesion, refresh cifrado con el llavero RSA del Keystore (HU-M02)
+    biometria/                hoy  · BiometriaService (local_auth) con los estados de HU-M02 y «Ir a ajustes» nativo
     errors/                   hoy  · Falla (sealed), Resultado<T> y guardarFallas
     storage/                  plan · SQLite con prefijo por ambiente (cuando una HU lo pida)
     log/                      hoy  · SolLog + limpiar.dart + Sentry (docs/observabilidad.md)

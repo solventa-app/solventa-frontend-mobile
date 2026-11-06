@@ -67,10 +67,10 @@ el usuario:
 
 | PR | Rama | Estado |
 |---|---|---|
-| 1 backend | `solventa-backend` `feat/KAN-227-refresh-gracia-hu-m02` | Hecho: gracia de 30 s en AUTH, pytest y Newman `hu-m02` (sin correr) |
+| 1 backend | `solventa-backend` `feat/KAN-227-refresh-gracia-hu-m02` | Hecho y **verificado en local**: gracia de 30 s en AUTH, suite de AUTH en verde y Newman `hu-m02` 57/57 por Envoy |
 | 2 mobile sesión | `feat/KAN-227-sesion-refresh-hu-m02` | Hecho: contrato v0.37, `lib/core/sesion/` (llavero RSA, almacén cifrado, `GestorSesion`), renovación en `GraphqlClient`, M01 guarda el refresh, cierre revoca. Codegen y `flutter analyze` en verde; pruebas sin correr |
-| 3 mobile biometría | `feat/KAN-225-…` | Pendiente: `BiometriaService` en `core` con los estados de §3.6, «Ir a ajustes» nativo, M01-08, arranque con refresh |
-| 4 mobile pantallas | `feat/KAN-226-…` | Pendiente: M02-01, M02-01a, M02-03 (sin M02-02/02b), bloqueo a los 5 min en segundo plano, goldens e `integration_test/hu_m02_test.dart` |
+| 3 mobile biometría | `feat/KAN-225-biometria-compartida-hu-m02` | Hecho: `lib/core/biometria/` (estados de §3.6, mapeo de `local_auth` 3.x), `AjustesSeguridad.kt` («Ir a ajustes»), M01-08 con D1, relectura al volver de Ajustes y guardado del refresh pendiente; textos ES/EN. Analyze en verde; pruebas sin correr |
+| 4 mobile pantallas | `feat/KAN-226-pantallas-m02` | Pendiente: arranque con refresh (F6/F10, se movió aquí desde el PR 3 para no dejar un estado «bloqueada» sin pantalla), M02-01, M02-01a, M02-03 (sin M02-02/02b), bloqueo a los 5 min, cierre de rutas al vencer la sesión, goldens e `integration_test/hu_m02_test.dart` |
 | 5 e2e | — | No se hace (decisión del usuario) |
 
 ### En curso (ramas remotas sin fusionar, de Frans, 2026-11-05)
@@ -122,8 +122,7 @@ el usuario:
 
 ## 8. Próximos pasos
 
-1. Crear `feat/KAN-225-biometria-compartida-hu-m02` desde la rama del PR 2 y hacer F4 y F8–F10 del plan.
-2. Luego `feat/KAN-226-pantallas-m02` (leer cada frame de Figma: archivo `2ahgOpwsejNnxZl57v4o9D`, nodos 2005:565,
+1. Crear `feat/KAN-226-pantallas-m02` desde la rama del PR 3 (leer cada frame de Figma: archivo `2ahgOpwsejNnxZl57v4o9D`, nodos 2005:565,
    2005:472, 2005:499; M01-08 2001:673).
 3. Codegen, `dart format` y `flutter analyze` en la imagen `ghcr.io/solventa-app/solventa-frontend-mobile-dev` (Docker
    guarda todo en el disco grande; ver sección 10). No correr pruebas ni goldens.
@@ -147,11 +146,11 @@ el usuario:
 
 ## 10. Handoff de sesión
 
-- **Estado:** PR 1 (backend) y PR 2 (mobile, sesión) con push hecho; falta que el usuario abra los PRs. Nada se ejecutó
-  salvo codegen, formato y análisis.
-- **Última tarea:** PR 2 de HU-M02 (`feat/KAN-227-sesion-refresh-hu-m02`).
-- **Sin terminar:** PR 3 y PR 4. Jira se actualiza según `docs/hu-m02-jira.md` (lo hace el equipo, no el agente).
-- **Siguiente acción exacta:** PR 3, rama desde la del PR 2.
+- **Estado:** PR 1 (backend), PR 2 y PR 3 (mobile) con push hecho; falta que el usuario abra los PRs. El backend se
+  puede levantar y probar con Docker (se hizo: AUTH y Newman en verde). En mobile solo codegen, formato y análisis.
+- **Última tarea:** PR 3 de HU-M02 (`feat/KAN-225-biometria-compartida-hu-m02`).
+- **Sin terminar:** PR 4. Jira se actualiza según `docs/hu-m02-jira.md` (lo hace el equipo, no el agente).
+- **Siguiente acción exacta:** PR 4, rama desde la del PR 3.
 - **Entorno:** `/` estuvo lleno; Docker usa `overlay2` con `data-root` en
   `/media/darthefe/323c09a9-d3ed-40c6-890f-c4da812cb27b/tmp/docker` (containerd-snapshotter apagado). Comando base:
   `docker run --rm --platform linux/amd64 -v "$PWD":/w -w /w -v solventa-mobile-pub:/home/dev/.pub-cache --entrypoint bash ghcr.io/solventa-app/solventa-frontend-mobile-dev:latest -lc '…'`.
