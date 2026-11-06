@@ -10,4 +10,8 @@ abstract interface class ReporteSiniestroRepository {
   /// el mismo reporte no vuelve a subir las fotos que ya subieron ni crea otro
   /// caso.
   Future<Resultado<SiniestroReportado>> reportar(ReporteSiniestro reporte);
+
+  /// Los casos que reportó el cliente, del más reciente al más antiguo, con su
+  /// estado en la mesa de siniestros (M05-06).
+  Future<Resultado<List<SiniestroReportado>>> misSiniestros();
 }

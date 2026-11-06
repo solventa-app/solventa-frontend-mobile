@@ -12,6 +12,7 @@ import '../features/claims/presentation/pages/m05_02_fotos_page.dart';
 import '../features/claims/presentation/pages/m05_03_relato_page.dart';
 import '../features/claims/presentation/pages/m05_04_enviando_page.dart';
 import '../features/claims/presentation/pages/m05_05_resultado_page.dart';
+import '../features/claims/presentation/pages/m05_06_mis_siniestros_page.dart';
 import '../features/claims/presentation/providers.dart';
 import '../features/claims/presentation/reporte_routes.dart';
 import '../features/home/presentation/home_page.dart';
@@ -160,6 +161,11 @@ GoRouter crearRouter() => GoRouter(
       name: 'm05-05',
       builder: (_, _) => const M0505ResultadoPage(),
     ),
+    GoRoute(
+      path: ReporteRoutes.misSiniestros,
+      name: 'm05-06',
+      builder: (_, _) => const M0506MisSiniestrosPage(),
+    ),
     if (kDebugMode)
       GoRoute(
         path: SolGalleryPage.routeName,
@@ -231,6 +237,9 @@ class _RootShell extends ConsumerWidget {
                 ref.read(reporteProvider.notifier).reiniciar();
                 context.push(ReporteRoutes.poliza);
               }
+            : null,
+        onMyClaims: verificado
+            ? () => context.push(ReporteRoutes.misSiniestros)
             : null,
       ),
       // «Solicitar» abrirá M06-02 (formulario) en KAN-265.

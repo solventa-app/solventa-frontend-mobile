@@ -55,6 +55,10 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
     final estado = ref.watch(reporteProvider);
     final notifier = ref.read(reporteProvider.notifier);
     final sol = context.solColors;
+    // Primero la ubicación y después la cámara: Android no muestra dos
+    // permisos a la vez y el segundo quedaría colgado.
+    final ubicacionLista =
+        estado.ubicacion != null || estado.ubicacionSinPermiso;
 
     return SolFlowScaffold(
       title: l10n.m0502Titulo,
@@ -65,9 +69,11 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
           Text(l10n.m0502Instruccion, style: context.solText.body),
           const SizedBox(height: SolSpacing.md),
           VisorCamaraReporte(
-            habilitada: ref.watch(camaraReporteHabilitadaProvider),
+            habilitada:
+                ref.watch(camaraReporteHabilitadaProvider) && ubicacionLista,
+            esPrueba: !ref.watch(camaraReporteHabilitadaProvider),
             permitirRespaldo: ref.watch(usarFakesProvider),
-            puedeTomar: estado.puedeTomarMasFotos,
+            puedeTomar: estado.puedeTomarMasFotos && ubicacionLista,
             onCapturada: notifier.agregarFoto,
             etiquetaTomar: l10n.m0502Tomar,
             etiquetaVisor: l10n.m0502Visor,

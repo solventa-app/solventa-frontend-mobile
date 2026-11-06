@@ -26,7 +26,17 @@ class M0505ResultadoPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final envio = ref.watch(reporteProvider.select((s) => s.envio));
-    void inicio() => context.go('/');
+    // Navega en el cuadro siguiente, con el gesto ya terminado: si se cambia
+    // de ruta dentro del toque, la barra inferior del inicio recibe ese mismo
+    // toque (con el botón sobre «Cerrar sesión» abría el cierre de sesión).
+    void despues(VoidCallback ir) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) ir();
+      });
+      WidgetsBinding.instance.scheduleFrame();
+    }
+
+    void inicio() => despues(() => context.go('/'));
 
     return switch (envio) {
       Enviado(:final siniestro) => SolResultScreen(
@@ -38,6 +48,13 @@ class M0505ResultadoPage extends ConsumerWidget {
         ),
         actionLabel: l10n.m0505VolverInicio,
         onAction: inicio,
+        secondaryAction: SolButton.text(
+          label: l10n.m0505VerMisSiniestros,
+          onPressed: () => despues(() {
+            context.go('/');
+            context.push(ReporteRoutes.misSiniestros);
+          }),
+        ),
         showBack: false,
       ),
       EnvioFallido(:final falla) => SolResultScreen(
@@ -50,8 +67,9 @@ class M0505ResultadoPage extends ConsumerWidget {
             ? l10n.m05Reintentar
             : l10n.m0505Revisar,
         onAction: falla.reintentable
-            ? () => context.pushReplacement(ReporteRoutes.enviando)
-            : () => context.go(ReporteRoutes.poliza),
+            ? () =>
+                  despues(() => context.pushReplacement(ReporteRoutes.enviando))
+            : () => despues(() => context.go(ReporteRoutes.poliza)),
         secondaryAction: SolButton.text(
           label: l10n.m0505VolverInicio,
           onPressed: inicio,

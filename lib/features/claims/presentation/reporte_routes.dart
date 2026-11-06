@@ -6,4 +6,5 @@ abstract final class ReporteRoutes {
   static const relato = '/siniestro/relato';
   static const enviando = '/siniestro/enviando';
   static const resultado = '/siniestro/resultado';
+  static const misSiniestros = '/siniestros';
 }

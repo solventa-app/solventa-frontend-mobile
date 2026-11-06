@@ -68,6 +68,7 @@ final class SiniestroReportado {
     required this.id,
     required this.radicado,
     required this.estado,
+    required this.notificadoEn,
     required this.venceDictamenEn,
     required this.fotos,
   });
@@ -77,6 +78,9 @@ final class SiniestroReportado {
 
   /// `PENDIENTE`, `EN_REVISION`, `APROBADO` o `RECHAZADO` (contrato).
   final String estado;
+
+  /// Cuándo se reportó.
+  final DateTime notificadoEn;
   final DateTime venceDictamenEn;
   final int fotos;
 }

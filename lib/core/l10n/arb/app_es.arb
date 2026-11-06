@@ -695,5 +695,74 @@
   "m0505FotoNoConfirmada": "Una de las fotos no se subió bien. Tómala de nuevo.",
   "@m0505FotoNoConfirmada": {
     "description": "M05-05 foto sin confirmar"
+  },
+  "homeMisSiniestrosTile": "Mis siniestros",
+  "@homeMisSiniestrosTile": {
+    "description": "Inicio: entrada a M05-06"
+  },
+  "m0505VerMisSiniestros": "Ver mis siniestros",
+  "@m0505VerMisSiniestros": {
+    "description": "M05-05 enlace a M05-06"
+  },
+  "m0506Titulo": "Mis siniestros",
+  "@m0506Titulo": {
+    "description": "M05-06 título"
+  },
+  "m0506Cargando": "Buscando tus reportes…",
+  "@m0506Cargando": {
+    "description": "M05-06 cargando"
+  },
+  "m0506Vacio": "Aún no has reportado siniestros.",
+  "@m0506Vacio": {
+    "description": "M05-06 lista vacía"
+  },
+  "m0506Reportado": "Reportado el {fecha} · {fotos, plural, =1{1 foto} other{{fotos} fotos}}",
+  "@m0506Reportado": {
+    "description": "M05-06 fecha y fotos del caso",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506Pendiente": "Pendiente",
+  "@m0506Pendiente": {
+    "description": "M05-06 estado PENDIENTE"
+  },
+  "m0506PendienteDetalle": "Lo revisaremos a más tardar el {fecha}.",
+  "@m0506PendienteDetalle": {
+    "description": "M05-06 detalle PENDIENTE",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506EnRevision": "En revisión",
+  "@m0506EnRevision": {
+    "description": "M05-06 estado EN_REVISION"
+  },
+  "m0506EnRevisionDetalle": "Un perito está evaluando tu caso.",
+  "@m0506EnRevisionDetalle": {
+    "description": "M05-06 detalle EN_REVISION"
+  },
+  "m0506Aprobado": "Aprobado",
+  "@m0506Aprobado": {
+    "description": "M05-06 estado APROBADO"
+  },
+  "m0506AprobadoDetalle": "Tu indemnización está en proceso de pago.",
+  "@m0506AprobadoDetalle": {
+    "description": "M05-06 detalle APROBADO"
+  },
+  "m0506Rechazado": "Rechazado",
+  "@m0506Rechazado": {
+    "description": "M05-06 estado RECHAZADO"
+  },
+  "m0506RechazadoDetalle": "Te enviamos el motivo y cómo presentar un recurso.",
+  "@m0506RechazadoDetalle": {
+    "description": "M05-06 detalle RECHAZADO"
   }
 }

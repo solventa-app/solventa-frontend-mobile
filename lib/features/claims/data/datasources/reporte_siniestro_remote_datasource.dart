@@ -19,6 +19,8 @@ abstract interface class ReporteSiniestroRemoteDataSource {
   Future<Mutation$ReportarSiniestro$reportarSiniestro> reportar(
     Input$ReporteSiniestroInput entrada,
   );
+
+  Future<Query$MisSiniestros> misSiniestros();
 }
 
 final class GqlReporteSiniestroRemoteDataSource
@@ -78,6 +80,12 @@ final class GqlReporteSiniestroRemoteDataSource
     );
     return Mutation$ReportarSiniestro.fromJson(data).reportarSiniestro;
   }
+
+  @override
+  Future<Query$MisSiniestros> misSiniestros() async =>
+      Query$MisSiniestros.fromJson(
+        await _cliente.ejecutar(documentNodeQueryMisSiniestros),
+      );
 }
 
 /// Fake con las respuestas de `ReporteSiniestroFixtures` (`API_ENV=mock` y
@@ -97,6 +105,11 @@ final class FakeReporteSiniestroRemoteDataSource
 
   /// Para pruebas: el siguiente `reportar` responde con la regla rechazada.
   bool rechazar = false;
+
+  /// Para pruebas: `misSiniestros` sin los casos de demostración.
+  bool sinHistorial = false;
+
+  final List<String> _mios = [];
 
   Future<void> _esperar() async {
     if (latencia > Duration.zero) await Future<void>.delayed(latencia);
@@ -147,11 +160,23 @@ final class FakeReporteSiniestroRemoteDataSource
       ).reportarSiniestro;
     }
     reportes.add(entrada);
+    _mios.insert(0, entrada.idReporte);
     return Mutation$ReportarSiniestro.fromJson(
       ReporteSiniestroFixtures.reportado(
         entrada.idReporte,
         entrada.fotos.length,
       ),
     ).reportarSiniestro;
+  }
+
+  @override
+  Future<Query$MisSiniestros> misSiniestros() async {
+    await _esperar();
+    return Query$MisSiniestros.fromJson(
+      ReporteSiniestroFixtures.misSiniestros(
+        nuevos: _mios,
+        conDemo: !sinHistorial,
+      ),
+    );
   }
 }

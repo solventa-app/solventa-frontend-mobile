@@ -79,4 +79,59 @@ abstract final class ReporteSiniestroFixtures {
           'La fecha del siniestro está fuera de la vigencia de la póliza.',
     },
   };
+
+  static Map<String, Object?> _caso(
+    String id,
+    String radicado,
+    String estado,
+    String notificadoEn,
+  ) => {
+    '__typename': 'SiniestroReportado',
+    'id': id,
+    'radicado': radicado,
+    'estado': estado,
+    'polizaId': 'pol-demo-01',
+    'ocurridoEn': notificadoEn,
+    'notificadoEn': notificadoEn,
+    'venceDictamenEn': '2026-11-06T22:00:00+00:00',
+    'fotos': 2,
+  };
+
+  /// `misSiniestros`: los que reportó en esta sesión del fake (PENDIENTE) y,
+  /// con [conDemo], uno de cada estado de la mesa.
+  static Map<String, Object?> misSiniestros({
+    List<String> nuevos = const [],
+    bool conDemo = true,
+  }) => {
+    '__typename': 'Query',
+    'misSiniestros': [
+      for (final (i, id) in nuevos.indexed)
+        _caso(
+          id,
+          'SIN-2026-${1001 + i}',
+          'PENDIENTE',
+          '2026-11-04T15:00:00+00:00',
+        ),
+      if (conDemo) ...[
+        _caso(
+          'demo-2',
+          'SIN-2026-0987',
+          'EN_REVISION',
+          '2026-10-28T15:00:00+00:00',
+        ),
+        _caso(
+          'demo-3',
+          'SIN-2026-0942',
+          'APROBADO',
+          '2026-10-15T15:00:00+00:00',
+        ),
+        _caso(
+          'demo-4',
+          'SIN-2026-0915',
+          'RECHAZADO',
+          '2026-10-02T15:00:00+00:00',
+        ),
+      ],
+    ],
+  };
 }

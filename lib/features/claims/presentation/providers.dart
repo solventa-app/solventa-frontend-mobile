@@ -58,6 +58,12 @@ final polizasReportablesProvider =
       (ref) => ref.watch(reporteSiniestroRepositoryProvider).polizas(),
     );
 
+/// M05-06: se recarga al volver a entrar (autoDispose) o al tirar hacia abajo.
+final misSiniestrosProvider =
+    FutureProvider.autoDispose<Resultado<List<SiniestroReportado>>>(
+      (ref) => ref.watch(reporteSiniestroRepositoryProvider).misSiniestros(),
+    );
+
 final reporteProvider = NotifierProvider<ReporteNotifier, ReporteState>(
   ReporteNotifier.new,
 );

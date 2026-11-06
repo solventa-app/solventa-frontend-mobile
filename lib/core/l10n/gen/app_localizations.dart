@@ -1447,6 +1447,90 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Una de las fotos no se subió bien. Tómala de nuevo.'**
   String get m0505FotoNoConfirmada;
+
+  /// Inicio: entrada a M05-06
+  ///
+  /// In es, this message translates to:
+  /// **'Mis siniestros'**
+  String get homeMisSiniestrosTile;
+
+  /// M05-05 enlace a M05-06
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mis siniestros'**
+  String get m0505VerMisSiniestros;
+
+  /// M05-06 título
+  ///
+  /// In es, this message translates to:
+  /// **'Mis siniestros'**
+  String get m0506Titulo;
+
+  /// M05-06 cargando
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando tus reportes…'**
+  String get m0506Cargando;
+
+  /// M05-06 lista vacía
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no has reportado siniestros.'**
+  String get m0506Vacio;
+
+  /// M05-06 fecha y fotos del caso
+  ///
+  /// In es, this message translates to:
+  /// **'Reportado el {fecha} · {fotos, plural, =1{1 foto} other{{fotos} fotos}}'**
+  String m0506Reportado(String fecha, int fotos);
+
+  /// M05-06 estado PENDIENTE
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente'**
+  String get m0506Pendiente;
+
+  /// M05-06 detalle PENDIENTE
+  ///
+  /// In es, this message translates to:
+  /// **'Lo revisaremos a más tardar el {fecha}.'**
+  String m0506PendienteDetalle(String fecha);
+
+  /// M05-06 estado EN_REVISION
+  ///
+  /// In es, this message translates to:
+  /// **'En revisión'**
+  String get m0506EnRevision;
+
+  /// M05-06 detalle EN_REVISION
+  ///
+  /// In es, this message translates to:
+  /// **'Un perito está evaluando tu caso.'**
+  String get m0506EnRevisionDetalle;
+
+  /// M05-06 estado APROBADO
+  ///
+  /// In es, this message translates to:
+  /// **'Aprobado'**
+  String get m0506Aprobado;
+
+  /// M05-06 detalle APROBADO
+  ///
+  /// In es, this message translates to:
+  /// **'Tu indemnización está en proceso de pago.'**
+  String get m0506AprobadoDetalle;
+
+  /// M05-06 estado RECHAZADO
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazado'**
+  String get m0506Rechazado;
+
+  /// M05-06 detalle RECHAZADO
+  ///
+  /// In es, this message translates to:
+  /// **'Te enviamos el motivo y cómo presentar un recurso.'**
+  String get m0506RechazadoDetalle;
 }
 
 class _AppLocalizationsDelegate

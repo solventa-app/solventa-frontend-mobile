@@ -23,6 +23,7 @@ class VisorCamaraReporte extends StatefulWidget {
   const VisorCamaraReporte({
     super.key,
     required this.habilitada,
+    required this.esPrueba,
     required this.permitirRespaldo,
     required this.puedeTomar,
     required this.onCapturada,
@@ -31,8 +32,12 @@ class VisorCamaraReporte extends StatefulWidget {
     required this.textoSinCamara,
   });
 
-  /// `false` en `flutter test`: no abre la cámara y captura [fotoDePrueba].
+  /// `false` mientras la página pide el permiso de ubicación (la cámara se
+  /// abre cuando eso termina) y en `flutter test`.
   final bool habilitada;
+
+  /// `flutter test`: nunca abre la cámara y captura [fotoDePrueba].
+  final bool esPrueba;
 
   /// Solo `mock`: sin cámara (o sin permiso) captura [fotoDePrueba].
   final bool permitirRespaldo;
@@ -57,6 +62,16 @@ class _VisorCamaraReporteState extends State<VisorCamaraReporte>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     if (widget.habilitada) unawaited(_abrir());
+  }
+
+  @override
+  void didUpdateWidget(VisorCamaraReporte anterior) {
+    super.didUpdateWidget(anterior);
+    // La página la habilita cuando termina de pedir la ubicación (no se piden
+    // dos permisos a la vez: Android muestra uno y el otro queda colgado).
+    if (widget.habilitada && !anterior.habilitada && _ctrl == null) {
+      unawaited(_abrir());
+    }
   }
 
   @override
@@ -111,7 +126,7 @@ class _VisorCamaraReporteState extends State<VisorCamaraReporte>
     if (_tomando) return;
     final c = _ctrl;
     if (c == null || !c.value.isInitialized) {
-      if (!widget.habilitada || widget.permitirRespaldo) {
+      if (widget.esPrueba || (widget.permitirRespaldo && _sinCamara)) {
         widget.onCapturada(fotoDePrueba);
       }
       return;

@@ -14,15 +14,15 @@ List<PolizaReportable> polizasDesdeGql(Query$PolizasParaReporte q) => [
       ),
 ];
 
-SiniestroReportado siniestroDesdeGql(
-  Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado s,
-) => SiniestroReportado(
-  id: s.id,
-  radicado: s.radicado,
-  estado: s.estado.name,
-  venceDictamenEn: s.venceDictamenEn,
-  fotos: s.fotos,
-);
+SiniestroReportado siniestroDesdeGql(Fragment$SiniestroReportadoCampos s) =>
+    SiniestroReportado(
+      id: s.id,
+      radicado: s.radicado,
+      estado: s.estado.name,
+      notificadoEn: s.notificadoEn,
+      venceDictamenEn: s.venceDictamenEn,
+      fotos: s.fotos,
+    );
 
 /// La entrada del contrato. [archivos] son los ids ya subidos, en el mismo
 /// orden que `reporte.fotos`.

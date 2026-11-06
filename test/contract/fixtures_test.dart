@@ -36,6 +36,10 @@ void main() {
           ReporteSiniestroFixtures.reportado('id-1', 2),
           (j) => Mutation$ReportarSiniestro.fromJson(j).toJson(),
         ),
+        'misSiniestros': (
+          ReporteSiniestroFixtures.misSiniestros(nuevos: ['id-1']),
+          (j) => Query$MisSiniestros.fromJson(j).toJson(),
+        ),
         'reportarSiniestro · rechazado': (
           ReporteSiniestroFixtures.rechazado,
           (j) => Mutation$ReportarSiniestro.fromJson(j).toJson(),

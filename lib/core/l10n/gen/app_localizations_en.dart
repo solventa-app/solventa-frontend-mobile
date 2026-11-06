@@ -772,4 +772,57 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get m0505FotoNoConfirmada =>
       'One of the photos didn\'t upload correctly. Please take it again.';
+
+  @override
+  String get homeMisSiniestrosTile => 'My claims';
+
+  @override
+  String get m0505VerMisSiniestros => 'See my claims';
+
+  @override
+  String get m0506Titulo => 'My claims';
+
+  @override
+  String get m0506Cargando => 'Looking for your reports…';
+
+  @override
+  String get m0506Vacio => 'You haven\'t reported any claims yet.';
+
+  @override
+  String m0506Reportado(String fecha, int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos photos',
+      one: '1 photo',
+    );
+    return 'Reported on $fecha · $_temp0';
+  }
+
+  @override
+  String get m0506Pendiente => 'Pending';
+
+  @override
+  String m0506PendienteDetalle(String fecha) {
+    return 'We\'ll review it by $fecha.';
+  }
+
+  @override
+  String get m0506EnRevision => 'Under review';
+
+  @override
+  String get m0506EnRevisionDetalle => 'An adjuster is evaluating your case.';
+
+  @override
+  String get m0506Aprobado => 'Approved';
+
+  @override
+  String get m0506AprobadoDetalle => 'Your payout is being processed.';
+
+  @override
+  String get m0506Rechazado => 'Rejected';
+
+  @override
+  String get m0506RechazadoDetalle =>
+      'We sent you the reason and how to appeal.';
 }

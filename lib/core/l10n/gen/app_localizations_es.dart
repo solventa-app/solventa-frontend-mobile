@@ -775,4 +775,58 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get m0505FotoNoConfirmada =>
       'Una de las fotos no se subió bien. Tómala de nuevo.';
+
+  @override
+  String get homeMisSiniestrosTile => 'Mis siniestros';
+
+  @override
+  String get m0505VerMisSiniestros => 'Ver mis siniestros';
+
+  @override
+  String get m0506Titulo => 'Mis siniestros';
+
+  @override
+  String get m0506Cargando => 'Buscando tus reportes…';
+
+  @override
+  String get m0506Vacio => 'Aún no has reportado siniestros.';
+
+  @override
+  String m0506Reportado(String fecha, int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos fotos',
+      one: '1 foto',
+    );
+    return 'Reportado el $fecha · $_temp0';
+  }
+
+  @override
+  String get m0506Pendiente => 'Pendiente';
+
+  @override
+  String m0506PendienteDetalle(String fecha) {
+    return 'Lo revisaremos a más tardar el $fecha.';
+  }
+
+  @override
+  String get m0506EnRevision => 'En revisión';
+
+  @override
+  String get m0506EnRevisionDetalle => 'Un perito está evaluando tu caso.';
+
+  @override
+  String get m0506Aprobado => 'Aprobado';
+
+  @override
+  String get m0506AprobadoDetalle =>
+      'Tu indemnización está en proceso de pago.';
+
+  @override
+  String get m0506Rechazado => 'Rechazado';
+
+  @override
+  String get m0506RechazadoDetalle =>
+      'Te enviamos el motivo y cómo presentar un recurso.';
 }
