@@ -2,11 +2,11 @@ import '../../../../core/contrato/schema.graphql.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/guardar_fallas.dart';
 import '../../../../core/errors/resultado.dart';
+import '../../../../core/network/subida_archivo_service.dart';
 import '../../../../core/sesion/sesion_store.dart';
 import '../../domain/entities/onboarding.dart';
 import '../../domain/repositories/onboarding_repository.dart';
 import '../datasources/onboarding_remote_datasource.dart';
-import '../datasources/subida_archivo_service.dart';
 import '../graphql/onboarding.graphql.dart';
 import '../mappers/onboarding_mapper.dart';
 

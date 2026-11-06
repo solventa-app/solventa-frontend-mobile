@@ -1219,6 +1219,318 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'© colaboradores de OpenStreetMap'**
   String get m0601Atribucion;
+
+  /// Inicio: entrada a HU-M05
+  ///
+  /// In es, this message translates to:
+  /// **'Reportar un siniestro'**
+  String get homeReportarTile;
+
+  /// M05 título de la barra
+  ///
+  /// In es, this message translates to:
+  /// **'Reportar siniestro'**
+  String get m05Titulo;
+
+  /// M05 botón continuar
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get m05Continuar;
+
+  /// M05 reintentar
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get m05Reintentar;
+
+  /// M05-01 sección póliza
+  ///
+  /// In es, this message translates to:
+  /// **'¿Sobre qué póliza?'**
+  String get m0501Poliza;
+
+  /// M05-01 fila de póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Póliza {numero}'**
+  String m0501PolizaNumero(String numero);
+
+  /// M05-01 vigencia de la póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Vigente hasta el {fecha}'**
+  String m0501Vigencia(String fecha);
+
+  /// M05-01 cargando
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando tus pólizas…'**
+  String get m0501Cargando;
+
+  /// M05-01 sin pólizas
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes pólizas emitidas sobre las que reportar.'**
+  String get m0501SinPolizas;
+
+  /// M05-01 campo fecha
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cuándo pasó?'**
+  String get m0501Fecha;
+
+  /// M05-01 fecha fuera de vigencia
+  ///
+  /// In es, this message translates to:
+  /// **'Esa fecha está fuera de la vigencia de la póliza.'**
+  String get m0501FechaFuera;
+
+  /// M05-02 título
+  ///
+  /// In es, this message translates to:
+  /// **'Fotos del daño'**
+  String get m0502Titulo;
+
+  /// M05-02 instrucción
+  ///
+  /// In es, this message translates to:
+  /// **'Toma de 1 a 3 fotos del daño. Cada foto guarda dónde la tomaste.'**
+  String get m0502Instruccion;
+
+  /// M05-02 botón de captura
+  ///
+  /// In es, this message translates to:
+  /// **'Tomar foto'**
+  String get m0502Tomar;
+
+  /// M05-02 contador de fotos
+  ///
+  /// In es, this message translates to:
+  /// **'{cantidad} de 3 fotos'**
+  String m0502Contador(int cantidad);
+
+  /// M05-02 lectura del botón quitar
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar la foto {numero}'**
+  String m0502Quitar(int numero);
+
+  /// M05-02 ubicación obtenida
+  ///
+  /// In es, this message translates to:
+  /// **'Ubicación lista: tus fotos quedan geoetiquetadas.'**
+  String get m0502Ubicada;
+
+  /// M05-02 sin permiso de ubicación
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.'**
+  String get m0502SinUbicacion;
+
+  /// M05-02 reintentar permiso
+  ///
+  /// In es, this message translates to:
+  /// **'Permitir ubicación'**
+  String get m0502PermitirUbicacion;
+
+  /// M05-02 abrir ajustes
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir ajustes'**
+  String get m0502AbrirAjustes;
+
+  /// M05-02 sin cámara
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.'**
+  String get m0502CamaraNoDisponible;
+
+  /// M05-02 lectura del visor
+  ///
+  /// In es, this message translates to:
+  /// **'Visor de la cámara'**
+  String get m0502Visor;
+
+  /// M05-03 título
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué pasó?'**
+  String get m0503Titulo;
+
+  /// M05-03 campo relato
+  ///
+  /// In es, this message translates to:
+  /// **'Cuéntanos qué pasó'**
+  String get m0503Relato;
+
+  /// M05-03 ayuda del relato
+  ///
+  /// In es, this message translates to:
+  /// **'De 10 a 1000 caracteres.'**
+  String get m0503RelatoAyuda;
+
+  /// M05-03 campo lugar
+  ///
+  /// In es, this message translates to:
+  /// **'¿Dónde pasó?'**
+  String get m0503Lugar;
+
+  /// M05-03 ayuda del lugar
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección o punto de referencia.'**
+  String get m0503LugarAyuda;
+
+  /// M05-03 campo ciudad
+  ///
+  /// In es, this message translates to:
+  /// **'Ciudad'**
+  String get m0503Ciudad;
+
+  /// M05-03 campo obligatorio
+  ///
+  /// In es, this message translates to:
+  /// **'Completa este campo.'**
+  String get m0503Requerido;
+
+  /// M05-03 botón enviar
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar reporte'**
+  String get m0503Enviar;
+
+  /// M05-04 título
+  ///
+  /// In es, this message translates to:
+  /// **'Enviando tu reporte'**
+  String get m0504Titulo;
+
+  /// M05-04 mensaje
+  ///
+  /// In es, this message translates to:
+  /// **'Estamos subiendo tus fotos y registrando tu caso…'**
+  String get m0504Mensaje;
+
+  /// M05-05 título de éxito
+  ///
+  /// In es, this message translates to:
+  /// **'Recibimos tu reporte'**
+  String get m0505Exito;
+
+  /// M05-05 mensaje de éxito
+  ///
+  /// In es, this message translates to:
+  /// **'Tu caso {radicado} quedó pendiente de revisión. Te daremos una respuesta a más tardar el {fecha}.'**
+  String m0505ExitoMensaje(String radicado, String fecha);
+
+  /// M05-05 título de error
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos enviar tu reporte'**
+  String get m0505Error;
+
+  /// M05-05 volver al inicio
+  ///
+  /// In es, this message translates to:
+  /// **'Volver al inicio'**
+  String get m0505VolverInicio;
+
+  /// M05-05 volver a corregir
+  ///
+  /// In es, this message translates to:
+  /// **'Revisar el reporte'**
+  String get m0505Revisar;
+
+  /// M05-05 foto sin confirmar
+  ///
+  /// In es, this message translates to:
+  /// **'Una de las fotos no se subió bien. Tómala de nuevo.'**
+  String get m0505FotoNoConfirmada;
+
+  /// Inicio: entrada a M05-06
+  ///
+  /// In es, this message translates to:
+  /// **'Mis siniestros'**
+  String get homeMisSiniestrosTile;
+
+  /// M05-05 enlace a M05-06
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mis siniestros'**
+  String get m0505VerMisSiniestros;
+
+  /// M05-06 título
+  ///
+  /// In es, this message translates to:
+  /// **'Mis siniestros'**
+  String get m0506Titulo;
+
+  /// M05-06 cargando
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando tus reportes…'**
+  String get m0506Cargando;
+
+  /// M05-06 lista vacía
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no has reportado siniestros.'**
+  String get m0506Vacio;
+
+  /// M05-06 fecha y fotos del caso
+  ///
+  /// In es, this message translates to:
+  /// **'Reportado el {fecha} · {fotos, plural, =1{1 foto} other{{fotos} fotos}}'**
+  String m0506Reportado(String fecha, int fotos);
+
+  /// M05-06 estado PENDIENTE
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente'**
+  String get m0506Pendiente;
+
+  /// M05-06 detalle PENDIENTE
+  ///
+  /// In es, this message translates to:
+  /// **'Lo revisaremos a más tardar el {fecha}.'**
+  String m0506PendienteDetalle(String fecha);
+
+  /// M05-06 estado EN_REVISION
+  ///
+  /// In es, this message translates to:
+  /// **'En revisión'**
+  String get m0506EnRevision;
+
+  /// M05-06 detalle EN_REVISION
+  ///
+  /// In es, this message translates to:
+  /// **'Un perito está evaluando tu caso.'**
+  String get m0506EnRevisionDetalle;
+
+  /// M05-06 estado APROBADO
+  ///
+  /// In es, this message translates to:
+  /// **'Aprobado'**
+  String get m0506Aprobado;
+
+  /// M05-06 detalle APROBADO
+  ///
+  /// In es, this message translates to:
+  /// **'Tu indemnización está en proceso de pago.'**
+  String get m0506AprobadoDetalle;
+
+  /// M05-06 estado RECHAZADO
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazado'**
+  String get m0506Rechazado;
+
+  /// M05-06 detalle RECHAZADO
+  ///
+  /// In es, this message translates to:
+  /// **'Te enviamos el motivo y cómo presentar un recurso.'**
+  String get m0506RechazadoDetalle;
 }
 
 class _AppLocalizationsDelegate
