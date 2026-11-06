@@ -15,11 +15,12 @@ import 'prestadores_state.dart';
 
 bool get _enPruebas => Platform.environment.containsKey('FLUTTER_TEST');
 
-/// El contrato todavía no tiene `catalogoPrestadores` (KAN-263): por ahora
-/// todos los ambientes usan el fake con la semilla. Cuando exista, con
-/// `API_ENV=mock` queda el fake y en el resto el datasource GraphQL.
+/// Con `API_ENV=mock` el fake con la semilla; si no, `catalogoPrestadores` del
+/// BFF (contrato v0.36, KAN-263).
 final asistenciaRemoteDataSourceProvider = Provider<AsistenciaRemoteDataSource>(
-  (ref) => FakeAsistenciaRemoteDataSource(),
+  (ref) => ref.watch(usarFakesProvider)
+      ? FakeAsistenciaRemoteDataSource()
+      : GqlAsistenciaRemoteDataSource(ref.watch(graphqlClientProvider)),
 );
 
 /// Copia del catálogo en el teléfono (en memoria durante las pruebas).

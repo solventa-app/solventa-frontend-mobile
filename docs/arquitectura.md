@@ -81,8 +81,8 @@ test/
 que abre Google Maps, Waze o el selector). Los prestadores son un **dato maestro**: la app guarda una copia del catálogo
 (`SharedPreferences`, no es dato personal), la revisa con el backend cada 7 días por versión y calcula en el teléfono
 los 3 más cercanos (`domain/cercania.dart`); la ubicación no sale del teléfono para listar. Contrato y semilla para el
-backend: [`hu-m06-backend.md`](hu-m06-backend.md). Mientras el contrato no tenga `catalogoPrestadores` usa su fake
-(con la misma semilla) en todos los ambientes. Hoy existe `lib/features/home/presentation/` solo con la pantalla, sin
+backend: [`hu-m06-backend.md`](hu-m06-backend.md). El catálogo sale de `catalogoPrestadores` del BFF (contrato v0.36); con
+`API_ENV=mock`, de su fake con la misma semilla. Hoy existe `lib/features/home/presentation/` solo con la pantalla, sin
 `domain` ni `data`: no consumen datos todavía. Cuando lo hagan, se completan con esta estructura.
 
 **Nombres.** Archivos en `snake_case`, clases en `PascalCase`. El código y los identificadores van en inglés
