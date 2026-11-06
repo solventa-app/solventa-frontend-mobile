@@ -142,6 +142,7 @@ el usuario:
 | `lib/core/config/app_config.dart` | Lectura de `FLAVOR`, `API_ENV`, `API_BASE_URL` y `SENTRY_DSN` |
 | `lib/core/design_system/solventa_ui.dart` | Barrel del design system |
 | `lib/core/l10n/` + `l10n.yaml` | Catálogos ES/EN |
+| `docs/hu-m02-jira.md` | Qué y cómo registrar HU-M02 en Jira (mapa de issues, decisiones, plantillas, transiciones) |
 | `tool/verificar.sh`, `tool/goldens.sh` | Verificación previa al PR y regeneración de goldens |
 
 ## 10. Handoff de sesión
@@ -149,7 +150,7 @@ el usuario:
 - **Estado:** PR 1 (backend) y PR 2 (mobile, sesión) con push hecho; falta que el usuario abra los PRs. Nada se ejecutó
   salvo codegen, formato y análisis.
 - **Última tarea:** PR 2 de HU-M02 (`feat/KAN-227-sesion-refresh-hu-m02`).
-- **Sin terminar:** PR 3 y PR 4. Pendiente del usuario: anotar en Jira que M02-02/02b (KAN-136, KAN-174) salen por D2.
+- **Sin terminar:** PR 3 y PR 4. Jira se actualiza según `docs/hu-m02-jira.md` (lo hace el equipo, no el agente).
 - **Siguiente acción exacta:** PR 3, rama desde la del PR 2.
 - **Entorno:** `/` estuvo lleno; Docker usa `overlay2` con `data-root` en
   `/media/darthefe/323c09a9-d3ed-40c6-890f-c4da812cb27b/tmp/docker` (containerd-snapshotter apagado). Comando base:
