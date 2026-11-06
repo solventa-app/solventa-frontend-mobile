@@ -1153,6 +1153,132 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.'**
   String get m0108BloqueoTemporal;
+
+  /// M02-01: título de la tarjeta
+  ///
+  /// In es, this message translates to:
+  /// **'Desbloquea tu cuenta'**
+  String get m0201Titulo;
+
+  /// M02-01: bajo el botón del sensor (en Android no se dice «Face ID»)
+  ///
+  /// In es, this message translates to:
+  /// **'Huella o rostro'**
+  String get m0201Sensor;
+
+  /// M02-01: lectura de TalkBack del botón del sensor
+  ///
+  /// In es, this message translates to:
+  /// **'Desbloquear con huella o rostro'**
+  String get m0201Escanear;
+
+  /// M02-01: texto del diálogo biométrico del sistema
+  ///
+  /// In es, this message translates to:
+  /// **'Desbloquea tu cuenta de Solventa'**
+  String get m0201Motivo;
+
+  /// M02-01 y M02-01a: abre el diálogo del sistema con el PIN, patrón o contraseña del teléfono (D2)
+  ///
+  /// In es, this message translates to:
+  /// **'Usar PIN del teléfono'**
+  String get m0201UsarPin;
+
+  /// M02-01: disparador de demo (solo debug)
+  ///
+  /// In es, this message translates to:
+  /// **'Simular que no reconoce la biometría'**
+  String get m0201SimularNoReconoce;
+
+  /// M02-01 y M02-01a: reintentar
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get m0201Reintentar;
+
+  /// M02-01: sin red al renovar la sesión
+  ///
+  /// In es, this message translates to:
+  /// **'No hay conexión. Tu sesión sigue guardada en este teléfono: reintenta cuando vuelva la señal.'**
+  String get m0201SinRed;
+
+  /// M02-01: sensor bloqueado temporalmente
+  ///
+  /// In es, this message translates to:
+  /// **'Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.'**
+  String get m0201BloqueoTemporal;
+
+  /// M02-01: biometría bloqueada hasta usar la credencial del teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Tu teléfono bloqueó la biometría. Desbloquéala con el PIN, patrón o contraseña del teléfono.'**
+  String get m0201BloqueoPermanente;
+
+  /// M02-01: la llave del Keystore pidió una autenticación más fuerte
+  ///
+  /// In es, this message translates to:
+  /// **'Tu teléfono no confirmó tu identidad con la seguridad necesaria. Usa el PIN del teléfono.'**
+  String get m0201FaltaAutenticacion;
+
+  /// M02-01: el teléfono no tiene bloqueo de pantalla
+  ///
+  /// In es, this message translates to:
+  /// **'Tu teléfono ya no tiene bloqueo de pantalla. Actívalo en Ajustes o ingresa con tu correo y clave.'**
+  String get m0201SinBloqueo;
+
+  /// M02-01: sin hardware o servicio de biometría
+  ///
+  /// In es, this message translates to:
+  /// **'Tu teléfono no puede verificar tu identidad ahora. Revisa Ajustes o ingresa con tu correo y clave.'**
+  String get m0201NoDisponible;
+
+  /// M02-01: abre los ajustes de seguridad del teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Ir a ajustes'**
+  String get m0201IrAjustes;
+
+  /// M02-01: salida cuando el teléfono no puede autenticar
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresar con correo y clave'**
+  String get m0201UsarCorreo;
+
+  /// M02-01a: título
+  ///
+  /// In es, this message translates to:
+  /// **'No te reconocimos'**
+  String get m0201aTitulo;
+
+  /// M02-01a: explicación
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos verificar tu huella o rostro. Intenta de nuevo o ingresa con el PIN de tu teléfono.'**
+  String get m0201aMensaje;
+
+  /// M02-03: título
+  ///
+  /// In es, this message translates to:
+  /// **'Acceso concedido'**
+  String get m0203Titulo;
+
+  /// M02-03: saludo cuando aún no llega el nombre
+  ///
+  /// In es, this message translates to:
+  /// **'Hola de nuevo.'**
+  String get m0203SaludoSinNombre;
+
+  /// M02-03: lectura de TalkBack de la barra de progreso
+  ///
+  /// In es, this message translates to:
+  /// **'Entrando a tu cuenta'**
+  String get m0203Progreso;
+
+  /// M02-03: saludo con el nombre (neutro en género)
+  ///
+  /// In es, this message translates to:
+  /// **'Hola de nuevo, {nombre}.'**
+  String m0203Saludo(String nombre);
 }
 
 class _AppLocalizationsDelegate

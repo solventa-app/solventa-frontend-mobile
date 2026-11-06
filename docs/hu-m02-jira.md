@@ -105,6 +105,17 @@ Luego: etiqueta `fuera-de-alcance-D2` y transición a **Done**.
 > diálogo del sistema y M02-02b no aplica (KAN-174). Se conservan los 1,5 pts. Estados adicionales sin diseño en Figma
 > (bloqueo temporal, sin bloqueo de pantalla, sin red) se resolvieron con patrones existentes. PR: <PR>.
 
+Al abrir el PR 4, agregar en KAN-226:
+> Hecho en el PR 4: arranque con sesión guardada sin parpadeo (M02-01 en vez de G-03), M02-01 que abre sola el diálogo,
+> M02-01a con «Reintentar» y «Usar PIN del teléfono», M02-03 que avanza sola en 1,5 s (barra llena sin animación si el
+> teléfono pide quitar animaciones), avisos de bloqueo temporal o permanente, sin red (con «Reintentar» sin volver a
+> pedir la huella), sin bloqueo de pantalla y sin hardware (con «Ir a ajustes» e «Ingresar con correo y clave»),
+> bloqueo tras 5 min en segundo plano y cierre de las pantallas apiladas al vencer la sesión. Textos ES/EN.
+> Diferencias con Figma: el saludo de M02-03 es neutro («Hola de nuevo, …» en vez de «Bienvenida de nuevo»), el texto
+> del sensor dice «Huella o rostro» (en Android no se dice «Face ID»), «Usar PIN en su lugar» pasa a «Usar PIN del
+> teléfono» (D2) y no se muestran la nota de prototipado ni el halo difuminado de M02-03. Pruebas de notifier, widget,
+> goldens (sin imágenes) e `integration_test/hu_m02_test.dart` escritas sin correr: las corre el compañero (5.8).
+
 **5.5 · KAN-225 y KAN-115 (D3, D4, 5 min):**
 > D3: el refresh se cifra con una llave RSA-2048 del Android Keystore; la pública cifra sin pedir nada (permite guardar
 > el refresh rotado en segundo plano) y la privada solo descifra durante 10 s después de una huella fuerte o del PIN del
@@ -148,9 +159,8 @@ Flujo del tablero: **To Do → In Progress → In Review → Done**.
 | Todas las tareas en Done | KAN-32 | → Done | Líder técnico |
 | Al aplicar D2 (en cualquier momento) | KAN-174 | → Done con 5.3 y la etiqueta | Quien registra la decisión |
 
-**Estado actual (2026-11-06):** PR 1 y PR 2 con push hecho y sin PR abierto. KAN-227 y KAN-225 pasan a **In Progress**
-ya, y a **In Review** cuando se abran los PRs 1 y 2. KAN-226 y las subtareas de pantallas siguen en To Do hasta crear
-la rama del PR 4.
+**Estado actual (2026-11-06):** PR 1, 2, 3 y 4 con push hecho y sin PR abierto. KAN-227, KAN-225, KAN-226 y las
+subtareas de pantallas pasan a **In Progress** ya, y a **In Review** cuando se abra su PR.
 
 Si un hallazgo de la validación obliga a corregir, la issue vuelve de In Review a In Progress, con un comentario que
 diga qué falló. La corrección va en un PR `fix/KAN-N-…`.
