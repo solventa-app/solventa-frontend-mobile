@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:solventa_mobile/core/biometria/biometria_providers.dart';
 import 'package:solventa_mobile/core/biometria/biometria_service.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
+import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/core/network/network_providers.dart';
 import 'package:solventa_mobile/core/sesion/gestor_sesion.dart';
 import 'package:solventa_mobile/core/sesion/llavero_sesion.dart';
@@ -66,7 +67,10 @@ void main() {
           theme: SolTheme.light(),
           locale: SolLocalizations.locale,
           supportedLocales: SolLocalizations.supportedLocales,
-          localizationsDelegates: SolLocalizations.delegates,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            ...SolLocalizations.delegates,
+          ],
           routerConfig: router,
         ),
       ),
