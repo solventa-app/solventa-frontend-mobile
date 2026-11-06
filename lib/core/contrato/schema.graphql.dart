@@ -777,7 +777,12 @@ class Input$CredencialesInput {
   factory Input$CredencialesInput({
     required String usuario,
     required String clave,
-  }) => Input$CredencialesInput._({r'usuario': usuario, r'clave': clave});
+    Enum$RolUsuario? rol,
+  }) => Input$CredencialesInput._({
+    r'usuario': usuario,
+    r'clave': clave,
+    if (rol != null) r'rol': rol,
+  });
 
   Input$CredencialesInput._(this._$data);
 
@@ -787,6 +792,12 @@ class Input$CredencialesInput {
     result$data['usuario'] = (l$usuario as String);
     final l$clave = data['clave'];
     result$data['clave'] = (l$clave as String);
+    if (data.containsKey('rol')) {
+      final l$rol = data['rol'];
+      result$data['rol'] = l$rol == null
+          ? null
+          : fromJson$Enum$RolUsuario((l$rol as String));
+    }
     return Input$CredencialesInput._(result$data);
   }
 
@@ -796,12 +807,18 @@ class Input$CredencialesInput {
 
   String get clave => (_$data['clave'] as String);
 
+  Enum$RolUsuario? get rol => (_$data['rol'] as Enum$RolUsuario?);
+
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$usuario = usuario;
     result$data['usuario'] = l$usuario;
     final l$clave = clave;
     result$data['clave'] = l$clave;
+    if (_$data.containsKey('rol')) {
+      final l$rol = rol;
+      result$data['rol'] = l$rol == null ? null : toJson$Enum$RolUsuario(l$rol);
+    }
     return result$data;
   }
 
@@ -823,6 +840,14 @@ class Input$CredencialesInput {
     if (l$clave != lOther$clave) {
       return false;
     }
+    final l$rol = rol;
+    final lOther$rol = other.rol;
+    if (_$data.containsKey('rol') != other._$data.containsKey('rol')) {
+      return false;
+    }
+    if (l$rol != lOther$rol) {
+      return false;
+    }
     return true;
   }
 
@@ -830,7 +855,12 @@ class Input$CredencialesInput {
   int get hashCode {
     final l$usuario = usuario;
     final l$clave = clave;
-    return Object.hashAll([l$usuario, l$clave]);
+    final l$rol = rol;
+    return Object.hashAll([
+      l$usuario,
+      l$clave,
+      _$data.containsKey('rol') ? l$rol : const {},
+    ]);
   }
 }
 
@@ -1420,6 +1450,354 @@ class Input$CuentaOnboardingInput {
     final l$correo = correo;
     final l$clave = clave;
     return Object.hashAll([l$correo, l$clave]);
+  }
+}
+
+class Input$UbicacionReporteInput {
+  factory Input$UbicacionReporteInput({
+    required String descripcion,
+    required String ciudad,
+    required double latitud,
+    required double longitud,
+  }) => Input$UbicacionReporteInput._({
+    r'descripcion': descripcion,
+    r'ciudad': ciudad,
+    r'latitud': latitud,
+    r'longitud': longitud,
+  });
+
+  Input$UbicacionReporteInput._(this._$data);
+
+  factory Input$UbicacionReporteInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$descripcion = data['descripcion'];
+    result$data['descripcion'] = (l$descripcion as String);
+    final l$ciudad = data['ciudad'];
+    result$data['ciudad'] = (l$ciudad as String);
+    final l$latitud = data['latitud'];
+    result$data['latitud'] = (l$latitud as num).toDouble();
+    final l$longitud = data['longitud'];
+    result$data['longitud'] = (l$longitud as num).toDouble();
+    return Input$UbicacionReporteInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get descripcion => (_$data['descripcion'] as String);
+
+  String get ciudad => (_$data['ciudad'] as String);
+
+  double get latitud => (_$data['latitud'] as double);
+
+  double get longitud => (_$data['longitud'] as double);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$descripcion = descripcion;
+    result$data['descripcion'] = l$descripcion;
+    final l$ciudad = ciudad;
+    result$data['ciudad'] = l$ciudad;
+    final l$latitud = latitud;
+    result$data['latitud'] = l$latitud;
+    final l$longitud = longitud;
+    result$data['longitud'] = l$longitud;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$UbicacionReporteInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    final l$ciudad = ciudad;
+    final lOther$ciudad = other.ciudad;
+    if (l$ciudad != lOther$ciudad) {
+      return false;
+    }
+    final l$latitud = latitud;
+    final lOther$latitud = other.latitud;
+    if (l$latitud != lOther$latitud) {
+      return false;
+    }
+    final l$longitud = longitud;
+    final lOther$longitud = other.longitud;
+    if (l$longitud != lOther$longitud) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$descripcion = descripcion;
+    final l$ciudad = ciudad;
+    final l$latitud = latitud;
+    final l$longitud = longitud;
+    return Object.hashAll([l$descripcion, l$ciudad, l$latitud, l$longitud]);
+  }
+}
+
+class Input$FotoReporteInput {
+  factory Input$FotoReporteInput({
+    required String archivoId,
+    required DateTime tomadaEn,
+    double? latitud,
+    double? longitud,
+  }) => Input$FotoReporteInput._({
+    r'archivoId': archivoId,
+    r'tomadaEn': tomadaEn,
+    if (latitud != null) r'latitud': latitud,
+    if (longitud != null) r'longitud': longitud,
+  });
+
+  Input$FotoReporteInput._(this._$data);
+
+  factory Input$FotoReporteInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$archivoId = data['archivoId'];
+    result$data['archivoId'] = (l$archivoId as String);
+    final l$tomadaEn = data['tomadaEn'];
+    result$data['tomadaEn'] = DateTime.parse((l$tomadaEn as String));
+    if (data.containsKey('latitud')) {
+      final l$latitud = data['latitud'];
+      result$data['latitud'] = (l$latitud as num?)?.toDouble();
+    }
+    if (data.containsKey('longitud')) {
+      final l$longitud = data['longitud'];
+      result$data['longitud'] = (l$longitud as num?)?.toDouble();
+    }
+    return Input$FotoReporteInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get archivoId => (_$data['archivoId'] as String);
+
+  DateTime get tomadaEn => (_$data['tomadaEn'] as DateTime);
+
+  double? get latitud => (_$data['latitud'] as double?);
+
+  double? get longitud => (_$data['longitud'] as double?);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$archivoId = archivoId;
+    result$data['archivoId'] = l$archivoId;
+    final l$tomadaEn = tomadaEn;
+    result$data['tomadaEn'] = l$tomadaEn.toIso8601String();
+    if (_$data.containsKey('latitud')) {
+      final l$latitud = latitud;
+      result$data['latitud'] = l$latitud;
+    }
+    if (_$data.containsKey('longitud')) {
+      final l$longitud = longitud;
+      result$data['longitud'] = l$longitud;
+    }
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$FotoReporteInput || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$archivoId = archivoId;
+    final lOther$archivoId = other.archivoId;
+    if (l$archivoId != lOther$archivoId) {
+      return false;
+    }
+    final l$tomadaEn = tomadaEn;
+    final lOther$tomadaEn = other.tomadaEn;
+    if (l$tomadaEn != lOther$tomadaEn) {
+      return false;
+    }
+    final l$latitud = latitud;
+    final lOther$latitud = other.latitud;
+    if (_$data.containsKey('latitud') != other._$data.containsKey('latitud')) {
+      return false;
+    }
+    if (l$latitud != lOther$latitud) {
+      return false;
+    }
+    final l$longitud = longitud;
+    final lOther$longitud = other.longitud;
+    if (_$data.containsKey('longitud') !=
+        other._$data.containsKey('longitud')) {
+      return false;
+    }
+    if (l$longitud != lOther$longitud) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$archivoId = archivoId;
+    final l$tomadaEn = tomadaEn;
+    final l$latitud = latitud;
+    final l$longitud = longitud;
+    return Object.hashAll([
+      l$archivoId,
+      l$tomadaEn,
+      _$data.containsKey('latitud') ? l$latitud : const {},
+      _$data.containsKey('longitud') ? l$longitud : const {},
+    ]);
+  }
+}
+
+class Input$ReporteSiniestroInput {
+  factory Input$ReporteSiniestroInput({
+    required String idReporte,
+    required String polizaId,
+    required DateTime ocurridoEn,
+    required String descripcion,
+    required Input$UbicacionReporteInput ubicacion,
+    required List<Input$FotoReporteInput> fotos,
+  }) => Input$ReporteSiniestroInput._({
+    r'idReporte': idReporte,
+    r'polizaId': polizaId,
+    r'ocurridoEn': ocurridoEn,
+    r'descripcion': descripcion,
+    r'ubicacion': ubicacion,
+    r'fotos': fotos,
+  });
+
+  Input$ReporteSiniestroInput._(this._$data);
+
+  factory Input$ReporteSiniestroInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$idReporte = data['idReporte'];
+    result$data['idReporte'] = (l$idReporte as String);
+    final l$polizaId = data['polizaId'];
+    result$data['polizaId'] = (l$polizaId as String);
+    final l$ocurridoEn = data['ocurridoEn'];
+    result$data['ocurridoEn'] = DateTime.parse((l$ocurridoEn as String));
+    final l$descripcion = data['descripcion'];
+    result$data['descripcion'] = (l$descripcion as String);
+    final l$ubicacion = data['ubicacion'];
+    result$data['ubicacion'] = Input$UbicacionReporteInput.fromJson(
+      (l$ubicacion as Map<String, dynamic>),
+    );
+    final l$fotos = data['fotos'];
+    result$data['fotos'] = (l$fotos as List<dynamic>)
+        .map(
+          (e) => Input$FotoReporteInput.fromJson((e as Map<String, dynamic>)),
+        )
+        .toList();
+    return Input$ReporteSiniestroInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get idReporte => (_$data['idReporte'] as String);
+
+  String get polizaId => (_$data['polizaId'] as String);
+
+  DateTime get ocurridoEn => (_$data['ocurridoEn'] as DateTime);
+
+  String get descripcion => (_$data['descripcion'] as String);
+
+  Input$UbicacionReporteInput get ubicacion =>
+      (_$data['ubicacion'] as Input$UbicacionReporteInput);
+
+  List<Input$FotoReporteInput> get fotos =>
+      (_$data['fotos'] as List<Input$FotoReporteInput>);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$idReporte = idReporte;
+    result$data['idReporte'] = l$idReporte;
+    final l$polizaId = polizaId;
+    result$data['polizaId'] = l$polizaId;
+    final l$ocurridoEn = ocurridoEn;
+    result$data['ocurridoEn'] = l$ocurridoEn.toIso8601String();
+    final l$descripcion = descripcion;
+    result$data['descripcion'] = l$descripcion;
+    final l$ubicacion = ubicacion;
+    result$data['ubicacion'] = l$ubicacion.toJson();
+    final l$fotos = fotos;
+    result$data['fotos'] = l$fotos.map((e) => e.toJson()).toList();
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$ReporteSiniestroInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$idReporte = idReporte;
+    final lOther$idReporte = other.idReporte;
+    if (l$idReporte != lOther$idReporte) {
+      return false;
+    }
+    final l$polizaId = polizaId;
+    final lOther$polizaId = other.polizaId;
+    if (l$polizaId != lOther$polizaId) {
+      return false;
+    }
+    final l$ocurridoEn = ocurridoEn;
+    final lOther$ocurridoEn = other.ocurridoEn;
+    if (l$ocurridoEn != lOther$ocurridoEn) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    final l$ubicacion = ubicacion;
+    final lOther$ubicacion = other.ubicacion;
+    if (l$ubicacion != lOther$ubicacion) {
+      return false;
+    }
+    final l$fotos = fotos;
+    final lOther$fotos = other.fotos;
+    if (l$fotos.length != lOther$fotos.length) {
+      return false;
+    }
+    for (int i = 0; i < l$fotos.length; i++) {
+      final l$fotos$entry = l$fotos[i];
+      final lOther$fotos$entry = lOther$fotos[i];
+      if (l$fotos$entry != lOther$fotos$entry) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$idReporte = idReporte;
+    final l$polizaId = polizaId;
+    final l$ocurridoEn = ocurridoEn;
+    final l$descripcion = descripcion;
+    final l$ubicacion = ubicacion;
+    final l$fotos = fotos;
+    return Object.hashAll([
+      l$idReporte,
+      l$polizaId,
+      l$ocurridoEn,
+      l$descripcion,
+      l$ubicacion,
+      Object.hashAll(l$fotos.map((v) => v)),
+    ]);
   }
 }
 
@@ -2799,6 +3177,39 @@ Enum$EstadoCircuito fromJson$Enum$EstadoCircuito(String value) {
   }
 }
 
+enum Enum$TipoPrestador {
+  MEDICO,
+  MECANICO,
+  $unknown;
+
+  factory Enum$TipoPrestador.fromJson(String value) =>
+      fromJson$Enum$TipoPrestador(value);
+
+  String toJson() => toJson$Enum$TipoPrestador(this);
+}
+
+String toJson$Enum$TipoPrestador(Enum$TipoPrestador e) {
+  switch (e) {
+    case Enum$TipoPrestador.MEDICO:
+      return r'MEDICO';
+    case Enum$TipoPrestador.MECANICO:
+      return r'MECANICO';
+    case Enum$TipoPrestador.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoPrestador fromJson$Enum$TipoPrestador(String value) {
+  switch (value) {
+    case r'MEDICO':
+      return Enum$TipoPrestador.MEDICO;
+    case r'MECANICO':
+      return Enum$TipoPrestador.MECANICO;
+    default:
+      return Enum$TipoPrestador.$unknown;
+  }
+}
+
 enum Enum$__TypeKind {
   SCALAR,
   OBJECT,
@@ -3001,4 +3412,5 @@ const possibleTypesMap = <String, Set<String>>{
   'ResultadoCuentaOnboarding': {'CuentaOnboarding', 'ErrorOnboarding'},
   'ResultadoCodigoOnboarding': {'CodigoOnboardingEnviado', 'ErrorOnboarding'},
   'ResultadoResolucion': {'Siniestro', 'ErrorSiniestro'},
+  'ResultadoReporteSiniestro': {'SiniestroReportado', 'ErrorSiniestro'},
 };

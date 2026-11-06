@@ -7,6 +7,9 @@ import 'network_exceptions.dart';
 /// Lee el JWT de la sesión activa (o `null` sin sesión).
 typedef LectorToken = Future<String?> Function();
 
+/// Renueva la sesión ante un JWT vencido. `true` si hay un JWT nuevo.
+typedef RenovadorSesion = Future<bool> Function();
+
 /// Cliente GraphQL mínimo contra el canal móvil del BFF (`POST /graphql/app`).
 ///
 /// Igual que `apps/web/src/graphql/cliente.ts` de la web: sin librería GraphQL,
@@ -14,7 +17,7 @@ typedef LectorToken = Future<String?> Function();
 /// `graphql_codegen` y devuelve el `data` crudo para que el datasource lo
 /// parsee con el `fromJson` generado.
 class GraphqlClient {
-  GraphqlClient(this._dio, {this.leerToken});
+  GraphqlClient(this._dio, {this.leerToken, this.renovarSesion});
 
   /// Ruta del canal móvil en el BFF y en el gateway.
   static const ruta = '/graphql/app';
@@ -24,10 +27,16 @@ class GraphqlClient {
   /// De dónde sale el JWT para `Authorization: Bearer`.
   final LectorToken? leerToken;
 
+  /// Renovación silenciosa ante un JWT vencido (HU-M02). `null` en el cliente
+  /// que usa `renovarSesion`, para no renovar en bucle.
+  final RenovadorSesion? renovarSesion;
+
   /// Ejecuta [documento] y devuelve `data`. Lanza [ErrorCliente].
   ///
-  /// No reintenta: las mutaciones pueden no ser idempotentes y el reintento
-  /// lo decide el usuario con «Reintentar».
+  /// Solo reintenta en un caso: el BFF rechazó el JWT por vencido o ausente
+  /// (la operación no llegó a ejecutarse), [renovarSesion] consiguió uno
+  /// nuevo y se repite **una** vez. Cualquier otro reintento lo decide el
+  /// usuario con «Reintentar».
   ///
   /// [cabeceras] suma cabeceras propias de la operación (p. ej.
   /// `X-Onboarding-Token` del onboarding, HU-M01).
@@ -36,6 +45,21 @@ class GraphqlClient {
     Map<String, dynamic> variables = const {},
     Map<String, String> cabeceras = const {},
   }) async {
+    try {
+      return await _ejecutarUnaVez(documento, variables, cabeceras);
+    } on ErrorCliente catch (e) {
+      final renovar = renovarSesion;
+      if (renovar == null || !esErrorSinSesion(e)) rethrow;
+      if (!await renovar()) rethrow;
+      return _ejecutarUnaVez(documento, variables, cabeceras);
+    }
+  }
+
+  Future<Map<String, dynamic>> _ejecutarUnaVez(
+    DocumentNode documento,
+    Map<String, dynamic> variables,
+    Map<String, String> cabeceras,
+  ) async {
     final token = await leerToken?.call();
     final Response<Object?> respuesta;
     try {

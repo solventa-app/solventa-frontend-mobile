@@ -82,6 +82,8 @@ mutation CrearCuentaOnboarding($onboardingId: ID!, $entrada: CuentaOnboardingInp
       sesion {
         token
         expiraEn
+        refreshToken
+        refreshExpiraEn
       }
       onboarding {
         ...OnboardingCampos
@@ -176,6 +178,8 @@ mutation RegistrarCuenta($correo: String!, $clave: String!, $codigo: String!) {
     ... on Sesion {
       token
       expiraEn
+      refreshToken
+      refreshExpiraEn
       usuario {
         ...UsuarioCampos
       }
@@ -193,6 +197,8 @@ mutation IniciarSesion($entrada: CredencialesInput!) {
     ... on Sesion {
       token
       expiraEn
+      refreshToken
+      refreshExpiraEn
       usuario {
         ...UsuarioCampos
       }

@@ -31,7 +31,7 @@ final onboardingRepositoryProvider = Provider<OnboardingRepository>(
   (ref) => OnboardingRepositoryImpl(
     ref.watch(onboardingRemoteDataSourceProvider),
     ref.watch(subidaArchivoServiceProvider),
-    ref.watch(sesionStoreProvider),
+    ref.watch(gestorSesionProvider),
   ),
 );
 

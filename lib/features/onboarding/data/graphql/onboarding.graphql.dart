@@ -3236,6 +3236,20 @@ const documentNodeMutationCrearCuentaOnboarding = DocumentNode(
                               selectionSet: null,
                             ),
                             FieldNode(
+                              name: NameNode(value: 'refreshToken'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'refreshExpiraEn'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
                               name: NameNode(value: '__typename'),
                               alias: null,
                               arguments: [],
@@ -3512,6 +3526,8 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
   Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$sesion({
     required this.token,
     required this.expiraEn,
+    this.refreshToken,
+    this.refreshExpiraEn,
     this.$__typename = 'Sesion',
   });
 
@@ -3520,10 +3536,16 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
   ) {
     final l$token = json['token'];
     final l$expiraEn = json['expiraEn'];
+    final l$refreshToken = json['refreshToken'];
+    final l$refreshExpiraEn = json['refreshExpiraEn'];
     final l$$__typename = json['__typename'];
     return Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$sesion(
       token: (l$token as String),
       expiraEn: DateTime.parse((l$expiraEn as String)),
+      refreshToken: (l$refreshToken as String?),
+      refreshExpiraEn: l$refreshExpiraEn == null
+          ? null
+          : DateTime.parse((l$refreshExpiraEn as String)),
       $__typename: (l$$__typename as String),
     );
   }
@@ -3531,6 +3553,10 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
   final String token;
 
   final DateTime expiraEn;
+
+  final String? refreshToken;
+
+  final DateTime? refreshExpiraEn;
 
   final String $__typename;
 
@@ -3540,6 +3566,10 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
     _resultData['token'] = l$token;
     final l$expiraEn = expiraEn;
     _resultData['expiraEn'] = l$expiraEn.toIso8601String();
+    final l$refreshToken = refreshToken;
+    _resultData['refreshToken'] = l$refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
+    _resultData['refreshExpiraEn'] = l$refreshExpiraEn?.toIso8601String();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -3549,8 +3579,16 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
   int get hashCode {
     final l$token = token;
     final l$expiraEn = expiraEn;
+    final l$refreshToken = refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$token, l$expiraEn, l$$__typename]);
+    return Object.hashAll([
+      l$token,
+      l$expiraEn,
+      l$refreshToken,
+      l$refreshExpiraEn,
+      l$$__typename,
+    ]);
   }
 
   @override
@@ -3571,6 +3609,16 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
     final l$expiraEn = expiraEn;
     final lOther$expiraEn = other.expiraEn;
     if (l$expiraEn != lOther$expiraEn) {
+      return false;
+    }
+    final l$refreshToken = refreshToken;
+    final lOther$refreshToken = other.refreshToken;
+    if (l$refreshToken != lOther$refreshToken) {
+      return false;
+    }
+    final l$refreshExpiraEn = refreshExpiraEn;
+    final lOther$refreshExpiraEn = other.refreshExpiraEn;
+    if (l$refreshExpiraEn != lOther$refreshExpiraEn) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -6445,6 +6493,20 @@ const documentNodeMutationRegistrarCuenta = DocumentNode(
                         selectionSet: null,
                       ),
                       FieldNode(
+                        name: NameNode(value: 'refreshToken'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'refreshExpiraEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
                         name: NameNode(value: 'usuario'),
                         alias: null,
                         arguments: [],
@@ -6644,6 +6706,8 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
   Mutation$RegistrarCuenta$registrarCuenta$$Sesion({
     required this.token,
     required this.expiraEn,
+    this.refreshToken,
+    this.refreshExpiraEn,
     required this.usuario,
     this.$__typename = 'Sesion',
   });
@@ -6653,11 +6717,17 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
   ) {
     final l$token = json['token'];
     final l$expiraEn = json['expiraEn'];
+    final l$refreshToken = json['refreshToken'];
+    final l$refreshExpiraEn = json['refreshExpiraEn'];
     final l$usuario = json['usuario'];
     final l$$__typename = json['__typename'];
     return Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
       token: (l$token as String),
       expiraEn: DateTime.parse((l$expiraEn as String)),
+      refreshToken: (l$refreshToken as String?),
+      refreshExpiraEn: l$refreshExpiraEn == null
+          ? null
+          : DateTime.parse((l$refreshExpiraEn as String)),
       usuario: Fragment$UsuarioCampos.fromJson(
         (l$usuario as Map<String, dynamic>),
       ),
@@ -6669,6 +6739,10 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
 
   final DateTime expiraEn;
 
+  final String? refreshToken;
+
+  final DateTime? refreshExpiraEn;
+
   final Fragment$UsuarioCampos usuario;
 
   final String $__typename;
@@ -6679,6 +6753,10 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
     _resultData['token'] = l$token;
     final l$expiraEn = expiraEn;
     _resultData['expiraEn'] = l$expiraEn.toIso8601String();
+    final l$refreshToken = refreshToken;
+    _resultData['refreshToken'] = l$refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
+    _resultData['refreshExpiraEn'] = l$refreshExpiraEn?.toIso8601String();
     final l$usuario = usuario;
     _resultData['usuario'] = l$usuario.toJson();
     final l$$__typename = $__typename;
@@ -6690,9 +6768,18 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
   int get hashCode {
     final l$token = token;
     final l$expiraEn = expiraEn;
+    final l$refreshToken = refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
     final l$usuario = usuario;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$token, l$expiraEn, l$usuario, l$$__typename]);
+    return Object.hashAll([
+      l$token,
+      l$expiraEn,
+      l$refreshToken,
+      l$refreshExpiraEn,
+      l$usuario,
+      l$$__typename,
+    ]);
   }
 
   @override
@@ -6712,6 +6799,16 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
     final l$expiraEn = expiraEn;
     final lOther$expiraEn = other.expiraEn;
     if (l$expiraEn != lOther$expiraEn) {
+      return false;
+    }
+    final l$refreshToken = refreshToken;
+    final lOther$refreshToken = other.refreshToken;
+    if (l$refreshToken != lOther$refreshToken) {
+      return false;
+    }
+    final l$refreshExpiraEn = refreshExpiraEn;
+    final lOther$refreshExpiraEn = other.refreshExpiraEn;
+    if (l$refreshExpiraEn != lOther$refreshExpiraEn) {
       return false;
     }
     final l$usuario = usuario;
@@ -6977,6 +7074,20 @@ const documentNodeMutationIniciarSesion = DocumentNode(
                         selectionSet: null,
                       ),
                       FieldNode(
+                        name: NameNode(value: 'refreshToken'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'refreshExpiraEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
                         name: NameNode(value: 'usuario'),
                         alias: null,
                         arguments: [],
@@ -7172,6 +7283,8 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
   Mutation$IniciarSesion$iniciarSesion$$Sesion({
     required this.token,
     required this.expiraEn,
+    this.refreshToken,
+    this.refreshExpiraEn,
     required this.usuario,
     this.$__typename = 'Sesion',
   });
@@ -7181,11 +7294,17 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
   ) {
     final l$token = json['token'];
     final l$expiraEn = json['expiraEn'];
+    final l$refreshToken = json['refreshToken'];
+    final l$refreshExpiraEn = json['refreshExpiraEn'];
     final l$usuario = json['usuario'];
     final l$$__typename = json['__typename'];
     return Mutation$IniciarSesion$iniciarSesion$$Sesion(
       token: (l$token as String),
       expiraEn: DateTime.parse((l$expiraEn as String)),
+      refreshToken: (l$refreshToken as String?),
+      refreshExpiraEn: l$refreshExpiraEn == null
+          ? null
+          : DateTime.parse((l$refreshExpiraEn as String)),
       usuario: Fragment$UsuarioCampos.fromJson(
         (l$usuario as Map<String, dynamic>),
       ),
@@ -7197,6 +7316,10 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
 
   final DateTime expiraEn;
 
+  final String? refreshToken;
+
+  final DateTime? refreshExpiraEn;
+
   final Fragment$UsuarioCampos usuario;
 
   final String $__typename;
@@ -7207,6 +7330,10 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
     _resultData['token'] = l$token;
     final l$expiraEn = expiraEn;
     _resultData['expiraEn'] = l$expiraEn.toIso8601String();
+    final l$refreshToken = refreshToken;
+    _resultData['refreshToken'] = l$refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
+    _resultData['refreshExpiraEn'] = l$refreshExpiraEn?.toIso8601String();
     final l$usuario = usuario;
     _resultData['usuario'] = l$usuario.toJson();
     final l$$__typename = $__typename;
@@ -7218,9 +7345,18 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
   int get hashCode {
     final l$token = token;
     final l$expiraEn = expiraEn;
+    final l$refreshToken = refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
     final l$usuario = usuario;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$token, l$expiraEn, l$usuario, l$$__typename]);
+    return Object.hashAll([
+      l$token,
+      l$expiraEn,
+      l$refreshToken,
+      l$refreshExpiraEn,
+      l$usuario,
+      l$$__typename,
+    ]);
   }
 
   @override
@@ -7240,6 +7376,16 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
     final l$expiraEn = expiraEn;
     final lOther$expiraEn = other.expiraEn;
     if (l$expiraEn != lOther$expiraEn) {
+      return false;
+    }
+    final l$refreshToken = refreshToken;
+    final lOther$refreshToken = other.refreshToken;
+    if (l$refreshToken != lOther$refreshToken) {
+      return false;
+    }
+    final l$refreshExpiraEn = refreshExpiraEn;
+    final lOther$refreshExpiraEn = other.refreshExpiraEn;
+    if (l$refreshExpiraEn != lOther$refreshExpiraEn) {
       return false;
     }
     final l$usuario = usuario;
