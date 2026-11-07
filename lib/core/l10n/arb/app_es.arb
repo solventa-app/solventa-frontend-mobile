@@ -168,10 +168,6 @@
   "@m0108Requisito": {
     "description": "M01-08 nota"
   },
-  "m0108NoActivada": "Aún no detectamos huella o rostro en tu teléfono.",
-  "@m0108NoActivada": {
-    "description": "M01-08 aviso si no está activada"
-  },
   "fallaSinConexion": "No tienes conexión. Revisa tu internet e intenta de nuevo.",
   "@fallaSinConexion": {
     "description": "Falla SinConexion"
@@ -442,6 +438,119 @@
   "fallaCamaraNoDisponible": "No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.",
   "@fallaCamaraNoDisponible": {
     "description": "Falla al capturar sin cámara activa"
+  },
+  "biometriaMotivo": "Confirma que eres tú para entrar a Solventa",
+  "@biometriaMotivo": {
+    "description": "Texto del diálogo del sistema al pedir huella, rostro o PIN del teléfono"
+  },
+  "m0108SoloPin": "Tu teléfono no tiene huella ni rostro registrados. Puedes continuar con el PIN del teléfono, aunque te recomendamos registrar tu huella.",
+  "@m0108SoloPin": {
+    "description": "M01-08: aviso cuando solo hay PIN del teléfono (decisión D1)"
+  },
+  "m0108SinBloqueo": "Tu teléfono no tiene bloqueo de pantalla. Activa un PIN, patrón o huella en los ajustes para proteger tu cuenta.",
+  "@m0108SinBloqueo": {
+    "description": "M01-08: aviso cuando el teléfono no tiene bloqueo de pantalla"
+  },
+  "m0108NoDisponible": "No pudimos consultar la seguridad de tu teléfono. Intenta de nuevo.",
+  "@m0108NoDisponible": {
+    "description": "M01-08: error al consultar la biometría del sistema"
+  },
+  "m0108NoReconocido": "No te reconocimos. Intenta de nuevo.",
+  "@m0108NoReconocido": {
+    "description": "M01-08: la huella o el rostro no coincidieron"
+  },
+  "m0108BloqueoTemporal": "Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.",
+  "@m0108BloqueoTemporal": {
+    "description": "M01-08 y M02-01: sensor bloqueado temporalmente"
+  },
+  "m0201Titulo": "Desbloquea tu cuenta",
+  "@m0201Titulo": {
+    "description": "M02-01: título de la tarjeta"
+  },
+  "m0201Sensor": "Huella o rostro",
+  "@m0201Sensor": {
+    "description": "M02-01: bajo el botón del sensor (en Android no se dice «Face ID»)"
+  },
+  "m0201Escanear": "Desbloquear con huella o rostro",
+  "@m0201Escanear": {
+    "description": "M02-01: lectura de TalkBack del botón del sensor"
+  },
+  "m0201Motivo": "Desbloquea tu cuenta de Solventa",
+  "@m0201Motivo": {
+    "description": "M02-01: texto del diálogo biométrico del sistema"
+  },
+  "m0201UsarPin": "Usar PIN del teléfono",
+  "@m0201UsarPin": {
+    "description": "M02-01 y M02-01a: abre el diálogo del sistema con el PIN, patrón o contraseña del teléfono (D2)"
+  },
+  "m0201SimularNoReconoce": "Simular que no reconoce la biometría",
+  "@m0201SimularNoReconoce": {
+    "description": "M02-01: disparador de demo (solo debug)"
+  },
+  "m0201Reintentar": "Reintentar",
+  "@m0201Reintentar": {
+    "description": "M02-01 y M02-01a: reintentar"
+  },
+  "m0201SinRed": "No hay conexión. Tu sesión sigue guardada en este teléfono: reintenta cuando vuelva la señal.",
+  "@m0201SinRed": {
+    "description": "M02-01: sin red al renovar la sesión"
+  },
+  "m0201BloqueoTemporal": "Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.",
+  "@m0201BloqueoTemporal": {
+    "description": "M02-01: sensor bloqueado temporalmente"
+  },
+  "m0201BloqueoPermanente": "Tu teléfono bloqueó la biometría. Desbloquéala con el PIN, patrón o contraseña del teléfono.",
+  "@m0201BloqueoPermanente": {
+    "description": "M02-01: biometría bloqueada hasta usar la credencial del teléfono"
+  },
+  "m0201FaltaAutenticacion": "Tu teléfono no confirmó tu identidad con la seguridad necesaria. Usa el PIN del teléfono.",
+  "@m0201FaltaAutenticacion": {
+    "description": "M02-01: la llave del Keystore pidió una autenticación más fuerte"
+  },
+  "m0201SinBloqueo": "Tu teléfono ya no tiene bloqueo de pantalla. Actívalo en Ajustes o ingresa con tu correo y clave.",
+  "@m0201SinBloqueo": {
+    "description": "M02-01: el teléfono no tiene bloqueo de pantalla"
+  },
+  "m0201NoDisponible": "Tu teléfono no puede verificar tu identidad ahora. Revisa Ajustes o ingresa con tu correo y clave.",
+  "@m0201NoDisponible": {
+    "description": "M02-01: sin hardware o servicio de biometría"
+  },
+  "m0201IrAjustes": "Ir a ajustes",
+  "@m0201IrAjustes": {
+    "description": "M02-01: abre los ajustes de seguridad del teléfono"
+  },
+  "m0201UsarCorreo": "Ingresar con correo y clave",
+  "@m0201UsarCorreo": {
+    "description": "M02-01: salida cuando el teléfono no puede autenticar"
+  },
+  "m0201aTitulo": "No te reconocimos",
+  "@m0201aTitulo": {
+    "description": "M02-01a: título"
+  },
+  "m0201aMensaje": "No pudimos verificar tu huella o rostro. Intenta de nuevo o ingresa con el PIN de tu teléfono.",
+  "@m0201aMensaje": {
+    "description": "M02-01a: explicación"
+  },
+  "m0203Titulo": "Acceso concedido",
+  "@m0203Titulo": {
+    "description": "M02-03: título"
+  },
+  "m0203SaludoSinNombre": "Hola de nuevo.",
+  "@m0203SaludoSinNombre": {
+    "description": "M02-03: saludo cuando aún no llega el nombre"
+  },
+  "m0203Progreso": "Entrando a tu cuenta",
+  "@m0203Progreso": {
+    "description": "M02-03: lectura de TalkBack de la barra de progreso"
+  },
+  "m0203Saludo": "Hola de nuevo, {nombre}.",
+  "@m0203Saludo": {
+    "description": "M02-03: saludo con el nombre (neutro en género)",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
   },
   "m0601Titulo": "Prestadores cercanos",
   "@m0601Titulo": {

@@ -122,6 +122,7 @@ abstract final class OnboardingFixtures {
     'crearCuentaOnboarding': {
       '__typename': 'ErrorOnboarding',
       'codigo': 'CORREO_YA_REGISTRADO',
+      'segundosRestantes': null,
     },
   };
 
@@ -159,6 +160,17 @@ abstract final class OnboardingFixtures {
     'enviarCodigoOnboarding': codigoEnviado(),
   };
 
+  /// `enviarCodigoOnboarding` rechazado con `ESPERA_REQUERIDA` y los segundos
+  /// que faltan (contrato v0.31).
+  static Map<String, dynamic> enviarCodigoEspera(int segundosRestantes) => {
+    '__typename': 'Mutation',
+    'enviarCodigoOnboarding': {
+      '__typename': 'ErrorOnboarding',
+      'codigo': 'ESPERA_REQUERIDA',
+      'segundosRestantes': segundosRestantes,
+    },
+  };
+
   static final verificarCodigo = <String, dynamic>{
     '__typename': 'Mutation',
     'verificarCodigoOnboarding': codigoEnviado(),
@@ -169,10 +181,11 @@ abstract final class OnboardingFixtures {
     'verificarCodigoOnboarding': {
       '__typename': 'ErrorOnboarding',
       'codigo': 'CODIGO_INVALIDO',
+      'segundosRestantes': null,
     },
   };
 
-  static final iniciarSesion = <String, dynamic>{
+  static Map<String, dynamic> iniciarSesionConRol(String rol) => {
     '__typename': 'Mutation',
     'iniciarSesion': {
       '__typename': 'Sesion',
@@ -180,9 +193,11 @@ abstract final class OnboardingFixtures {
       'expiraEn': '2026-10-28T16:00:00.000Z',
       'refreshToken': 'refresh-demo-login',
       'refreshExpiraEn': '2026-11-05T15:00:00.000Z',
-      'usuario': usuario(),
+      'usuario': usuario(rol: rol),
     },
   };
+
+  static final iniciarSesion = iniciarSesionConRol('CLIENTE');
 
   static Map<String, dynamic> yo([Map<String, dynamic>? u]) => {
     '__typename': 'Query',

@@ -58,6 +58,18 @@ final class DesbloqueoVencido extends Desbloqueo {
   const DesbloqueoVencido();
 }
 
+/// Qué encontró [GestorSesion.consultarGuardado] al abrir la app.
+enum RefreshGuardado {
+  /// No hay sesión guardada: G-03 (crear cuenta o iniciar sesión).
+  ninguno,
+
+  /// Hay un refresh que no vence: M02-01.
+  vigente,
+
+  /// Había uno pero ya venció (se borró): login con `fallaSesionVencida`.
+  vencido,
+}
+
 /// Dueño de la sesión de la app (HU-M02; docs/integracion-backend.md §7).
 ///
 /// - El JWT de acceso y el refresh en claro viven **solo en memoria**.
@@ -136,14 +148,19 @@ final class GestorSesion {
 
   /// `true` si hay un refresh guardado que todavía no vence: al abrir la app
   /// se muestra M02-01 en vez de pedir correo y clave.
-  Future<bool> hayRefreshVigente() async {
-    if (!await _store.hayRefresh()) return false;
+  Future<bool> hayRefreshVigente() async =>
+      await consultarGuardado() == RefreshGuardado.vigente;
+
+  /// Arranque (HU-M02, F6): mira el refresh guardado sin descifrarlo (no
+  /// pide huella). Si venció, lo borra.
+  Future<RefreshGuardado> consultarGuardado() async {
+    if (!await _store.hayRefresh()) return RefreshGuardado.ninguno;
     final vence = await _store.refreshVenceEn();
     if (vence != null && !vence.isAfter(_reloj())) {
       await _limpiar();
-      return false;
+      return RefreshGuardado.vencido;
     }
-    return true;
+    return RefreshGuardado.vigente;
   }
 
   /// Tras autenticar con biometría o el PIN del teléfono (M02-01): descifra el
@@ -167,13 +184,23 @@ final class GestorSesion {
     }
     _refresh = refresh;
     _refreshPersistido = true;
-    return switch (await renovar()) {
-      ResultadoRenovar.renovada => const Desbloqueada(),
-      ResultadoRenovar.sinRed => const DesbloqueoSinRed(),
-      ResultadoRenovar.vencida ||
-      ResultadoRenovar.sinSesion => const DesbloqueoVencido(),
-    };
+    return _desbloqueoDe(await renovar());
   }
+
+  /// «Reintentar» de M02-01 tras [DesbloqueoSinRed]: el refresh ya está en
+  /// memoria, así que se renueva sin volver a pedir la huella. Si no lo está
+  /// (p. ej. la app se bloqueó entretanto), [FaltaAutenticacion].
+  Future<Desbloqueo> reintentarRenovacion() async {
+    if (_refresh == null) return const FaltaAutenticacion();
+    return _desbloqueoDe(await renovar());
+  }
+
+  static Desbloqueo _desbloqueoDe(ResultadoRenovar r) => switch (r) {
+    ResultadoRenovar.renovada => const Desbloqueada(),
+    ResultadoRenovar.sinRed => const DesbloqueoSinRed(),
+    ResultadoRenovar.vencida ||
+    ResultadoRenovar.sinSesion => const DesbloqueoVencido(),
+  };
 
   /// Cambia el refresh en memoria por un par nuevo. Una sola a la vez: las
   /// llamadas concurrentes esperan el mismo resultado.

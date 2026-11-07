@@ -12,8 +12,11 @@ import '../mappers/onboarding_mapper.dart';
 
 /// `ErrorOnboarding` del contrato, convertido en `FallaNegocio` con su código.
 final class _Rechazo implements Exception {
-  const _Rechazo(this.codigo);
+  const _Rechazo(this.codigo, {this.segundosRestantes});
   final String codigo;
+
+  /// Solo con `ESPERA_REQUERIDA` (v0.31).
+  final int? segundosRestantes;
 }
 
 /// Códigos de `ErrorOnboarding` que tiene sentido reintentar tal cual.
@@ -45,9 +48,13 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
 
   Future<Resultado<T>> _guardar<T>(Future<T> Function() op) async {
     final r = await guardarFallas(op);
-    if (r case Fracaso(falla: Inesperada(causa: _Rechazo(:final codigo)))) {
+    if (r case Fracaso(falla: Inesperada(causa: final _Rechazo rechazo))) {
       return Fracaso(
-        FallaNegocio(codigo, reintentable: _reintentables.contains(codigo)),
+        FallaNegocio(
+          rechazo.codigo,
+          reintentable: _reintentables.contains(rechazo.codigo),
+          segundosRestantes: rechazo.segundosRestantes,
+        ),
       );
     }
     return r;
@@ -59,9 +66,13 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     _ => throw const _Rechazo('RESPUESTA_DESCONOCIDA'),
   };
 
+  /// El error del código OTP conserva `segundosRestantes` (ESPERA_REQUERIDA).
+  Never _rechazar(Fragment$ErrorOnboardingCampos e) =>
+      throw _Rechazo(e.codigo, segundosRestantes: e.segundosRestantes);
+
   CodigoOnboarding _resultadoCodigo(Object r) => switch (r) {
     Fragment$CodigoOnboardingCampos() => codigoOnboardingDesdeGql(r),
-    Fragment$ErrorOnboardingCampos(:final codigo) => throw _Rechazo(codigo),
+    Fragment$ErrorOnboardingCampos() => _rechazar(r),
     _ => throw const _Rechazo('RESPUESTA_DESCONOCIDA'),
   };
 
@@ -224,6 +235,12 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
         :final refreshExpiraEn,
         :final usuario,
       ):
+        // La app es solo del cliente (el backend ya lo exige, v0.29). Si
+        // llegara otro rol no se abre sesión y se responde como con una clave
+        // errada: el rol de la cuenta no se revela.
+        if (usuario.rol != Enum$RolUsuario.CLIENTE) {
+          throw const _Rechazo('CREDENCIALES_INVALIDAS');
+        }
         await _sesion.abrir(
           token: token,
           expiraEn: expiraEn,

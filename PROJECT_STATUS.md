@@ -1,6 +1,6 @@
 # Estado del proyecto: Solventa Frontend Mobile
 
-Última actualización: **2026-11-06** (verificado contra `develop` en `0cb2531` + rama `feat/KAN-227-sesion-refresh-hu-m02`). Es la primera lectura de cada sesión.
+Última actualización: **2026-11-06** (verificado contra `develop` en `0cb2531` + ramas apiladas de HU-M02 hasta `feat/KAN-226-pantallas-m02`). Es la primera lectura de cada sesión.
 Las reglas permanentes viven en [`CLAUDE.md`](CLAUDE.md), la arquitectura en [`docs/arquitectura.md`](docs/arquitectura.md),
 el contrato con el BFF en [`docs/integracion-backend.md`](docs/integracion-backend.md) y el CI/CD en
 [`docs/ci-cd.md`](docs/ci-cd.md). Este archivo no las repite: describe el estado actual.
@@ -29,8 +29,8 @@ Flutter 3.47.8 / Dart ^3.13 (fijado; `tool/verificar-versiones.sh` lo controla c
 - `lib/core/`: `config` (flavors), `design_system` (tokens, tema, componentes `Sol*`, layouts, galería en debug),
   `network` (cliente GraphQL), `sesion` (`sesion_store.dart`, almacenamiento seguro), `errors` (`Resultado`/`Falla`),
   `log` (`SolLog`, `limpiar`), `l10n` (ARB ES/EN generado en `gen/`), `contrato` (esquema GraphQL).
-- `lib/features/<feature>/{data,domain,presentation}`: `onboarding` (completa), `home`, `profile` y `assistance`
-  (placeholder).
+- `lib/features/<feature>/{data,domain,presentation}`: `onboarding` (completa), `acceso` (HU-M02, solo
+  `presentation`), `home`, `profile` y `assistance` (placeholder).
 - Ambientes: `config/{mock,local,dev,prod}.json` con `--dart-define-from-file`. `API_ENV` vale `mock` por defecto
   (fakes, sin red).
 
@@ -67,10 +67,10 @@ el usuario:
 
 | PR | Rama | Estado |
 |---|---|---|
-| 1 backend | `solventa-backend` `feat/KAN-227-refresh-gracia-hu-m02` | Hecho: gracia de 30 s en AUTH, pytest y Newman `hu-m02` (sin correr) |
+| 1 backend | `solventa-backend` `feat/KAN-227-refresh-gracia-hu-m02` | Hecho y **verificado en local**: gracia de 30 s en AUTH, suite de AUTH en verde y Newman `hu-m02` 57/57 por Envoy |
 | 2 mobile sesión | `feat/KAN-227-sesion-refresh-hu-m02` | Hecho: contrato v0.37, `lib/core/sesion/` (llavero RSA, almacén cifrado, `GestorSesion`), renovación en `GraphqlClient`, M01 guarda el refresh, cierre revoca. Codegen y `flutter analyze` en verde; pruebas sin correr |
-| 3 mobile biometría | `feat/KAN-225-…` | Pendiente: `BiometriaService` en `core` con los estados de §3.6, «Ir a ajustes» nativo, M01-08, arranque con refresh |
-| 4 mobile pantallas | `feat/KAN-226-…` | Pendiente: M02-01, M02-01a, M02-03 (sin M02-02/02b), bloqueo a los 5 min en segundo plano, goldens e `integration_test/hu_m02_test.dart` |
+| 3 mobile biometría | `feat/KAN-225-biometria-compartida-hu-m02` | Hecho: `lib/core/biometria/` (estados de §3.6, mapeo de `local_auth` 3.x), `AjustesSeguridad.kt` («Ir a ajustes»), M01-08 con D1, relectura al volver de Ajustes y guardado del refresh pendiente; textos ES/EN. Analyze en verde; pruebas sin correr |
+| 4 mobile pantallas | `feat/KAN-226-pantallas-m02` | Hecho: `lib/features/acceso/` (`AccesoNotifier` con fases `comprobando`/`normal`/`bloqueada`/`concedida`), arranque sin parpadeo (F6/F10), M02-01 + M02-01a + M02-03 según Figma (sin M02-02/02b), avisos de §3.6, bloqueo a los 5 min (`AppLifecycleListener`), `go('/')` al vencer la sesión, redirección en `router.dart`, textos ES/EN. Pruebas de notifier y widget, goldens (36 imágenes) e `integration_test/hu_m02_test.dart`; CI `mobile` en verde en #41, #42 y #43 (falta `integration_test` en emulador). Incluye un arreglo en el PR 3 (catálogo de textos en la prueba de M01-08) |
 | 5 e2e | — | No se hace (decisión del usuario) |
 
 ### En curso (ramas remotas sin fusionar, de Frans, 2026-11-05)
@@ -104,28 +104,27 @@ el usuario:
 ## 6. Problemas conocidos y deuda
 
 - **HU-M02:** el contrato de mobile salta a v0.37 desde `develop`; la rama KAN-35/36 de Frans lo sincronizó a v0.36: quien
-  fusione segundo resuelve el conflicto en `schema.graphql` y lo generado. La sesión vencida vuelve a «Inicia sesión»
-  solo desde `/` (las rutas apiladas no se cierran todavía; llega con el PR 4).
+  fusione segundo resuelve el conflicto en `schema.graphql` y lo generado. Las diferencias de M02 con Figma (saludo
+  neutro, «Huella o rostro», sin nota de prototipado) están en la plantilla 5.4 de `docs/hu-m02-jira.md`.
 - **Doc desactualizada:** `docs/ci-cd.md` §«Logs y errores en producción» todavía dice que Sentry está «Pendiente», aunque
   ya está implementado (ver `docs/plan-sentry.md`).
-- **Textos quemados (incumplen la regla de l10n):** `assistance_placeholder_page.dart:15`, `home_page.dart:91` y el
-  `localizedReason` en `biometria_service.dart:28`.
+- **Textos quemados (incumplen la regla de l10n):** `assistance_placeholder_page.dart:15`, `home_page.dart:91` (el
+  `localizedReason` de la biometría ya sale del catálogo desde el PR 3).
 - **`integration_test/app_test.dart`** solo prueba que la app arranque. Falta el recorrido de HU-M01 que exige la regla.
 - **`docs/evidencias/`** solo tiene la plantilla. Faltan las sesiones exploratorias de los sprints cerrados.
 - `network_exceptions.dart`: `extensions.codigo` depende de que el BFF lo envíe (pendiente en el backend).
 
 ## 7. Prioridades actuales
 
-1. HU-M02: PR 3 (biometría compartida, M01-08 y arranque) y PR 4 (pantallas M02).
+1. HU-M02: revisar y fusionar backend #511 y mobile #41 → #42 → #43, y que el compañero valide (`tool/verificar.sh`, `tool/goldens.sh`, `integration_test`).
 2. Revisar y fusionar KAN-36 y KAN-35 (Frans).
 3. Deuda de reglas: textos a l10n, `integration_test` de HU-M01, evidencia exploratoria, `docs/ci-cd.md` (Sentry «hoy»).
 
 ## 8. Próximos pasos
 
-1. Crear `feat/KAN-225-biometria-compartida-hu-m02` desde la rama del PR 2 y hacer F4 y F8–F10 del plan.
-2. Luego `feat/KAN-226-pantallas-m02` (leer cada frame de Figma: archivo `2ahgOpwsejNnxZl57v4o9D`, nodos 2005:565,
-   2005:472, 2005:499; M01-08 2001:673).
-3. Codegen, `dart format` y `flutter analyze` en la imagen `ghcr.io/solventa-app/solventa-frontend-mobile-dev` (Docker
+1. PRs abiertos: backend #511; mobile #41, #42 y #43 apilados (al fusionar #41, GitHub cambia la base de #42 a `develop`; lo mismo con #43). Si la validación encuentra fallas, se
+   corrigen en la rama del PR afectado y se trae a las siguientes con `git merge --ff-only` o rebase.
+2. Codegen, `dart format` y `flutter analyze` en la imagen `ghcr.io/solventa-app/solventa-frontend-mobile-dev` (Docker
    guarda todo en el disco grande; ver sección 10). No correr pruebas ni goldens.
 
 ## 9. Archivos de referencia
@@ -136,6 +135,7 @@ el usuario:
 | `lib/features/onboarding/presentation/onboarding_notifier.dart` | Estado y lógica de todo el onboarding, sesión y reintentos |
 | `lib/features/onboarding/data/datasources/onboarding_remote_datasource.dart` | Llamadas GraphQL. `fake_…` es la versión mock |
 | `lib/features/onboarding/data/repositories/onboarding_repository_impl.dart` | Mapeo de respuestas a `Resultado` |
+| `lib/features/acceso/presentation/acceso_notifier.dart` | Fases de acceso (HU-M02), desbloqueo, bloqueo a los 5 min y `redirigirAcceso` |
 | `lib/core/sesion/gestor_sesion.dart` | Dueño de la sesión: JWT en memoria, renovación con candado y gracia, desbloqueo, cierre |
 | `lib/core/sesion/sesion_store.dart`, `llavero_sesion.dart` | Refresh cifrado con prefijo de ambiente; canal del llavero RSA |
 | `android/.../LlaveroSesion.kt` | Par RSA del Keystore con ventana de autenticación de 10 s |
@@ -147,13 +147,14 @@ el usuario:
 
 ## 10. Handoff de sesión
 
-- **Estado:** PR 1 (backend) y PR 2 (mobile, sesión) con push hecho; falta que el usuario abra los PRs. Nada se ejecutó
-  salvo codegen, formato y análisis.
-- **Última tarea:** PR 2 de HU-M02 (`feat/KAN-227-sesion-refresh-hu-m02`).
-- **Sin terminar:** PR 3 y PR 4. Jira se actualiza según `docs/hu-m02-jira.md` (lo hace el equipo, no el agente).
-- **Siguiente acción exacta:** PR 3, rama desde la del PR 2.
+- **Estado:** PRs abiertos el 2026-11-06: backend #511 (→ `develop`); mobile #41 (→ `develop`), #42 (→ rama del #41) y #43 (→ rama del #42), apilados: se fusionan en ese orden. El backend se
+  puede levantar y probar con Docker (se hizo: AUTH y Newman en verde). En mobile solo codegen, formato y análisis.
+- **Última tarea:** PR 4 de HU-M02 (`feat/KAN-226-pantallas-m02`).
+- **Sin terminar:** nada del código de HU-M02. Falta la validación del compañero (pruebas, goldens, dispositivo) y
+  Jira según `docs/hu-m02-jira.md` (lo hace el equipo, no el agente).
+- **Siguiente acción exacta:** esperar los PRs y la validación; atender hallazgos en la rama del PR que corresponda.
 - **Entorno:** `/` estuvo lleno; Docker usa `overlay2` con `data-root` en
   `/media/darthefe/323c09a9-d3ed-40c6-890f-c4da812cb27b/tmp/docker` (containerd-snapshotter apagado). Comando base:
   `docker run --rm --platform linux/amd64 -v "$PWD":/w -w /w -v solventa-mobile-pub:/home/dev/.pub-cache --entrypoint bash ghcr.io/solventa-app/solventa-frontend-mobile-dev:latest -lc '…'`.
-- **Archivos para la próxima sesión:** este archivo, el plan del paquete, `lib/core/sesion/`, `lib/app/router.dart`,
-  `lib/features/onboarding/presentation/pages/m01_08_biometria_page.dart`.
+- **Archivos para la próxima sesión:** este archivo, `docs/hu-m02-jira.md`, `lib/features/acceso/`,
+  `lib/core/sesion/`, `lib/app/router.dart`.

@@ -174,6 +174,21 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     state = const OnboardingState(sesionCerrada: true, falla: SesionVencida());
   }
 
+  /// HU-M02: la sesión guardada ya no sirve (venció, se revocó o Android
+  /// invalidó la llave). Vuelve a «Inicia sesión» con `fallaSesionVencida`.
+  void marcarSesionVencida() => _alVencerSesion();
+
+  /// HU-M02: M02-01 abrió la sesión guardada. Marca la cuenta como abierta
+  /// (para que `/` muestre el Home y no el login) y trae perfil y estado.
+  Future<void> reanudarSesion() async {
+    state = state.copyWith(
+      cuentaCreada: true,
+      sesionCerrada: false,
+      limpiarFalla: true,
+    );
+    await cargarPerfilYEstado();
+  }
+
   void limpiarFalla() => state = state.copyWith(limpiarFalla: true);
 
   /// «Empezar de nuevo» cuando el recorrido venció (`TOKEN_INVALIDO`, T16):

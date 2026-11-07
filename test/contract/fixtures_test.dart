@@ -80,6 +80,10 @@ void main() {
           OnboardingFixtures.codigoInvalido,
           (j) => Mutation$VerificarCodigoOnboarding.fromJson(j).toJson(),
         ),
+        'enviarCodigoOnboarding · espera requerida (v0.31)': (
+          OnboardingFixtures.enviarCodigoEspera(42),
+          (j) => Mutation$EnviarCodigoOnboarding.fromJson(j).toJson(),
+        ),
         'iniciarSesion': (
           OnboardingFixtures.iniciarSesion,
           (j) => Mutation$IniciarSesion.fromJson(j).toJson(),
