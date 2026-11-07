@@ -35,7 +35,7 @@ original se conserva aunque el alcance cambie por D2; la diferencia se explica e
 |---|---|---|---|---|
 | 1 | `solventa-backend` | `feat/KAN-227-refresh-gracia-hu-m02` | `feat(auth): KAN-227 período de gracia del refresh y Newman de la sesión de HU-M02` | KAN-227 |
 | 2 | `solventa-frontend-mobile` | `feat/KAN-227-sesion-refresh-hu-m02` | `feat(mobile): KAN-227 sesión con refresh cifrado en el Keystore, renovación silenciosa y cierre que revoca` | KAN-227 (lado móvil), avance de KAN-225 |
-| 3 | `solventa-frontend-mobile` | `feat/KAN-225-biometria-compartida-hu-m02` | `feat(mobile): KAN-225 …` | KAN-225 |
+| 3 | `solventa-frontend-mobile` | `feat/KAN-225-biometria-compartida-hu-m02` | `feat(mobile): KAN-225 biometría compartida en core, M01-08 con estados del teléfono e «Ir a ajustes» nativo` | KAN-225 |
 | 4 | `solventa-frontend-mobile` | `feat/KAN-226-pantallas-m02` | `feat(mobile): KAN-226 …` | KAN-226, KAN-134, KAN-135, KAN-136, KAN-137, KAN-174 |
 
 Las ramas de mobile están **apiladas**: la 3 sale de la 2 y la 4 de la 3. Se fusionan en orden (2 → 3 → 4); si se
@@ -117,9 +117,10 @@ Luego: etiqueta `fuera-de-alcance-D2` y transición a **Done**.
 > Backend: período de gracia de 30 s (`refresh_gracia_segundos` en `contracts/sesion.json`, `REFRESH_GRACIA_SEGUNDOS=0` lo
 > apaga). Un reintento con el refresh anterior, si nadie usó el sucesor, recibe un par nuevo en vez de revocar la
 > cadena: evita cerrar la sesión cuando la respuesta se pierde en la red. Fuera de la gracia, o con el sucesor usado,
-> sigue revocando. Pruebas en `services/auth/tests/test_refresh_gracia.py` y colección Newman `hu-m02` (17 peticiones),
-> pendientes de correr por el compañero que valida. Móvil: renovación silenciosa con candado, reintento en la gracia y
-> cierre que revoca. PRs: <PR backend>, <PR móvil>.
+> sigue revocando. Verificado en local por el gateway (Envoy `:8080`, Postgres real): suite de AUTH en verde y Newman
+> `hu-m02` con 17 peticiones y 57 aserciones en verde (`docs/evidencias/hu-m02-sesion-refresh-2026-11-06.md` del
+> backend). Falta staging. Móvil: renovación silenciosa con candado, reintento en la gracia y cierre que revoca
+> (pruebas escritas, las corre el compañero que valida). PRs: <PR backend>, <PR móvil>.
 
 **5.7 · KAN-229:**
 > Documentación entregada en los PRs: `docs/arquitectura.md` §8 (decisiones D1–D5, deuda y sin «PIN derivado»),

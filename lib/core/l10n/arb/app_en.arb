@@ -40,7 +40,6 @@
   "m0108Ajustes": "Open phone settings",
   "m0108Continuar": "I turned it on, continue",
   "m0108Requisito": "Without fingerprint or face unlock on the device the app can't be used — it's a requirement, not an option.",
-  "m0108NoActivada": "We still can't find fingerprint or face unlock on your phone.",
   "fallaSinConexion": "You're offline. Check your connection and try again.",
   "fallaServicio": "The service took longer than expected. Please try again.",
   "fallaGenerica": "Something went wrong. Please try again.",
@@ -184,5 +183,11 @@
   "camaraPermisoBloqueado": "You blocked camera access. Turn it on in Settings → Permissions → Camera and come back.",
   "camaraAbrirAjustes": "Open settings",
   "camaraNoDisponible": "We couldn't find an available camera on this device.",
-  "fallaCamaraNoDisponible": "We couldn't use the camera. Check the camera permission and try again."
+  "fallaCamaraNoDisponible": "We couldn't use the camera. Check the camera permission and try again.",
+  "biometriaMotivo": "Confirm it's you to open Solventa",
+  "m0108SoloPin": "Your phone has no fingerprint or face registered. You can continue with your phone PIN, but we recommend adding a fingerprint.",
+  "m0108SinBloqueo": "Your phone has no screen lock. Turn on a PIN, pattern or fingerprint in settings to protect your account.",
+  "m0108NoDisponible": "We couldn't check your phone's security. Please try again.",
+  "m0108NoReconocido": "We didn't recognize you. Please try again.",
+  "m0108BloqueoTemporal": "Too many attempts. Wait a few seconds or use your phone PIN."
 }

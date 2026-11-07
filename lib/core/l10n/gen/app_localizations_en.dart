@@ -142,10 +142,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Without fingerprint or face unlock on the device the app can\'t be used — it\'s a requirement, not an option.';
 
   @override
-  String get m0108NoActivada =>
-      'We still can\'t find fingerprint or face unlock on your phone.';
-
-  @override
   String get fallaSinConexion =>
       'You\'re offline. Check your connection and try again.';
 
@@ -586,4 +582,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fallaCamaraNoDisponible =>
       'We couldn\'t use the camera. Check the camera permission and try again.';
+
+  @override
+  String get biometriaMotivo => 'Confirm it\'s you to open Solventa';
+
+  @override
+  String get m0108SoloPin =>
+      'Your phone has no fingerprint or face registered. You can continue with your phone PIN, but we recommend adding a fingerprint.';
+
+  @override
+  String get m0108SinBloqueo =>
+      'Your phone has no screen lock. Turn on a PIN, pattern or fingerprint in settings to protect your account.';
+
+  @override
+  String get m0108NoDisponible =>
+      'We couldn\'t check your phone\'s security. Please try again.';
+
+  @override
+  String get m0108NoReconocido => 'We didn\'t recognize you. Please try again.';
+
+  @override
+  String get m0108BloqueoTemporal =>
+      'Too many attempts. Wait a few seconds or use your phone PIN.';
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/app/solventa_app.dart';
+import 'package:solventa_mobile/core/biometria/biometria_service.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
-import 'package:solventa_mobile/features/onboarding/data/datasources/biometria_service.dart';
 import 'package:solventa_mobile/features/onboarding/data/datasources/fake_onboarding_remote_datasource.dart';
 import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
@@ -52,7 +52,11 @@ void main() {
             Duration.zero,
           ]),
           biometriaServiceProvider.overrideWithValue(
-            FakeBiometriaService(activada: biometria),
+            FakeBiometriaService(
+              estadoActual: biometria
+                  ? EstadoBiometria.biometriaRegistrada
+                  : EstadoBiometria.sinBloqueoPantalla,
+            ),
           ),
         ],
         child: const SolventaApp(),
@@ -130,7 +134,7 @@ void main() {
     expect(find.text('Hola, María'), findsOneWidget);
   });
 
-  testWidgets('M01-08 no deja seguir sin biometría activada', (tester) async {
+  testWidgets('M01-08 no deja seguir sin bloqueo de pantalla', (tester) async {
     await abrir(tester, biometria: false);
     await hastaPruebaDeVida(tester);
     await tester.tap(find.text('Continuar'));
@@ -140,7 +144,10 @@ void main() {
     await tester.tap(find.text('Ya lo activé, continuar'));
     await tester.pumpAndSettle();
     expect(
-      find.text('Aún no detectamos huella o rostro en tu teléfono.'),
+      find.text(
+        'Tu teléfono no tiene bloqueo de pantalla. Activa un PIN, patrón o '
+        'huella en los ajustes para proteger tu cuenta.',
+      ),
       findsOneWidget,
     );
     expect(find.text('Hola, María'), findsNothing);

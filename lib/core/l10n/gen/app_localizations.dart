@@ -338,12 +338,6 @@ abstract class AppLocalizations {
   /// **'Sin huella o rostro activado en el equipo, la app no puede usarse — es un requisito, no una opción.'**
   String get m0108Requisito;
 
-  /// M01-08 aviso si no está activada
-  ///
-  /// In es, this message translates to:
-  /// **'Aún no detectamos huella o rostro en tu teléfono.'**
-  String get m0108NoActivada;
-
   /// Falla SinConexion
   ///
   /// In es, this message translates to:
@@ -1123,6 +1117,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.'**
   String get fallaCamaraNoDisponible;
+
+  /// Texto del diálogo del sistema al pedir huella, rostro o PIN del teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Confirma que eres tú para entrar a Solventa'**
+  String get biometriaMotivo;
+
+  /// M01-08: aviso cuando solo hay PIN del teléfono (decisión D1)
+  ///
+  /// In es, this message translates to:
+  /// **'Tu teléfono no tiene huella ni rostro registrados. Puedes continuar con el PIN del teléfono, aunque te recomendamos registrar tu huella.'**
+  String get m0108SoloPin;
+
+  /// M01-08: aviso cuando el teléfono no tiene bloqueo de pantalla
+  ///
+  /// In es, this message translates to:
+  /// **'Tu teléfono no tiene bloqueo de pantalla. Activa un PIN, patrón o huella en los ajustes para proteger tu cuenta.'**
+  String get m0108SinBloqueo;
+
+  /// M01-08: error al consultar la biometría del sistema
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos consultar la seguridad de tu teléfono. Intenta de nuevo.'**
+  String get m0108NoDisponible;
+
+  /// M01-08: la huella o el rostro no coincidieron
+  ///
+  /// In es, this message translates to:
+  /// **'No te reconocimos. Intenta de nuevo.'**
+  String get m0108NoReconocido;
+
+  /// M01-08 y M02-01: sensor bloqueado temporalmente
+  ///
+  /// In es, this message translates to:
+  /// **'Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.'**
+  String get m0108BloqueoTemporal;
 }
 
 class _AppLocalizationsDelegate
