@@ -7,6 +7,7 @@ import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
+import '../widgets/falla_banner.dart';
 import '../widgets/onboarding_widgets.dart';
 
 /// M01-05 · Prueba de vida (2001:502). «Continuar» toma la selfie y el video,
@@ -65,10 +66,7 @@ class M0105PruebaVidaPage extends ConsumerWidget {
                 children: [
                   marco,
                   const SizedBox(height: SolSpacing.lg),
-                  SolStatusBanner(
-                    status: SolStatus.error,
-                    title: l10n.falla(falla),
-                  ),
+                  FallaBanner(falla: falla),
                 ],
               ),
         actions: [

@@ -109,11 +109,12 @@ final class OnboardingState {
     bool limpiarVerificacion = false,
     bool limpiarCredencialesPendientes = false,
     bool limpiarPerfil = false,
+    bool limpiarOnboarding = false,
   }) => OnboardingState(
     consentimientoMarcado: consentimientoMarcado ?? this.consentimientoMarcado,
     registrandoConsentimiento:
         registrandoConsentimiento ?? this.registrandoConsentimiento,
-    onboarding: onboarding ?? this.onboarding,
+    onboarding: limpiarOnboarding ? null : onboarding ?? this.onboarding,
     frenteCapturado: frenteCapturado ?? this.frenteCapturado,
     reversoCapturado: reversoCapturado ?? this.reversoCapturado,
     rostroCapturado: rostroCapturado ?? this.rostroCapturado,
@@ -174,6 +175,29 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
   }
 
   void limpiarFalla() => state = state.copyWith(limpiarFalla: true);
+
+  /// «Empezar de nuevo» cuando el recorrido venció (`TOKEN_INVALIDO`, T16):
+  /// descarta el recorrido, las capturas y el consentimiento marcado. La
+  /// cuenta, su sesión y su perfil no se tocan.
+  void reiniciarRecorrido() {
+    _capturasEnMemoria.clear();
+    _subidas.clear();
+    unawaited(limpiarCacheCapturas());
+    ref.read(onboardingRepositoryProvider).descartarRecorrido();
+    state = state.copyWith(
+      consentimientoMarcado: false,
+      registrandoConsentimiento: false,
+      frenteCapturado: false,
+      reversoCapturado: false,
+      rostroCapturado: false,
+      videoCapturado: false,
+      ocupado: false,
+      consultasAgotadas: false,
+      limpiarFalla: true,
+      limpiarVerificacion: true,
+      limpiarOnboarding: true,
+    );
+  }
 
   void marcarConsentimiento(bool valor) =>
       state = state.copyWith(consentimientoMarcado: valor, limpiarFalla: true);

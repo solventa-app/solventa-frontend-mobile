@@ -280,6 +280,10 @@
   "@fallaRegistroVencido": {
     "description": "Onboarding: TOKEN_INVALIDO"
   },
+  "fallaEmpezarDeNuevo": "Empezar de nuevo",
+  "@fallaEmpezarDeNuevo": {
+    "description": "Onboarding: acción del aviso cuando el registro venció (TOKEN_INVALIDO)"
+  },
   "fallaAlmacenamiento": "El servicio de almacenamiento de documentos no está disponible en este momento. Intenta de nuevo.",
   "fallaObjetoNoSubido": "No pudimos recibir tu archivo completo. Revisa tu conexión y toca Reintentar envío.",
   "fallaTamanoNoAdmitido": "El archivo supera el peso máximo permitido (5 MB foto de documento, 2 MB selfie, 15 MB video).",

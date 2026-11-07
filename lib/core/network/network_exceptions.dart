@@ -6,7 +6,12 @@ sealed class ErrorCliente implements Exception {
 
 /// Sin red, DNS o timeout de conexión.
 final class ErrorRed extends ErrorCliente {
-  const ErrorRed();
+  const ErrorRed({this.tipo});
+
+  /// Tipo exacto del fallo de red (`DioExceptionType.name`: `connectionError`,
+  /// `connectionTimeout`, `badCertificate`, `cancel`, `unknown`). Solo para
+  /// logs: no lleva URL ni datos personales.
+  final String? tipo;
 }
 
 /// Timeout esperando la respuesta.

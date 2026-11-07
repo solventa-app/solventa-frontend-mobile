@@ -122,8 +122,7 @@ extension FallaTextoX on AppLocalizations {
     ServicioNoDisponible() => fallaServicio,
     SesionVencida() => fallaSesionVencida,
     SinPermiso() => fallaSinPermiso,
-    FallaNegocio(motivo: 'TOKEN_INVALIDO' || 'SIN_ONBOARDING') =>
-      fallaRegistroVencido,
+    FallaNegocio(registroVencido: true) => fallaRegistroVencido,
     FallaNegocio(motivo: 'ALMACENAMIENTO_NO_DISPONIBLE' || 'NO_DISPONIBLE') =>
       fallaAlmacenamiento,
     FallaNegocio(motivo: 'OBJETO_NO_SUBIDO') => fallaObjetoNoSubido,

@@ -118,7 +118,12 @@ void main() {
         ),
       ),
     );
-    expect(ejecutar(cliente()), throwsA(isA<ErrorRed>()));
+    expect(
+      ejecutar(cliente()),
+      throwsA(
+        isA<ErrorRed>().having((e) => e.tipo, 'tipo', 'connectionError'),
+      ),
+    );
   });
 
   test('timeout de respuesta lanza ErrorTiempoRespuesta', () {
