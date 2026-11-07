@@ -264,6 +264,7 @@ void main() {
           child: MaterialApp(
             theme: SolTheme.light(),
             locale: AppLocales.es,
+            supportedLocales: SolLocalizations.supportedLocales,
             localizationsDelegates: const [
               AppLocalizations.delegate,
               ...SolLocalizations.delegates,
