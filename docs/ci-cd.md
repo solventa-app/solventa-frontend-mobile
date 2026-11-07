@@ -83,7 +83,7 @@ Comparado con el web: ESLint ↔ `flutter analyze`, Prettier ↔ `dart format`, 
 |---|---|---|---|
 | Unitarias y de widget | `flutter_test` | Devcontainer, en cada PR | Hoy |
 | Goldens de componentes | alchemist | Devcontainer, en cada PR | Llega con el PR del sistema de diseño (KAN-239): 360 y 390 dp, texto al 100 % y 200 % |
-| Goldens de pantallas | alchemist | Devcontainer, en cada PR | Hoy (HU-M01): 360 y 390 dp con texto al 100 % y 200 % en español, 390 dp en inglés y 600 dp. Pendiente: variante horizontal de 640 × 360. Se regeneran con `tool/goldens.sh` |
+| Goldens de pantallas | alchemist | Devcontainer, en cada PR | Hoy (HU-M01 y HU-M02): 360 y 390 dp con texto al 100 % y 200 % en español, 390 dp en inglés y 600 dp. Pendiente: variante horizontal de 640 × 360. Se regeneran con `tool/goldens.sh` |
 | Accesibilidad (contraste, tap targets) | `meetsGuideline` | Cada PR | Llega con KAN-239 |
 | Integración en emuladores | `integration_test` | `emuladores.yml`, cada merge a `develop` | Hoy (prueba de humo; cada HU con recorrido agrega la suya en `integration_test/`) |
 | Integración y exploración en teléfonos reales | `integration_test` y Robo test | `test-lab.yml`, cada release | Listo, falta cuenta |
