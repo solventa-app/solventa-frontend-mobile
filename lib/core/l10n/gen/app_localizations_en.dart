@@ -403,6 +403,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your account is active and protected with biometric validation.';
 
   @override
+  String get homeVerificadaWeb =>
+      'Your verification was successful. You can now also sign in to the Solventa website with the same email and password.';
+
+  @override
+  String get homeSoloAppAviso =>
+      'Until your identity is verified you can only sign in to this app. The website will not let you in until you finish the verification here.';
+
+  @override
   String get homeAsistenciaTile => 'Request on-site assistance';
 
   @override

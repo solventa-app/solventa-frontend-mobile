@@ -776,6 +776,18 @@ abstract class AppLocalizations {
   /// **'Tu cuenta está activa y protegida con validación biométrica.'**
   String get homeVerificadaTexto;
 
+  /// Home verificado: aviso de verificación exitosa y acceso a la web (T15)
+  ///
+  /// In es, this message translates to:
+  /// **'Tu verificación fue exitosa. Ya puedes entrar también a la web de Solventa con el mismo correo y clave.'**
+  String get homeVerificadaWeb;
+
+  /// Home en revisión o rechazado: mientras no verifique, solo entra a la app (T15)
+  ///
+  /// In es, this message translates to:
+  /// **'Mientras tu identidad no esté verificada solo puedes entrar a esta app. La web no te dejará entrar hasta que termines la verificación aquí.'**
+  String get homeSoloAppAviso;
+
   /// No description provided for @homeAsistenciaTile.
   ///
   /// In es, this message translates to:
