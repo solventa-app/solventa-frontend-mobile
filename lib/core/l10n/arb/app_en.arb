@@ -119,6 +119,14 @@
   "homeRechazadaBoton": "Retry verification",
   "homeVerificadaTitulo": "Identity verified",
   "homeVerificadaTexto": "Your account is active and protected with biometric validation.",
+  "homeVerificadaWeb": "Your verification was successful. You can now also sign in to the Solventa website with the same email and password.",
+  "@homeVerificadaWeb": {
+    "description": "Home verificado: aviso de verificación exitosa y acceso a la web (T15)"
+  },
+  "homeSoloAppAviso": "Until your identity is verified you can only sign in to this app. The website will not let you in until you finish the verification here.",
+  "@homeSoloAppAviso": {
+    "description": "Home en revisión o rechazado: mientras no verifique, solo entra a la app (T15)"
+  },
   "homeAsistenciaTile": "Request on-site assistance",
   "homeBilleteraNota": "Wallet and policy status — coming soon",
   "navInicio": "Home",
