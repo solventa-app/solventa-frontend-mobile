@@ -289,6 +289,35 @@ void main() {
     expect(find.text('Completar registro'), findsOneWidget);
   });
 
+  testWidgets('M01-05c: reenvío con segundos del backend', (tester) async {
+    bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          fakeOnboardingProvider.overrideWithValue(bff),
+          esperasVerificacionProvider.overrideWithValue(const [
+            Duration.zero,
+            Duration.zero,
+            Duration.zero,
+          ]),
+        ],
+        child: const SolventaApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await crearCuenta(tester, conCodigo: false);
+    expect(find.text('Reenviar en 1:00'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 61));
+    // El backend dice que aún faltan 42 s (v0.31): el botón se bloquea con ese
+    // valor y no con los 60 s de partida.
+    bff.respuestaEnviarCodigo = OnboardingFixtures.enviarCodigoEspera(42);
+    await tester.tap(find.text('Enviar otro código'));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('Reenviar en 0:42'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('Reenviar en 0:41'), findsOneWidget);
+  });
+
   testWidgets('M01-07c sin intentos manda a soporte, no a capturar', (
     tester,
   ) async {

@@ -91,6 +91,26 @@ void main() {
     expect(await guardada.hayRefresh(), isFalse);
   });
 
+  test('ESPERA_REQUERIDA trae los segundos que faltan', () async {
+    bff.respuestaEnviarCodigo = OnboardingFixtures.enviarCodigoEspera(42);
+
+    final r = await repo.enviarCodigo(correo: 'm@e.co');
+
+    final falla = fallaDe(r);
+    expect(falla.motivo, 'ESPERA_REQUERIDA');
+    expect(falla.segundosRestantes, 42);
+    expect(falla.reintentable, isFalse);
+  });
+
+  test('un rechazo sin espera no trae segundosRestantes', () async {
+    bff.cuenta = OnboardingFixtures.correoRegistrado;
+    await repo.iniciarConConsentimiento(versionTexto: 'v1');
+
+    final r = await repo.crearCuenta(correo: 'm@e.co', clave: 'clave-segura');
+
+    expect(fallaDe(r).segundosRestantes, isNull);
+  });
+
   test('consultar usa el token del recorrido y, sin él, la sesión', () async {
     await repo.consultar();
     await repo.iniciarConConsentimiento(versionTexto: 'v1');
