@@ -116,13 +116,13 @@ el usuario:
 
 ## 7. Prioridades actuales
 
-1. HU-M02: abrir los PRs 1 a 4 y que el compañero valide (`tool/verificar.sh`, `tool/goldens.sh`, `integration_test`).
+1. HU-M02: revisar y fusionar backend #511 y mobile #41 → #42 → #43, y que el compañero valide (`tool/verificar.sh`, `tool/goldens.sh`, `integration_test`).
 2. Revisar y fusionar KAN-36 y KAN-35 (Frans).
 3. Deuda de reglas: textos a l10n, `integration_test` de HU-M01, evidencia exploratoria, `docs/ci-cd.md` (Sentry «hoy»).
 
 ## 8. Próximos pasos
 
-1. El usuario abre los PRs en orden (1 backend; 2, 3 y 4 mobile apilados). Si la validación encuentra fallas, se
+1. PRs abiertos: backend #511; mobile #41, #42 y #43 apilados (al fusionar #41, GitHub cambia la base de #42 a `develop`; lo mismo con #43). Si la validación encuentra fallas, se
    corrigen en la rama del PR afectado y se trae a las siguientes con `git merge --ff-only` o rebase.
 2. Codegen, `dart format` y `flutter analyze` en la imagen `ghcr.io/solventa-app/solventa-frontend-mobile-dev` (Docker
    guarda todo en el disco grande; ver sección 10). No correr pruebas ni goldens.
@@ -147,7 +147,7 @@ el usuario:
 
 ## 10. Handoff de sesión
 
-- **Estado:** PR 1 (backend), PR 2, PR 3 y PR 4 (mobile) con push hecho; falta que el usuario abra los PRs. El backend se
+- **Estado:** PRs abiertos el 2026-11-06: backend #511 (→ `develop`); mobile #41 (→ `develop`), #42 (→ rama del #41) y #43 (→ rama del #42), apilados: se fusionan en ese orden. El backend se
   puede levantar y probar con Docker (se hizo: AUTH y Newman en verde). En mobile solo codegen, formato y análisis.
 - **Última tarea:** PR 4 de HU-M02 (`feat/KAN-226-pantallas-m02`).
 - **Sin terminar:** nada del código de HU-M02. Falta la validación del compañero (pruebas, goldens, dispositivo) y
