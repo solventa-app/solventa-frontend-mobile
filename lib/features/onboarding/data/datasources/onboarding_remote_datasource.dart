@@ -90,6 +90,11 @@ final class GqlOnboardingRemoteDataSource
 
   static const cabeceraToken = 'X-Onboarding-Token';
 
+  /// La app móvil es solo del cliente: `iniciarSesion` lo manda siempre como
+  /// `CredencialesInput.rol` (contrato v0.29, T17). Si la cuenta tiene otro
+  /// rol, el backend responde igual que con una clave errada.
+  static const rolApp = Enum$RolUsuario.CLIENTE;
+
   final GraphqlClient _cliente;
 
   Map<String, String> _con(String token) => {cabeceraToken: token};
@@ -285,7 +290,11 @@ final class GqlOnboardingRemoteDataSource
     final data = await _cliente.ejecutar(
       documentNodeMutationIniciarSesion,
       variables: Variables$Mutation$IniciarSesion(
-        entrada: Input$CredencialesInput(usuario: usuario, clave: clave),
+        entrada: Input$CredencialesInput(
+          usuario: usuario,
+          clave: clave,
+          rol: rolApp,
+        ),
       ).toJson(),
     );
     return Mutation$IniciarSesion.fromJson(data).iniciarSesion;
