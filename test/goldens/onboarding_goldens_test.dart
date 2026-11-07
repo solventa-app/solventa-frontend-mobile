@@ -36,6 +36,7 @@ class _NuncaTermina implements OnboardingRepository {
     PerfilUsuario(
       id: 'u-1',
       usuario: 'maria@ejemplo.co',
+      correo: 'maria@ejemplo.co',
       nombre: 'María',
       rol: 'CLIENTE',
       estado: 'ACTIVO',
@@ -207,6 +208,7 @@ void main() {
       perfil: PerfilUsuario(
         id: 'u-1',
         usuario: 'maria@ejemplo.co',
+        correo: 'maria@ejemplo.co',
         nombre: 'María',
         rol: 'CLIENTE',
         estado: 'ACTIVO',

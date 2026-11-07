@@ -49,6 +49,7 @@ PerfilUsuario perfilUsuarioDesdeGql(Fragment$UsuarioCampos g) => PerfilUsuario(
   rol: g.rol.name,
   estado: g.estado.name,
   documentoEnmascarado: g.documentoEnmascarado,
+  correo: g.correo,
   creadoEn: g.creadoEn.toIso8601String(),
   idioma: g.idioma,
   moneda: g.moneda,

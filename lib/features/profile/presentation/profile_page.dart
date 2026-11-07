@@ -10,7 +10,7 @@ import '../../onboarding/presentation/providers.dart';
 
 /// G-05 · Mi perfil (equivalente móvil de `MiPerfil.vue` en `solventa-frontend-web`).
 ///
-/// Muestra los datos reales del usuario (`yo`): nombre, correo/usuario, rol,
+/// Muestra los datos reales del usuario (`yo`): nombre, correo, rol,
 /// documento enmascarado, estado de la cuenta, fecha de registro y preferencias
 /// de idioma (`ES`/`EN`) y moneda (`COP`, `MXN`, `BRL`, `CLP`, `PEN`, `USD`, `EUR`).
 /// Incluye el botón para cerrar sesión con modal de confirmación (`G-04`).
@@ -81,7 +81,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final nombreMostrado = (perfil?.nombre?.trim().isNotEmpty ?? false)
         ? perfil!.nombre!.trim()
         : l10n.perfilNombrePendiente;
-    final correoMostrado = perfil?.usuario ?? estado.correoPendiente ?? '—';
+    // T24: el correo es `Usuario.correo` (v0.24). `perfil.usuario` es el alias
+    // de acceso, que es opaco y nunca se muestra: sin correo se ve «—».
+    final correoMostrado = (perfil?.correo?.trim().isNotEmpty ?? false)
+        ? perfil!.correo!.trim()
+        : (estado.correoPendiente ?? '—');
     final verificado =
         (perfil?.verificado ?? false) ||
         estado.onboarding?.estado == EstadoOnboarding.verificada;
@@ -404,6 +408,16 @@ class _DatoLectura extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    // El lector de pantalla dice que el dato es de solo lectura (T24).
+    return Semantics(
+      container: true,
+      label: '$etiqueta, $valor, ${context.l10n.perfilSoloLectura}',
+      excludeSemantics: true,
+      child: _contenido(context, colors),
+    );
+  }
+
+  Widget _contenido(BuildContext context, ColorScheme colors) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

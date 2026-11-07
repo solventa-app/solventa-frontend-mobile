@@ -94,6 +94,7 @@ final class FakeOnboardingRemoteDataSource
   ) async {
     usuarioActual = OnboardingFixtures.usuario(
       usuario: correo,
+      correo: correo,
       nombre: null,
       estado: 'PENDIENTE_VERIFICACION',
     );
@@ -125,6 +126,7 @@ final class FakeOnboardingRemoteDataSource
     }
     usuarioActual = OnboardingFixtures.usuario(
       usuario: correo,
+      correo: correo,
       nombre: null,
       estado: 'PENDIENTE_VERIFICACION',
     );
@@ -183,6 +185,7 @@ final class FakeOnboardingRemoteDataSource
   Future<Mutation$ActualizarSesion$actualizarSesion> actualizarSesion() async {
     usuarioActual = OnboardingFixtures.usuario(
       usuario: (usuarioActual['usuario'] as String?) ?? 'maria@ejemplo.co',
+      correo: usuarioActual['correo'] as String?,
       nombre: 'María',
       estado: 'ACTIVO',
     );
@@ -218,7 +221,10 @@ final class FakeOnboardingRemoteDataSource
     String usuario,
     String clave,
   ) async {
-    usuarioActual = OnboardingFixtures.usuario(usuario: usuario);
+    usuarioActual = OnboardingFixtures.usuario(
+      usuario: usuario,
+      correo: usuario,
+    );
     return Mutation$IniciarSesion.fromJson(
       await _responder('iniciarSesion', OnboardingFixtures.iniciarSesion),
     ).iniciarSesion;
