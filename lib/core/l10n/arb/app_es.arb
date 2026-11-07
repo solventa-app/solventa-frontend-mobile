@@ -353,6 +353,14 @@
   "homeRechazadaBoton": "Reintentar verificación",
   "homeVerificadaTitulo": "Identidad verificada",
   "homeVerificadaTexto": "Tu cuenta está activa y protegida con validación biométrica.",
+  "homeVerificadaWeb": "Tu verificación fue exitosa. Ya puedes entrar también a la web de Solventa con el mismo correo y clave.",
+  "@homeVerificadaWeb": {
+    "description": "Home verificado: aviso de verificación exitosa y acceso a la web (T15)"
+  },
+  "homeSoloAppAviso": "Mientras tu identidad no esté verificada solo puedes entrar a esta app. La web no te dejará entrar hasta que termines la verificación aquí.",
+  "@homeSoloAppAviso": {
+    "description": "Home en revisión o rechazado: mientras no verifique, solo entra a la app (T15)"
+  },
   "homeAsistenciaTile": "Solicitar asistencia en sitio",
   "homeBilleteraNota": "Billetera y estado de póliza — próximamente",
   "navInicio": "Inicio",
