@@ -316,7 +316,8 @@ SolLoadingState(message: 'Validando con el proveedor KYC/AML...');
 SolResultView(status: SolStatus.success,
               message: '¡Identidad verificada! Bienvenido a Solventa.');
 ```
-Ambos se anuncian a TalkBack. Con «quitar animaciones» el indicador queda fijo.
+Ambos se anuncian a TalkBack. El indicador de carga (también el de `SolButton` en `loading`) es siempre
+indeterminado: con «quitar animaciones» no se congela en un arco fijo.
 
 ### SolCameraFrame
 ```dart
