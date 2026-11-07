@@ -83,6 +83,20 @@ void main() {
       handle.dispose();
     });
 
+    testWidgets('cargando sigue indeterminado con «quitar animaciones»', (
+      tester,
+    ) async {
+      await pumpSol(
+        tester,
+        SolButton.primary(label: 'Enviar', loading: true, onPressed: () {}),
+        disableAnimations: true,
+      );
+      final indicator = tester.widget<CircularProgressIndicator>(
+        find.byType(CircularProgressIndicator),
+      );
+      expect(indicator.value, isNull);
+    });
+
     testWidgets('texto al 200 % crece sin desbordar', (tester) async {
       await pumpSol(
         tester,

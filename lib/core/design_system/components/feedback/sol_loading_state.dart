@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/context_x.dart';
-import '../../tokens/sol_motion.dart';
 import '../../tokens/sol_spacing.dart';
 
 /// Carga: indicador circular + texto de lo que está pasando (M01-06).
 ///
-/// Se anuncia a TalkBack (liveRegion). Con «quitar animaciones» el
-/// indicador queda quieto.
+/// Se anuncia a TalkBack (liveRegion). El indicador es siempre indeterminado:
+/// con «quitar animaciones» no se congela en un arco fijo, porque un círculo
+/// quieto parece una carga colgada (T12).
 class SolLoadingState extends StatelessWidget {
   const SolLoadingState({
     super.key,
@@ -24,7 +24,6 @@ class SolLoadingState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final reduce = SolMotion.reduced(context);
     return Semantics(
       liveRegion: true,
       label: message,
@@ -42,7 +41,6 @@ class SolLoadingState extends StatelessWidget {
                 dimension: 40,
                 child: CircularProgressIndicator(
                   strokeWidth: 4,
-                  value: reduce ? 0.25 : null,
                   color: colors.primary,
                   backgroundColor: colors.outline,
                 ),
