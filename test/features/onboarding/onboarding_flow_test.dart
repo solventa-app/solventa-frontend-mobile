@@ -282,6 +282,27 @@ void main() {
     expect(find.text('Completar registro'), findsOneWidget);
   });
 
+  testWidgets('un registro vencido ofrece Empezar de nuevo', (tester) async {
+    await abrir(tester);
+    // El token del recorrido (30 min) ya no sirve: toda subida falla.
+    bff.respuestaSubida = OnboardingFixtures.subidaTokenInvalido;
+    await hastaPruebaDeVida(tester);
+    await tester.tap(find.text('Continuar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Tu registro venció. Empieza de nuevo.'), findsOneWidget);
+    await tester.tap(find.text('Empezar de nuevo'));
+    await tester.pumpAndSettle();
+    // Vuelve a la bienvenida con el recorrido y las capturas descartadas.
+    expect(find.text('Empezar'), findsOneWidget);
+    final contenedor = ProviderScope.containerOf(
+      tester.element(find.byType(SolventaApp)),
+    );
+    final estado = contenedor.read(onboardingProvider);
+    expect(estado.frenteCapturado, isFalse);
+    expect(estado.onboarding, isNull);
+    expect(estado.falla, isNull);
+  });
+
   testWidgets('M01-07c sin intentos manda a soporte, no a capturar', (
     tester,
   ) async {

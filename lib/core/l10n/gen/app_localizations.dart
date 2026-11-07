@@ -506,6 +506,12 @@ abstract class AppLocalizations {
   /// **'Tu registro venció. Empieza de nuevo.'**
   String get fallaRegistroVencido;
 
+  /// Onboarding: acción del aviso cuando el registro venció (TOKEN_INVALIDO)
+  ///
+  /// In es, this message translates to:
+  /// **'Empezar de nuevo'**
+  String get fallaEmpezarDeNuevo;
+
   /// No description provided for @fallaAlmacenamiento.
   ///
   /// In es, this message translates to:

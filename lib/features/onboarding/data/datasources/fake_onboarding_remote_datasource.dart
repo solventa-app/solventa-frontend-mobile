@@ -33,6 +33,10 @@ final class FakeOnboardingRemoteDataSource
   Map<String, dynamic> respuestaVerificarCodigo =
       OnboardingFixtures.verificarCodigo;
 
+  /// Respuesta de `solicitarSubidaOnboarding` (p. ej. `TOKEN_INVALIDO` cuando
+  /// el recorrido venció). `null`: la subida normal.
+  Map<String, dynamic>? respuestaSubida;
+
   /// Código OTP válido esperado en modo fake (`123456` por defecto).
   String codigoEsperado = '123456';
 
@@ -75,7 +79,10 @@ final class FakeOnboardingRemoteDataSource
     String tipoContenido,
     int tamanoBytes,
   ) async => Mutation$SolicitarSubidaOnboarding.fromJson(
-    await _responder('subida:${paso.name}', OnboardingFixtures.subida),
+    await _responder(
+      'subida:${paso.name}',
+      respuestaSubida ?? OnboardingFixtures.subida,
+    ),
   ).solicitarSubidaOnboarding;
 
   @override
