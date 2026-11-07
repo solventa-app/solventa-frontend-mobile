@@ -333,7 +333,7 @@ void main() {
   });
 
   group('SolLoadingState y SolResultView', () {
-    testWidgets('la carga se anuncia y respeta «quitar animaciones»', (
+    testWidgets('la carga se anuncia y no se congela sin animaciones', (
       tester,
     ) async {
       final handle = tester.ensureSemantics();
@@ -348,7 +348,8 @@ void main() {
       final indicator = tester.widget<CircularProgressIndicator>(
         find.byType(CircularProgressIndicator),
       );
-      expect(indicator.value, isNotNull);
+      // Un indicador de carga no se congela en un arco fijo (T12).
+      expect(indicator.value, isNull);
       handle.dispose();
     });
 

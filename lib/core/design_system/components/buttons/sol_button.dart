@@ -209,7 +209,8 @@ class _ButtonContent extends StatelessWidget {
       ],
     );
     if (!loading) return row;
-    // Se conserva el ancho del texto para que el botón no salte.
+    // Se conserva el ancho del texto para que el botón no salte. El indicador
+    // es siempre indeterminado: con «quitar animaciones» no se congela (T12).
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -220,7 +221,6 @@ class _ButtonContent extends StatelessWidget {
             strokeWidth: 2.5,
             color: color,
             backgroundColor: Colors.transparent,
-            value: SolMotion.reduced(context) ? 0.75 : null,
           ),
         ),
       ],
