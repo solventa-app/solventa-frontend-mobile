@@ -79,6 +79,19 @@ void main() {
     expect(await guardada.leerRefresh(), 'refresh-demo-login');
   });
 
+  test('el perfil trae el correo de Usuario.correo, no el alias', () async {
+    bff.usuarioActual = OnboardingFixtures.usuario(
+      usuario: 'alias-opaco',
+      correo: 'm@e.co',
+    );
+
+    final r = await repo.consultarPerfil();
+
+    final perfil = (r as Exito<PerfilUsuario?>).valor;
+    expect(perfil?.correo, 'm@e.co');
+    expect(perfil?.usuario, 'alias-opaco');
+  });
+
   test('el correo ya registrado es una FallaNegocio no reintentable', () async {
     bff.cuenta = OnboardingFixtures.correoRegistrado;
     await repo.iniciarConConsentimiento(versionTexto: 'v1');

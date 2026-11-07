@@ -284,6 +284,7 @@ class Fragment$UsuarioCampos {
     required this.moneda,
     required this.tieneContacto,
     this.documentoEnmascarado,
+    this.correo,
     this.$__typename = 'Usuario',
   });
 
@@ -298,6 +299,7 @@ class Fragment$UsuarioCampos {
     final l$moneda = json['moneda'];
     final l$tieneContacto = json['tieneContacto'];
     final l$documentoEnmascarado = json['documentoEnmascarado'];
+    final l$correo = json['correo'];
     final l$$__typename = json['__typename'];
     return Fragment$UsuarioCampos(
       id: (l$id as String),
@@ -310,6 +312,7 @@ class Fragment$UsuarioCampos {
       moneda: (l$moneda as String),
       tieneContacto: (l$tieneContacto as bool),
       documentoEnmascarado: (l$documentoEnmascarado as String?),
+      correo: (l$correo as String?),
       $__typename: (l$$__typename as String),
     );
   }
@@ -333,6 +336,8 @@ class Fragment$UsuarioCampos {
   final bool tieneContacto;
 
   final String? documentoEnmascarado;
+
+  final String? correo;
 
   final String $__typename;
 
@@ -358,6 +363,8 @@ class Fragment$UsuarioCampos {
     _resultData['tieneContacto'] = l$tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
     _resultData['documentoEnmascarado'] = l$documentoEnmascarado;
+    final l$correo = correo;
+    _resultData['correo'] = l$correo;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -375,6 +382,7 @@ class Fragment$UsuarioCampos {
     final l$moneda = moneda;
     final l$tieneContacto = tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
+    final l$correo = correo;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -387,6 +395,7 @@ class Fragment$UsuarioCampos {
       l$moneda,
       l$tieneContacto,
       l$documentoEnmascarado,
+      l$correo,
       l$$__typename,
     ]);
   }
@@ -447,6 +456,11 @@ class Fragment$UsuarioCampos {
     final l$documentoEnmascarado = documentoEnmascarado;
     final lOther$documentoEnmascarado = other.documentoEnmascarado;
     if (l$documentoEnmascarado != lOther$documentoEnmascarado) {
+      return false;
+    }
+    final l$correo = correo;
+    final lOther$correo = other.correo;
+    if (l$correo != lOther$correo) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -531,6 +545,13 @@ const fragmentDefinitionUsuarioCampos = FragmentDefinitionNode(
       ),
       FieldNode(
         name: NameNode(value: 'documentoEnmascarado'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'correo'),
         alias: null,
         arguments: [],
         directives: [],
@@ -7942,6 +7963,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     required this.moneda,
     required this.tieneContacto,
     this.documentoEnmascarado,
+    this.correo,
     this.$__typename = 'Usuario',
   });
 
@@ -7958,6 +7980,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     final l$moneda = json['moneda'];
     final l$tieneContacto = json['tieneContacto'];
     final l$documentoEnmascarado = json['documentoEnmascarado'];
+    final l$correo = json['correo'];
     final l$$__typename = json['__typename'];
     return Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario(
       id: (l$id as String),
@@ -7970,6 +7993,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
       moneda: (l$moneda as String),
       tieneContacto: (l$tieneContacto as bool),
       documentoEnmascarado: (l$documentoEnmascarado as String?),
+      correo: (l$correo as String?),
       $__typename: (l$$__typename as String),
     );
   }
@@ -7993,6 +8017,8 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
   final bool tieneContacto;
 
   final String? documentoEnmascarado;
+
+  final String? correo;
 
   final String $__typename;
 
@@ -8018,6 +8044,8 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     _resultData['tieneContacto'] = l$tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
     _resultData['documentoEnmascarado'] = l$documentoEnmascarado;
+    final l$correo = correo;
+    _resultData['correo'] = l$correo;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -8035,6 +8063,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     final l$moneda = moneda;
     final l$tieneContacto = tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
+    final l$correo = correo;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -8047,6 +8076,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
       l$moneda,
       l$tieneContacto,
       l$documentoEnmascarado,
+      l$correo,
       l$$__typename,
     ]);
   }
@@ -8109,6 +8139,11 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     final l$documentoEnmascarado = documentoEnmascarado;
     final lOther$documentoEnmascarado = other.documentoEnmascarado;
     if (l$documentoEnmascarado != lOther$documentoEnmascarado) {
+      return false;
+    }
+    final l$correo = correo;
+    final lOther$correo = other.correo;
+    if (l$correo != lOther$correo) {
       return false;
     }
     final l$$__typename = $__typename;
