@@ -67,6 +67,10 @@
   "m0107cDocumentoRegistrado": "This document already has a Solventa account.",
   "m0107cSinIntentos": "There are no attempts left. Contact support so we can review your case.",
   "fallaRegistroVencido": "Your sign-up expired. Please start again.",
+  "fallaEmpezarDeNuevo": "Start over",
+  "@fallaEmpezarDeNuevo": {
+    "description": "Onboarding: acción del aviso cuando el registro venció (TOKEN_INVALIDO)"
+  },
   "fallaAlmacenamiento": "The document storage service is unavailable right now. Please try again.",
   "fallaObjetoNoSubido": "We couldn't receive your complete file. Check your connection and tap Retry upload.",
   "fallaTamanoNoAdmitido": "The file exceeds the maximum allowed size (5 MB ID photo, 2 MB selfie, 15 MB video).",

@@ -79,6 +79,31 @@ void main() {
     expect(await guardada.leerRefresh(), 'refresh-demo-login');
   });
 
+  test('descartar el recorrido crea uno nuevo al consentir', () async {
+    await repo.iniciarConConsentimiento(versionTexto: 'v1');
+
+    repo.descartarRecorrido();
+    await repo.iniciarConConsentimiento(versionTexto: 'v1');
+
+    expect(bff.operaciones, [
+      'iniciar',
+      'consentimiento',
+      'iniciar',
+      'consentimiento',
+    ]);
+  });
+
+  test('sin recorrido, subir falla con un registro vencido', () async {
+    await repo.iniciarConConsentimiento(versionTexto: 'v1');
+    repo.descartarRecorrido();
+
+    final r = await repo.subir(PasoOnboarding.anverso, foto);
+
+    final falla = fallaDe(r);
+    expect(falla.motivo, 'TOKEN_INVALIDO');
+    expect(falla.registroVencido, isTrue);
+  });
+
   test('el perfil trae el correo de Usuario.correo, no el alias', () async {
     bff.usuarioActual = OnboardingFixtures.usuario(
       usuario: 'alias-opaco',

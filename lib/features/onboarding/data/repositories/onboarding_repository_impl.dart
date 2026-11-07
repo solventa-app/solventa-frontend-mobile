@@ -314,6 +314,12 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
   });
 
   @override
+  void descartarRecorrido() {
+    _id = null;
+    _token = null;
+  }
+
+  @override
   Future<void> cerrarSesion() async {
     _id = null;
     _token = null;

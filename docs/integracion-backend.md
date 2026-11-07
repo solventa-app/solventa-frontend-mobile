@@ -231,7 +231,13 @@ final class Fracaso<T> extends Resultado<T> { const Fracaso(this.falla); final F
 | Error GraphQL de token inválido o vencido | `SesionVencida` | Se borra la sesión y se vuelve al ingreso | No |
 | Error GraphQL de rol no permitido | `SinPermiso` | Mensaje de acceso no permitido | No |
 | Unión `Error*` del contrato | `FallaNegocio(motivo)` | El estado diseñado para ese motivo (p. ej. M01-07c) | Según el motivo |
+| `ErrorOnboarding` con `TOKEN_INVALIDO`, `SESION_NO_ENCONTRADA` o `SIN_ONBOARDING` (el recorrido de 30 min venció) | `FallaNegocio.registroVencido` | «Tu registro venció. Empieza de nuevo.» y el enlace **«Empezar de nuevo»** (`FallaBanner`: descarta el recorrido y las capturas, vuelve a la bienvenida; la cuenta y la sesión no se tocan) | No |
 | HTTP 4xx/5xx restante, `errors` inesperado, JSON que no parsea | `Inesperada` | Mensaje genérico con «Reintentar» y código de soporte | Sí |
+
+**Log de red.** `ErrorRed.tipo` guarda el tipo exacto del fallo (`DioExceptionType.name`: `connectionError`,
+`connectionTimeout`, `badCertificate`, `cancel`, `unknown`) y `guardarFallas` lo registra como `codigo` en el log, sin
+URL ni datos personales. Sirve para decidir con datos reales cuándo un fallo es «sin internet» y cuándo «servidor no
+disponible»; hoy todos se muestran como `SinConexion`.
 
 **Dependencia con el backend.** Hoy el BFF señala la sesión y los permisos con un error GraphQL cuyo único dato es
 el texto (`ErrorPublico` en `services/bff/app/esquema.py`), con HTTP 200. Para no depender de un texto, se pedirá al

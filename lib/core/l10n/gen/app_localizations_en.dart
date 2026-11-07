@@ -236,6 +236,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your sign-up expired. Please start again.';
 
   @override
+  String get fallaEmpezarDeNuevo => 'Start over';
+
+  @override
   String get fallaAlmacenamiento =>
       'The document storage service is unavailable right now. Please try again.';
 

@@ -58,7 +58,18 @@ final class FallaNegocio extends Falla {
 
   @override
   final bool reintentable;
+
+  /// El backend dice que el recorrido de onboarding ya no sirve (su token dura
+  /// 30 min o la sesión no existe): hay que empezar de nuevo (T16).
+  bool get registroVencido => _codigosRegistroVencido.contains(motivo);
 }
+
+/// Códigos de `ErrorOnboarding` con los que el recorrido ya no sirve.
+const _codigosRegistroVencido = {
+  'TOKEN_INVALIDO',
+  'SESION_NO_ENCONTRADA',
+  'SIN_ONBOARDING',
+};
 
 /// Cualquier otra cosa: 4xx/5xx restante, `errors` inesperado o JSON que no
 /// cumple el contrato. Se reporta; el usuario ve un mensaje genérico.

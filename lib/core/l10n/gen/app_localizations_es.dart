@@ -237,6 +237,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get fallaRegistroVencido => 'Tu registro venció. Empieza de nuevo.';
 
   @override
+  String get fallaEmpezarDeNuevo => 'Empezar de nuevo';
+
+  @override
   String get fallaAlmacenamiento =>
       'El servicio de almacenamiento de documentos no está disponible en este momento. Intenta de nuevo.';
 

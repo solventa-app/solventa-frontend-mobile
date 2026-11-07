@@ -82,7 +82,7 @@ class GraphqlClient {
       throw switch (e.type) {
         DioExceptionType.receiveTimeout ||
         DioExceptionType.sendTimeout => const ErrorTiempoRespuesta(),
-        _ => const ErrorRed(),
+        _ => ErrorRed(tipo: e.type.name),
       };
     }
 

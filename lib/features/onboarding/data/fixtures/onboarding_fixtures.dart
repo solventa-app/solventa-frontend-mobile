@@ -90,6 +90,15 @@ abstract final class OnboardingFixtures {
     },
   };
 
+  /// El token del recorrido (30 min) ya venció.
+  static final subidaTokenInvalido = <String, dynamic>{
+    '__typename': 'Mutation',
+    'solicitarSubidaOnboarding': {
+      '__typename': 'ErrorOnboarding',
+      'codigo': 'TOKEN_INVALIDO',
+    },
+  };
+
   static final confirmar = <String, dynamic>{
     '__typename': 'Mutation',
     'confirmarSubidaOnboarding': onboarding(),
