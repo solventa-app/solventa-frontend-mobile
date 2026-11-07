@@ -30,7 +30,8 @@ class _M0105cCodigoPageState extends ConsumerState<M0105cCodigoPage> {
   bool _reenviado = false;
 
   /// Espera mínima entre envíos. El backend la exige también y manda los
-  /// segundos restantes (`ESPERA_REQUERIDA`); este valor es solo el de partida.
+  /// segundos restantes (`ESPERA_REQUERIDA`, `segundosRestantes`): este valor
+  /// es solo el de partida y el de respaldo si el backend no lo manda.
   static const _esperaReenvio = 60;
   int _segundosRestantes = _esperaReenvio;
   Timer? _reloj;
@@ -110,9 +111,12 @@ class _M0105cCodigoPageState extends ConsumerState<M0105cCodigoPage> {
       _iniciarEspera();
     } else if (ref.read(onboardingProvider).falla case FallaNegocio(
       motivo: 'ESPERA_REQUERIDA',
+      :final segundosRestantes,
     )) {
-      // El backend aún exige esperar: se vuelve a bloquear el botón.
-      _iniciarEspera();
+      // El backend aún exige esperar: se vuelve a bloquear el botón con lo que
+      // él dice que falta (v0.31); sin ese dato, con la espera de partida.
+      final espera = segundosRestantes ?? 0;
+      _iniciarEspera(espera > 0 ? espera : _esperaReenvio);
     }
   }
 
