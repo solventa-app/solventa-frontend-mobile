@@ -10,7 +10,7 @@ import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/acceso/presentation/acceso_routes.dart';
 import '../features/acceso/presentation/pages/m02_01_desbloqueo_page.dart';
 import '../features/acceso/presentation/pages/m02_03_acceso_concedido_page.dart';
-import '../features/assistance/presentation/assistance_placeholder_page.dart';
+import '../features/assistance/presentation/pages/m06_01_prestadores_page.dart';
 import '../features/home/presentation/home_page.dart';
 import '../features/onboarding/domain/entities/verificacion_identidad.dart';
 import '../features/onboarding/presentation/onboarding_notifier.dart';
@@ -235,7 +235,8 @@ class _RootShell extends ConsumerWidget {
             : null,
         onRequestAssistance: () {},
       ),
-      assistance: const AssistancePlaceholderPage(),
+      // «Solicitar» abrirá M06-02 (formulario) en KAN-265.
+      assistance: M0601PrestadoresPage(onSolicitar: (_) {}),
       onWordmarkLongPress: kDebugMode
           ? () => context.push(SolGalleryPage.routeName)
           : null,
