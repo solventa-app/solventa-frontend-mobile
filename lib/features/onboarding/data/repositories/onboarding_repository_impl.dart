@@ -224,6 +224,12 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
         :final refreshExpiraEn,
         :final usuario,
       ):
+        // La app es solo del cliente (el backend ya lo exige, v0.29). Si
+        // llegara otro rol no se abre sesión y se responde como con una clave
+        // errada: el rol de la cuenta no se revela.
+        if (usuario.rol != Enum$RolUsuario.CLIENTE) {
+          throw const _Rechazo('CREDENCIALES_INVALIDAS');
+        }
         await _sesion.abrir(
           token: token,
           expiraEn: expiraEn,
