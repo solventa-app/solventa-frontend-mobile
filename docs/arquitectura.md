@@ -42,13 +42,14 @@ lib/
   main.dart                   hoy · arranque único; el ambiente sale de --dart-define-from-file
   app/
     solventa_app.dart         hoy · MaterialApp: tema, locale, router
-    router.dart               hoy  · go_router con las rutas de todas las features (G-03, G-05, M01-01..M01-08)
+    router.dart               hoy  · go_router con las rutas de todas las features (G-03, G-05, M01-01..M01-08, M02-01, M02-03) y la redirección por fase de acceso
     bootstrap.dart            plan · lee AppConfig, separa datos por ambiente, crea el ProviderScope
   core/
     contrato/                 hoy  · schema.graphql (copia del backend, no se edita) y schema.graphql.dart (generado)
     config/                   hoy  · AppConfig: FLAVOR, API_ENV, API_BASE_URL, SENTRY_DSN
     network/                  hoy  · GraphqlClient sobre dio (con renovación silenciosa de la sesión) y providers de red
     sesion/                   hoy  · GestorSesion, refresh cifrado con el llavero RSA del Keystore (HU-M02)
+    biometria/                hoy  · BiometriaService (local_auth) con los estados de HU-M02 y «Ir a ajustes» nativo
     errors/                   hoy  · Falla (sealed), Resultado<T> y guardarFallas
     storage/                  plan · SQLite con prefijo por ambiente (cuando una HU lo pida)
     log/                      hoy  · SolLog + limpiar.dart + Sentry (docs/observabilidad.md)
@@ -76,6 +77,9 @@ test/
   contract/                   prueba de que toda fixture parsea con su tipo generado
   goldens/                    hoy
 ```
+
+`lib/features/acceso/presentation/` (HU-M02) tampoco tiene `domain` ni `data`: la sesión es de `core/sesion/` y la
+biometría de `core/biometria/`; la feature solo tiene `AccesoNotifier`, M02-01 (con su estado M02-01a) y M02-03.
 
 `lib/features/assistance/` (HU-M06) ya tiene sus tres capas: mapa con `flutter_map` y teselas de OpenStreetMap
 (`MAP_TILE_URL`), ubicación con `geolocator` y ruta en la app de mapas del teléfono con `url_launcher` (intent `geo:`,
@@ -246,7 +250,20 @@ trazarlas a Figma, y un test que verifique que cada pantalla del sprint tiene su
 `src/router/pantallas.ts` en la web). La galería sigue existiendo solo en debug.
 
 Atrás del sistema: lo manejan los layouts (`SolFlowScaffold` con `PopScope`, `SolTransitionalScreen` bloqueado).
-Ninguna página reimplementa `PopScope`.
+La excepción es M02-03, transitoria sin layout propio, que bloquea el atrás con `PopScope`.
+
+**Redirección por fase de acceso (HU-M02, hoy).** `crearRouter` recibe la fase de `AccesoNotifier` y un `Listenable`
+que avisa cuando cambia; `redirigirAcceso` decide:
+
+| Fase | Qué deja ver |
+|---|---|
+| `comprobando` (arranque, leyendo si hay refresh guardado) | Solo `/`, que pinta el fondo vacío: no hay parpadeo de G-03 a M02-01 |
+| `bloqueada` (hay sesión guardada o pasaron 5 min en segundo plano) | Solo M02-01 (`/acceso/desbloqueo`); el atrás cierra la app |
+| `concedida` | Solo M02-03 (`/acceso/concedido`), que a los 1,5 s pasa a `normal` |
+| `normal` | Todas las rutas menos las de M02 |
+
+Al vencer la sesión (`SesionVencidaEvento`) la app hace `go('/')`: se cierran las pantallas apiladas (perfil,
+verificación) y queda «Inicia sesión» con el aviso. M02-01 y M02-03 están en las rutas sin captura de Sentry.
 
 ---
 
@@ -317,6 +334,10 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
   (`android/.../LlaveroSesion.kt`): la pública cifra sin pedir nada (el refresh rotado se guarda en segundo plano); la
   privada exige autenticación reciente. No se usa `BiometricPrompt` con `CryptoObject` y `local_auth` sigue siendo el
   diálogo.
+- **Bloqueo tras 5 minutos en segundo plano.** `AppLifecycleListener` en `SolventaApp` (`hidden` → `show`): si la
+  sesión está abierta y su refresh quedó guardado, `GestorSesion.bloquear()` olvida el JWT y el refresh en claro y la
+  app vuelve a M02-01. Si el refresh no se pudo guardar (teléfono sin bloqueo de pantalla) no se bloquea, porque no
+  habría con qué desbloquear.
 - **Deuda conocida.** (1) Una huella nueva no invalida la sesión (D4): Android solo lo hace con llaves por operación.
   (2) La ventana de 10 s permite usar la llave a código que ya corre dentro de la app. (3) El código Kotlin no tiene
   pruebas instrumentadas. (4) Un rostro clasificado como «débil» no abre la llave: la app ofrece el PIN del teléfono

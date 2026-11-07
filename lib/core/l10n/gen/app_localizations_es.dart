@@ -144,10 +144,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Sin huella o rostro activado en el equipo, la app no puede usarse — es un requisito, no una opción.';
 
   @override
-  String get m0108NoActivada =>
-      'Aún no detectamos huella o rostro en tu teléfono.';
-
-  @override
   String get fallaSinConexion =>
       'No tienes conexión. Revisa tu internet e intenta de nuevo.';
 
@@ -587,6 +583,100 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get fallaCamaraNoDisponible =>
       'No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.';
+
+  @override
+  String get biometriaMotivo => 'Confirma que eres tú para entrar a Solventa';
+
+  @override
+  String get m0108SoloPin =>
+      'Tu teléfono no tiene huella ni rostro registrados. Puedes continuar con el PIN del teléfono, aunque te recomendamos registrar tu huella.';
+
+  @override
+  String get m0108SinBloqueo =>
+      'Tu teléfono no tiene bloqueo de pantalla. Activa un PIN, patrón o huella en los ajustes para proteger tu cuenta.';
+
+  @override
+  String get m0108NoDisponible =>
+      'No pudimos consultar la seguridad de tu teléfono. Intenta de nuevo.';
+
+  @override
+  String get m0108NoReconocido => 'No te reconocimos. Intenta de nuevo.';
+
+  @override
+  String get m0108BloqueoTemporal =>
+      'Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.';
+
+  @override
+  String get m0201Titulo => 'Desbloquea tu cuenta';
+
+  @override
+  String get m0201Sensor => 'Huella o rostro';
+
+  @override
+  String get m0201Escanear => 'Desbloquear con huella o rostro';
+
+  @override
+  String get m0201Motivo => 'Desbloquea tu cuenta de Solventa';
+
+  @override
+  String get m0201UsarPin => 'Usar PIN del teléfono';
+
+  @override
+  String get m0201SimularNoReconoce => 'Simular que no reconoce la biometría';
+
+  @override
+  String get m0201Reintentar => 'Reintentar';
+
+  @override
+  String get m0201SinRed =>
+      'No hay conexión. Tu sesión sigue guardada en este teléfono: reintenta cuando vuelva la señal.';
+
+  @override
+  String get m0201BloqueoTemporal =>
+      'Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.';
+
+  @override
+  String get m0201BloqueoPermanente =>
+      'Tu teléfono bloqueó la biometría. Desbloquéala con el PIN, patrón o contraseña del teléfono.';
+
+  @override
+  String get m0201FaltaAutenticacion =>
+      'Tu teléfono no confirmó tu identidad con la seguridad necesaria. Usa el PIN del teléfono.';
+
+  @override
+  String get m0201SinBloqueo =>
+      'Tu teléfono ya no tiene bloqueo de pantalla. Actívalo en Ajustes o ingresa con tu correo y clave.';
+
+  @override
+  String get m0201NoDisponible =>
+      'Tu teléfono no puede verificar tu identidad ahora. Revisa Ajustes o ingresa con tu correo y clave.';
+
+  @override
+  String get m0201IrAjustes => 'Ir a ajustes';
+
+  @override
+  String get m0201UsarCorreo => 'Ingresar con correo y clave';
+
+  @override
+  String get m0201aTitulo => 'No te reconocimos';
+
+  @override
+  String get m0201aMensaje =>
+      'No pudimos verificar tu huella o rostro. Intenta de nuevo o ingresa con el PIN de tu teléfono.';
+
+  @override
+  String get m0203Titulo => 'Acceso concedido';
+
+  @override
+  String get m0203SaludoSinNombre => 'Hola de nuevo.';
+
+  @override
+  String get m0203Progreso => 'Entrando a tu cuenta';
+
+  @override
+  String m0203Saludo(String nombre) {
+    return 'Hola de nuevo, $nombre.';
+  }
 
   @override
   String get m0601Titulo => 'Prestadores cercanos';
