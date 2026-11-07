@@ -151,6 +151,7 @@ fragment UsuarioCampos on Usuario {
   moneda
   tieneContacto
   documentoEnmascarado
+  correo
 }
 
 fragment CodigoOnboardingCampos on CodigoOnboardingEnviado {

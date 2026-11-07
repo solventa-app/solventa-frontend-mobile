@@ -79,6 +79,19 @@ void main() {
     expect(await guardada.leerRefresh(), 'refresh-demo-login');
   });
 
+  test('el perfil trae el correo de Usuario.correo, no el alias', () async {
+    bff.usuarioActual = OnboardingFixtures.usuario(
+      usuario: 'alias-opaco',
+      correo: 'm@e.co',
+    );
+
+    final r = await repo.consultarPerfil();
+
+    final perfil = (r as Exito<PerfilUsuario?>).valor;
+    expect(perfil?.correo, 'm@e.co');
+    expect(perfil?.usuario, 'alias-opaco');
+  });
+
   test('la app no abre sesión con una cuenta que no es de cliente', () async {
     final asesor = OnboardingFixtures.iniciarSesionConRol('ASESOR');
     bff.respuestaIniciarSesion = asesor;
