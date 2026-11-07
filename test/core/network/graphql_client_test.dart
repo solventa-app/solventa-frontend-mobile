@@ -120,9 +120,7 @@ void main() {
     );
     expect(
       ejecutar(cliente()),
-      throwsA(
-        isA<ErrorRed>().having((e) => e.tipo, 'tipo', 'connectionError'),
-      ),
+      throwsA(isA<ErrorRed>().having((e) => e.tipo, 'tipo', 'connectionError')),
     );
   });
 
