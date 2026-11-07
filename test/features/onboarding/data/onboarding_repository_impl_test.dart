@@ -79,6 +79,18 @@ void main() {
     expect(await guardada.leerRefresh(), 'refresh-demo-login');
   });
 
+  test('la app no abre sesión con una cuenta que no es de cliente', () async {
+    final asesor = OnboardingFixtures.iniciarSesionConRol('ASESOR');
+    bff.respuestaIniciarSesion = asesor;
+
+    final r = await repo.iniciarSesion(usuario: 'a@e.co', clave: 'clave');
+
+    // Mismo error que una clave errada: no revela el rol de la cuenta.
+    expect(fallaDe(r).motivo, 'CREDENCIALES_INVALIDAS');
+    expect(sesion.token, isNull);
+    expect(await guardada.hayRefresh(), isFalse);
+  });
+
   test('el correo ya registrado es una FallaNegocio no reintentable', () async {
     bff.cuenta = OnboardingFixtures.correoRegistrado;
     await repo.iniciarConConsentimiento(versionTexto: 'v1');

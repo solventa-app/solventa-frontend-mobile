@@ -163,7 +163,7 @@ abstract final class OnboardingFixtures {
     },
   };
 
-  static final iniciarSesion = <String, dynamic>{
+  static Map<String, dynamic> iniciarSesionConRol(String rol) => {
     '__typename': 'Mutation',
     'iniciarSesion': {
       '__typename': 'Sesion',
@@ -171,9 +171,11 @@ abstract final class OnboardingFixtures {
       'expiraEn': '2026-10-28T16:00:00.000Z',
       'refreshToken': 'refresh-demo-login',
       'refreshExpiraEn': '2026-11-05T15:00:00.000Z',
-      'usuario': usuario(),
+      'usuario': usuario(rol: rol),
     },
   };
+
+  static final iniciarSesion = iniciarSesionConRol('CLIENTE');
 
   static Map<String, dynamic> yo([Map<String, dynamic>? u]) => {
     '__typename': 'Query',
