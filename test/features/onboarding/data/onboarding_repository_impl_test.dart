@@ -92,6 +92,18 @@ void main() {
     expect(perfil?.usuario, 'alias-opaco');
   });
 
+  test('la app no abre sesión con una cuenta que no es de cliente', () async {
+    final asesor = OnboardingFixtures.iniciarSesionConRol('ASESOR');
+    bff.respuestaIniciarSesion = asesor;
+
+    final r = await repo.iniciarSesion(usuario: 'a@e.co', clave: 'clave');
+
+    // Mismo error que una clave errada: no revela el rol de la cuenta.
+    expect(fallaDe(r).motivo, 'CREDENCIALES_INVALIDAS');
+    expect(sesion.token, isNull);
+    expect(await guardada.hayRefresh(), isFalse);
+  });
+
   test('el correo ya registrado es una FallaNegocio no reintentable', () async {
     bff.cuenta = OnboardingFixtures.correoRegistrado;
     await repo.iniciarConConsentimiento(versionTexto: 'v1');
@@ -102,6 +114,26 @@ void main() {
     expect((falla.motivo, falla.reintentable), ('CORREO_YA_REGISTRADO', false));
     expect(sesion.token, isNull);
     expect(await guardada.hayRefresh(), isFalse);
+  });
+
+  test('ESPERA_REQUERIDA trae los segundos que faltan', () async {
+    bff.respuestaEnviarCodigo = OnboardingFixtures.enviarCodigoEspera(42);
+
+    final r = await repo.enviarCodigo(correo: 'm@e.co');
+
+    final falla = fallaDe(r);
+    expect(falla.motivo, 'ESPERA_REQUERIDA');
+    expect(falla.segundosRestantes, 42);
+    expect(falla.reintentable, isFalse);
+  });
+
+  test('un rechazo sin espera no trae segundosRestantes', () async {
+    bff.cuenta = OnboardingFixtures.correoRegistrado;
+    await repo.iniciarConConsentimiento(versionTexto: 'v1');
+
+    final r = await repo.crearCuenta(correo: 'm@e.co', clave: 'clave-segura');
+
+    expect(fallaDe(r).segundosRestantes, isNull);
   });
 
   test('consultar usa el token del recorrido y, sin él, la sesión', () async {

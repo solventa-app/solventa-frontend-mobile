@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/design_system/solventa_ui.dart';
 import '../core/l10n/l10n.dart';
+import '../core/network/network_providers.dart';
+import '../core/sesion/gestor_sesion.dart';
+import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/profile/presentation/sol_preferencias_sheet.dart';
 import 'router.dart';
 
@@ -17,11 +22,40 @@ class SolventaApp extends ConsumerStatefulWidget {
 }
 
 class _SolventaAppState extends ConsumerState<SolventaApp> {
-  late final GoRouter _router = crearRouter();
+  /// Avisa al router cuando cambia la fase de acceso (HU-M02).
+  final _cambioFase = _Aviso();
+  late final GoRouter _router = crearRouter(
+    fase: () => ref.read(accesoProvider).fase,
+    refrescar: _cambioFase,
+  );
+  late final AppLifecycleListener _ciclo;
+  StreamSubscription<EventoSesion>? _eventos;
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listenManual(
+      accesoProvider.select((s) => s.fase),
+      (_, _) => _cambioFase.avisar(),
+    );
+    // Sesión vencida con pantallas apiladas (perfil, verificación…): `go`
+    // las descarta y deja solo `/`, que muestra «Inicia sesión».
+    _eventos = ref.read(gestorSesionProvider).eventos.listen((evento) {
+      if (evento is SesionVencidaEvento) _router.go('/');
+    });
+    // Bloqueo tras 5 min en segundo plano (HU-M02).
+    _ciclo = AppLifecycleListener(
+      onHide: () => ref.read(accesoProvider.notifier).alPasarASegundoPlano(),
+      onShow: () => ref.read(accesoProvider.notifier).alVolverAPrimerPlano(),
+    );
+  }
 
   @override
   void dispose() {
+    _ciclo.dispose();
+    unawaited(_eventos?.cancel());
     _router.dispose();
+    _cambioFase.dispose();
     super.dispose();
   }
 
@@ -62,4 +96,8 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
       },
     );
   }
+}
+
+class _Aviso extends ChangeNotifier {
+  void avisar() => notifyListeners();
 }

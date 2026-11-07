@@ -35,7 +35,7 @@ original se conserva aunque el alcance cambie por D2; la diferencia se explica e
 |---|---|---|---|---|
 | 1 | `solventa-backend` | `feat/KAN-227-refresh-gracia-hu-m02` | `feat(auth): KAN-227 período de gracia del refresh y Newman de la sesión de HU-M02` | KAN-227 |
 | 2 | `solventa-frontend-mobile` | `feat/KAN-227-sesion-refresh-hu-m02` | `feat(mobile): KAN-227 sesión con refresh cifrado en el Keystore, renovación silenciosa y cierre que revoca` | KAN-227 (lado móvil), avance de KAN-225 |
-| 3 | `solventa-frontend-mobile` | `feat/KAN-225-biometria-compartida-hu-m02` | `feat(mobile): KAN-225 …` | KAN-225 |
+| 3 | `solventa-frontend-mobile` | `feat/KAN-225-biometria-compartida-hu-m02` | `feat(mobile): KAN-225 biometría compartida en core, M01-08 con estados del teléfono e «Ir a ajustes» nativo` | KAN-225 |
 | 4 | `solventa-frontend-mobile` | `feat/KAN-226-pantallas-m02` | `feat(mobile): KAN-226 …` | KAN-226, KAN-134, KAN-135, KAN-136, KAN-137, KAN-174 |
 
 Las ramas de mobile están **apiladas**: la 3 sale de la 2 y la 4 de la 3. Se fusionan en orden (2 → 3 → 4); si se
@@ -105,6 +105,17 @@ Luego: etiqueta `fuera-de-alcance-D2` y transición a **Done**.
 > diálogo del sistema y M02-02b no aplica (KAN-174). Se conservan los 1,5 pts. Estados adicionales sin diseño en Figma
 > (bloqueo temporal, sin bloqueo de pantalla, sin red) se resolvieron con patrones existentes. PR: <PR>.
 
+Al abrir el PR 4, agregar en KAN-226:
+> Hecho en el PR 4: arranque con sesión guardada sin parpadeo (M02-01 en vez de G-03), M02-01 que abre sola el diálogo,
+> M02-01a con «Reintentar» y «Usar PIN del teléfono», M02-03 que avanza sola en 1,5 s (barra llena sin animación si el
+> teléfono pide quitar animaciones), avisos de bloqueo temporal o permanente, sin red (con «Reintentar» sin volver a
+> pedir la huella), sin bloqueo de pantalla y sin hardware (con «Ir a ajustes» e «Ingresar con correo y clave»),
+> bloqueo tras 5 min en segundo plano y cierre de las pantallas apiladas al vencer la sesión. Textos ES/EN.
+> Diferencias con Figma: el saludo de M02-03 es neutro («Hola de nuevo, …» en vez de «Bienvenida de nuevo»), el texto
+> del sensor dice «Huella o rostro» (en Android no se dice «Face ID»), «Usar PIN en su lugar» pasa a «Usar PIN del
+> teléfono» (D2) y no se muestran la nota de prototipado ni el halo difuminado de M02-03. Pruebas de notifier, widget,
+> goldens (sin imágenes) e `integration_test/hu_m02_test.dart` escritas sin correr: las corre el compañero (5.8).
+
 **5.5 · KAN-225 y KAN-115 (D3, D4, 5 min):**
 > D3: el refresh se cifra con una llave RSA-2048 del Android Keystore; la pública cifra sin pedir nada (permite guardar
 > el refresh rotado en segundo plano) y la privada solo descifra durante 10 s después de una huella fuerte o del PIN del
@@ -117,9 +128,10 @@ Luego: etiqueta `fuera-de-alcance-D2` y transición a **Done**.
 > Backend: período de gracia de 30 s (`refresh_gracia_segundos` en `contracts/sesion.json`, `REFRESH_GRACIA_SEGUNDOS=0` lo
 > apaga). Un reintento con el refresh anterior, si nadie usó el sucesor, recibe un par nuevo en vez de revocar la
 > cadena: evita cerrar la sesión cuando la respuesta se pierde en la red. Fuera de la gracia, o con el sucesor usado,
-> sigue revocando. Pruebas en `services/auth/tests/test_refresh_gracia.py` y colección Newman `hu-m02` (17 peticiones),
-> pendientes de correr por el compañero que valida. Móvil: renovación silenciosa con candado, reintento en la gracia y
-> cierre que revoca. PRs: <PR backend>, <PR móvil>.
+> sigue revocando. Verificado en local por el gateway (Envoy `:8080`, Postgres real): suite de AUTH en verde y Newman
+> `hu-m02` con 17 peticiones y 57 aserciones en verde (`docs/evidencias/hu-m02-sesion-refresh-2026-11-06.md` del
+> backend). Falta staging. Móvil: renovación silenciosa con candado, reintento en la gracia y cierre que revoca
+> (pruebas escritas, las corre el compañero que valida). PRs: <PR backend>, <PR móvil>.
 
 **5.7 · KAN-229:**
 > Documentación entregada en los PRs: `docs/arquitectura.md` §8 (decisiones D1–D5, deuda y sin «PIN derivado»),
@@ -147,9 +159,8 @@ Flujo del tablero: **To Do → In Progress → In Review → Done**.
 | Todas las tareas en Done | KAN-32 | → Done | Líder técnico |
 | Al aplicar D2 (en cualquier momento) | KAN-174 | → Done con 5.3 y la etiqueta | Quien registra la decisión |
 
-**Estado actual (2026-11-06):** PR 1 y PR 2 con push hecho y sin PR abierto. KAN-227 y KAN-225 pasan a **In Progress**
-ya, y a **In Review** cuando se abran los PRs 1 y 2. KAN-226 y las subtareas de pantallas siguen en To Do hasta crear
-la rama del PR 4.
+**Estado actual (2026-11-06):** PR 1, 2, 3 y 4 con push hecho y sin PR abierto. KAN-227, KAN-225, KAN-226 y las
+subtareas de pantallas pasan a **In Progress** ya, y a **In Review** cuando se abra su PR.
 
 Si un hallazgo de la validación obliga a corregir, la issue vuelve de In Review a In Progress, con un comentario que
 diga qué falló. La corrección va en un PR `fix/KAN-N-…`.

@@ -142,10 +142,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Without fingerprint or face unlock on the device the app can\'t be used — it\'s a requirement, not an option.';
 
   @override
-  String get m0108NoActivada =>
-      'We still can\'t find fingerprint or face unlock on your phone.';
-
-  @override
   String get fallaSinConexion =>
       'You\'re offline. Check your connection and try again.';
 
@@ -586,6 +582,100 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fallaCamaraNoDisponible =>
       'We couldn\'t use the camera. Check the camera permission and try again.';
+
+  @override
+  String get biometriaMotivo => 'Confirm it\'s you to open Solventa';
+
+  @override
+  String get m0108SoloPin =>
+      'Your phone has no fingerprint or face registered. You can continue with your phone PIN, but we recommend adding a fingerprint.';
+
+  @override
+  String get m0108SinBloqueo =>
+      'Your phone has no screen lock. Turn on a PIN, pattern or fingerprint in settings to protect your account.';
+
+  @override
+  String get m0108NoDisponible =>
+      'We couldn\'t check your phone\'s security. Please try again.';
+
+  @override
+  String get m0108NoReconocido => 'We didn\'t recognize you. Please try again.';
+
+  @override
+  String get m0108BloqueoTemporal =>
+      'Too many attempts. Wait a few seconds or use your phone PIN.';
+
+  @override
+  String get m0201Titulo => 'Unlock your account';
+
+  @override
+  String get m0201Sensor => 'Fingerprint or face';
+
+  @override
+  String get m0201Escanear => 'Unlock with fingerprint or face';
+
+  @override
+  String get m0201Motivo => 'Unlock your Solventa account';
+
+  @override
+  String get m0201UsarPin => 'Use phone PIN';
+
+  @override
+  String get m0201SimularNoReconoce => 'Simulate biometrics not recognized';
+
+  @override
+  String get m0201Reintentar => 'Try again';
+
+  @override
+  String get m0201SinRed =>
+      'No connection. Your session is still saved on this phone: try again when you\'re back online.';
+
+  @override
+  String get m0201BloqueoTemporal =>
+      'Too many attempts. Wait a few seconds or use your phone PIN.';
+
+  @override
+  String get m0201BloqueoPermanente =>
+      'Your phone locked biometrics. Unlock it with your phone PIN, pattern or password.';
+
+  @override
+  String get m0201FaltaAutenticacion =>
+      'Your phone couldn\'t confirm it\'s you securely enough. Use your phone PIN.';
+
+  @override
+  String get m0201SinBloqueo =>
+      'Your phone no longer has a screen lock. Turn it on in settings or sign in with your email and password.';
+
+  @override
+  String get m0201NoDisponible =>
+      'Your phone can\'t verify your identity right now. Check settings or sign in with your email and password.';
+
+  @override
+  String get m0201IrAjustes => 'Go to settings';
+
+  @override
+  String get m0201UsarCorreo => 'Sign in with email and password';
+
+  @override
+  String get m0201aTitulo => 'We couldn\'t recognize you';
+
+  @override
+  String get m0201aMensaje =>
+      'We couldn\'t verify your fingerprint or face. Try again or sign in with your phone PIN.';
+
+  @override
+  String get m0203Titulo => 'Access granted';
+
+  @override
+  String get m0203SaludoSinNombre => 'Welcome back.';
+
+  @override
+  String get m0203Progreso => 'Opening your account';
+
+  @override
+  String m0203Saludo(String nombre) {
+    return 'Welcome back, $nombre.';
+  }
 
   @override
   String get m0601Titulo => 'Nearby providers';

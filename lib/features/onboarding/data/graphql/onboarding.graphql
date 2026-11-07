@@ -9,8 +9,10 @@ fragment OnboardingCampos on Onboarding {
   intentosRestantes
 }
 
+# `segundosRestantes` (v0.31): solo con ESPERA_REQUERIDA; es lo que falta para poder reenviar el código.
 fragment ErrorOnboardingCampos on ErrorOnboarding {
   codigo
+  segundosRestantes
 }
 
 # M01-02: al entrar a la autorización.

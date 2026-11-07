@@ -33,6 +33,10 @@ final class FakeOnboardingRemoteDataSource
   Map<String, dynamic> respuestaVerificarCodigo =
       OnboardingFixtures.verificarCodigo;
 
+  /// Respuesta de `iniciarSesion` (p. ej. otro rol en las pruebas).
+  Map<String, dynamic> respuestaIniciarSesion =
+      OnboardingFixtures.iniciarSesion;
+
   /// Código OTP válido esperado en modo fake (`123456` por defecto).
   String codigoEsperado = '123456';
 
@@ -226,7 +230,7 @@ final class FakeOnboardingRemoteDataSource
       correo: usuario,
     );
     return Mutation$IniciarSesion.fromJson(
-      await _responder('iniciarSesion', OnboardingFixtures.iniciarSesion),
+      await _responder('iniciarSesion', respuestaIniciarSesion),
     ).iniciarSesion;
   }
 

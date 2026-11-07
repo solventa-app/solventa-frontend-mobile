@@ -306,6 +306,10 @@ Hoy (HU-M02, KAN-227; contrato T22 v0.26). Código en `lib/core/sesion/`.
   teléfono sin bloqueo no puede crear la llave: la sesión queda solo en memoria (`refreshPersistido = false`).
 - **Abrir.** `iniciarSesion`, `registrarCuenta` y `crearCuentaOnboarding` piden `refreshToken` y `refreshExpiraEn`;
   `GestorSesion.abrir` guarda el refresh antes de seguir. `actualizarSesion` (tras VERIFICADA) cambia solo el JWT.
+- **Rol (contrato v0.29, T17).** La app es solo del cliente: `iniciarSesion` manda siempre `CredencialesInput.rol =
+  CLIENTE` (`GqlOnboardingRemoteDataSource.rolApp`) y, como defensa, el repositorio no abre sesión si el usuario que
+  vuelve no es `CLIENTE`. En ambos casos el usuario ve el mismo error de una clave errada («El correo o la clave no son
+  correctos»): el rol real de la cuenta no se revela.
 - **Renovación silenciosa.** `GraphqlClient` reconoce un JWT vencido (HTTP 401 o los mensajes de sesión del BFF,
   `esErrorSinSesion`), pide `GestorSesion.renovar()` y repite la operación **una** vez. La renovación usa un cliente
   aparte, sin renovación, para no entrar en bucle. Tiene candado: varios 401 a la vez producen una sola llamada.

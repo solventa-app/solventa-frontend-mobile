@@ -185,19 +185,24 @@ const documentNodeFragmentOnboardingCampos = DocumentNode(
 class Fragment$ErrorOnboardingCampos {
   Fragment$ErrorOnboardingCampos({
     required this.codigo,
+    this.segundosRestantes,
     this.$__typename = 'ErrorOnboarding',
   });
 
   factory Fragment$ErrorOnboardingCampos.fromJson(Map<String, dynamic> json) {
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     final l$$__typename = json['__typename'];
     return Fragment$ErrorOnboardingCampos(
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
       $__typename: (l$$__typename as String),
     );
   }
 
   final String codigo;
+
+  final int? segundosRestantes;
 
   final String $__typename;
 
@@ -205,6 +210,8 @@ class Fragment$ErrorOnboardingCampos {
     final _resultData = <String, dynamic>{};
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -213,8 +220,9 @@ class Fragment$ErrorOnboardingCampos {
   @override
   int get hashCode {
     final l$codigo = codigo;
+    final l$segundosRestantes = segundosRestantes;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$codigo, l$$__typename]);
+    return Object.hashAll([l$codigo, l$segundosRestantes, l$$__typename]);
   }
 
   @override
@@ -229,6 +237,11 @@ class Fragment$ErrorOnboardingCampos {
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -253,6 +266,13 @@ const fragmentDefinitionErrorOnboardingCampos = FragmentDefinitionNode(
     selections: [
       FieldNode(
         name: NameNode(value: 'codigo'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'segundosRestantes'),
         alias: null,
         arguments: [],
         directives: [],
@@ -1134,6 +1154,7 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
   Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding.fromJson(
@@ -1141,9 +1162,11 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -1151,12 +1174,16 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -1164,7 +1191,8 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -1185,6 +1213,11 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -1664,6 +1697,7 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
   Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboarding$$ErrorOnboarding.fromJson(
@@ -1671,9 +1705,11 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -1681,12 +1717,16 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -1694,7 +1734,8 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -1715,6 +1756,11 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -2464,6 +2510,7 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
   Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboarding.fromJson(
@@ -2471,9 +2518,11 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -2481,12 +2530,16 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -2494,7 +2547,8 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -2515,6 +2569,11 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -2988,6 +3047,7 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
   Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboarding.fromJson(
@@ -2995,9 +3055,11 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -3005,12 +3067,16 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -3018,7 +3084,8 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -3039,6 +3106,11 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -3658,6 +3730,7 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
   Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding.fromJson(
@@ -3665,9 +3738,11 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -3675,12 +3750,16 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -3688,7 +3767,8 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -3709,6 +3789,11 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -4145,6 +4230,7 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
   Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding.fromJson(
@@ -4152,9 +4238,11 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -4162,12 +4250,16 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -4175,7 +4267,8 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -4196,6 +4289,11 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -4638,6 +4736,7 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
   Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding.fromJson(
@@ -4645,9 +4744,11 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -4655,12 +4756,16 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -4668,7 +4773,8 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -4689,6 +4795,11 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -5762,6 +5873,7 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
   Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding.fromJson(
@@ -5769,9 +5881,11 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -5779,12 +5893,16 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -5792,7 +5910,8 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -5813,6 +5932,11 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -6236,6 +6360,7 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
   Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding.fromJson(
@@ -6243,9 +6368,11 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -6253,12 +6380,16 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -6266,7 +6397,8 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -6287,6 +6419,11 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
