@@ -43,10 +43,18 @@ final class SinPermiso extends Falla {
 
 /// Respuesta de negocio del contrato (uniones `Error*`, p. ej. `ErrorOferta.motivo`).
 final class FallaNegocio extends Falla {
-  const FallaNegocio(this.motivo, {this.reintentable = false});
+  const FallaNegocio(
+    this.motivo, {
+    this.reintentable = false,
+    this.segundosRestantes,
+  });
 
   /// Valor del enum de motivo del contrato, tal cual (p. ej. `CONSENTIMIENTO_NO_VIGENTE`).
   final String motivo;
+
+  /// Solo con `ESPERA_REQUERIDA` (contrato v0.31): segundos que faltan para
+  /// poder pedir otro código. Lo manda el backend; el cliente no lo inventa.
+  final int? segundosRestantes;
 
   @override
   final bool reintentable;
