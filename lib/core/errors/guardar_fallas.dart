@@ -3,13 +3,8 @@ import '../network/network_exceptions.dart';
 import 'falla.dart';
 import 'resultado.dart';
 
-/// Mensajes con los que el BFF señala sesión y permisos mientras no envíe
-/// `extensions.codigo` (solventa-backend: services/bff/app/autenticacion_usuarios.py).
-/// Es el único lugar de la app que depende de un texto del servidor.
-const _mensajesSinSesion = {
-  'Debes iniciar sesión.',
-  'Tu sesión no es válida o venció. Inicia sesión de nuevo.',
-};
+/// Mensajes con los que el BFF señala permisos mientras no envíe
+/// `extensions.codigo` (los de sesión viven en `network_exceptions.dart`).
 const _mensajesSinPermiso = {'No tienes permiso para esta operación.'};
 
 /// Ejecuta [operacion] y convierte cualquier error en una [Falla].
@@ -57,8 +52,7 @@ Falla fallaDesdeErrorCliente(ErrorCliente e) => switch (e) {
   ErrorGraphql(codigo: 'SIN_SESION' || 'TOKEN_INVALIDO') =>
     const SesionVencida(),
   ErrorGraphql(codigo: 'SIN_PERMISO') => const SinPermiso(),
-  ErrorGraphql(:final mensajes)
-      when mensajes.any(_mensajesSinSesion.contains) =>
+  ErrorGraphql(:final mensajes) when mensajes.any(mensajesSinSesion.contains) =>
     const SesionVencida(),
   ErrorGraphql(:final mensajes)
       when mensajes.any(_mensajesSinPermiso.contains) =>

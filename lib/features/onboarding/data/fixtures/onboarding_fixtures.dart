@@ -101,6 +101,8 @@ abstract final class OnboardingFixtures {
         '__typename': 'Sesion',
         'token': 'jwt-demo-verificacion-pendiente',
         'expiraEn': '2026-10-28T16:00:00.000Z',
+        'refreshToken': 'refresh-demo-cuenta',
+        'refreshExpiraEn': '2026-11-05T15:00:00.000Z',
       },
       'onboarding': onboarding(estado: 'EN_VERIFICACION'),
     },
@@ -167,6 +169,8 @@ abstract final class OnboardingFixtures {
       '__typename': 'Sesion',
       'token': 'jwt-demo-completo',
       'expiraEn': '2026-10-28T16:00:00.000Z',
+      'refreshToken': 'refresh-demo-login',
+      'refreshExpiraEn': '2026-11-05T15:00:00.000Z',
       'usuario': usuario(),
     },
   };

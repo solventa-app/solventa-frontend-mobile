@@ -33,3 +33,20 @@ final class ErrorGraphql extends ErrorCliente {
   @override
   String toString() => 'ErrorGraphql($codigo, $mensajes)';
 }
+
+/// Mensajes con los que el BFF señala sesión vencida o ausente mientras no
+/// envíe `extensions.codigo` (solventa-backend:
+/// services/bff/app/autenticacion_usuarios.py). Único lugar de la app que
+/// depende de un texto del servidor.
+const mensajesSinSesion = {
+  'Debes iniciar sesión.',
+  'Tu sesión no es válida o venció. Inicia sesión de nuevo.',
+};
+
+/// `true` si [e] dice que el JWT venció o falta (HTTP 401 o los mensajes de
+/// [mensajesSinSesion]): el cliente intenta renovar la sesión.
+bool esErrorSinSesion(ErrorCliente e) => switch (e) {
+  ErrorHttp(status: 401) => true,
+  ErrorGraphql(:final mensajes) => mensajes.any(mensajesSinSesion.contains),
+  _ => false,
+};

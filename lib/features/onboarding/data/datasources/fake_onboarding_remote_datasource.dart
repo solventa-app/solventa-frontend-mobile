@@ -131,6 +131,8 @@ final class FakeOnboardingRemoteDataSource
     return Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
       token: 'fake-jwt-token-onboarding',
       expiraEn: DateTime.now().add(const Duration(hours: 1)),
+      refreshToken: 'fake-refresh-onboarding',
+      refreshExpiraEn: DateTime.now().add(const Duration(days: 8)),
       usuario: Fragment$UsuarioCampos.fromJson(usuarioActual),
     );
   }

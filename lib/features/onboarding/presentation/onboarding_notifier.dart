@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/falla.dart';
 import '../../../core/errors/resultado.dart';
+import '../../../core/network/network_providers.dart';
+import '../../../core/sesion/gestor_sesion.dart';
 import '../data/datasources/captura_service.dart';
 import '../domain/entities/onboarding.dart';
 import '../domain/entities/verificacion_identidad.dart';
@@ -153,7 +155,23 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
   int _epocaSesion = 0;
 
   @override
-  OnboardingState build() => const OnboardingState();
+  OnboardingState build() {
+    // HU-M02: si la renovación devuelve SESION_VENCIDA (o la llave se
+    // invalidó), el gestor ya borró todo; aquí se vuelve a «Inicia sesión»
+    // con el aviso `fallaSesionVencida`.
+    final eventos = ref.watch(gestorSesionProvider).eventos.listen((evento) {
+      if (evento is SesionVencidaEvento) _alVencerSesion();
+    });
+    ref.onDispose(eventos.cancel);
+    return const OnboardingState();
+  }
+
+  void _alVencerSesion() {
+    _capturasEnMemoria.clear();
+    _subidas.clear();
+    _epocaSesion++;
+    state = const OnboardingState(sesionCerrada: true, falla: SesionVencida());
+  }
 
   void limpiarFalla() => state = state.copyWith(limpiarFalla: true);
 

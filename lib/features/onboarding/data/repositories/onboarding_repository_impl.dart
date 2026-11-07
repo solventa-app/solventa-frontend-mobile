@@ -2,7 +2,7 @@ import '../../../../core/contrato/schema.graphql.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/guardar_fallas.dart';
 import '../../../../core/errors/resultado.dart';
-import '../../../../core/sesion/sesion_store.dart';
+import '../../../../core/sesion/gestor_sesion.dart';
 import '../../domain/entities/onboarding.dart';
 import '../../domain/repositories/onboarding_repository.dart';
 import '../datasources/onboarding_remote_datasource.dart';
@@ -34,7 +34,7 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
 
   final OnboardingRemoteDataSource _remoto;
   final SubidaArchivoService _subidas;
-  final SesionStore _sesion;
+  final GestorSesion _sesion;
 
   /// Hoy solo cédula de ciudadanía (CO); CE queda en el contrato para después.
   final Enum$TipoDocumentoOnboarding tipoDocumento;
@@ -160,9 +160,17 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     switch (r) {
       case Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
         :final token,
+        :final expiraEn,
+        :final refreshToken,
+        :final refreshExpiraEn,
         :final usuario,
       ):
-        await _sesion.guardar(token);
+        await _sesion.abrir(
+          token: token,
+          expiraEn: expiraEn,
+          refresh: refreshToken,
+          refreshVenceEn: refreshExpiraEn,
+        );
         return perfilUsuarioDesdeGql(usuario);
       case Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion(
         :final codigo,
@@ -183,7 +191,13 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
       final cuenta = await _remoto.crearCuenta(r.token, r.id, correo, clave);
       switch (cuenta) {
         case Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding():
-          await _sesion.guardar(cuenta.sesion.token);
+          final sesion = cuenta.sesion;
+          await _sesion.abrir(
+            token: sesion.token,
+            expiraEn: sesion.expiraEn,
+            refresh: sesion.refreshToken,
+            refreshVenceEn: sesion.refreshExpiraEn,
+          );
           return onboardingDesdeGql(cuenta.onboarding);
         case Fragment$ErrorOnboardingCampos(:final codigo):
           throw _Rechazo(codigo);
@@ -205,9 +219,17 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     switch (r) {
       case Mutation$IniciarSesion$iniciarSesion$$Sesion(
         :final token,
+        :final expiraEn,
+        :final refreshToken,
+        :final refreshExpiraEn,
         :final usuario,
       ):
-        await _sesion.guardar(token);
+        await _sesion.abrir(
+          token: token,
+          expiraEn: expiraEn,
+          refresh: refreshToken,
+          refreshVenceEn: refreshExpiraEn,
+        );
         return perfilUsuarioDesdeGql(usuario);
       case Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion(
         :final codigo,
@@ -253,8 +275,12 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
   Future<Resultado<void>> actualizarSesion() => _guardar(() async {
     final r = await _remoto.actualizarSesion();
     switch (r) {
-      case Mutation$ActualizarSesion$actualizarSesion$$Sesion(:final token):
-        await _sesion.guardar(token);
+      case Mutation$ActualizarSesion$actualizarSesion$$Sesion(
+        :final token,
+        :final expiraEn,
+      ):
+        // El refresh no cambia: renovarSesion revalida el estado verificado.
+        _sesion.actualizarToken(token, expiraEn);
       case Mutation$ActualizarSesion$actualizarSesion$$ErrorAutenticacion(
         :final codigo,
       ):
@@ -274,6 +300,7 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
   Future<void> cerrarSesion() async {
     _id = null;
     _token = null;
-    await _sesion.borrar();
+    // Revoca el refresh en el backend (si falla la red, igual borra local).
+    await _sesion.cerrar();
   }
 }
