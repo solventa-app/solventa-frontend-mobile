@@ -3177,6 +3177,39 @@ Enum$EstadoCircuito fromJson$Enum$EstadoCircuito(String value) {
   }
 }
 
+enum Enum$TipoPrestador {
+  MEDICO,
+  MECANICO,
+  $unknown;
+
+  factory Enum$TipoPrestador.fromJson(String value) =>
+      fromJson$Enum$TipoPrestador(value);
+
+  String toJson() => toJson$Enum$TipoPrestador(this);
+}
+
+String toJson$Enum$TipoPrestador(Enum$TipoPrestador e) {
+  switch (e) {
+    case Enum$TipoPrestador.MEDICO:
+      return r'MEDICO';
+    case Enum$TipoPrestador.MECANICO:
+      return r'MECANICO';
+    case Enum$TipoPrestador.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoPrestador fromJson$Enum$TipoPrestador(String value) {
+  switch (value) {
+    case r'MEDICO':
+      return Enum$TipoPrestador.MEDICO;
+    case r'MECANICO':
+      return Enum$TipoPrestador.MECANICO;
+    default:
+      return Enum$TipoPrestador.$unknown;
+  }
+}
+
 enum Enum$__TypeKind {
   SCALAR,
   OBJECT,
