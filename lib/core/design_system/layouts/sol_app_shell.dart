@@ -37,12 +37,20 @@ class SolAppShell extends StatefulWidget {
 class _SolAppShellState extends State<SolAppShell> {
   late int _index = widget.initialIndex;
 
+  /// Pestañas ya abiertas. Una pestaña se construye la primera vez que se
+  /// visita (Asistencia pide el permiso de ubicación al construirse) y
+  /// después conserva su estado en el [IndexedStack].
+  late final Set<int> _visitadas = {widget.initialIndex};
+
   void _select(int i) {
     if (i == SolAppShell.logoutIndex) {
       widget.onLogout();
       return;
     }
-    setState(() => _index = i);
+    setState(() {
+      _index = i;
+      _visitadas.add(i);
+    });
   }
 
   @override
@@ -60,7 +68,10 @@ class _SolAppShellState extends State<SolAppShell> {
         onWordmarkLongPress: widget.onWordmarkLongPress,
         body: IndexedStack(
           index: _index,
-          children: [widget.home, widget.assistance],
+          children: [
+            for (final (i, tab) in [widget.home, widget.assistance].indexed)
+              _visitadas.contains(i) ? tab : const SizedBox.shrink(),
+          ],
         ),
       ),
     );

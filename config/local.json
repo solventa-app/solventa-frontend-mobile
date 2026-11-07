@@ -2,5 +2,6 @@
   "FLAVOR": "dev",
   "API_ENV": "local",
   "API_BASE_URL": "http://10.0.2.2:8080",
-  "SENTRY_DSN": ""
+  "SENTRY_DSN": "",
+  "MAP_TILE_URL": "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 }

@@ -2,5 +2,6 @@
   "FLAVOR": "dev",
   "API_ENV": "mock",
   "API_BASE_URL": "",
-  "SENTRY_DSN": ""
+  "SENTRY_DSN": "",
+  "MAP_TILE_URL": "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 }

@@ -1123,6 +1123,102 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.'**
   String get fallaCamaraNoDisponible;
+
+  /// M06-01 encabezado de la hoja
+  ///
+  /// In es, this message translates to:
+  /// **'Prestadores cercanos'**
+  String get m0601Titulo;
+
+  /// M06-01 píldora del encabezado
+  ///
+  /// In es, this message translates to:
+  /// **'{cantidad} disponibles'**
+  String m0601Disponibles(int cantidad);
+
+  /// M06-01 botón de cada fila
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitar'**
+  String get m0601Solicitar;
+
+  /// M06-01 especialidad médica
+  ///
+  /// In es, this message translates to:
+  /// **'Médico'**
+  String get m0601TipoMedico;
+
+  /// M06-01 especialidad mecánica
+  ///
+  /// In es, this message translates to:
+  /// **'Mecánico'**
+  String get m0601TipoMecanico;
+
+  /// M06-01 cargando
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando prestadores cerca de ti…'**
+  String get m0601Buscando;
+
+  /// M06-01 lista vacía
+  ///
+  /// In es, this message translates to:
+  /// **'No hay prestadores disponibles cerca de ti en este momento.'**
+  String get m0601SinPrestadores;
+
+  /// M06-01 sin permiso de ubicación
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitamos tu ubicación para mostrarte los prestadores más cercanos.'**
+  String get m0601SinPermiso;
+
+  /// M06-01 GPS apagado
+  ///
+  /// In es, this message translates to:
+  /// **'Tu ubicación está desactivada. Actívala para ver los prestadores cercanos.'**
+  String get m0601GpsApagado;
+
+  /// M06-01 reintentar permiso
+  ///
+  /// In es, this message translates to:
+  /// **'Permitir ubicación'**
+  String get m0601PermitirUbicacion;
+
+  /// M06-01 abrir ajustes
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir ajustes'**
+  String get m0601AbrirAjustes;
+
+  /// M06-01 reintentar
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get m0601Reintentar;
+
+  /// M06-01 lectura del pin del cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Tu ubicación'**
+  String get m0601TuUbicacion;
+
+  /// M06-01 lectura del pin de prestador; abre la app de mapas
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo llegar a {nombre}, {tiempo}'**
+  String m0601ComoLlegar(String nombre, String tiempo);
+
+  /// M06-01 sin app de mapas
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos una app de mapas para abrir la ruta.'**
+  String get m0601RutaNoDisponible;
+
+  /// M06-01 atribución del mapa
+  ///
+  /// In es, this message translates to:
+  /// **'© colaboradores de OpenStreetMap'**
+  String get m0601Atribucion;
 }
 
 class _AppLocalizationsDelegate

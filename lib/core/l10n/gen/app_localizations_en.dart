@@ -586,4 +586,60 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fallaCamaraNoDisponible =>
       'We couldn\'t use the camera. Check the camera permission and try again.';
+
+  @override
+  String get m0601Titulo => 'Nearby providers';
+
+  @override
+  String m0601Disponibles(int cantidad) {
+    return '$cantidad available';
+  }
+
+  @override
+  String get m0601Solicitar => 'Request';
+
+  @override
+  String get m0601TipoMedico => 'Medical';
+
+  @override
+  String get m0601TipoMecanico => 'Mechanic';
+
+  @override
+  String get m0601Buscando => 'Looking for providers near you…';
+
+  @override
+  String get m0601SinPrestadores =>
+      'There are no providers available near you right now.';
+
+  @override
+  String get m0601SinPermiso =>
+      'We need your location to show you the nearest providers.';
+
+  @override
+  String get m0601GpsApagado =>
+      'Your location is turned off. Turn it on to see nearby providers.';
+
+  @override
+  String get m0601PermitirUbicacion => 'Allow location';
+
+  @override
+  String get m0601AbrirAjustes => 'Open settings';
+
+  @override
+  String get m0601Reintentar => 'Try again';
+
+  @override
+  String get m0601TuUbicacion => 'Your location';
+
+  @override
+  String m0601ComoLlegar(String nombre, String tiempo) {
+    return 'Directions to $nombre, $tiempo';
+  }
+
+  @override
+  String get m0601RutaNoDisponible =>
+      'We couldn\'t find a maps app to open the route.';
+
+  @override
+  String get m0601Atribucion => '© OpenStreetMap contributors';
 }

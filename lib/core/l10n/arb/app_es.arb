@@ -209,9 +209,13 @@
     "description": "M01-05b: campo confirmación"
   },
   "m0105bRequisitoCumplido": "cumplido",
-  "@m0105bRequisitoCumplido": {"description": "M01-05b: requisito de la clave cumplido (lector de pantalla)"},
+  "@m0105bRequisitoCumplido": {
+    "description": "M01-05b: requisito de la clave cumplido (lector de pantalla)"
+  },
   "m0105bRequisitoPendiente": "pendiente",
-  "@m0105bRequisitoPendiente": {"description": "M01-05b: requisito de la clave pendiente (lector de pantalla)"},
+  "@m0105bRequisitoPendiente": {
+    "description": "M01-05b: requisito de la clave pendiente (lector de pantalla)"
+  },
   "m0105bAyudaContrasena": "Entre 8 y 128 caracteres.",
   "@m0105bAyudaContrasena": {
     "description": "M01-05b: ayuda de la clave"
@@ -434,5 +438,82 @@
   "fallaCamaraNoDisponible": "No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.",
   "@fallaCamaraNoDisponible": {
     "description": "Falla al capturar sin cámara activa"
+  },
+  "m0601Titulo": "Prestadores cercanos",
+  "@m0601Titulo": {
+    "description": "M06-01 encabezado de la hoja"
+  },
+  "m0601Disponibles": "{cantidad} disponibles",
+  "@m0601Disponibles": {
+    "description": "M06-01 píldora del encabezado",
+    "placeholders": {
+      "cantidad": {
+        "type": "int"
+      }
+    }
+  },
+  "m0601Solicitar": "Solicitar",
+  "@m0601Solicitar": {
+    "description": "M06-01 botón de cada fila"
+  },
+  "m0601TipoMedico": "Médico",
+  "@m0601TipoMedico": {
+    "description": "M06-01 especialidad médica"
+  },
+  "m0601TipoMecanico": "Mecánico",
+  "@m0601TipoMecanico": {
+    "description": "M06-01 especialidad mecánica"
+  },
+  "m0601Buscando": "Buscando prestadores cerca de ti…",
+  "@m0601Buscando": {
+    "description": "M06-01 cargando"
+  },
+  "m0601SinPrestadores": "No hay prestadores disponibles cerca de ti en este momento.",
+  "@m0601SinPrestadores": {
+    "description": "M06-01 lista vacía"
+  },
+  "m0601SinPermiso": "Necesitamos tu ubicación para mostrarte los prestadores más cercanos.",
+  "@m0601SinPermiso": {
+    "description": "M06-01 sin permiso de ubicación"
+  },
+  "m0601GpsApagado": "Tu ubicación está desactivada. Actívala para ver los prestadores cercanos.",
+  "@m0601GpsApagado": {
+    "description": "M06-01 GPS apagado"
+  },
+  "m0601PermitirUbicacion": "Permitir ubicación",
+  "@m0601PermitirUbicacion": {
+    "description": "M06-01 reintentar permiso"
+  },
+  "m0601AbrirAjustes": "Abrir ajustes",
+  "@m0601AbrirAjustes": {
+    "description": "M06-01 abrir ajustes"
+  },
+  "m0601Reintentar": "Reintentar",
+  "@m0601Reintentar": {
+    "description": "M06-01 reintentar"
+  },
+  "m0601TuUbicacion": "Tu ubicación",
+  "@m0601TuUbicacion": {
+    "description": "M06-01 lectura del pin del cliente"
+  },
+  "m0601ComoLlegar": "Cómo llegar a {nombre}, {tiempo}",
+  "@m0601ComoLlegar": {
+    "description": "M06-01 lectura del pin de prestador; abre la app de mapas",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      },
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601RutaNoDisponible": "No encontramos una app de mapas para abrir la ruta.",
+  "@m0601RutaNoDisponible": {
+    "description": "M06-01 sin app de mapas"
+  },
+  "m0601Atribucion": "© colaboradores de OpenStreetMap",
+  "@m0601Atribucion": {
+    "description": "M06-01 atribución del mapa"
   }
 }

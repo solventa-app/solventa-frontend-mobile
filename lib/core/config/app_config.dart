@@ -29,6 +29,14 @@ abstract final class AppConfig {
   /// envía nada (pruebas, mock, local).
   static const String sentryDsn = String.fromEnvironment('SENTRY_DSN');
 
+  /// Plantilla de teselas del mapa de M06-01 (`flutter_map`, decisión D-M06).
+  /// Por defecto, OpenStreetMap; para cambiar de proveedor (MapTiler,
+  /// Stadia…) basta con otra URL en `config/<flavor>.json`. No es secreta.
+  static const String mapTileUrl = String.fromEnvironment(
+    'MAP_TILE_URL',
+    defaultValue: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  );
+
   static bool get isDev => flavor == 'dev';
   static bool get isProd => flavor == 'prod';
 }
