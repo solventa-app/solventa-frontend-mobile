@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/resultado.dart';
-import '../data/datasources/ubicacion_service.dart';
+import '../../../core/ubicacion/ubicacion_service.dart';
 import '../domain/cercania.dart';
 import 'prestadores_state.dart';
 import 'providers.dart';

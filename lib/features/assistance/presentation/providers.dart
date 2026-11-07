@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/network/network_providers.dart';
+import '../../../core/ubicacion/ubicacion_service.dart';
 import '../data/datasources/asistencia_remote_datasource.dart';
 import '../data/datasources/catalogo_local_datasource.dart';
 import '../data/datasources/ruta_externa_service.dart';
-import '../data/datasources/ubicacion_service.dart';
 import '../data/repositories/asistencia_repository_impl.dart';
 import '../domain/repositories/asistencia_repository.dart';
 import 'prestadores_notifier.dart';

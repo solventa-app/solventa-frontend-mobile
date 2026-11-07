@@ -1,6 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 
-import '../../domain/entities/prestador.dart';
+import 'coordenada.dart';
 
 /// Resultado de pedir la ubicación actual del teléfono.
 ///

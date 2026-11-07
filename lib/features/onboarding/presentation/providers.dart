@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/network_providers.dart';
+import '../../../core/network/subida_archivo_service.dart';
 import '../data/datasources/biometria_service.dart';
 import '../data/datasources/captura_service.dart';
 import '../data/datasources/fake_onboarding_remote_datasource.dart';
 import '../data/datasources/onboarding_remote_datasource.dart';
-import '../data/datasources/subida_archivo_service.dart';
 import '../data/repositories/onboarding_repository_impl.dart';
 import '../domain/repositories/onboarding_repository.dart';
 
