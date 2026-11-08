@@ -70,6 +70,17 @@ void main() {
     await tester.pumpAndSettle();
   }
 
+  /// M02-03 se muestra unos milisegundos y luego va al Home con un `Timer`.
+  /// En el dispositivo ese tiempo es real y `pumpAndSettle` puede terminar
+  /// antes (M02-03 no anima), así que se bombea hasta ver el Home.
+  Future<void> esperarHome(WidgetTester tester) async {
+    for (var i = 0; i < 50; i++) {
+      if (find.byType(SolAppShell).evaluate().isNotEmpty) break;
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    await tester.pumpAndSettle();
+  }
+
   testWidgets('login → cerrar la app → M02-01 con huella → M02-03 → Home', (
     tester,
   ) async {
@@ -82,6 +93,7 @@ void main() {
 
     // El diálogo se abrió solo al entrar a M02-01 y reconoció la huella.
     expect(biometria.autenticaciones, [false]);
+    await esperarHome(tester);
     expect(find.byType(SolAppShell), findsOneWidget);
     expect(remota.renovaciones, 1);
   });
@@ -97,6 +109,7 @@ void main() {
     await tester.tap(find.text('Reintentar'));
     await tester.pumpAndSettle();
 
+    await esperarHome(tester);
     expect(find.byType(SolAppShell), findsOneWidget);
   });
 
@@ -109,6 +122,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(biometria.autenticaciones, [false, true]);
+    await esperarHome(tester);
     expect(find.byType(SolAppShell), findsOneWidget);
   });
 
@@ -161,6 +175,7 @@ void main() {
 
     // M02-01 abrió el diálogo y, con la huella, volvió al Home.
     expect(biometria.autenticaciones, [false]);
+    await esperarHome(tester);
     expect(find.byType(SolAppShell), findsOneWidget);
   });
 }
