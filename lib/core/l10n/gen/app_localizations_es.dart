@@ -785,6 +785,22 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esa fecha está fuera de la vigencia de la póliza.';
 
   @override
+  String m0501FechaAntes(String desde) {
+    return 'Tu póliza empezó a cubrirte el $desde. Elige una fecha y hora desde ese momento.';
+  }
+
+  @override
+  String get m0501FechaElegir => 'Elige el día y la hora';
+
+  @override
+  String get m0501ElegirPoliza => 'Primero elige la póliza afectada.';
+
+  @override
+  String m0501CubreDesde(String desde) {
+    return 'Tu póliza cubre desde el $desde.';
+  }
+
+  @override
   String get m0502Titulo => 'Fotos del daño';
 
   @override

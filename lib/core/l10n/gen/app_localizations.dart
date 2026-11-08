@@ -1460,6 +1460,30 @@ abstract class AppLocalizations {
   /// **'Esa fecha está fuera de la vigencia de la póliza.'**
   String get m0501FechaFuera;
 
+  /// M05-01 fecha anterior al inicio de la vigencia
+  ///
+  /// In es, this message translates to:
+  /// **'Tu póliza empezó a cubrirte el {desde}. Elige una fecha y hora desde ese momento.'**
+  String m0501FechaAntes(String desde);
+
+  /// M05-01 valor del campo fecha sin elegir
+  ///
+  /// In es, this message translates to:
+  /// **'Elige el día y la hora'**
+  String get m0501FechaElegir;
+
+  /// M05-01 ayuda del campo fecha sin póliza elegida
+  ///
+  /// In es, this message translates to:
+  /// **'Primero elige la póliza afectada.'**
+  String get m0501ElegirPoliza;
+
+  /// M05-01 ayuda del campo fecha con el inicio de la vigencia
+  ///
+  /// In es, this message translates to:
+  /// **'Tu póliza cubre desde el {desde}.'**
+  String m0501CubreDesde(String desde);
+
   /// M05-02 título
   ///
   /// In es, this message translates to:

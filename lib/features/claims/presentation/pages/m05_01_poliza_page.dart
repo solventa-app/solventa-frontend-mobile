@@ -23,10 +23,14 @@ class M0501PolizaPage extends ConsumerWidget {
     final ahora = ref.read(relojReporteProvider)();
     final inicio =
         poliza?.vigenciaDesde ?? ahora.subtract(const Duration(days: 365));
+    final primero = inicio.isAfter(ahora) ? ahora : inicio;
+    // Si cambió de póliza, la fecha anterior puede quedar antes de la nueva
+    // vigencia: el selector exige initialDate dentro del rango.
+    final inicial = actual == null || actual.isBefore(primero) ? ahora : actual;
     final dia = await showDatePicker(
       context: context,
-      initialDate: actual ?? ahora,
-      firstDate: inicio.isAfter(ahora) ? ahora : inicio,
+      initialDate: inicial,
+      firstDate: primero,
       lastDate: ahora,
     );
     if (dia == null || !context.mounted) return;
@@ -34,16 +38,12 @@ class M0501PolizaPage extends ConsumerWidget {
       context: context,
       initialTime: TimeOfDay.fromDateTime(actual ?? ahora),
     );
-    if (!context.mounted) return;
-    var fecha = DateTime(
-      dia.year,
-      dia.month,
-      dia.day,
-      hora?.hour ?? 0,
-      hora?.minute ?? 0,
-    );
-    if (fecha.isAfter(ahora)) fecha = ahora;
-    ref.read(reporteProvider.notifier).fijarFecha(fecha);
+    // Sin hora no hay fecha: antes se tomaba la medianoche, que en una póliza
+    // emitida ese mismo día cae fuera de la vigencia y bloqueaba «Continuar».
+    if (hora == null || !context.mounted) return;
+    ref
+        .read(reporteProvider.notifier)
+        .fijarFecha(fechaDelSiniestro(dia, hora, ahora: ahora, poliza: poliza));
   }
 
   @override
@@ -53,8 +53,14 @@ class M0501PolizaPage extends ConsumerWidget {
     final polizas = ref.watch(polizasReportablesProvider);
     final notifier = ref.read(reporteProvider.notifier);
     final fecha = estado.ocurridoEn;
+    final poliza = estado.poliza;
     final fueraDeVigencia =
-        estado.poliza != null && fecha != null && !estado.poliza!.cubre(fecha);
+        poliza != null && fecha != null && !poliza.cubre(fecha);
+    final errorFecha = !fueraDeVigencia
+        ? null
+        : fecha.isBefore(poliza.vigenciaDesde)
+        ? l10n.m0501FechaAntes(SolFormat.dateTime(poliza.vigenciaDesde))
+        : l10n.m0501FechaFuera;
 
     final lista = switch (polizas) {
       AsyncData(value: Exito(:final valor)) when valor.isEmpty => SolInlineNote(
@@ -100,22 +106,51 @@ class M0501PolizaPage extends ConsumerWidget {
           const SizedBox(height: SolSpacing.lg),
           SolTextField.select(
             label: l10n.m0501Fecha,
-            value: fecha == null ? '' : SolFormat.dateTime(fecha),
-            errorText: fueraDeVigencia ? l10n.m0501FechaFuera : null,
-            onTap: () => _elegirFecha(context, ref, estado.poliza, fecha),
+            value: fecha == null
+                ? l10n.m0501FechaElegir
+                : SolFormat.dateTime(fecha),
+            // Dice qué falta en lugar de dejar «Continuar» apagado sin más.
+            helperText: poliza == null
+                ? l10n.m0501ElegirPoliza
+                : l10n.m0501CubreDesde(
+                    SolFormat.dateTime(poliza.vigenciaDesde),
+                  ),
+            errorText: errorFecha,
+            onTap: () => _elegirFecha(context, ref, poliza, fecha),
           ),
         ],
       ),
       actions: [
         SolButton.primary(
           label: l10n.m05Continuar,
-          onPressed: estado.poliza != null && fecha != null && !fueraDeVigencia
+          onPressed: poliza != null && fecha != null && !fueraDeVigencia
               ? () => context.push(ReporteRoutes.fotos)
               : null,
         ),
       ],
     );
   }
+}
+
+/// Día y hora elegidos en los selectores, nunca en el futuro. El selector solo
+/// da minutos: si cae en el mismo minuto en que empezó la vigencia (póliza
+/// recién emitida) se toma ese instante, que es lo que CLAIMS acepta.
+@visibleForTesting
+DateTime fechaDelSiniestro(
+  DateTime dia,
+  TimeOfDay hora, {
+  required DateTime ahora,
+  PolizaReportable? poliza,
+}) {
+  var fecha = DateTime(dia.year, dia.month, dia.day, hora.hour, hora.minute);
+  if (fecha.isAfter(ahora)) fecha = ahora;
+  final desde = poliza?.vigenciaDesde;
+  if (desde != null &&
+      fecha.isBefore(desde) &&
+      desde.difference(fecha) < const Duration(minutes: 1)) {
+    fecha = desde.isAfter(ahora) ? ahora : desde;
+  }
+  return fecha;
 }
 
 class _FilaPoliza extends StatelessWidget {

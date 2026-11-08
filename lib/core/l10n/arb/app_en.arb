@@ -354,6 +354,32 @@
   "@m0501FechaFuera": {
     "description": "M05-01 fecha fuera de vigencia"
   },
+  "m0501FechaAntes": "Your policy started covering you on {desde}. Choose a date and time from then on.",
+  "@m0501FechaAntes": {
+    "description": "M05-01 fecha anterior al inicio de la vigencia",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501FechaElegir": "Choose the day and time",
+  "@m0501FechaElegir": {
+    "description": "M05-01 valor del campo fecha sin elegir"
+  },
+  "m0501ElegirPoliza": "First choose the affected policy.",
+  "@m0501ElegirPoliza": {
+    "description": "M05-01 ayuda del campo fecha sin póliza elegida"
+  },
+  "m0501CubreDesde": "Your policy covers from {desde}.",
+  "@m0501CubreDesde": {
+    "description": "M05-01 ayuda del campo fecha con el inicio de la vigencia",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      }
+    }
+  },
   "m0502Titulo": "Photos of the damage",
   "@m0502Titulo": {
     "description": "M05-02 título"
