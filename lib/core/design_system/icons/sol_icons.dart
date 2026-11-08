@@ -58,4 +58,11 @@ abstract final class SolIcons {
   static const IconData fingerprint = Symbols.fingerprint;
   static const IconData settings = Symbols.settings;
   static const IconData shield = Symbols.verified_user;
+
+  // Siniestro paramétrico (HU-M04).
+  static const IconData flight = Symbols.flight;
+  static const IconData thunderstorm = Symbols.thunderstorm;
+  static const IconData payments = Symbols.payments;
+  static const IconData bank = Symbols.account_balance;
+  static const IconData celebration = Symbols.celebration;
 }

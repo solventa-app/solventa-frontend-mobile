@@ -37,6 +37,11 @@ void main() {
       SolIcons.lighting,
       SolIcons.face,
       SolIcons.portrait,
+      SolIcons.flight,
+      SolIcons.thunderstorm,
+      SolIcons.payments,
+      SolIcons.bank,
+      SolIcons.celebration,
     ];
     for (final icon in icons) {
       expect(icon.fontFamily, 'MaterialSymbolsOutlined');

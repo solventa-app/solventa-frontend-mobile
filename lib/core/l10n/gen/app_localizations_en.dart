@@ -1072,4 +1072,195 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0606SolicitarDeNuevo => 'Request again';
+
+  @override
+  String get m0402Titulo => 'Payout';
+
+  @override
+  String get m0402Mensaje => 'Your payout is on its way!';
+
+  @override
+  String m0402Monto(String monto) {
+    return '$monto deposited';
+  }
+
+  @override
+  String m0402Cuenta(String cuenta) {
+    return 'To your account $cuenta';
+  }
+
+  @override
+  String get m0402VerDetalle => 'See details';
+
+  @override
+  String get m0402Cargando => 'Loading your payout…';
+
+  @override
+  String get m0403Titulo => 'Payout details';
+
+  @override
+  String m0403EventoRetrasoVuelo(String ref, String detalle) {
+    return 'Event detected: flight $ref delayed ($detalle)';
+  }
+
+  @override
+  String m0403EventoCancelacionVuelo(String ref) {
+    return 'Event detected: flight $ref cancelled';
+  }
+
+  @override
+  String m0403EventoLluvia(String ciudad, String detalle) {
+    return 'Event detected: rainfall over the threshold in $ciudad ($detalle)';
+  }
+
+  @override
+  String get m0403Indemnizacion => 'Payout';
+
+  @override
+  String get m0403FechaEvento => 'Event date';
+
+  @override
+  String get m0403FechaPago => 'Payment date';
+
+  @override
+  String get m0403Cuenta => 'Destination account';
+
+  @override
+  String get m0403Automatico => 'Payment processed automatically';
+
+  @override
+  String get m0403Cerrar => 'Close';
+
+  @override
+  String get m0404Titulo => 'My coverage';
+
+  @override
+  String get m0404Cargando => 'Loading your coverage…';
+
+  @override
+  String m0404Producto(String producto, String estado) {
+    return '$producto · $estado';
+  }
+
+  @override
+  String get m0404Vigente => 'Active';
+
+  @override
+  String get m0404Vencida => 'Expired';
+
+  @override
+  String m0404Poliza(String numero, String fecha) {
+    return 'Policy $numero · until $fecha';
+  }
+
+  @override
+  String get m0404Tope => 'Coverage limit';
+
+  @override
+  String m0404PorcentajeUsado(int porcentaje) {
+    return '$porcentaje% of the limit used';
+  }
+
+  @override
+  String get m0404Disponible => 'Available';
+
+  @override
+  String get m0404TotalIndemnizado => 'Total paid out';
+
+  @override
+  String m0404TotalDetalle(int pagos, String mes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pagos,
+      locale: localeName,
+      other: 'the $pagos payments you\'ve received',
+      one: 'the payment you\'ve received',
+    );
+    return 'Sum of $_temp0 since $mes, across all your policies.';
+  }
+
+  @override
+  String m0404Depositado(String cuenta) {
+    return 'Deposited to $cuenta';
+  }
+
+  @override
+  String m0404SaldoFavor(String monto) {
+    return '+ $monto in your favor';
+  }
+
+  @override
+  String m0404SaldoFavorDetalle(String mes) {
+    return 'Premium adjustment for $mes. It will be deducted from your next charge.';
+  }
+
+  @override
+  String m0404SaldoContra(String monto) {
+    return '− $monto pending';
+  }
+
+  @override
+  String m0404SaldoContraDetalle(String mes) {
+    return 'Premium difference for $mes. It will be added to your next charge.';
+  }
+
+  @override
+  String get m0404Movimientos => 'Payouts';
+
+  @override
+  String m0404Pagos(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n payments',
+      one: '1 payment',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0404Pagado => 'Paid';
+
+  @override
+  String get m0404EnProceso => 'Processing';
+
+  @override
+  String get m0404PolizaAnterior => 'previous policy';
+
+  @override
+  String m0404Meta(String fecha, String detalle) {
+    return '$fecha · $detalle';
+  }
+
+  @override
+  String get m0404Nota =>
+      'The limit resets with each renewal. Payouts from previous policies don\'t count against the current limit.';
+
+  @override
+  String get m0404Vacio => 'You don\'t have any payouts yet.';
+
+  @override
+  String get m04Reintentar => 'Try again';
+
+  @override
+  String m04EventoRetrasoVuelo(String ref) {
+    return 'Flight $ref delayed';
+  }
+
+  @override
+  String m04EventoCancelacionVuelo(String ref) {
+    return 'Flight $ref cancelled';
+  }
+
+  @override
+  String get m04EventoLluvia => 'Rainfall over the threshold';
+
+  @override
+  String m04DetalleLluvia(String ciudad, String detalle) {
+    return '$ciudad, $detalle';
+  }
+
+  @override
+  String m0402CuentaSemantica(String digitos) {
+    return 'To your account ending in $digitos';
+  }
 }

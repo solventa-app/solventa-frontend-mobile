@@ -1945,6 +1945,282 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Solicitar de nuevo'**
   String get m0606SolicitarDeNuevo;
+
+  /// M04-02: título de la barra
+  ///
+  /// In es, this message translates to:
+  /// **'Indemnización'**
+  String get m0402Titulo;
+
+  /// M04-02: mensaje de celebración
+  ///
+  /// In es, this message translates to:
+  /// **'¡Tu indemnización ya está en camino!'**
+  String get m0402Mensaje;
+
+  /// M04-02: monto depositado
+  ///
+  /// In es, this message translates to:
+  /// **'{monto} depositados'**
+  String m0402Monto(String monto);
+
+  /// M04-02: cuenta destino enmascarada
+  ///
+  /// In es, this message translates to:
+  /// **'En tu cuenta {cuenta}'**
+  String m0402Cuenta(String cuenta);
+
+  /// M04-02: botón al detalle
+  ///
+  /// In es, this message translates to:
+  /// **'Ver detalle'**
+  String get m0402VerDetalle;
+
+  /// M04-02 y M04-03: cargando
+  ///
+  /// In es, this message translates to:
+  /// **'Consultando tu indemnización…'**
+  String get m0402Cargando;
+
+  /// M04-03: título de la barra
+  ///
+  /// In es, this message translates to:
+  /// **'Detalle de la indemnización'**
+  String get m0403Titulo;
+
+  /// M04-03: cabecera para retraso de vuelo
+  ///
+  /// In es, this message translates to:
+  /// **'Evento detectado: retraso de vuelo {ref} ({detalle})'**
+  String m0403EventoRetrasoVuelo(String ref, String detalle);
+
+  /// M04-03: cabecera para cancelación de vuelo
+  ///
+  /// In es, this message translates to:
+  /// **'Evento detectado: cancelación de vuelo {ref}'**
+  String m0403EventoCancelacionVuelo(String ref);
+
+  /// M04-03: cabecera para lluvia
+  ///
+  /// In es, this message translates to:
+  /// **'Evento detectado: lluvia sobre el umbral en {ciudad} ({detalle})'**
+  String m0403EventoLluvia(String ciudad, String detalle);
+
+  /// M04-03: fila del monto
+  ///
+  /// In es, this message translates to:
+  /// **'Indemnización'**
+  String get m0403Indemnizacion;
+
+  /// M04-03: fila
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha del evento'**
+  String get m0403FechaEvento;
+
+  /// M04-03: fila
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de pago'**
+  String get m0403FechaPago;
+
+  /// M04-03: fila
+  ///
+  /// In es, this message translates to:
+  /// **'Cuenta destino'**
+  String get m0403Cuenta;
+
+  /// M04-03: insignia de éxito
+  ///
+  /// In es, this message translates to:
+  /// **'Pago procesado automáticamente'**
+  String get m0403Automatico;
+
+  /// M04-03: botón principal
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get m0403Cerrar;
+
+  /// M04-04: título de la barra
+  ///
+  /// In es, this message translates to:
+  /// **'Mi cobertura'**
+  String get m0404Titulo;
+
+  /// M04-04: cargando
+  ///
+  /// In es, this message translates to:
+  /// **'Consultando tu cobertura…'**
+  String get m0404Cargando;
+
+  /// M04-04: producto y estado de la póliza
+  ///
+  /// In es, this message translates to:
+  /// **'{producto} · {estado}'**
+  String m0404Producto(String producto, String estado);
+
+  /// M04-04: estado de la póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Vigente'**
+  String get m0404Vigente;
+
+  /// M04-04: estado de la póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Vencida'**
+  String get m0404Vencida;
+
+  /// M04-04: número y vigencia
+  ///
+  /// In es, this message translates to:
+  /// **'Póliza {numero} · hasta {fecha}'**
+  String m0404Poliza(String numero, String fecha);
+
+  /// M04-04: etiqueta del tope
+  ///
+  /// In es, this message translates to:
+  /// **'Tope de cobertura'**
+  String get m0404Tope;
+
+  /// M04-04: porcentaje usado (también lectura de la barra)
+  ///
+  /// In es, this message translates to:
+  /// **'{porcentaje} % del tope usado'**
+  String m0404PorcentajeUsado(int porcentaje);
+
+  /// M04-04: etiqueta del disponible
+  ///
+  /// In es, this message translates to:
+  /// **'Disponible'**
+  String get m0404Disponible;
+
+  /// M04-04: etiqueta del total
+  ///
+  /// In es, this message translates to:
+  /// **'Total indemnizado'**
+  String get m0404TotalIndemnizado;
+
+  /// M04-04: explicación del total
+  ///
+  /// In es, this message translates to:
+  /// **'Suma de {pagos, plural, =1{el pago que has recibido} other{los {pagos} pagos que has recibido}} desde {mes}, en todas tus pólizas.'**
+  String m0404TotalDetalle(int pagos, String mes);
+
+  /// M04-04: cuenta de depósito
+  ///
+  /// In es, this message translates to:
+  /// **'Depositado en {cuenta}'**
+  String m0404Depositado(String cuenta);
+
+  /// M04-04: saldo de prima a favor (el signo va en el texto, no solo el color)
+  ///
+  /// In es, this message translates to:
+  /// **'+ {monto} a tu favor'**
+  String m0404SaldoFavor(String monto);
+
+  /// M04-04: detalle del saldo a favor
+  ///
+  /// In es, this message translates to:
+  /// **'Ajuste de prima de {mes}. Se descuenta de tu próximo cobro.'**
+  String m0404SaldoFavorDetalle(String mes);
+
+  /// M04-04: saldo de prima en contra (U+2212)
+  ///
+  /// In es, this message translates to:
+  /// **'− {monto} pendiente'**
+  String m0404SaldoContra(String monto);
+
+  /// M04-04: detalle del saldo en contra
+  ///
+  /// In es, this message translates to:
+  /// **'Diferencia de prima de {mes}. Se suma a tu próximo cobro.'**
+  String m0404SaldoContraDetalle(String mes);
+
+  /// M04-04: encabezado de la lista
+  ///
+  /// In es, this message translates to:
+  /// **'Movimientos indemnizados'**
+  String get m0404Movimientos;
+
+  /// M04-04: número de pagos
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 pago} other{{n} pagos}}'**
+  String m0404Pagos(int n);
+
+  /// M04-04: estado del pago
+  ///
+  /// In es, this message translates to:
+  /// **'Pagado'**
+  String get m0404Pagado;
+
+  /// M04-04: estado del pago
+  ///
+  /// In es, this message translates to:
+  /// **'En proceso'**
+  String get m0404EnProceso;
+
+  /// M04-04: meta de un pago de una póliza vencida
+  ///
+  /// In es, this message translates to:
+  /// **'póliza anterior'**
+  String get m0404PolizaAnterior;
+
+  /// M04-04: fecha y detalle de la fila
+  ///
+  /// In es, this message translates to:
+  /// **'{fecha} · {detalle}'**
+  String m0404Meta(String fecha, String detalle);
+
+  /// M04-04: nota al pie
+  ///
+  /// In es, this message translates to:
+  /// **'El tope se reinicia con cada renovación. Los pagos de pólizas anteriores no descuentan del cupo actual.'**
+  String get m0404Nota;
+
+  /// M04-04: sin movimientos
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no tienes pagos indemnizados.'**
+  String get m0404Vacio;
+
+  /// M04: reintentar tras un error
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get m04Reintentar;
+
+  /// M04: título del evento
+  ///
+  /// In es, this message translates to:
+  /// **'Retraso de vuelo {ref}'**
+  String m04EventoRetrasoVuelo(String ref);
+
+  /// M04: título del evento
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelación de vuelo {ref}'**
+  String m04EventoCancelacionVuelo(String ref);
+
+  /// M04: título del evento
+  ///
+  /// In es, this message translates to:
+  /// **'Lluvia sobre el umbral'**
+  String get m04EventoLluvia;
+
+  /// M04: ciudad y milímetros de lluvia
+  ///
+  /// In es, this message translates to:
+  /// **'{ciudad}, {detalle}'**
+  String m04DetalleLluvia(String ciudad, String detalle);
+
+  /// M04-02: lectura de TalkBack de la cuenta destino
+  ///
+  /// In es, this message translates to:
+  /// **'En tu cuenta terminada en {digitos}'**
+  String m0402CuentaSemantica(String digitos);
 }
 
 class _AppLocalizationsDelegate

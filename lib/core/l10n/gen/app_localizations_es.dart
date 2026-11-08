@@ -1076,4 +1076,195 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0606SolicitarDeNuevo => 'Solicitar de nuevo';
+
+  @override
+  String get m0402Titulo => 'Indemnización';
+
+  @override
+  String get m0402Mensaje => '¡Tu indemnización ya está en camino!';
+
+  @override
+  String m0402Monto(String monto) {
+    return '$monto depositados';
+  }
+
+  @override
+  String m0402Cuenta(String cuenta) {
+    return 'En tu cuenta $cuenta';
+  }
+
+  @override
+  String get m0402VerDetalle => 'Ver detalle';
+
+  @override
+  String get m0402Cargando => 'Consultando tu indemnización…';
+
+  @override
+  String get m0403Titulo => 'Detalle de la indemnización';
+
+  @override
+  String m0403EventoRetrasoVuelo(String ref, String detalle) {
+    return 'Evento detectado: retraso de vuelo $ref ($detalle)';
+  }
+
+  @override
+  String m0403EventoCancelacionVuelo(String ref) {
+    return 'Evento detectado: cancelación de vuelo $ref';
+  }
+
+  @override
+  String m0403EventoLluvia(String ciudad, String detalle) {
+    return 'Evento detectado: lluvia sobre el umbral en $ciudad ($detalle)';
+  }
+
+  @override
+  String get m0403Indemnizacion => 'Indemnización';
+
+  @override
+  String get m0403FechaEvento => 'Fecha del evento';
+
+  @override
+  String get m0403FechaPago => 'Fecha de pago';
+
+  @override
+  String get m0403Cuenta => 'Cuenta destino';
+
+  @override
+  String get m0403Automatico => 'Pago procesado automáticamente';
+
+  @override
+  String get m0403Cerrar => 'Cerrar';
+
+  @override
+  String get m0404Titulo => 'Mi cobertura';
+
+  @override
+  String get m0404Cargando => 'Consultando tu cobertura…';
+
+  @override
+  String m0404Producto(String producto, String estado) {
+    return '$producto · $estado';
+  }
+
+  @override
+  String get m0404Vigente => 'Vigente';
+
+  @override
+  String get m0404Vencida => 'Vencida';
+
+  @override
+  String m0404Poliza(String numero, String fecha) {
+    return 'Póliza $numero · hasta $fecha';
+  }
+
+  @override
+  String get m0404Tope => 'Tope de cobertura';
+
+  @override
+  String m0404PorcentajeUsado(int porcentaje) {
+    return '$porcentaje % del tope usado';
+  }
+
+  @override
+  String get m0404Disponible => 'Disponible';
+
+  @override
+  String get m0404TotalIndemnizado => 'Total indemnizado';
+
+  @override
+  String m0404TotalDetalle(int pagos, String mes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pagos,
+      locale: localeName,
+      other: 'los $pagos pagos que has recibido',
+      one: 'el pago que has recibido',
+    );
+    return 'Suma de $_temp0 desde $mes, en todas tus pólizas.';
+  }
+
+  @override
+  String m0404Depositado(String cuenta) {
+    return 'Depositado en $cuenta';
+  }
+
+  @override
+  String m0404SaldoFavor(String monto) {
+    return '+ $monto a tu favor';
+  }
+
+  @override
+  String m0404SaldoFavorDetalle(String mes) {
+    return 'Ajuste de prima de $mes. Se descuenta de tu próximo cobro.';
+  }
+
+  @override
+  String m0404SaldoContra(String monto) {
+    return '− $monto pendiente';
+  }
+
+  @override
+  String m0404SaldoContraDetalle(String mes) {
+    return 'Diferencia de prima de $mes. Se suma a tu próximo cobro.';
+  }
+
+  @override
+  String get m0404Movimientos => 'Movimientos indemnizados';
+
+  @override
+  String m0404Pagos(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n pagos',
+      one: '1 pago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0404Pagado => 'Pagado';
+
+  @override
+  String get m0404EnProceso => 'En proceso';
+
+  @override
+  String get m0404PolizaAnterior => 'póliza anterior';
+
+  @override
+  String m0404Meta(String fecha, String detalle) {
+    return '$fecha · $detalle';
+  }
+
+  @override
+  String get m0404Nota =>
+      'El tope se reinicia con cada renovación. Los pagos de pólizas anteriores no descuentan del cupo actual.';
+
+  @override
+  String get m0404Vacio => 'Aún no tienes pagos indemnizados.';
+
+  @override
+  String get m04Reintentar => 'Reintentar';
+
+  @override
+  String m04EventoRetrasoVuelo(String ref) {
+    return 'Retraso de vuelo $ref';
+  }
+
+  @override
+  String m04EventoCancelacionVuelo(String ref) {
+    return 'Cancelación de vuelo $ref';
+  }
+
+  @override
+  String get m04EventoLluvia => 'Lluvia sobre el umbral';
+
+  @override
+  String m04DetalleLluvia(String ciudad, String detalle) {
+    return '$ciudad, $detalle';
+  }
+
+  @override
+  String m0402CuentaSemantica(String digitos) {
+    return 'En tu cuenta terminada en $digitos';
+  }
 }

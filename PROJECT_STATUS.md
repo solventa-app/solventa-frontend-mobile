@@ -1,6 +1,6 @@
 # Estado del proyecto: Solventa Frontend Mobile
 
-Última actualización: **2026-11-06** (verificado contra `develop` en `0cb2531` + ramas apiladas de HU-M02 hasta `feat/KAN-226-pantallas-m02`). Es la primera lectura de cada sesión.
+Última actualización: **2026-11-08** (verificado contra `develop` en `5ada135` + rama `feat/KAN-260-cobertura-mock`). Es la primera lectura de cada sesión.
 Las reglas permanentes viven en [`CLAUDE.md`](CLAUDE.md), la arquitectura en [`docs/arquitectura.md`](docs/arquitectura.md),
 el contrato con el BFF en [`docs/integracion-backend.md`](docs/integracion-backend.md) y el CI/CD en
 [`docs/ci-cd.md`](docs/ci-cd.md). Este archivo no las repite: describe el estado actual.
@@ -20,6 +20,7 @@ el contrato con el BFF en [`docs/integracion-backend.md`](docs/integracion-backe
 Flutter 3.47.8 / Dart ^3.13 (fijado; `tool/verificar-versiones.sh` lo controla contra el devcontainer). Riverpod 3,
 `go_router` 18, Dio + `gql`/`graphql_codegen` (BFF GraphQL `/graphql/app`), `camera`, `image_picker`,
 `permission_handler` 12, `local_auth`, `flutter_secure_storage`, `shared_preferences`, `sentry_flutter` + `sentry_dio`,
+`flutter_map` (OpenStreetMap), `geolocator`, `url_launcher`,
 `alchemist` (goldens). La app no tiene base de datos local; `drift` queda planeado solo para HU offline
 (`docs/arquitectura.md` §8).
 
@@ -29,8 +30,8 @@ Flutter 3.47.8 / Dart ^3.13 (fijado; `tool/verificar-versiones.sh` lo controla c
 - `lib/core/`: `config` (flavors), `design_system` (tokens, tema, componentes `Sol*`, layouts, galería en debug),
   `network` (cliente GraphQL), `sesion` (`sesion_store.dart`, almacenamiento seguro), `errors` (`Resultado`/`Falla`),
   `log` (`SolLog`, `limpiar`), `l10n` (ARB ES/EN generado en `gen/`), `contrato` (esquema GraphQL).
-- `lib/features/<feature>/{data,domain,presentation}`: `onboarding` (completa), `acceso` (HU-M02, solo
-  `presentation`), `home`, `profile` y `assistance` (placeholder).
+- `lib/features/<feature>/{data,domain,presentation}`: `onboarding` (HU-M01), `acceso` (HU-M02, solo
+  `presentation`), `claims` (HU-M05), `assistance` (HU-M06), `parametric` (HU-M04, en curso), `home` y `profile`.
 - Ambientes: `config/{mock,local,dev,prod}.json` con `--dart-define-from-file`. `API_ENV` vale `mock` por defecto
   (fakes, sin red).
 
@@ -59,32 +60,30 @@ Flutter 3.47.8 / Dart ^3.13 (fijado; `tool/verificar-versiones.sh` lo controla c
 - **CI/CD y seguridad:** según `docs/ci-cd.md` (estados «hoy»). 24 archivos de prueba (unitarias, widget, contrato,
   goldens CI en `test/goldens/ci/`).
 
-### En curso: HU-M02 (KAN-32), ingreso con biometría
+- **HU-M02 (KAN-32), ingreso con biometría:** PRs #41, #43, #44, #51 y #55 en `develop`; validada con biometría real
+  en emulador (#57, `docs/evidencias/2026-11-07-hu-m02-biometria-real.md`). Backend #511 (gracia del refresh).
+- **HU-M05 (KAN-35) reporte de siniestro** (#38) y **HU-M06 (KAN-36) asistencia en sitio** (#37, #52): ver `CLAUDE.md`
+  §Estado. Reporte HTML de Emuladores con capturas (#56: `integration_test/soporte/capturas.dart`,
+  `tool/reporte-emuladores.py`).
 
-Plan: `~/Downloads/hu-m02-paquete/plan-HU-M02-integracion-M01.md`. **Solo se escribe código (app y pruebas) sin ejecutar
-pruebas ni goldens: otro compañero valida.** Ramas apiladas (cada una sale de la anterior), push hecho; los PRs los abre
-el usuario:
+### En curso: HU-M04 (KAN-38), siniestro paramétrico — avance con datos mock
 
-| PR | Rama | Estado |
-|---|---|---|
-| 1 backend | `solventa-backend` `feat/KAN-227-refresh-gracia-hu-m02` | Hecho y **verificado en local**: gracia de 30 s en AUTH, suite de AUTH en verde y Newman `hu-m02` 57/57 por Envoy |
-| 2 mobile sesión | `feat/KAN-227-sesion-refresh-hu-m02` | Hecho: contrato v0.37, `lib/core/sesion/` (llavero RSA, almacén cifrado, `GestorSesion`), renovación en `GraphqlClient`, M01 guarda el refresh, cierre revoca. Codegen y `flutter analyze` en verde; pruebas sin correr |
-| 3 mobile biometría | `feat/KAN-225-biometria-compartida-hu-m02` | Hecho: `lib/core/biometria/` (estados de §3.6, mapeo de `local_auth` 3.x), `AjustesSeguridad.kt` («Ir a ajustes»), M01-08 con D1, relectura al volver de Ajustes y guardado del refresh pendiente; textos ES/EN. Analyze en verde; pruebas sin correr |
-| 4 mobile pantallas | `feat/KAN-226-pantallas-m02` | Hecho: `lib/features/acceso/` (`AccesoNotifier` con fases `comprobando`/`normal`/`bloqueada`/`concedida`), arranque sin parpadeo (F6/F10), M02-01 + M02-01a + M02-03 según Figma (sin M02-02/02b), avisos de §3.6, bloqueo a los 5 min (`AppLifecycleListener`), `go('/')` al vencer la sesión, redirección en `router.dart`, textos ES/EN. Pruebas de notifier y widget, goldens (36 imágenes) e `integration_test/hu_m02_test.dart`; CI `mobile` en verde en #41, #42 y #43 (falta `integration_test` en emulador). Incluye un arreglo en el PR 3 (catálogo de textos en la prueba de M01-08) |
-| 5 e2e | — | No se hace (decisión del usuario) |
+Rama `feat/KAN-260-cobertura-mock` (KAN-260 y KAN-280). Plan, diseños, decisiones (M04-D1 a D5) y pendientes en
+[`docs/hu-m04/README.md`](docs/hu-m04/README.md).
 
-### En curso (ramas remotas sin fusionar, de Frans, 2026-11-05)
-
-- `feat/KAN-36-asistencia-en-sitio`: mapa de prestadores cercanos `M06-01`, con el catálogo desde el BFF (contrato
-  v0.36).
-- `feat/KAN-35-reporte-siniestro` (incluye KAN-36): reporte de siniestro con cámara y GPS `M05-01`..`M05-05` y «Mis
-  siniestros» `M05-06`.
+- Hecho: `lib/features/parametric/` con M04-02 (celebración), M04-03 (detalle) y M04-04 (Mi cobertura: sin saldo, a
+  favor y en contra), datos mock detrás de `FakeCoberturaRemoteDataSource`, textos ES/EN, íconos y formatos nuevos
+  (`SolFormat.monthYear`, `monthName`, `maskedAccountFull` para cuentas de 16 dígitos), pruebas unitarias y de widget,
+  30 goldens e `integration_test/cobertura_test.dart` con capturas.
+- Verificado en la imagen del devcontainer: análisis, pruebas de `test/features/parametric` y `test/core/design_system`
+  y goldens. No corrido aquí: `integration_test` en emulador (workflow Emuladores en la rama).
+- Sin navegación, sin push M04-01 (KAN-138, KAN-259) y sin backend: no hay contrato de cobertura paramétrica.
+- Jira: se creó KAN-280 (M04-04 · Mi cobertura) bajo KAN-38 el 2026-11-08.
 
 ### Pendiente
 
-- Integrar HU-M05 y HU-M06 en `develop` y reemplazar `AssistancePlaceholderPage`. `onRequestAssistance` en Home hoy es
-  `() {}`.
-- Dependencias de las próximas HU: `geolocator`, `google_maps_flutter` y `firebase_messaging` (no están en `develop`).
+- HU-M04: navegación, push M04-01 con FCM (`firebase_messaging`), contrato y backend, moneda seleccionada y los datos
+  de M04-03 que pide KAN-146 (fuente, umbral, desglose, referencia). Lista completa en `docs/hu-m04/README.md`.
 - Firebase App Distribution y Test Lab: listos, falta la cuenta. Google Play queda para el futuro.
 - Goldens horizontales de 640 × 360 (`docs/ci-cd.md`).
 
@@ -103,9 +102,8 @@ el usuario:
 
 ## 6. Problemas conocidos y deuda
 
-- **HU-M02:** el contrato de mobile salta a v0.37 desde `develop`; la rama KAN-35/36 de Frans lo sincronizó a v0.36: quien
-  fusione segundo resuelve el conflicto en `schema.graphql` y lo generado. Las diferencias de M02 con Figma (saludo
-  neutro, «Huella o rostro», sin nota de prototipado) están en la plantilla 5.4 de `docs/hu-m02-jira.md`.
+- **HU-M02:** las diferencias de M02 con Figma están en `docs/hu-m02-jira.md` (plantilla 5.4) y la decisión D6 sobre
+  M02-01a en la evidencia del 2026-11-07.
 - **Doc desactualizada:** `docs/ci-cd.md` §«Logs y errores en producción» todavía dice que Sentry está «Pendiente», aunque
   ya está implementado (ver `docs/plan-sentry.md`).
 - **Textos quemados (incumplen la regla de l10n):** `assistance_placeholder_page.dart:15`, `home_page.dart:91` (el
@@ -116,16 +114,16 @@ el usuario:
 
 ## 7. Prioridades actuales
 
-1. HU-M02: revisar y fusionar backend #511 y mobile #41 → #42 → #43, y que el compañero valide (`tool/verificar.sh`, `tool/goldens.sh`, `integration_test`).
-2. Revisar y fusionar KAN-36 y KAN-35 (Frans).
+1. HU-M04: PR de `feat/KAN-260-cobertura-mock` y reporte de Emuladores con las capturas de M04.
+2. PR #58 abierto (KAN-31, reintento de verificación y cámara).
 3. Deuda de reglas: textos a l10n, `integration_test` de HU-M01, evidencia exploratoria, `docs/ci-cd.md` (Sentry «hoy»).
 
 ## 8. Próximos pasos
 
-1. PRs abiertos: backend #511; mobile #41, #42 y #43 apilados (al fusionar #41, GitHub cambia la base de #42 a `develop`; lo mismo con #43). Si la validación encuentra fallas, se
-   corrigen en la rama del PR afectado y se trae a las siguientes con `git merge --ff-only` o rebase.
-2. Codegen, `dart format` y `flutter analyze` en la imagen `ghcr.io/solventa-app/solventa-frontend-mobile-dev` (Docker
-   guarda todo en el disco grande; ver sección 10). No correr pruebas ni goldens.
+1. Abrir el PR de HU-M04 hacia `develop` y lanzar Emuladores en la rama
+   (`gh workflow run emuladores.yml --ref feat/KAN-260-cobertura-mock`), luego descargar `reporte-emuladores`.
+2. En esta máquina solo se corre lo que cabe en la imagen del devcontainer (análisis, pruebas unitarias y de widget,
+   goldens). Emuladores y teléfono real quedan para el CI o para el equipo.
 
 ## 9. Archivos de referencia
 
@@ -136,6 +134,7 @@ el usuario:
 | `lib/features/onboarding/data/datasources/onboarding_remote_datasource.dart` | Llamadas GraphQL. `fake_…` es la versión mock |
 | `lib/features/onboarding/data/repositories/onboarding_repository_impl.dart` | Mapeo de respuestas a `Resultado` |
 | `lib/features/acceso/presentation/acceso_notifier.dart` | Fases de acceso (HU-M02), desbloqueo, bloqueo a los 5 min y `redirigirAcceso` |
+| `lib/features/parametric/` y `docs/hu-m04/` | HU-M04 con datos mock: pantallas M04-02/03/04, cálculo del cupo, decisiones y pendientes |
 | `lib/core/sesion/gestor_sesion.dart` | Dueño de la sesión: JWT en memoria, renovación con candado y gracia, desbloqueo, cierre |
 | `lib/core/sesion/sesion_store.dart`, `llavero_sesion.dart` | Refresh cifrado con prefijo de ambiente; canal del llavero RSA |
 | `android/.../LlaveroSesion.kt` | Par RSA del Keystore con ventana de autenticación de 10 s |
@@ -147,14 +146,14 @@ el usuario:
 
 ## 10. Handoff de sesión
 
-- **Estado:** PRs abiertos el 2026-11-06: backend #511 (→ `develop`); mobile #41 (→ `develop`), #42 (→ rama del #41) y #43 (→ rama del #42), apilados: se fusionan en ese orden. El backend se
-  puede levantar y probar con Docker (se hizo: AUTH y Newman en verde). En mobile solo codegen, formato y análisis.
-- **Última tarea:** PR 4 de HU-M02 (`feat/KAN-226-pantallas-m02`).
-- **Sin terminar:** nada del código de HU-M02. Falta la validación del compañero (pruebas, goldens, dispositivo) y
-  Jira según `docs/hu-m02-jira.md` (lo hace el equipo, no el agente).
-- **Siguiente acción exacta:** esperar los PRs y la validación; atender hallazgos en la rama del PR que corresponda.
+- **Estado:** HU-M04 con datos mock en `feat/KAN-260-cobertura-mock` (commits a nombre de Uniandes, sin atribución a
+  IA). En esta máquina se corrieron análisis, pruebas unitarias y de widget de HU-M04 y goldens en la imagen del
+  devcontainer; no emuladores.
+- **Última tarea:** pantallas M04-02, M04-03 y M04-04, pruebas, goldens e `integration_test` de HU-M04.
+- **Sin terminar:** PR de HU-M04 y el reporte de Emuladores; los pendientes de producto están en
+  `docs/hu-m04/README.md`.
+- **Siguiente acción exacta:** push de la rama, PR a `develop` y lanzar Emuladores en la rama.
 - **Entorno:** `/` estuvo lleno; Docker usa `overlay2` con `data-root` en
   `/media/darthefe/323c09a9-d3ed-40c6-890f-c4da812cb27b/tmp/docker` (containerd-snapshotter apagado). Comando base:
   `docker run --rm --platform linux/amd64 -v "$PWD":/w -w /w -v solventa-mobile-pub:/home/dev/.pub-cache --entrypoint bash ghcr.io/solventa-app/solventa-frontend-mobile-dev:latest -lc '…'`.
-- **Archivos para la próxima sesión:** este archivo, `docs/hu-m02-jira.md`, `lib/features/acceso/`,
-  `lib/core/sesion/`, `lib/app/router.dart`.
+- **Archivos para la próxima sesión:** este archivo, `docs/hu-m04/README.md`, `lib/features/parametric/`.

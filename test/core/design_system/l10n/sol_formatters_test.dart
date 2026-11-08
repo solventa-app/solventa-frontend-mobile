@@ -77,6 +77,31 @@ void main() {
     });
   });
 
+  group('HU-M04', () {
+    test('monthYear: mes abreviado y año', () {
+      expect(SolFormat.monthYear(DateTime(2026, 7, 3)), 'jul 2026');
+      expect(SolFormat.monthYear(DateTime(2026, 12)), 'dic 2026');
+      expect(SolFormat.monthName(DateTime(2026, 10)), 'octubre');
+    });
+
+    test('maskedAccountFull: 16 dígitos con solo los últimos 4 visibles', () {
+      expect(
+        SolFormat.maskedAccountFull('4532 0151 1283 4821'),
+        '••••\u00A0••••\u00A0••••\u00A04821',
+      );
+      expect(
+        SolFormat.maskedAccountFull('0012004821'),
+        '••\u00A0••••\u00A04821',
+      );
+      // Con 4 dígitos o menos no hay qué ocultar: igual que maskedAccount.
+      expect(SolFormat.maskedAccountFull('4821'), '4821');
+      expect(
+        SolFormat.maskedAccountSemantics('4532015112834821'),
+        'cuenta terminada en 4821',
+      );
+    });
+  });
+
   test('distancia y minutos', () {
     // Espacio duro (U+00A0) entre cifra y unidad.
     expect(SolFormat.distanceKm(1.2), '1,2\u00A0km');
