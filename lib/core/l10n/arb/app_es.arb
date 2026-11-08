@@ -1108,5 +1108,301 @@
   "m0606SolicitarDeNuevo": "Solicitar de nuevo",
   "@m0606SolicitarDeNuevo": {
     "description": "M06-06 vuelve al mapa de prestadores"
+  },
+  "m0402Titulo": "Indemnización",
+  "@m0402Titulo": {
+    "description": "M04-02: título de la barra"
+  },
+  "m0402Mensaje": "¡Tu indemnización ya está en camino!",
+  "@m0402Mensaje": {
+    "description": "M04-02: mensaje de celebración"
+  },
+  "m0402Monto": "{monto} depositados",
+  "@m0402Monto": {
+    "description": "M04-02: monto depositado",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0402Cuenta": "En tu cuenta {cuenta}",
+  "@m0402Cuenta": {
+    "description": "M04-02: cuenta destino enmascarada",
+    "placeholders": {
+      "cuenta": {
+        "type": "String"
+      }
+    }
+  },
+  "m0402VerDetalle": "Ver detalle",
+  "@m0402VerDetalle": {
+    "description": "M04-02: botón al detalle"
+  },
+  "m0402Cargando": "Consultando tu indemnización…",
+  "@m0402Cargando": {
+    "description": "M04-02 y M04-03: cargando"
+  },
+  "m0403Titulo": "Detalle de la indemnización",
+  "@m0403Titulo": {
+    "description": "M04-03: título de la barra"
+  },
+  "m0403EventoRetrasoVuelo": "Evento detectado: retraso de vuelo {ref} ({detalle})",
+  "@m0403EventoRetrasoVuelo": {
+    "description": "M04-03: cabecera para retraso de vuelo",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "detalle": {
+        "type": "String"
+      }
+    }
+  },
+  "m0403EventoCancelacionVuelo": "Evento detectado: cancelación de vuelo {ref}",
+  "@m0403EventoCancelacionVuelo": {
+    "description": "M04-03: cabecera para cancelación de vuelo",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "m0403EventoLluvia": "Evento detectado: lluvia sobre el umbral en {ciudad} ({detalle})",
+  "@m0403EventoLluvia": {
+    "description": "M04-03: cabecera para lluvia",
+    "placeholders": {
+      "ciudad": {
+        "type": "String"
+      },
+      "detalle": {
+        "type": "String"
+      }
+    }
+  },
+  "m0403Indemnizacion": "Indemnización",
+  "@m0403Indemnizacion": {
+    "description": "M04-03: fila del monto"
+  },
+  "m0403FechaEvento": "Fecha del evento",
+  "@m0403FechaEvento": {
+    "description": "M04-03: fila"
+  },
+  "m0403FechaPago": "Fecha de pago",
+  "@m0403FechaPago": {
+    "description": "M04-03: fila"
+  },
+  "m0403Cuenta": "Cuenta destino",
+  "@m0403Cuenta": {
+    "description": "M04-03: fila"
+  },
+  "m0403Automatico": "Pago procesado automáticamente",
+  "@m0403Automatico": {
+    "description": "M04-03: insignia de éxito"
+  },
+  "m0403Cerrar": "Cerrar",
+  "@m0403Cerrar": {
+    "description": "M04-03: botón principal"
+  },
+  "m0404Titulo": "Mi cobertura",
+  "@m0404Titulo": {
+    "description": "M04-04: título de la barra"
+  },
+  "m0404Cargando": "Consultando tu cobertura…",
+  "@m0404Cargando": {
+    "description": "M04-04: cargando"
+  },
+  "m0404Producto": "{producto} · {estado}",
+  "@m0404Producto": {
+    "description": "M04-04: producto y estado de la póliza",
+    "placeholders": {
+      "producto": {
+        "type": "String"
+      },
+      "estado": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Vigente": "Vigente",
+  "@m0404Vigente": {
+    "description": "M04-04: estado de la póliza"
+  },
+  "m0404Vencida": "Vencida",
+  "@m0404Vencida": {
+    "description": "M04-04: estado de la póliza"
+  },
+  "m0404Poliza": "Póliza {numero} · hasta {fecha}",
+  "@m0404Poliza": {
+    "description": "M04-04: número y vigencia",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      },
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Tope": "Tope de cobertura",
+  "@m0404Tope": {
+    "description": "M04-04: etiqueta del tope"
+  },
+  "m0404PorcentajeUsado": "{porcentaje} % del tope usado",
+  "@m0404PorcentajeUsado": {
+    "description": "M04-04: porcentaje usado (también lectura de la barra)",
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "m0404Disponible": "Disponible",
+  "@m0404Disponible": {
+    "description": "M04-04: etiqueta del disponible"
+  },
+  "m0404TotalIndemnizado": "Total indemnizado",
+  "@m0404TotalIndemnizado": {
+    "description": "M04-04: etiqueta del total"
+  },
+  "m0404TotalDetalle": "Suma de {pagos, plural, =1{el pago que has recibido} other{los {pagos} pagos que has recibido}} desde {mes}, en todas tus pólizas.",
+  "@m0404TotalDetalle": {
+    "description": "M04-04: explicación del total",
+    "placeholders": {
+      "pagos": {
+        "type": "int"
+      },
+      "mes": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Depositado": "Depositado en {cuenta}",
+  "@m0404Depositado": {
+    "description": "M04-04: cuenta de depósito",
+    "placeholders": {
+      "cuenta": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404SaldoFavor": "+ {monto} a tu favor",
+  "@m0404SaldoFavor": {
+    "description": "M04-04: saldo de prima a favor (el signo va en el texto, no solo el color)",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404SaldoFavorDetalle": "Ajuste de prima de {mes}. Se descuenta de tu próximo cobro.",
+  "@m0404SaldoFavorDetalle": {
+    "description": "M04-04: detalle del saldo a favor",
+    "placeholders": {
+      "mes": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404SaldoContra": "− {monto} pendiente",
+  "@m0404SaldoContra": {
+    "description": "M04-04: saldo de prima en contra (U+2212)",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404SaldoContraDetalle": "Diferencia de prima de {mes}. Se suma a tu próximo cobro.",
+  "@m0404SaldoContraDetalle": {
+    "description": "M04-04: detalle del saldo en contra",
+    "placeholders": {
+      "mes": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Movimientos": "Movimientos indemnizados",
+  "@m0404Movimientos": {
+    "description": "M04-04: encabezado de la lista"
+  },
+  "m0404Pagos": "{n, plural, =1{1 pago} other{{n} pagos}}",
+  "@m0404Pagos": {
+    "description": "M04-04: número de pagos",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0404Pagado": "Pagado",
+  "@m0404Pagado": {
+    "description": "M04-04: estado del pago"
+  },
+  "m0404EnProceso": "En proceso",
+  "@m0404EnProceso": {
+    "description": "M04-04: estado del pago"
+  },
+  "m0404PolizaAnterior": "póliza anterior",
+  "@m0404PolizaAnterior": {
+    "description": "M04-04: meta de un pago de una póliza vencida"
+  },
+  "m0404Meta": "{fecha} · {detalle}",
+  "@m0404Meta": {
+    "description": "M04-04: fecha y detalle de la fila",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "detalle": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Nota": "El tope se reinicia con cada renovación. Los pagos de pólizas anteriores no descuentan del cupo actual.",
+  "@m0404Nota": {
+    "description": "M04-04: nota al pie"
+  },
+  "m0404Vacio": "Aún no tienes pagos indemnizados.",
+  "@m0404Vacio": {
+    "description": "M04-04: sin movimientos"
+  },
+  "m04Reintentar": "Reintentar",
+  "@m04Reintentar": {
+    "description": "M04: reintentar tras un error"
+  },
+  "m04EventoRetrasoVuelo": "Retraso de vuelo {ref}",
+  "@m04EventoRetrasoVuelo": {
+    "description": "M04: título del evento",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "m04EventoCancelacionVuelo": "Cancelación de vuelo {ref}",
+  "@m04EventoCancelacionVuelo": {
+    "description": "M04: título del evento",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "m04EventoLluvia": "Lluvia sobre el umbral",
+  "@m04EventoLluvia": {
+    "description": "M04: título del evento"
+  },
+  "m04DetalleLluvia": "{ciudad}, {detalle}",
+  "@m04DetalleLluvia": {
+    "description": "M04: ciudad y milímetros de lluvia",
+    "placeholders": {
+      "ciudad": {
+        "type": "String"
+      },
+      "detalle": {
+        "type": "String"
+      }
+    }
   }
 }
