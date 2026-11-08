@@ -9,8 +9,10 @@ fragment OnboardingCampos on Onboarding {
   intentosRestantes
 }
 
+# `segundosRestantes` (v0.31): solo con ESPERA_REQUERIDA; es lo que falta para poder reenviar el código.
 fragment ErrorOnboardingCampos on ErrorOnboarding {
   codigo
+  segundosRestantes
 }
 
 # M01-02: al entrar a la autorización.
@@ -82,6 +84,8 @@ mutation CrearCuentaOnboarding($onboardingId: ID!, $entrada: CuentaOnboardingInp
       sesion {
         token
         expiraEn
+        refreshToken
+        refreshExpiraEn
       }
       onboarding {
         ...OnboardingCampos
@@ -147,6 +151,7 @@ fragment UsuarioCampos on Usuario {
   moneda
   tieneContacto
   documentoEnmascarado
+  correo
 }
 
 fragment CodigoOnboardingCampos on CodigoOnboardingEnviado {
@@ -176,6 +181,8 @@ mutation RegistrarCuenta($correo: String!, $clave: String!, $codigo: String!) {
     ... on Sesion {
       token
       expiraEn
+      refreshToken
+      refreshExpiraEn
       usuario {
         ...UsuarioCampos
       }
@@ -193,6 +200,8 @@ mutation IniciarSesion($entrada: CredencialesInput!) {
     ... on Sesion {
       token
       expiraEn
+      refreshToken
+      refreshExpiraEn
       usuario {
         ...UsuarioCampos
       }

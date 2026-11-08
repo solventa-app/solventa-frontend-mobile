@@ -231,7 +231,13 @@ final class Fracaso<T> extends Resultado<T> { const Fracaso(this.falla); final F
 | Error GraphQL de token inválido o vencido | `SesionVencida` | Se borra la sesión y se vuelve al ingreso | No |
 | Error GraphQL de rol no permitido | `SinPermiso` | Mensaje de acceso no permitido | No |
 | Unión `Error*` del contrato | `FallaNegocio(motivo)` | El estado diseñado para ese motivo (p. ej. M01-07c) | Según el motivo |
+| `ErrorOnboarding` con `TOKEN_INVALIDO`, `SESION_NO_ENCONTRADA` o `SIN_ONBOARDING` (el recorrido de 30 min venció) | `FallaNegocio.registroVencido` | «Tu registro venció. Empieza de nuevo.» y el enlace **«Empezar de nuevo»** (`FallaBanner`: descarta el recorrido y las capturas, vuelve a la bienvenida; la cuenta y la sesión no se tocan) | No |
 | HTTP 4xx/5xx restante, `errors` inesperado, JSON que no parsea | `Inesperada` | Mensaje genérico con «Reintentar» y código de soporte | Sí |
+
+**Log de red.** `ErrorRed.tipo` guarda el tipo exacto del fallo (`DioExceptionType.name`: `connectionError`,
+`connectionTimeout`, `badCertificate`, `cancel`, `unknown`) y `guardarFallas` lo registra como `codigo` en el log, sin
+URL ni datos personales. Sirve para decidir con datos reales cuándo un fallo es «sin internet» y cuándo «servidor no
+disponible»; hoy todos se muestran como `SinConexion`.
 
 **Dependencia con el backend.** Hoy el BFF señala la sesión y los permisos con un error GraphQL cuyo único dato es
 el texto (`ErrorPublico` en `services/bff/app/esquema.py`), con HTTP 200. Para no depender de un texto, se pedirá al
@@ -294,8 +300,32 @@ Qué impide que se rompa:
 
 ## 7. Sesión y autenticación
 
-- El JWT del BFF vive solo en `flutter_secure_storage` (con prefijo de ambiente) y en memoria; nunca en logs,
-  preferencias ni SQLite. El interceptor lo pone en `Authorization: Bearer`.
-- `SesionVencida` borra el token y lleva al ingreso.
-- Biometría y refresh token (HU-M02) siguen el diseño de `solventa-backend/docs/autenticacion-usuarios.md` §7: la
-  biometría nunca llega al servidor, solo desbloquea el refresh token guardado en el Keystore.
+Hoy (HU-M02, KAN-227; contrato T22 v0.26). Código en `lib/core/sesion/`.
+
+- **Qué se guarda y dónde.** El JWT de acceso (60 min) vive **solo en memoria** (`GestorSesion`). El refresh (8 días)
+  se guarda **cifrado** con la llave pública de un par RSA-2048 del Android Keystore (`LlaveroSesion.kt`) y el
+  resultado va en `flutter_secure_storage` bajo `<API_ENV>.solventa.sesion.refresh`. Nunca en logs, preferencias ni
+  SQLite. La clave vieja `solventa.sesion.token` se borra al actualizar (el usuario inicia sesión una vez).
+- **Atado a la autenticación del usuario (D3).** La llave privada solo descifra durante 10 s después de una huella
+  fuerte o del PIN/patrón del teléfono. Cifrar con la pública no pide nada, así que el refresh rotado se guarda en
+  segundo plano. Si se quita el bloqueo de pantalla, Android invalida la llave y se vuelve a pedir correo y clave. Un
+  teléfono sin bloqueo no puede crear la llave: la sesión queda solo en memoria (`refreshPersistido = false`).
+- **Abrir.** `iniciarSesion`, `registrarCuenta` y `crearCuentaOnboarding` piden `refreshToken` y `refreshExpiraEn`;
+  `GestorSesion.abrir` guarda el refresh antes de seguir. `actualizarSesion` (tras VERIFICADA) cambia solo el JWT.
+- **Rol (contrato v0.29, T17).** La app es solo del cliente: `iniciarSesion` manda siempre `CredencialesInput.rol =
+  CLIENTE` (`GqlOnboardingRemoteDataSource.rolApp`) y, como defensa, el repositorio no abre sesión si el usuario que
+  vuelve no es `CLIENTE`. En ambos casos el usuario ve el mismo error de una clave errada («El correo o la clave no son
+  correctos»): el rol real de la cuenta no se revela.
+- **Renovación silenciosa.** `GraphqlClient` reconoce un JWT vencido (HTTP 401 o los mensajes de sesión del BFF,
+  `esErrorSinSesion`), pide `GestorSesion.renovar()` y repite la operación **una** vez. La renovación usa un cliente
+  aparte, sin renovación, para no entrar en bucle. Tiene candado: varios 401 a la vez producen una sola llamada.
+- **Período de gracia (mitiga la rotación perdida).** Ante una falla de red, `renovar` reintenta una vez con el mismo
+  refresh; el backend lo acepta si llega antes de 30 s y nadie usó el sucesor (`refresh_gracia_segundos`). El
+  refresh nuevo se guarda **antes** que cualquier otra cosa. Sin red tras el reintento no se borra nada.
+- **`SESION_VENCIDA`.** Se borran el refresh y la llave, y el gestor emite `SesionVencidaEvento`: el onboarding vuelve a
+  «Inicia sesión» con `fallaSesionVencida`.
+- **Cerrar sesión (G-04).** `cerrarSesion(refreshToken)` revoca la cadena; si la red falla igual se borra todo local.
+- La biometría nunca llega al servidor: solo abre la llave del refresh. Detalle del backend en
+  `solventa-backend/docs/autenticacion-usuarios.md` (T22 y período de gracia).
+- **Pendiente:** al abrir la app con un refresh guardado, mostrar M02-01 y desbloquear (`GestorSesion.desbloquear`), y
+  bloquear tras 5 minutos en segundo plano (`GestorSesion.bloquear`). Llegan con las pantallas de HU-M02.

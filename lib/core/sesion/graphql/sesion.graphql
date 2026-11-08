@@ -1,0 +1,21 @@
+# Sesión de la app con refresh (T22, contrato v0.26; HU-M02).
+# Canal app: el refresh viaja en el cuerpo. Rota en cada uso; ver docs/integracion-backend.md §7.
+
+mutation RenovarSesion($refreshToken: String) {
+  renovarSesion(refreshToken: $refreshToken) {
+    __typename
+    ... on Sesion {
+      token
+      expiraEn
+      refreshToken
+      refreshExpiraEn
+    }
+    ... on ErrorAutenticacion {
+      codigo
+    }
+  }
+}
+
+mutation CerrarSesion($refreshToken: String) {
+  cerrarSesion(refreshToken: $refreshToken)
+}

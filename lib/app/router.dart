@@ -6,6 +6,10 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../core/design_system/solventa_ui.dart';
 import '../core/l10n/l10n.dart';
+import '../features/acceso/presentation/acceso_notifier.dart';
+import '../features/acceso/presentation/acceso_routes.dart';
+import '../features/acceso/presentation/pages/m02_01_desbloqueo_page.dart';
+import '../features/acceso/presentation/pages/m02_03_acceso_concedido_page.dart';
 import '../features/assistance/presentation/asistencia_routes.dart';
 import '../features/assistance/presentation/pages/m06_01_prestadores_page.dart';
 import '../features/assistance/presentation/pages/m06_02_solicitud_page.dart';
@@ -40,19 +44,24 @@ import '../features/profile/presentation/profile_page.dart';
 const bool _openGallery = bool.fromEnvironment('SOL_GALLERY');
 
 /// Última ruta activa observada por el navegador, usada por `beforeCaptureScreenshot`
-/// para no tomar capturas en pantallas de documento o cámara (`M01-03`..`M01-05`).
+/// para no tomar capturas en pantallas de documento o cámara (`M01-03`..`M01-05`)
+/// ni en las de acceso a la cuenta (`M02-01`, `M02-03`).
 String? rutaActualObservada;
 
 const Set<String> _rutasSinCaptura = {
   'm01-03',
   'm01-04',
   'm01-05',
+  'm02-01',
+  'm02-03',
   '/onboarding/frente',
   '/onboarding/reverso',
   '/onboarding/prueba-vida',
   OnboardingRoutes.frente,
   OnboardingRoutes.reverso,
   OnboardingRoutes.pruebaVida,
+  AccesoRoutes.desbloqueo,
+  AccesoRoutes.concedido,
 };
 
 /// Indica si [ruta] corresponde a una pantalla de captura biométrica/documento
@@ -96,129 +105,156 @@ void _volverAPestana(BuildContext context, int indice) {
 }
 
 /// Rutas de la app. El nombre de cada ruta es el id del plano de Figma.
-GoRouter crearRouter() => GoRouter(
-  initialLocation: kDebugMode && _openGallery ? SolGalleryPage.routeName : '/',
-  observers: [_RutaActualObserver(), SentryNavigatorObserver()],
-  routes: [
-    GoRoute(path: '/', name: 'g-03', builder: (_, _) => const _RootShell()),
-    GoRoute(
-      path: OnboardingRoutes.bienvenida,
-      name: 'm01-01',
-      builder: (_, _) => const M0101BienvenidaPage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.autorizacion,
-      name: 'm01-02',
-      builder: (_, _) => const M0102AutorizacionPage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.frente,
-      name: 'm01-03',
-      builder: (_, _) => const M0103DocumentoFrentePage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.reverso,
-      name: 'm01-04',
-      builder: (_, _) => const M0104DocumentoReversoPage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.pruebaVida,
-      name: 'm01-05',
-      builder: (_, _) => const M0105PruebaVidaPage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.cuenta,
-      name: 'm01-05b',
-      builder: (_, _) => const M0105bCuentaPage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.codigoCorreo,
-      name: 'm01-05c',
-      builder: (_, _) => const M0105cCodigoPage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.verificando,
-      name: 'm01-06',
-      builder: (_, _) => const M0106VerificandoPage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.resultado,
-      name: 'm01-07',
-      builder: (_, _) => const M0107ResultadoPage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.biometria,
-      name: 'm01-08',
-      builder: (_, _) => const M0108BiometriaPage(),
-    ),
-    GoRoute(
-      path: OnboardingRoutes.perfil,
-      name: 'g-05',
-      builder: (_, _) => const ProfilePage(),
-    ),
-    GoRoute(
-      path: ReporteRoutes.poliza,
-      name: 'm05-01',
-      builder: (_, _) => const M0501PolizaPage(),
-    ),
-    GoRoute(
-      path: ReporteRoutes.fotos,
-      name: 'm05-02',
-      builder: (_, _) => const M0502FotosPage(),
-    ),
-    GoRoute(
-      path: ReporteRoutes.relato,
-      name: 'm05-03',
-      builder: (_, _) => const M0503RelatoPage(),
-    ),
-    GoRoute(
-      path: ReporteRoutes.enviando,
-      name: 'm05-04',
-      builder: (_, _) => const M0504EnviandoPage(),
-    ),
-    GoRoute(
-      path: ReporteRoutes.resultado,
-      name: 'm05-05',
-      builder: (_, _) => const M0505ResultadoPage(),
-    ),
-    GoRoute(
-      path: ReporteRoutes.misSiniestros,
-      name: 'm05-06',
-      builder: (_, _) => const M0506MisSiniestrosPage(),
-    ),
-    GoRoute(
-      path: AsistenciaRoutes.solicitud,
-      name: 'm06-02',
-      builder: (_, _) => const M0602SolicitudPage(),
-    ),
-    GoRoute(
-      path: AsistenciaRoutes.enviando,
-      name: 'm06-03',
-      builder: (_, _) => const M0603EnviandoPage(),
-    ),
-    GoRoute(
-      path: AsistenciaRoutes.resultado,
-      name: 'm06-04',
-      builder: (context, _) => M0604ResultadoPage(
-        onIrAlMapa: () => _volverAPestana(context, SolAppShell.assistanceIndex),
-        onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
-      ),
-    ),
-    GoRoute(
-      path: AsistenciaRoutes.cancelada,
-      name: 'm06-06',
-      builder: (context, _) => M0606CanceladaPage(
-        onIrAlMapa: () => _volverAPestana(context, SolAppShell.assistanceIndex),
-        onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
-      ),
-    ),
-    if (kDebugMode)
-      GoRoute(
-        path: SolGalleryPage.routeName,
-        builder: (_, _) => const SolGalleryPage(),
-      ),
-  ],
-);
+///
+/// Con [fase] (HU-M02) el router redirige según la fase de acceso:
+/// arrancando solo `/`, con sesión guardada solo M02-01, recién desbloqueada
+/// solo M02-03 ([redirigirAcceso]). [refrescar] avisa cuando cambia.
+GoRouter crearRouter({FaseAcceso Function()? fase, Listenable? refrescar}) =>
+    GoRouter(
+      initialLocation: kDebugMode && _openGallery
+          ? SolGalleryPage.routeName
+          : '/',
+      observers: [_RutaActualObserver(), SentryNavigatorObserver()],
+      refreshListenable: refrescar,
+      redirect: fase == null
+          ? null
+          : (_, state) {
+              final ubicacion = state.matchedLocation;
+              if (ubicacion == SolGalleryPage.routeName) return null;
+              return redirigirAcceso(fase(), ubicacion);
+            },
+      routes: [
+        GoRoute(path: '/', name: 'g-03', builder: (_, _) => const _RootShell()),
+        GoRoute(
+          path: OnboardingRoutes.bienvenida,
+          name: 'm01-01',
+          builder: (_, _) => const M0101BienvenidaPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.autorizacion,
+          name: 'm01-02',
+          builder: (_, _) => const M0102AutorizacionPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.frente,
+          name: 'm01-03',
+          builder: (_, _) => const M0103DocumentoFrentePage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.reverso,
+          name: 'm01-04',
+          builder: (_, _) => const M0104DocumentoReversoPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.pruebaVida,
+          name: 'm01-05',
+          builder: (_, _) => const M0105PruebaVidaPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.cuenta,
+          name: 'm01-05b',
+          builder: (_, _) => const M0105bCuentaPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.codigoCorreo,
+          name: 'm01-05c',
+          builder: (_, _) => const M0105cCodigoPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.verificando,
+          name: 'm01-06',
+          builder: (_, _) => const M0106VerificandoPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.resultado,
+          name: 'm01-07',
+          builder: (_, _) => const M0107ResultadoPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.biometria,
+          name: 'm01-08',
+          builder: (_, _) => const M0108BiometriaPage(),
+        ),
+        GoRoute(
+          path: AccesoRoutes.desbloqueo,
+          name: 'm02-01',
+          builder: (_, _) => const M0201DesbloqueoPage(),
+        ),
+        GoRoute(
+          path: AccesoRoutes.concedido,
+          name: 'm02-03',
+          builder: (_, _) => const M0203AccesoConcedidoPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.perfil,
+          name: 'g-05',
+          builder: (_, _) => const ProfilePage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.poliza,
+          name: 'm05-01',
+          builder: (_, _) => const M0501PolizaPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.fotos,
+          name: 'm05-02',
+          builder: (_, _) => const M0502FotosPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.relato,
+          name: 'm05-03',
+          builder: (_, _) => const M0503RelatoPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.enviando,
+          name: 'm05-04',
+          builder: (_, _) => const M0504EnviandoPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.resultado,
+          name: 'm05-05',
+          builder: (_, _) => const M0505ResultadoPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.misSiniestros,
+          name: 'm05-06',
+          builder: (_, _) => const M0506MisSiniestrosPage(),
+        ),
+        GoRoute(
+          path: AsistenciaRoutes.solicitud,
+          name: 'm06-02',
+          builder: (_, _) => const M0602SolicitudPage(),
+        ),
+        GoRoute(
+          path: AsistenciaRoutes.enviando,
+          name: 'm06-03',
+          builder: (_, _) => const M0603EnviandoPage(),
+        ),
+        GoRoute(
+          path: AsistenciaRoutes.resultado,
+          name: 'm06-04',
+          builder: (context, _) => M0604ResultadoPage(
+            onIrAlMapa: () =>
+                _volverAPestana(context, SolAppShell.assistanceIndex),
+            onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
+          ),
+        ),
+        GoRoute(
+          path: AsistenciaRoutes.cancelada,
+          name: 'm06-06',
+          builder: (context, _) => M0606CanceladaPage(
+            onIrAlMapa: () =>
+                _volverAPestana(context, SolAppShell.assistanceIndex),
+            onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
+          ),
+        ),
+        if (kDebugMode)
+          GoRoute(
+            path: SolGalleryPage.routeName,
+            builder: (_, _) => const SolGalleryPage(),
+          ),
+      ],
+    );
 
 class _RootShell extends ConsumerWidget {
   const _RootShell();
@@ -226,6 +262,13 @@ class _RootShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final estado = ref.watch(onboardingProvider);
+
+    // HU-M02 (F6): mientras se mira si hay sesión guardada, solo el fondo;
+    // así no se ve G-03 un instante antes de M02-01.
+    if (ref.watch(accesoProvider.select((s) => s.fase)) ==
+        FaseAcceso.comprobando) {
+      return const Scaffold(body: SizedBox.expand());
+    }
 
     // Sin sesión o cuenta creada, la pantalla de entrada es Crea tu cuenta / Inicia sesión.
     if (!estado.cuentaCreada) {

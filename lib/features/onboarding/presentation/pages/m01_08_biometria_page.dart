@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/biometria/biometria_service.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/network/network_providers.dart';
 import '../onboarding_routes.dart';
 import '../providers.dart';
 
-/// M01-08 · Activa tu biometría (2001:673). Sin huella o rostro activado la
-/// app no puede usarse: «Ya lo activé» lo comprueba antes de seguir.
+/// M01-08 · Activa tu biometría (2001:673).
+///
+/// Al entrar y al volver de Ajustes consulta qué tiene el teléfono. «Ya lo
+/// activé» abre el diálogo del sistema (huella, rostro o PIN del teléfono,
+/// decisión D1) y, si confirma, deja guardado el refresh de la sesión
+/// (HU-M02). Sin bloqueo de pantalla no se puede seguir.
 class M0108BiometriaPage extends ConsumerStatefulWidget {
   const M0108BiometriaPage({super.key});
 
@@ -16,19 +22,103 @@ class M0108BiometriaPage extends ConsumerStatefulWidget {
   ConsumerState<M0108BiometriaPage> createState() => _M0108BiometriaPageState();
 }
 
-class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage> {
+class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
+    with WidgetsBindingObserver {
   bool _comprobando = false;
-  bool _noActivada = false;
+  EstadoBiometria? _estado;
+  ResultadoBiometria? _ultimo;
 
-  Future<void> _continuar() async {
-    setState(() => _comprobando = true);
-    final ok = await ref.read(biometriaServiceProvider).disponible();
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _consultarEstado();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Al volver de Ajustes, el teléfono puede tener ya huella o bloqueo.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _consultarEstado();
+  }
+
+  Future<void> _consultarEstado() async {
+    final estado = await ref.read(biometriaServiceProvider).estado();
     if (!mounted) return;
     setState(() {
-      _comprobando = false;
-      _noActivada = !ok;
+      _estado = estado;
+      _ultimo = null;
     });
-    if (ok) context.go('/');
+  }
+
+  Future<void> _continuar() async {
+    final motivo = context.l10n.biometriaMotivo;
+    final servicio = ref.read(biometriaServiceProvider);
+    setState(() {
+      _comprobando = true;
+      _ultimo = null;
+    });
+    final estado = await servicio.estado();
+    if (!mounted) return;
+    if (estado == EstadoBiometria.sinBloqueoPantalla ||
+        estado == EstadoBiometria.noDisponible) {
+      setState(() {
+        _estado = estado;
+        _comprobando = false;
+      });
+      return;
+    }
+    final resultado = await servicio.autenticar(
+      motivo: motivo,
+      permitirCredencialDispositivo: true,
+    );
+    if (!mounted) return;
+    if (resultado is Autenticado) {
+      // Si al abrir la sesión no había bloqueo, el refresh quedó solo en
+      // memoria: ahora que hay bloqueo se guarda cifrado.
+      await ref.read(gestorSesionProvider).asegurarPersistencia();
+      if (!mounted) return;
+      context.go('/');
+      return;
+    }
+    setState(() {
+      _comprobando = false;
+      _estado = estado;
+      _ultimo = resultado;
+    });
+  }
+
+  /// Aviso según el último intento o, si no hubo, según el estado.
+  (SolStatus, String)? _aviso(AppLocalizations l10n) {
+    final ultimo = _ultimo;
+    if (ultimo != null) {
+      return switch (ultimo) {
+        NoReconocido() => (SolStatus.warning, l10n.m0108NoReconocido),
+        BloqueoTemporal() ||
+        BloqueoPermanente() => (SolStatus.warning, l10n.m0108BloqueoTemporal),
+        SinBloqueoPantalla() => (SolStatus.warning, l10n.m0108SinBloqueo),
+        SinBiometriaRegistrada() => (SolStatus.info, l10n.m0108SoloPin),
+        NoDisponible() => (SolStatus.warning, l10n.m0108NoDisponible),
+        Autenticado() || Cancelado() => null,
+      };
+    }
+    return switch (_estado) {
+      EstadoBiometria.sinBloqueoPantalla => (
+        SolStatus.warning,
+        l10n.m0108SinBloqueo,
+      ),
+      EstadoBiometria.noDisponible => (
+        SolStatus.warning,
+        l10n.m0108NoDisponible,
+      ),
+      EstadoBiometria.soloCredencial => (SolStatus.info, l10n.m0108SoloPin),
+      EstadoBiometria.biometriaRegistrada || null => null,
+    };
   }
 
   @override
@@ -128,11 +218,11 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage> {
               ],
             ),
           ),
-          if (_noActivada) ...[
+          if (_aviso(l10n) case (final status, final texto)) ...[
             const SizedBox(height: SolSpacing.lg),
-            SolStatusBanner(
-              status: SolStatus.warning,
-              title: l10n.m0108NoActivada,
+            Semantics(
+              liveRegion: true,
+              child: SolStatusBanner(status: status, title: texto),
             ),
           ],
         ],
@@ -141,7 +231,8 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage> {
         SolButton.outlined(
           label: l10n.m0108Ajustes,
           icon: SolIcons.settings,
-          onPressed: () => ref.read(biometriaServiceProvider).abrirAjustes(),
+          onPressed: () =>
+              ref.read(biometriaServiceProvider).abrirAjustesSeguridad(),
         ),
         const SizedBox(height: SolSpacing.lg),
         SolButton.primary(

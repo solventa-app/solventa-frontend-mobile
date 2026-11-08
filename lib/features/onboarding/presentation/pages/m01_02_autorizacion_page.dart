@@ -8,6 +8,7 @@ import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
+import '../widgets/falla_banner.dart';
 
 /// M01-02 · Autorización de datos (2001:236) y M01-02b · consentimiento
 /// marcado (2018:493). «Continuar» deshabilitado hasta marcar (nunca marcado
@@ -61,7 +62,7 @@ class M0102AutorizacionPage extends ConsumerWidget {
           ),
           if (falla != null) ...[
             const SizedBox(height: SolSpacing.lg),
-            SolStatusBanner(status: SolStatus.error, title: l10n.falla(falla)),
+            FallaBanner(falla: falla),
           ],
         ],
       ),

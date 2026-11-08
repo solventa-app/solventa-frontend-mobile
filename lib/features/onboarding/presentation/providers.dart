@@ -2,12 +2,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/network_providers.dart';
 import '../../../core/network/subida_archivo_service.dart';
-import '../data/datasources/biometria_service.dart';
 import '../data/datasources/captura_service.dart';
 import '../data/datasources/fake_onboarding_remote_datasource.dart';
 import '../data/datasources/onboarding_remote_datasource.dart';
 import '../data/repositories/onboarding_repository_impl.dart';
 import '../domain/repositories/onboarding_repository.dart';
+
+export '../../../core/biometria/biometria_providers.dart'
+    show biometriaServiceProvider;
 
 /// Con `API_ENV=mock` el fake del BFF; si no, el real (contrato v0.21).
 final fakeOnboardingProvider = Provider<FakeOnboardingRemoteDataSource>(
@@ -31,7 +33,7 @@ final onboardingRepositoryProvider = Provider<OnboardingRepository>(
   (ref) => OnboardingRepositoryImpl(
     ref.watch(onboardingRemoteDataSourceProvider),
     ref.watch(subidaArchivoServiceProvider),
-    ref.watch(sesionStoreProvider),
+    ref.watch(gestorSesionProvider),
   ),
 );
 
@@ -78,10 +80,4 @@ final esperasVerificacionProvider = Provider<List<Duration>>(
     Duration(seconds: 5),
     Duration(seconds: 12),
   ],
-);
-
-final biometriaServiceProvider = Provider<BiometriaService>(
-  (ref) => ref.watch(usarFakesProvider)
-      ? FakeBiometriaService()
-      : LocalAuthBiometriaService(),
 );

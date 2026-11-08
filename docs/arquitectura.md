@@ -42,14 +42,16 @@ lib/
   main.dart                   hoy · arranque único; el ambiente sale de --dart-define-from-file
   app/
     solventa_app.dart         hoy · MaterialApp: tema, locale, router
-    router.dart               hoy  · go_router con las rutas de todas las features (G-03, G-05, M01-01..M01-08)
+    router.dart               hoy  · go_router con las rutas de todas las features (G-03, G-05, M01-01..M01-08, M02-01, M02-03) y la redirección por fase de acceso
     bootstrap.dart            plan · lee AppConfig, separa datos por ambiente, crea el ProviderScope
   core/
     contrato/                 hoy  · schema.graphql (copia del backend, no se edita) y schema.graphql.dart (generado)
     config/                   hoy  · AppConfig: FLAVOR, API_ENV, API_BASE_URL, SENTRY_DSN
-    network/                  hoy  · GraphqlClient sobre dio y providers de red
+    network/                  hoy  · GraphqlClient sobre dio (con renovación silenciosa de la sesión) y providers de red
+    sesion/                   hoy  · GestorSesion, refresh cifrado con el llavero RSA del Keystore (HU-M02)
+    biometria/                hoy  · BiometriaService (local_auth) con los estados de HU-M02 y «Ir a ajustes» nativo
     errors/                   hoy  · Falla (sealed), Resultado<T> y guardarFallas
-    storage/                  plan · secure storage y SQLite con prefijo por ambiente
+    storage/                  plan · SQLite con prefijo por ambiente (cuando una HU lo pida)
     log/                      hoy  · SolLog + limpiar.dart + Sentry (docs/observabilidad.md)
     l10n/                     hoy  · archivos .arb (es/en), selector de 7 monedas y código generado
     design_system/            hoy  · tokens, tema, íconos, componentes y layouts (KAN-239)
@@ -75,6 +77,9 @@ test/
   contract/                   prueba de que toda fixture parsea con su tipo generado
   goldens/                    hoy
 ```
+
+`lib/features/acceso/presentation/` (HU-M02) tampoco tiene `domain` ni `data`: la sesión es de `core/sesion/` y la
+biometría de `core/biometria/`; la feature solo tiene `AccesoNotifier`, M02-01 (con su estado M02-01a) y M02-03.
 
 `lib/features/assistance/` (HU-M06) ya tiene sus tres capas: mapa con `flutter_map` y teselas de OpenStreetMap
 (`MAP_TILE_URL`), ubicación con `geolocator` y ruta en la app de mapas del teléfono con `url_launcher` (intent `geo:`,
@@ -245,7 +250,20 @@ trazarlas a Figma, y un test que verifique que cada pantalla del sprint tiene su
 `src/router/pantallas.ts` en la web). La galería sigue existiendo solo en debug.
 
 Atrás del sistema: lo manejan los layouts (`SolFlowScaffold` con `PopScope`, `SolTransitionalScreen` bloqueado).
-Ninguna página reimplementa `PopScope`.
+La excepción es M02-03, transitoria sin layout propio, que bloquea el atrás con `PopScope`.
+
+**Redirección por fase de acceso (HU-M02, hoy).** `crearRouter` recibe la fase de `AccesoNotifier` y un `Listenable`
+que avisa cuando cambia; `redirigirAcceso` decide:
+
+| Fase | Qué deja ver |
+|---|---|
+| `comprobando` (arranque, leyendo si hay refresh guardado) | Solo `/`, que pinta el fondo vacío: no hay parpadeo de G-03 a M02-01 |
+| `bloqueada` (hay sesión guardada o pasaron 5 min en segundo plano) | Solo M02-01 (`/acceso/desbloqueo`); el atrás cierra la app |
+| `concedida` | Solo M02-03 (`/acceso/concedido`), que a los 1,5 s pasa a `normal` |
+| `normal` | Todas las rutas menos las de M02 |
+
+Al vencer la sesión (`SesionVencidaEvento`) la app hace `go('/')`: se cierran las pantallas apiladas (perfil,
+verificación) y queda «Inicia sesión» con el aviso. M02-01 y M02-03 están en las rutas sin captura de Sentry.
 
 ---
 
@@ -296,7 +314,8 @@ widgets y `SolLocalizations` fija `es_CO`; el primer PR de HU-M01 lo migra.
 
 | Dato | Dónde | Por qué |
 |---|---|---|
-| JWT, refresh token, PIN derivado | `flutter_secure_storage` (Keystore) | Credenciales: cifradas y atadas al dispositivo |
+| JWT de acceso | Solo en memoria (`GestorSesion`) | Dura 60 min y se renueva con el refresh: no hace falta persistirlo |
+| Refresh token | Cifrado con la llave pública RSA del Keystore y guardado en `flutter_secure_storage`, con prefijo de ambiente | La llave privada solo descifra 10 s después de una huella o del PIN del teléfono (HU-M02, D3) |
 | Preferencias (idioma, onboarding visto) | `shared_preferences` | No son datos personales |
 | Datos que deben sobrevivir sin red (póliza de la billetera, evidencias de siniestro pendientes de enviar, colas de sincronización) | SQLite con `drift` | ACID, transacciones, migraciones versionadas y consultas reactivas (`Stream`) |
 | Imágenes del documento y la selfie (HU-M01) | Solo en memoria y en el directorio temporal mientras se envían; se borran al terminar | Son datos biométricos y de identidad: no se guardan |
@@ -304,6 +323,26 @@ widgets y `SolLocalizations` fija `es_CO`; el primer PR de HU-M01 lo migra.
 Reglas: las migraciones de `drift` se versionan y prueban (como Alembic en el backend); ningún dato personal va en
 SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves llevan el prefijo del ambiente (ver
 [integracion-backend.md §1](integracion-backend.md#1-ambientes)). HU-M01 no necesita SQLite.
+
+**Decisiones de HU-M02 (2026-11-06).**
+
+- **Sin PIN propio de Solventa (D5).** El ingreso alterno usa el PIN o patrón **del teléfono** por el diálogo del sistema;
+  la app no guarda ningún PIN. M02-02 y M02-02b de Figma no se construyen (D2): «Usar PIN del teléfono» abre el diálogo.
+- **El PIN del teléfono también desbloquea (D1).** Desviación deliberada de HA-SEG-005 («exclusivamente con el sensor
+  biométrico»): un teléfono con PIN y sin huella puede entrar.
+- **Llave atada a la autenticación con ventana de 10 s (D3).** RSA-2048 en el Keystore
+  (`android/.../LlaveroSesion.kt`): la pública cifra sin pedir nada (el refresh rotado se guarda en segundo plano); la
+  privada exige autenticación reciente. No se usa `BiometricPrompt` con `CryptoObject` y `local_auth` sigue siendo el
+  diálogo.
+- **Bloqueo tras 5 minutos en segundo plano.** `AppLifecycleListener` en `SolventaApp` (`hidden` → `show`): si la
+  sesión está abierta y su refresh quedó guardado, `GestorSesion.bloquear()` olvida el JWT y el refresh en claro y la
+  app vuelve a M02-01. Si el refresh no se pudo guardar (teléfono sin bloqueo de pantalla) no se bloquea, porque no
+  habría con qué desbloquear.
+- **Deuda conocida.** (1) Una huella nueva no invalida la sesión (D4): Android solo lo hace con llaves por operación.
+  (2) La ventana de 10 s permite usar la llave a código que ya corre dentro de la app. (3) El código Kotlin no tiene
+  pruebas instrumentadas. (4) Un rostro clasificado como «débil» no abre la llave: la app ofrece el PIN del teléfono
+  (falta validarlo en un teléfono real). (5) Si la app muere entre recibir y guardar el refresh rotado y se reabre
+  después de 30 s, el backend toma el reuso como robo y pide correo y clave.
 
 ---
 

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/errors/falla.dart';
 import 'package:solventa_mobile/core/errors/guardar_fallas.dart';
 import 'package:solventa_mobile/core/errors/resultado.dart';
+import 'package:solventa_mobile/core/log/sol_log.dart';
 import 'package:solventa_mobile/core/network/network_exceptions.dart';
 
 void main() {
@@ -31,6 +32,32 @@ void main() {
         expect(fallaDesdeErrorCliente(error).runtimeType, esperado);
       });
     });
+  });
+
+  group('FallaNegocio.registroVencido (T16)', () {
+    for (final motivo in [
+      'TOKEN_INVALIDO',
+      'SESION_NO_ENCONTRADA',
+      'SIN_ONBOARDING',
+    ]) {
+      test('$motivo pide empezar de nuevo', () {
+        expect(FallaNegocio(motivo).registroVencido, isTrue);
+      });
+    }
+
+    test('otros motivos no', () {
+      expect(const FallaNegocio('CODIGO_INVALIDO').registroVencido, isFalse);
+    });
+  });
+
+  test('una falla de red registra su tipo exacto', () async {
+    SolLog.limpiarHistorialPruebas();
+
+    await guardarFallas<int>(
+      () async => throw const ErrorRed(tipo: 'connectionTimeout'),
+    );
+
+    expect(SolLog.historialPruebas.join('\n'), contains('connectionTimeout'));
   });
 
   test('guardarFallas devuelve Exito con el valor', () async {

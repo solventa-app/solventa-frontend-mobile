@@ -33,6 +33,14 @@ final class FakeOnboardingRemoteDataSource
   Map<String, dynamic> respuestaVerificarCodigo =
       OnboardingFixtures.verificarCodigo;
 
+  /// Respuesta de `solicitarSubidaOnboarding` (p. ej. `TOKEN_INVALIDO` cuando
+  /// el recorrido venció). `null`: la subida normal.
+  Map<String, dynamic>? respuestaSubida;
+
+  /// Respuesta de `iniciarSesion` (p. ej. otro rol en las pruebas).
+  Map<String, dynamic> respuestaIniciarSesion =
+      OnboardingFixtures.iniciarSesion;
+
   /// Código OTP válido esperado en modo fake (`123456` por defecto).
   String codigoEsperado = '123456';
 
@@ -75,7 +83,10 @@ final class FakeOnboardingRemoteDataSource
     String tipoContenido,
     int tamanoBytes,
   ) async => Mutation$SolicitarSubidaOnboarding.fromJson(
-    await _responder('subida:${paso.name}', OnboardingFixtures.subida),
+    await _responder(
+      'subida:${paso.name}',
+      respuestaSubida ?? OnboardingFixtures.subida,
+    ),
   ).solicitarSubidaOnboarding;
 
   @override
@@ -94,6 +105,7 @@ final class FakeOnboardingRemoteDataSource
   ) async {
     usuarioActual = OnboardingFixtures.usuario(
       usuario: correo,
+      correo: correo,
       nombre: null,
       estado: 'PENDIENTE_VERIFICACION',
     );
@@ -125,12 +137,15 @@ final class FakeOnboardingRemoteDataSource
     }
     usuarioActual = OnboardingFixtures.usuario(
       usuario: correo,
+      correo: correo,
       nombre: null,
       estado: 'PENDIENTE_VERIFICACION',
     );
     return Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
       token: 'fake-jwt-token-onboarding',
       expiraEn: DateTime.now().add(const Duration(hours: 1)),
+      refreshToken: 'fake-refresh-onboarding',
+      refreshExpiraEn: DateTime.now().add(const Duration(days: 8)),
       usuario: Fragment$UsuarioCampos.fromJson(usuarioActual),
     );
   }
@@ -181,6 +196,7 @@ final class FakeOnboardingRemoteDataSource
   Future<Mutation$ActualizarSesion$actualizarSesion> actualizarSesion() async {
     usuarioActual = OnboardingFixtures.usuario(
       usuario: (usuarioActual['usuario'] as String?) ?? 'maria@ejemplo.co',
+      correo: usuarioActual['correo'] as String?,
       nombre: 'María',
       estado: 'ACTIVO',
     );
@@ -216,9 +232,12 @@ final class FakeOnboardingRemoteDataSource
     String usuario,
     String clave,
   ) async {
-    usuarioActual = OnboardingFixtures.usuario(usuario: usuario);
+    usuarioActual = OnboardingFixtures.usuario(
+      usuario: usuario,
+      correo: usuario,
+    );
     return Mutation$IniciarSesion.fromJson(
-      await _responder('iniciarSesion', OnboardingFixtures.iniciarSesion),
+      await _responder('iniciarSesion', respuestaIniciarSesion),
     ).iniciarSesion;
   }
 

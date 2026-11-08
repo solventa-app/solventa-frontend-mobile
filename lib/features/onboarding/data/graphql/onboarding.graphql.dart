@@ -185,19 +185,24 @@ const documentNodeFragmentOnboardingCampos = DocumentNode(
 class Fragment$ErrorOnboardingCampos {
   Fragment$ErrorOnboardingCampos({
     required this.codigo,
+    this.segundosRestantes,
     this.$__typename = 'ErrorOnboarding',
   });
 
   factory Fragment$ErrorOnboardingCampos.fromJson(Map<String, dynamic> json) {
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     final l$$__typename = json['__typename'];
     return Fragment$ErrorOnboardingCampos(
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
       $__typename: (l$$__typename as String),
     );
   }
 
   final String codigo;
+
+  final int? segundosRestantes;
 
   final String $__typename;
 
@@ -205,6 +210,8 @@ class Fragment$ErrorOnboardingCampos {
     final _resultData = <String, dynamic>{};
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -213,8 +220,9 @@ class Fragment$ErrorOnboardingCampos {
   @override
   int get hashCode {
     final l$codigo = codigo;
+    final l$segundosRestantes = segundosRestantes;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$codigo, l$$__typename]);
+    return Object.hashAll([l$codigo, l$segundosRestantes, l$$__typename]);
   }
 
   @override
@@ -229,6 +237,11 @@ class Fragment$ErrorOnboardingCampos {
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -253,6 +266,13 @@ const fragmentDefinitionErrorOnboardingCampos = FragmentDefinitionNode(
     selections: [
       FieldNode(
         name: NameNode(value: 'codigo'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'segundosRestantes'),
         alias: null,
         arguments: [],
         directives: [],
@@ -284,6 +304,7 @@ class Fragment$UsuarioCampos {
     required this.moneda,
     required this.tieneContacto,
     this.documentoEnmascarado,
+    this.correo,
     this.$__typename = 'Usuario',
   });
 
@@ -298,6 +319,7 @@ class Fragment$UsuarioCampos {
     final l$moneda = json['moneda'];
     final l$tieneContacto = json['tieneContacto'];
     final l$documentoEnmascarado = json['documentoEnmascarado'];
+    final l$correo = json['correo'];
     final l$$__typename = json['__typename'];
     return Fragment$UsuarioCampos(
       id: (l$id as String),
@@ -310,6 +332,7 @@ class Fragment$UsuarioCampos {
       moneda: (l$moneda as String),
       tieneContacto: (l$tieneContacto as bool),
       documentoEnmascarado: (l$documentoEnmascarado as String?),
+      correo: (l$correo as String?),
       $__typename: (l$$__typename as String),
     );
   }
@@ -333,6 +356,8 @@ class Fragment$UsuarioCampos {
   final bool tieneContacto;
 
   final String? documentoEnmascarado;
+
+  final String? correo;
 
   final String $__typename;
 
@@ -358,6 +383,8 @@ class Fragment$UsuarioCampos {
     _resultData['tieneContacto'] = l$tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
     _resultData['documentoEnmascarado'] = l$documentoEnmascarado;
+    final l$correo = correo;
+    _resultData['correo'] = l$correo;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -375,6 +402,7 @@ class Fragment$UsuarioCampos {
     final l$moneda = moneda;
     final l$tieneContacto = tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
+    final l$correo = correo;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -387,6 +415,7 @@ class Fragment$UsuarioCampos {
       l$moneda,
       l$tieneContacto,
       l$documentoEnmascarado,
+      l$correo,
       l$$__typename,
     ]);
   }
@@ -447,6 +476,11 @@ class Fragment$UsuarioCampos {
     final l$documentoEnmascarado = documentoEnmascarado;
     final lOther$documentoEnmascarado = other.documentoEnmascarado;
     if (l$documentoEnmascarado != lOther$documentoEnmascarado) {
+      return false;
+    }
+    final l$correo = correo;
+    final lOther$correo = other.correo;
+    if (l$correo != lOther$correo) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -531,6 +565,13 @@ const fragmentDefinitionUsuarioCampos = FragmentDefinitionNode(
       ),
       FieldNode(
         name: NameNode(value: 'documentoEnmascarado'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'correo'),
         alias: null,
         arguments: [],
         directives: [],
@@ -1113,6 +1154,7 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
   Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding.fromJson(
@@ -1120,9 +1162,11 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -1130,12 +1174,16 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -1143,7 +1191,8 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -1164,6 +1213,11 @@ class Mutation$IniciarOnboarding$iniciarOnboarding$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -1643,6 +1697,7 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
   Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboarding$$ErrorOnboarding.fromJson(
@@ -1650,9 +1705,11 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -1660,12 +1717,16 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -1673,7 +1734,8 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -1694,6 +1756,11 @@ class Mutation$RegistrarConsentimientoOnboarding$registrarConsentimientoOnboardi
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -2443,6 +2510,7 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
   Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboarding.fromJson(
@@ -2450,9 +2518,11 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -2460,12 +2530,16 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -2473,7 +2547,8 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -2494,6 +2569,11 @@ class Mutation$SolicitarSubidaOnboarding$solicitarSubidaOnboarding$$ErrorOnboard
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -2967,6 +3047,7 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
   Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboarding.fromJson(
@@ -2974,9 +3055,11 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -2984,12 +3067,16 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -2997,7 +3084,8 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -3018,6 +3106,11 @@ class Mutation$ConfirmarSubidaOnboarding$confirmarSubidaOnboarding$$ErrorOnboard
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -3230,6 +3323,20 @@ const documentNodeMutationCrearCuentaOnboarding = DocumentNode(
                             ),
                             FieldNode(
                               name: NameNode(value: 'expiraEn'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'refreshToken'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'refreshExpiraEn'),
                               alias: null,
                               arguments: [],
                               directives: [],
@@ -3512,6 +3619,8 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
   Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$sesion({
     required this.token,
     required this.expiraEn,
+    this.refreshToken,
+    this.refreshExpiraEn,
     this.$__typename = 'Sesion',
   });
 
@@ -3520,10 +3629,16 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
   ) {
     final l$token = json['token'];
     final l$expiraEn = json['expiraEn'];
+    final l$refreshToken = json['refreshToken'];
+    final l$refreshExpiraEn = json['refreshExpiraEn'];
     final l$$__typename = json['__typename'];
     return Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$sesion(
       token: (l$token as String),
       expiraEn: DateTime.parse((l$expiraEn as String)),
+      refreshToken: (l$refreshToken as String?),
+      refreshExpiraEn: l$refreshExpiraEn == null
+          ? null
+          : DateTime.parse((l$refreshExpiraEn as String)),
       $__typename: (l$$__typename as String),
     );
   }
@@ -3531,6 +3646,10 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
   final String token;
 
   final DateTime expiraEn;
+
+  final String? refreshToken;
+
+  final DateTime? refreshExpiraEn;
 
   final String $__typename;
 
@@ -3540,6 +3659,10 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
     _resultData['token'] = l$token;
     final l$expiraEn = expiraEn;
     _resultData['expiraEn'] = l$expiraEn.toIso8601String();
+    final l$refreshToken = refreshToken;
+    _resultData['refreshToken'] = l$refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
+    _resultData['refreshExpiraEn'] = l$refreshExpiraEn?.toIso8601String();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -3549,8 +3672,16 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
   int get hashCode {
     final l$token = token;
     final l$expiraEn = expiraEn;
+    final l$refreshToken = refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$token, l$expiraEn, l$$__typename]);
+    return Object.hashAll([
+      l$token,
+      l$expiraEn,
+      l$refreshToken,
+      l$refreshExpiraEn,
+      l$$__typename,
+    ]);
   }
 
   @override
@@ -3573,6 +3704,16 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding$ses
     if (l$expiraEn != lOther$expiraEn) {
       return false;
     }
+    final l$refreshToken = refreshToken;
+    final lOther$refreshToken = other.refreshToken;
+    if (l$refreshToken != lOther$refreshToken) {
+      return false;
+    }
+    final l$refreshExpiraEn = refreshExpiraEn;
+    final lOther$refreshExpiraEn = other.refreshExpiraEn;
+    if (l$refreshExpiraEn != lOther$refreshExpiraEn) {
+      return false;
+    }
     final l$$__typename = $__typename;
     final lOther$$__typename = other.$__typename;
     if (l$$__typename != lOther$$__typename) {
@@ -3589,6 +3730,7 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
   Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding.fromJson(
@@ -3596,9 +3738,11 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -3606,12 +3750,16 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -3619,7 +3767,8 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -3640,6 +3789,11 @@ class Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -4076,6 +4230,7 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
   Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding.fromJson(
@@ -4083,9 +4238,11 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -4093,12 +4250,16 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -4106,7 +4267,8 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -4127,6 +4289,11 @@ class Mutation$EnviarVerificacion$enviarVerificacion$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -4569,6 +4736,7 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
   Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding.fromJson(
@@ -4576,9 +4744,11 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -4586,12 +4756,16 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -4599,7 +4773,8 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -4620,6 +4795,11 @@ class Mutation$ReintentarOnboarding$reintentarOnboarding$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -5693,6 +5873,7 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
   Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding.fromJson(
@@ -5700,9 +5881,11 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -5710,12 +5893,16 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -5723,7 +5910,8 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -5744,6 +5932,11 @@ class Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding$$ErrorOnboarding
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -6167,6 +6360,7 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
   Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding({
     this.$__typename = 'ErrorOnboarding',
     required this.codigo,
+    this.segundosRestantes,
   });
 
   factory Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding.fromJson(
@@ -6174,9 +6368,11 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
   ) {
     final l$$__typename = json['__typename'];
     final l$codigo = json['codigo'];
+    final l$segundosRestantes = json['segundosRestantes'];
     return Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboarding(
       $__typename: (l$$__typename as String),
       codigo: (l$codigo as String),
+      segundosRestantes: (l$segundosRestantes as int?),
     );
   }
 
@@ -6184,12 +6380,16 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
 
   final String codigo;
 
+  final int? segundosRestantes;
+
   Map<String, dynamic> toJson() {
     final _resultData = <String, dynamic>{};
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     final l$codigo = codigo;
     _resultData['codigo'] = l$codigo;
+    final l$segundosRestantes = segundosRestantes;
+    _resultData['segundosRestantes'] = l$segundosRestantes;
     return _resultData;
   }
 
@@ -6197,7 +6397,8 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
   int get hashCode {
     final l$$__typename = $__typename;
     final l$codigo = codigo;
-    return Object.hashAll([l$$__typename, l$codigo]);
+    final l$segundosRestantes = segundosRestantes;
+    return Object.hashAll([l$$__typename, l$codigo, l$segundosRestantes]);
   }
 
   @override
@@ -6218,6 +6419,11 @@ class Mutation$VerificarCodigoOnboarding$verificarCodigoOnboarding$$ErrorOnboard
     final l$codigo = codigo;
     final lOther$codigo = other.codigo;
     if (l$codigo != lOther$codigo) {
+      return false;
+    }
+    final l$segundosRestantes = segundosRestantes;
+    final lOther$segundosRestantes = other.segundosRestantes;
+    if (l$segundosRestantes != lOther$segundosRestantes) {
       return false;
     }
     return true;
@@ -6445,6 +6651,20 @@ const documentNodeMutationRegistrarCuenta = DocumentNode(
                         selectionSet: null,
                       ),
                       FieldNode(
+                        name: NameNode(value: 'refreshToken'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'refreshExpiraEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
                         name: NameNode(value: 'usuario'),
                         alias: null,
                         arguments: [],
@@ -6644,6 +6864,8 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
   Mutation$RegistrarCuenta$registrarCuenta$$Sesion({
     required this.token,
     required this.expiraEn,
+    this.refreshToken,
+    this.refreshExpiraEn,
     required this.usuario,
     this.$__typename = 'Sesion',
   });
@@ -6653,11 +6875,17 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
   ) {
     final l$token = json['token'];
     final l$expiraEn = json['expiraEn'];
+    final l$refreshToken = json['refreshToken'];
+    final l$refreshExpiraEn = json['refreshExpiraEn'];
     final l$usuario = json['usuario'];
     final l$$__typename = json['__typename'];
     return Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
       token: (l$token as String),
       expiraEn: DateTime.parse((l$expiraEn as String)),
+      refreshToken: (l$refreshToken as String?),
+      refreshExpiraEn: l$refreshExpiraEn == null
+          ? null
+          : DateTime.parse((l$refreshExpiraEn as String)),
       usuario: Fragment$UsuarioCampos.fromJson(
         (l$usuario as Map<String, dynamic>),
       ),
@@ -6669,6 +6897,10 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
 
   final DateTime expiraEn;
 
+  final String? refreshToken;
+
+  final DateTime? refreshExpiraEn;
+
   final Fragment$UsuarioCampos usuario;
 
   final String $__typename;
@@ -6679,6 +6911,10 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
     _resultData['token'] = l$token;
     final l$expiraEn = expiraEn;
     _resultData['expiraEn'] = l$expiraEn.toIso8601String();
+    final l$refreshToken = refreshToken;
+    _resultData['refreshToken'] = l$refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
+    _resultData['refreshExpiraEn'] = l$refreshExpiraEn?.toIso8601String();
     final l$usuario = usuario;
     _resultData['usuario'] = l$usuario.toJson();
     final l$$__typename = $__typename;
@@ -6690,9 +6926,18 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
   int get hashCode {
     final l$token = token;
     final l$expiraEn = expiraEn;
+    final l$refreshToken = refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
     final l$usuario = usuario;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$token, l$expiraEn, l$usuario, l$$__typename]);
+    return Object.hashAll([
+      l$token,
+      l$expiraEn,
+      l$refreshToken,
+      l$refreshExpiraEn,
+      l$usuario,
+      l$$__typename,
+    ]);
   }
 
   @override
@@ -6712,6 +6957,16 @@ class Mutation$RegistrarCuenta$registrarCuenta$$Sesion
     final l$expiraEn = expiraEn;
     final lOther$expiraEn = other.expiraEn;
     if (l$expiraEn != lOther$expiraEn) {
+      return false;
+    }
+    final l$refreshToken = refreshToken;
+    final lOther$refreshToken = other.refreshToken;
+    if (l$refreshToken != lOther$refreshToken) {
+      return false;
+    }
+    final l$refreshExpiraEn = refreshExpiraEn;
+    final lOther$refreshExpiraEn = other.refreshExpiraEn;
+    if (l$refreshExpiraEn != lOther$refreshExpiraEn) {
       return false;
     }
     final l$usuario = usuario;
@@ -6977,6 +7232,20 @@ const documentNodeMutationIniciarSesion = DocumentNode(
                         selectionSet: null,
                       ),
                       FieldNode(
+                        name: NameNode(value: 'refreshToken'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'refreshExpiraEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
                         name: NameNode(value: 'usuario'),
                         alias: null,
                         arguments: [],
@@ -7172,6 +7441,8 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
   Mutation$IniciarSesion$iniciarSesion$$Sesion({
     required this.token,
     required this.expiraEn,
+    this.refreshToken,
+    this.refreshExpiraEn,
     required this.usuario,
     this.$__typename = 'Sesion',
   });
@@ -7181,11 +7452,17 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
   ) {
     final l$token = json['token'];
     final l$expiraEn = json['expiraEn'];
+    final l$refreshToken = json['refreshToken'];
+    final l$refreshExpiraEn = json['refreshExpiraEn'];
     final l$usuario = json['usuario'];
     final l$$__typename = json['__typename'];
     return Mutation$IniciarSesion$iniciarSesion$$Sesion(
       token: (l$token as String),
       expiraEn: DateTime.parse((l$expiraEn as String)),
+      refreshToken: (l$refreshToken as String?),
+      refreshExpiraEn: l$refreshExpiraEn == null
+          ? null
+          : DateTime.parse((l$refreshExpiraEn as String)),
       usuario: Fragment$UsuarioCampos.fromJson(
         (l$usuario as Map<String, dynamic>),
       ),
@@ -7197,6 +7474,10 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
 
   final DateTime expiraEn;
 
+  final String? refreshToken;
+
+  final DateTime? refreshExpiraEn;
+
   final Fragment$UsuarioCampos usuario;
 
   final String $__typename;
@@ -7207,6 +7488,10 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
     _resultData['token'] = l$token;
     final l$expiraEn = expiraEn;
     _resultData['expiraEn'] = l$expiraEn.toIso8601String();
+    final l$refreshToken = refreshToken;
+    _resultData['refreshToken'] = l$refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
+    _resultData['refreshExpiraEn'] = l$refreshExpiraEn?.toIso8601String();
     final l$usuario = usuario;
     _resultData['usuario'] = l$usuario.toJson();
     final l$$__typename = $__typename;
@@ -7218,9 +7503,18 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
   int get hashCode {
     final l$token = token;
     final l$expiraEn = expiraEn;
+    final l$refreshToken = refreshToken;
+    final l$refreshExpiraEn = refreshExpiraEn;
     final l$usuario = usuario;
     final l$$__typename = $__typename;
-    return Object.hashAll([l$token, l$expiraEn, l$usuario, l$$__typename]);
+    return Object.hashAll([
+      l$token,
+      l$expiraEn,
+      l$refreshToken,
+      l$refreshExpiraEn,
+      l$usuario,
+      l$$__typename,
+    ]);
   }
 
   @override
@@ -7240,6 +7534,16 @@ class Mutation$IniciarSesion$iniciarSesion$$Sesion
     final l$expiraEn = expiraEn;
     final lOther$expiraEn = other.expiraEn;
     if (l$expiraEn != lOther$expiraEn) {
+      return false;
+    }
+    final l$refreshToken = refreshToken;
+    final lOther$refreshToken = other.refreshToken;
+    if (l$refreshToken != lOther$refreshToken) {
+      return false;
+    }
+    final l$refreshExpiraEn = refreshExpiraEn;
+    final lOther$refreshExpiraEn = other.refreshExpiraEn;
+    if (l$refreshExpiraEn != lOther$refreshExpiraEn) {
       return false;
     }
     final l$usuario = usuario;
@@ -7796,6 +8100,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     required this.moneda,
     required this.tieneContacto,
     this.documentoEnmascarado,
+    this.correo,
     this.$__typename = 'Usuario',
   });
 
@@ -7812,6 +8117,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     final l$moneda = json['moneda'];
     final l$tieneContacto = json['tieneContacto'];
     final l$documentoEnmascarado = json['documentoEnmascarado'];
+    final l$correo = json['correo'];
     final l$$__typename = json['__typename'];
     return Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario(
       id: (l$id as String),
@@ -7824,6 +8130,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
       moneda: (l$moneda as String),
       tieneContacto: (l$tieneContacto as bool),
       documentoEnmascarado: (l$documentoEnmascarado as String?),
+      correo: (l$correo as String?),
       $__typename: (l$$__typename as String),
     );
   }
@@ -7847,6 +8154,8 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
   final bool tieneContacto;
 
   final String? documentoEnmascarado;
+
+  final String? correo;
 
   final String $__typename;
 
@@ -7872,6 +8181,8 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     _resultData['tieneContacto'] = l$tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
     _resultData['documentoEnmascarado'] = l$documentoEnmascarado;
+    final l$correo = correo;
+    _resultData['correo'] = l$correo;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -7889,6 +8200,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     final l$moneda = moneda;
     final l$tieneContacto = tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
+    final l$correo = correo;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -7901,6 +8213,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
       l$moneda,
       l$tieneContacto,
       l$documentoEnmascarado,
+      l$correo,
       l$$__typename,
     ]);
   }
@@ -7963,6 +8276,11 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     final l$documentoEnmascarado = documentoEnmascarado;
     final lOther$documentoEnmascarado = other.documentoEnmascarado;
     if (l$documentoEnmascarado != lOther$documentoEnmascarado) {
+      return false;
+    }
+    final l$correo = correo;
+    final lOther$correo = other.correo;
+    if (l$correo != lOther$correo) {
       return false;
     }
     final l$$__typename = $__typename;

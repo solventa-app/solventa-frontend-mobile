@@ -111,6 +111,7 @@ class HomePage extends StatelessWidget {
                       color: colors.onSurfaceVariant,
                     ),
                   ),
+                  const _AvisoAcceso(verificada: false),
                   const SizedBox(height: SolSpacing.lg),
                   SolButton.tonal(
                     label: l10n?.homeEnRevisionBoton ?? 'Consultar estado',
@@ -153,6 +154,7 @@ class HomePage extends StatelessWidget {
                       color: colors.onSurfaceVariant,
                     ),
                   ),
+                  const _AvisoAcceso(verificada: false),
                   const SizedBox(height: SolSpacing.lg),
                   SolButton.primary(
                     label:
@@ -193,6 +195,7 @@ class HomePage extends StatelessWidget {
                       color: colors.onSurfaceVariant,
                     ),
                   ),
+                  const _AvisoAcceso(verificada: true),
                   if (onOpenProfile != null) ...[
                     const SizedBox(height: SolSpacing.md),
                     SolButton.tonal(
@@ -270,6 +273,25 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Aviso de acceso (T15): una cuenta creada en la app entra a la app mientras
+/// no verifique su identidad; al verificar, entra también a la web con el
+/// mismo correo y clave. Sin los textos del idioma activo no muestra nada.
+class _AvisoAcceso extends StatelessWidget {
+  const _AvisoAcceso({required this.verificada});
+
+  final bool verificada;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = Localizations.of<AppLocalizations>(context, AppLocalizations);
+    if (l10n == null) return const SizedBox.shrink();
+    return SolInlineNote(
+      icon: SolIcons.info,
+      text: verificada ? l10n.homeVerificadaWeb : l10n.homeSoloAppAviso,
     );
   }
 }

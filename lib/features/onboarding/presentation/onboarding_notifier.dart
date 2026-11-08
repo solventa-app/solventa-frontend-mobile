@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/falla.dart';
 import '../../../core/errors/resultado.dart';
+import '../../../core/network/network_providers.dart';
+import '../../../core/sesion/gestor_sesion.dart';
 import '../data/datasources/captura_service.dart';
 import '../domain/entities/onboarding.dart';
 import '../domain/entities/verificacion_identidad.dart';
@@ -107,11 +109,12 @@ final class OnboardingState {
     bool limpiarVerificacion = false,
     bool limpiarCredencialesPendientes = false,
     bool limpiarPerfil = false,
+    bool limpiarOnboarding = false,
   }) => OnboardingState(
     consentimientoMarcado: consentimientoMarcado ?? this.consentimientoMarcado,
     registrandoConsentimiento:
         registrandoConsentimiento ?? this.registrandoConsentimiento,
-    onboarding: onboarding ?? this.onboarding,
+    onboarding: limpiarOnboarding ? null : onboarding ?? this.onboarding,
     frenteCapturado: frenteCapturado ?? this.frenteCapturado,
     reversoCapturado: reversoCapturado ?? this.reversoCapturado,
     rostroCapturado: rostroCapturado ?? this.rostroCapturado,
@@ -153,9 +156,63 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
   int _epocaSesion = 0;
 
   @override
-  OnboardingState build() => const OnboardingState();
+  OnboardingState build() {
+    // HU-M02: si la renovación devuelve SESION_VENCIDA (o la llave se
+    // invalidó), el gestor ya borró todo; aquí se vuelve a «Inicia sesión»
+    // con el aviso `fallaSesionVencida`.
+    final eventos = ref.watch(gestorSesionProvider).eventos.listen((evento) {
+      if (evento is SesionVencidaEvento) _alVencerSesion();
+    });
+    ref.onDispose(eventos.cancel);
+    return const OnboardingState();
+  }
+
+  void _alVencerSesion() {
+    _capturasEnMemoria.clear();
+    _subidas.clear();
+    _epocaSesion++;
+    state = const OnboardingState(sesionCerrada: true, falla: SesionVencida());
+  }
+
+  /// HU-M02: la sesión guardada ya no sirve (venció, se revocó o Android
+  /// invalidó la llave). Vuelve a «Inicia sesión» con `fallaSesionVencida`.
+  void marcarSesionVencida() => _alVencerSesion();
+
+  /// HU-M02: M02-01 abrió la sesión guardada. Marca la cuenta como abierta
+  /// (para que `/` muestre el Home y no el login) y trae perfil y estado.
+  Future<void> reanudarSesion() async {
+    state = state.copyWith(
+      cuentaCreada: true,
+      sesionCerrada: false,
+      limpiarFalla: true,
+    );
+    await cargarPerfilYEstado();
+  }
 
   void limpiarFalla() => state = state.copyWith(limpiarFalla: true);
+
+  /// «Empezar de nuevo» cuando el recorrido venció (`TOKEN_INVALIDO`, T16):
+  /// descarta el recorrido, las capturas y el consentimiento marcado. La
+  /// cuenta, su sesión y su perfil no se tocan.
+  void reiniciarRecorrido() {
+    _capturasEnMemoria.clear();
+    _subidas.clear();
+    unawaited(limpiarCacheCapturas());
+    ref.read(onboardingRepositoryProvider).descartarRecorrido();
+    state = state.copyWith(
+      consentimientoMarcado: false,
+      registrandoConsentimiento: false,
+      frenteCapturado: false,
+      reversoCapturado: false,
+      rostroCapturado: false,
+      videoCapturado: false,
+      ocupado: false,
+      consultasAgotadas: false,
+      limpiarFalla: true,
+      limpiarVerificacion: true,
+      limpiarOnboarding: true,
+    );
+  }
 
   void marcarConsentimiento(bool valor) =>
       state = state.copyWith(consentimientoMarcado: valor, limpiarFalla: true);

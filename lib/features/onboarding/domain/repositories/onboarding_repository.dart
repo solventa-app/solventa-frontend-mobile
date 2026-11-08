@@ -65,6 +65,10 @@ abstract interface class OnboardingRepository {
   /// M01-07c «Intentar de nuevo»: vuelve a INICIADO y pide las cuatro piezas.
   Future<Resultado<Onboarding>> reintentar();
 
+  /// Descarta el recorrido guardado (id y token): el siguiente consentimiento
+  /// crea uno nuevo. Para «Empezar de nuevo» cuando el token venció (T16).
+  void descartarRecorrido();
+
   /// Cierra la sesión actual borrando el token y el recorrido en memoria.
   Future<void> cerrarSesion();
 }
