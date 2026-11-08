@@ -655,5 +655,6 @@
   "m04EventoRetrasoVuelo": "Flight {ref} delayed",
   "m04EventoCancelacionVuelo": "Flight {ref} cancelled",
   "m04EventoLluvia": "Rainfall over the threshold",
-  "m04DetalleLluvia": "{ciudad}, {detalle}"
+  "m04DetalleLluvia": "{ciudad}, {detalle}",
+  "m0402CuentaSemantica": "To your account ending in {digitos}"
 }

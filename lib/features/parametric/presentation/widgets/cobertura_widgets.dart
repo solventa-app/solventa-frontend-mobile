@@ -102,29 +102,37 @@ class ErrorConReintento extends StatelessWidget {
   }
 }
 
-/// Cuenta enmascarada con su lectura para TalkBack («cuenta terminada en
-/// 4821»), M04-D1.
+/// Cuenta enmascarada con su lectura para TalkBack (M04-D1). Por defecto se
+/// lee «cuenta terminada en 4821».
 class CuentaEnmascarada extends StatelessWidget {
   const CuentaEnmascarada({
     super.key,
     required this.cuenta,
     required this.estilo,
     this.texto,
+    this.semantica,
   });
 
   final String cuenta;
   final TextStyle estilo;
 
-  /// Texto alrededor de la cuenta (p. ej. «En tu cuenta {cuenta}»).
+  /// Texto alrededor de la cuenta visible (p. ej. «En tu cuenta {cuenta}»).
   final String Function(String cuentaVisible)? texto;
+
+  /// Lectura completa a partir de los últimos 4 dígitos.
+  final String Function(String ultimos4)? semantica;
 
   @override
   Widget build(BuildContext context) {
     final visible = SolFormat.maskedAccountFull(cuenta);
-    final semantica = SolFormat.maskedAccountSemantics(cuenta);
+    final digitos = cuenta.replaceAll(RegExp(r'\D'), '');
+    final ultimos4 = digitos.length <= 4
+        ? digitos
+        : digitos.substring(digitos.length - 4);
     final f = texto;
+    final s = semantica;
     return Semantics(
-      label: f == null ? semantica : f(semantica),
+      label: s == null ? SolFormat.maskedAccountSemantics(cuenta) : s(ultimos4),
       excludeSemantics: true,
       child: Text(f == null ? visible : f(visible), style: estilo),
     );

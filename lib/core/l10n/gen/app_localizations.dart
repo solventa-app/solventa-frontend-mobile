@@ -2215,6 +2215,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'{ciudad}, {detalle}'**
   String m04DetalleLluvia(String ciudad, String detalle);
+
+  /// M04-02: lectura de TalkBack de la cuenta destino
+  ///
+  /// In es, this message translates to:
+  /// **'En tu cuenta terminada en {digitos}'**
+  String m0402CuentaSemantica(String digitos);
 }
 
 class _AppLocalizationsDelegate

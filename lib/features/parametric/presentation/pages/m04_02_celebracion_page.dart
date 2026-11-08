@@ -141,6 +141,7 @@ class _Celebracion extends StatelessWidget {
             estilo: textoPequeno(context)
                 .copyWith(color: colors.onSurfaceVariant),
             texto: l10n.m0402Cuenta,
+            semantica: l10n.m0402CuentaSemantica,
           ),
         ),
         const SizedBox(height: SolSpacing.xxxl),

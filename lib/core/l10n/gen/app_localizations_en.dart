@@ -1258,4 +1258,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String m04DetalleLluvia(String ciudad, String detalle) {
     return '$ciudad, $detalle';
   }
+
+  @override
+  String m0402CuentaSemantica(String digitos) {
+    return 'To your account ending in $digitos';
+  }
 }

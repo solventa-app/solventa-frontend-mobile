@@ -180,6 +180,7 @@ class _TarjetaCupo extends StatelessWidget {
           ),
           const SizedBox(height: SolSpacing.md),
           Semantics(
+            container: true,
             label: porcentaje,
             excludeSemantics: true,
             child: Container(
@@ -208,15 +209,13 @@ class _TarjetaCupo extends StatelessWidget {
             ),
           ),
           const SizedBox(height: SolSpacing.sm),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // Con texto grande el disponible pasa debajo del porcentaje.
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            spacing: SolSpacing.sm,
+            runSpacing: SolSpacing.sm,
             children: [
-              Expanded(
-                child: ExcludeSemantics(
-                  child: Text(porcentaje, style: variante),
-                ),
-              ),
-              const SizedBox(width: SolSpacing.sm),
+              ExcludeSemantics(child: Text(porcentaje, style: variante)),
               MergeSemantics(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -421,6 +420,52 @@ class _FilaMovimiento extends StatelessWidget {
     final m = movimiento;
     final pagado = m.estado == EstadoPago.pagado;
     final estadoColor = pagado ? sol.success : sol.warning;
+    // Con texto grande (más de 130 %) el monto no cabe al lado del título:
+    // pasa debajo, alineado al inicio.
+    final apilar = MediaQuery.textScalerOf(context).scale(10) > 13;
+
+    final monto = Text(
+      SolFormat.currency(m.monto),
+      style: context.solText.titleSmall.copyWith(color: colors.onSurface),
+    );
+    final estado = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          pagado ? SolIcons.success : SolIcons.schedule,
+          size: 14,
+          color: estadoColor,
+        ),
+        const SizedBox(width: 3),
+        Flexible(
+          child: Text(
+            pagado ? l10n.m0404Pagado : l10n.m0404EnProceso,
+            style: context.solText.labelStrong.copyWith(color: estadoColor),
+          ),
+        ),
+      ],
+    );
+    final textos = <Widget>[
+      Text(
+        tituloEvento(l10n, m),
+        style: context.solText.body.copyWith(
+          fontWeight: FontWeight.w500,
+          color: colors.onSurface,
+        ),
+      ),
+      const SizedBox(height: SolSpacing.xxs),
+      Text(
+        l10n.m0404Meta(SolFormat.date(m.fechaEvento), detalleEvento(l10n, m)),
+        style: textoPequeno(context).copyWith(color: colors.onSurfaceVariant),
+      ),
+      if (apilar) ...[
+        const SizedBox(height: SolSpacing.xs),
+        monto,
+        const SizedBox(height: 3),
+        estado,
+      ],
+    ];
+
     return MergeSemantics(
       child: Semantics(
         button: true,
@@ -442,56 +487,16 @@ class _FilaMovimiento extends StatelessWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          tituloEvento(l10n, m),
-                          style: context.solText.body.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: colors.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: SolSpacing.xxs),
-                        Text(
-                          l10n.m0404Meta(
-                            SolFormat.date(m.fechaEvento),
-                            detalleEvento(l10n, m),
-                          ),
-                          style: textoPequeno(context)
-                              .copyWith(color: colors.onSurfaceVariant),
-                        ),
-                      ],
+                      children: textos,
                     ),
                   ),
-                  const SizedBox(width: SolSpacing.sm),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        SolFormat.currency(m.monto),
-                        style: context.solText.titleSmall.copyWith(
-                          color: colors.onSurface,
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            pagado ? SolIcons.success : SolIcons.schedule,
-                            size: 14,
-                            color: estadoColor,
-                          ),
-                          const SizedBox(width: 3),
-                          Text(
-                            pagado ? l10n.m0404Pagado : l10n.m0404EnProceso,
-                            style: context.solText.labelStrong.copyWith(
-                              color: estadoColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  if (!apilar) ...[
+                    const SizedBox(width: SolSpacing.sm),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [monto, const SizedBox(height: 3), estado],
+                    ),
+                  ],
                   const SizedBox(width: SolSpacing.xs),
                   ExcludeSemantics(
                     child: Icon(

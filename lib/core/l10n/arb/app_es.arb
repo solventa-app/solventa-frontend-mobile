@@ -1404,5 +1404,14 @@
         "type": "String"
       }
     }
+  },
+  "m0402CuentaSemantica": "En tu cuenta terminada en {digitos}",
+  "@m0402CuentaSemantica": {
+    "description": "M04-02: lectura de TalkBack de la cuenta destino",
+    "placeholders": {
+      "digitos": {
+        "type": "String"
+      }
+    }
   }
 }
