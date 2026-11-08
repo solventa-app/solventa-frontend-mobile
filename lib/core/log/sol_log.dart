@@ -98,9 +98,13 @@ abstract final class SolLog {
           data: datos.isEmpty ? null : datos,
         ),
       );
+      final codigoLimpio = datos['codigo'] as String?;
       Sentry.captureException(
         error ?? Exception(msgLimpio),
         stackTrace: stackTrace,
+        withScope: codigoLimpio == null
+            ? null
+            : (scope) => scope.setTag('codigo', codigoLimpio),
       );
     }
   }

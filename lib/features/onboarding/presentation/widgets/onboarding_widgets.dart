@@ -144,10 +144,24 @@ class IndicadorPasoDocumento extends StatelessWidget {
   }
 }
 
+/// CameraX tiene una sola cámara activa en todo el plugin. Si la pantalla
+/// siguiente abre su cámara mientras la anterior todavía la suelta, el plugin
+/// lanza `releaseFlutterSurfaceTexture() cannot be called if the
+/// flutterSurfaceProducer ... has not yet been initialized`
+/// (SOLVENTA-MOBILE-4). Por eso abrir y soltar van en una sola cola, de una en
+/// una.
+Future<void> _colaCamara = Future<void>.value();
+
+Future<T> _enSerieCamara<T>(Future<T> Function() operacion) {
+  final resultado = _colaCamara.then((_) => operacion());
+  _colaCamara = resultado.then<void>((_) {}, onError: (Object _) {});
+  return resultado;
+}
+
 /// Visor de cámara en vivo dentro de [SolCameraFrame].
 ///
 /// Cuando corre con hardware real (`usarFakesProvider == false`), abre la
-/// cámara trasera o frontal en resolución media (~720p) y dibuja el
+/// cámara trasera o frontal en resolución alta (1280x720) y dibuja el
 /// [CameraPreview] detrás del marco punteado centrado. Si el emulador no tiene
 /// cámara o corre en pruebas/goldens, muestra la guía del sistema de diseño.
 class SolLiveCameraFrame extends ConsumerStatefulWidget {
@@ -190,8 +204,11 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
   /// se vuelve a mostrar el diálogo de permiso: solo se revisa si ya se dio.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
+    // Solo al ir de verdad al fondo. `inactive` llega también con el diálogo
+    // de permiso o una notificación, a veces a mitad de `initialize()`, y
+    // soltar la cámara ahí rompía el preview de CameraX (SOLVENTA-MOBILE-4).
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
       unawaited(_liberar());
     } else if (state == AppLifecycleState.resumed && _controller == null) {
       unawaited(_iniciarCamaraSiAplica(pedirPermiso: false));
@@ -238,11 +255,13 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
       );
       final ctrl = CameraController(
         elegida,
-        ResolutionPreset.medium,
+        // 1280x720: con `medium` (720x480 en Android) la cédula sale poco
+        // legible y el rostro del documento muy pequeño para el face-match.
+        ResolutionPreset.high,
         enableAudio: false,
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
-      await ctrl.initialize();
+      await _enSerieCamara(ctrl.initialize);
       // Si la app se fue al fondo mientras abría, se suelta y se reabre al volver.
       // `inactive` NO cuenta como fondo: es el estado que deja el diálogo de
       // permiso por un instante; soltar ahí la cámara antes de mostrar la vista
@@ -280,15 +299,18 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
   /// previa nunca llegó a crearse, Android lanza `IllegalStateException` al
   /// liberar su textura, y eso no debe tumbar la pantalla ni llegar a Sentry
   /// como excepción sin manejar.
-  static Future<void> _soltar(CameraController ctrl) async {
-    try {
-      await ctrl.dispose();
-    } on PlatformException catch (e) {
-      SolLog.warning('camara: no se pudo soltar', codigo: e.code);
-    } on CameraException catch (e) {
-      SolLog.warning('camara: no se pudo soltar', codigo: e.code);
-    }
-  }
+  /// En la cola de la cámara: la pantalla siguiente puede estar abriendo ya
+  /// la suya.
+  static Future<void> _soltar(CameraController ctrl) =>
+      _enSerieCamara(() async {
+        try {
+          await ctrl.dispose();
+        } on PlatformException catch (e) {
+          SolLog.warning('camara: no se pudo soltar', codigo: e.code);
+        } on CameraException catch (e) {
+          SolLog.warning('camara: no se pudo soltar', codigo: e.code);
+        }
+      });
 
   Future<void> _liberar() async {
     final ctrl = _controller;

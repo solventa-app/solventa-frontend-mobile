@@ -47,6 +47,10 @@ final class FakeOnboardingRemoteDataSource
   /// Usuario actual devuelto por `yo`.
   Map<String, dynamic> usuarioActual = OnboardingFixtures.usuario();
 
+  /// Respuestas de `registrarConsentimientoOnboarding` que se usan en orden
+  /// antes de la de siempre (p. ej. un `ESTADO_INVALIDO` del recorrido viejo).
+  final respuestasConsentimiento = <Map<String, dynamic>>[];
+
   final operaciones = <String>[];
 
   Future<Map<String, dynamic>> _responder(
@@ -71,7 +75,12 @@ final class FakeOnboardingRemoteDataSource
   >
   registrarConsentimiento(String token, String id, String versionTexto) async =>
       Mutation$RegistrarConsentimientoOnboarding.fromJson(
-        await _responder('consentimiento', OnboardingFixtures.consentimiento),
+        await _responder(
+          'consentimiento',
+          respuestasConsentimiento.isEmpty
+              ? OnboardingFixtures.consentimiento
+              : respuestasConsentimiento.removeAt(0),
+        ),
       ).registrarConsentimientoOnboarding;
 
   @override

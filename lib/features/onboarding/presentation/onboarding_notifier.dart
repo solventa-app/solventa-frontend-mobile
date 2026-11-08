@@ -228,6 +228,20 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
         .iniciarConConsentimiento(versionTexto: versionTexto);
     switch (r) {
       case Exito(:final valor):
+        if (valor.id != state.onboarding?.id) {
+          // Recorrido nuevo (el anterior ya no admitía intentos): las capturas
+          // y el resultado del recorrido viejo no le sirven.
+          _capturasEnMemoria.clear();
+          _subidas.clear();
+          state = state.copyWith(
+            frenteCapturado: false,
+            reversoCapturado: false,
+            rostroCapturado: false,
+            videoCapturado: false,
+            consultasAgotadas: false,
+            limpiarVerificacion: true,
+          );
+        }
         state = state.copyWith(
           registrandoConsentimiento: false,
           onboarding: valor,

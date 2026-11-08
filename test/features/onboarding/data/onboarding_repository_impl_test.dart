@@ -51,6 +51,40 @@ void main() {
     expect(bff.operaciones, ['iniciar', 'consentimiento', 'consentimiento']);
   });
 
+  Map<String, dynamic> consentimientoRechazado(String codigo) => {
+    '__typename': 'Mutation',
+    'registrarConsentimientoOnboarding': OnboardingFixtures.error(codigo),
+  };
+
+  for (final codigo in ['ESTADO_INVALIDO', 'TOKEN_INVALIDO']) {
+    test('con el recorrido viejo agotado ($codigo) abre uno nuevo', () async {
+      await repo.iniciarConConsentimiento(versionTexto: 'v1');
+      bff.respuestasConsentimiento.add(consentimientoRechazado(codigo));
+
+      final r = await repo.iniciarConConsentimiento(versionTexto: 'v1');
+
+      expect(r, isA<Exito<Onboarding>>());
+      expect(bff.operaciones, [
+        'iniciar',
+        'consentimiento',
+        'consentimiento',
+        'iniciar',
+        'consentimiento',
+      ]);
+    });
+  }
+
+  test('otro rechazo del consentimiento no abre un recorrido nuevo', () async {
+    bff.respuestasConsentimiento.add(
+      consentimientoRechazado('SIN_CONSENTIMIENTO'),
+    );
+
+    final r = await repo.iniciarConConsentimiento(versionTexto: 'v1');
+
+    expect(fallaDe(r).motivo, 'SIN_CONSENTIMIENTO');
+    expect(bff.operaciones, ['iniciar', 'consentimiento']);
+  });
+
   test('subir pide la URL, hace el PUT y confirma', () async {
     await repo.iniciarConConsentimiento(versionTexto: 'v1');
 
