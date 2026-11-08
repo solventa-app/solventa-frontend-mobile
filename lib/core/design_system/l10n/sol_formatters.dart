@@ -59,6 +59,27 @@ abstract final class SolFormat {
   /// `12 sep 2026, 11:02 a. m.`
   static String dateTime(DateTime d) => '${date(d)}, ${time(d)}';
 
+  /// `jul 2026` (mes abreviado y año).
+  static String monthYear(DateTime d) => '${_months[d.month - 1]} ${d.year}';
+
+  /// `octubre` (nombre completo del mes, en minúscula).
+  static String monthName(DateTime d) => _monthNames[d.month - 1];
+
+  static const List<String> _monthNames = [
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre',
+  ];
+
   /// `••••4821`: deja visibles los últimos [visible] dígitos.
   ///
   /// Para lectores de pantalla usa [maskedAccountSemantics].
@@ -70,6 +91,25 @@ abstract final class SolFormat {
     final digits = account.replaceAll(RegExp(r'\D'), '');
     if (digits.length <= visible) return digits;
     return '${maskChar * 4}${digits.substring(digits.length - visible)}';
+  }
+
+  /// `•••• •••• •••• 4821`: cuenta o tarjeta completa con todos los dígitos
+  /// ocultos salvo los últimos [visible], en grupos de 4 separados por
+  /// espacio duro (no se parte en dos líneas). Con menos de [visible] + 1
+  /// dígitos devuelve lo mismo que [maskedAccount].
+  ///
+  /// Para lectores de pantalla usa [maskedAccountSemantics].
+  static String maskedAccountFull(String account, {int visible = 4}) {
+    final digits = account.replaceAll(RegExp(r'\D'), '');
+    if (digits.length <= visible) return maskedAccount(account);
+    final masked =
+        '\u2022' * (digits.length - visible) +
+        digits.substring(digits.length - visible);
+    final groups = <String>[];
+    for (var end = masked.length; end > 0; end -= 4) {
+      groups.insert(0, masked.substring(end - 4 < 0 ? 0 : end - 4, end));
+    }
+    return groups.join(nbsp);
   }
 
   /// Etiqueta semántica de una cuenta enmascarada: «cuenta terminada en 4821».
