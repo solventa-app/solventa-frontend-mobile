@@ -55,6 +55,7 @@ Las tomó el equipo con el líder técnico. Detalle técnico en `docs/arquitectu
 | D5 | Sin PIN propio de Solventa; se quitó el «PIN derivado» de la arquitectura | KAN-229 | Comentario (5.7) |
 | Gracia | AUTH acepta durante 30 s un reintento con el refresh anterior (respuesta perdida en la red) | KAN-227 | Comentario (5.6) |
 | 5 min | Volver del segundo plano después de 5 min pide de nuevo la huella (M02-01) | KAN-225 | Comentario (5.5) |
+| D6 (2026-11-07) | Con huella real en Android, M02-01a «No te reconocimos» no aparece: el fallo lo muestra el diálogo del sistema y, tras 5 intentos, M02-01 ofrece el PIN. M02-01a queda como respaldo | KAN-135, KAN-226 | Comentario en las dos (plantilla 5.9) |
 
 **Por qué KAN-136 se conserva y KAN-174 se cierra.** La necesidad de KAN-136 («entrar con el PIN de mi teléfono para no
 quedarme fuera») se cumple, solo que con el diálogo del sistema: Android no deja que una app valide el PIN del teléfono
@@ -143,6 +144,16 @@ Al abrir el PR 4, agregar en KAN-226:
 > regenerados con `tool/goldens.sh`, `integration_test/hu_m02_test.dart` en verde, Newman `hu-m02` en verde contra el
 > compose y los casos de `validar-local-auth-android.md`. Evidencia en `docs/evidencias/hu-m02/`. Hallazgos: <lista o
 > «ninguno»>.
+
+**5.9 · KAN-135 y KAN-226 (D6):**
+> Decisión D6 (2026-11-07), tras probar la biometría real en un emulador Android 16 (API 36): con una huella que no
+> coincide, Android no cierra el diálogo ni avisa a la app; escribe «Not recognized» dentro del diálogo y espera otro
+> intento. Al quinto fallo cierra el diálogo con bloqueo temporal y M02-01 muestra «Hiciste demasiados intentos…» con
+> «Usar PIN del teléfono», que desbloquea. Por eso M02-01a solo aparece si `local_auth` responde «no reconocido», lo
+> que en Android con `BiometricPrompt` prácticamente no pasa. Se acepta ese comportamiento: M02-01a se conserva como
+> respaldo (con sus pruebas) y en pruebas manuales se ve con el disparador de demo «Simular que no reconoce la
+> biometría». Al validar contra Figma (2005:472) no se marca como fallo. Evidencia:
+> `docs/evidencias/2026-11-07-hu-m02-biometria-real.md`.
 
 ## 6. Cuándo mover cada issue
 
