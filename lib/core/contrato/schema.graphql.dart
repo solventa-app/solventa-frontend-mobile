@@ -2148,6 +2148,132 @@ class Input$SolicitudAsistenciaInput {
   }
 }
 
+class Input$SolicitudAsistenciaDireccionInput {
+  factory Input$SolicitudAsistenciaDireccionInput({
+    required String idSolicitud,
+    required String prestadorId,
+    required Enum$TipoPrestador tipoAsistencia,
+    required String direccion,
+    String? descripcion,
+  }) => Input$SolicitudAsistenciaDireccionInput._({
+    r'idSolicitud': idSolicitud,
+    r'prestadorId': prestadorId,
+    r'tipoAsistencia': tipoAsistencia,
+    r'direccion': direccion,
+    if (descripcion != null) r'descripcion': descripcion,
+  });
+
+  Input$SolicitudAsistenciaDireccionInput._(this._$data);
+
+  factory Input$SolicitudAsistenciaDireccionInput.fromJson(
+    Map<String, dynamic> data,
+  ) {
+    final result$data = <String, dynamic>{};
+    final l$idSolicitud = data['idSolicitud'];
+    result$data['idSolicitud'] = (l$idSolicitud as String);
+    final l$prestadorId = data['prestadorId'];
+    result$data['prestadorId'] = (l$prestadorId as String);
+    final l$tipoAsistencia = data['tipoAsistencia'];
+    result$data['tipoAsistencia'] = fromJson$Enum$TipoPrestador(
+      (l$tipoAsistencia as String),
+    );
+    final l$direccion = data['direccion'];
+    result$data['direccion'] = (l$direccion as String);
+    if (data.containsKey('descripcion')) {
+      final l$descripcion = data['descripcion'];
+      result$data['descripcion'] = (l$descripcion as String?);
+    }
+    return Input$SolicitudAsistenciaDireccionInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get idSolicitud => (_$data['idSolicitud'] as String);
+
+  String get prestadorId => (_$data['prestadorId'] as String);
+
+  Enum$TipoPrestador get tipoAsistencia =>
+      (_$data['tipoAsistencia'] as Enum$TipoPrestador);
+
+  String get direccion => (_$data['direccion'] as String);
+
+  String? get descripcion => (_$data['descripcion'] as String?);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$idSolicitud = idSolicitud;
+    result$data['idSolicitud'] = l$idSolicitud;
+    final l$prestadorId = prestadorId;
+    result$data['prestadorId'] = l$prestadorId;
+    final l$tipoAsistencia = tipoAsistencia;
+    result$data['tipoAsistencia'] = toJson$Enum$TipoPrestador(l$tipoAsistencia);
+    final l$direccion = direccion;
+    result$data['direccion'] = l$direccion;
+    if (_$data.containsKey('descripcion')) {
+      final l$descripcion = descripcion;
+      result$data['descripcion'] = l$descripcion;
+    }
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$SolicitudAsistenciaDireccionInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$idSolicitud = idSolicitud;
+    final lOther$idSolicitud = other.idSolicitud;
+    if (l$idSolicitud != lOther$idSolicitud) {
+      return false;
+    }
+    final l$prestadorId = prestadorId;
+    final lOther$prestadorId = other.prestadorId;
+    if (l$prestadorId != lOther$prestadorId) {
+      return false;
+    }
+    final l$tipoAsistencia = tipoAsistencia;
+    final lOther$tipoAsistencia = other.tipoAsistencia;
+    if (l$tipoAsistencia != lOther$tipoAsistencia) {
+      return false;
+    }
+    final l$direccion = direccion;
+    final lOther$direccion = other.direccion;
+    if (l$direccion != lOther$direccion) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (_$data.containsKey('descripcion') !=
+        other._$data.containsKey('descripcion')) {
+      return false;
+    }
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$idSolicitud = idSolicitud;
+    final l$prestadorId = prestadorId;
+    final l$tipoAsistencia = tipoAsistencia;
+    final l$direccion = direccion;
+    final l$descripcion = descripcion;
+    return Object.hashAll([
+      l$idSolicitud,
+      l$prestadorId,
+      l$tipoAsistencia,
+      l$direccion,
+      _$data.containsKey('descripcion') ? l$descripcion : const {},
+    ]);
+  }
+}
+
 enum Enum$EstadoConsentimiento {
   VIGENTE,
   REVOCADO,

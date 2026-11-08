@@ -175,3 +175,9 @@ extend type Mutation {
   nunca va a logs.
 - `idSolicitud` repetido devuelve la misma asistencia (el reintento de M06-03b no crea dos).
 - Mientras no haya prestadores reales, el backend puede simular el desenlace (CONFIRMADA / NO_CONFIRMADA).
+
+## Sin ubicación: dirección a mano (contrato v0.41, CA-M06-02)
+
+Sin permiso de ubicación o con el GPS apagado, M06-01 ofrece «Escribir mi dirección»: muestra el catálogo por ciudad, sin
+distancia ni tiempo, y M06-02 pide la dirección como obligatoria. Se envía con `solicitarAsistenciaConDireccion`;
+M06-04a confirma sin tiempo estimado porque, sin coordenadas, el backend no puede calcularlo.

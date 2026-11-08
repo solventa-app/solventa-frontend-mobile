@@ -19,8 +19,9 @@ final class SolicitudAsistencia {
   final Prestador prestador;
   final TipoPrestador tipo;
 
-  /// Adónde debe llegar el prestador (GPS del teléfono).
-  final Coordenada ubicacion;
+  /// Adónde debe llegar el prestador (GPS del teléfono). `null` si el cliente
+  /// no dio la ubicación y escribió la dirección a mano (CA-M06-02).
+  final Coordenada? ubicacion;
   final String descripcion;
   final String direccion;
 }

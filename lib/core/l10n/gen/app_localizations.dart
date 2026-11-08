@@ -1364,6 +1364,30 @@ abstract class AppLocalizations {
   /// **'Abrir ajustes'**
   String get m0601AbrirAjustes;
 
+  /// M06-01 sin ubicación: pedir asistencia con la dirección a mano (CA-M06-02)
+  ///
+  /// In es, this message translates to:
+  /// **'Escribir mi dirección'**
+  String get m0601EscribirDireccion;
+
+  /// M06-01 sin ubicación: título de la lista
+  ///
+  /// In es, this message translates to:
+  /// **'Elige un prestador'**
+  String get m0601TituloSinOrden;
+
+  /// M06-01 sin ubicación: nota sobre la lista
+  ///
+  /// In es, this message translates to:
+  /// **'Sin tu ubicación no podemos ordenarlos por cercanía. En el siguiente paso escribes tu dirección.'**
+  String get m0601NotaSinOrden;
+
+  /// M06-01 sin ubicación: volver a intentar con el GPS
+  ///
+  /// In es, this message translates to:
+  /// **'Usar mi ubicación'**
+  String get m0601UsarUbicacion;
+
   /// M06-01 reintentar
   ///
   /// In es, this message translates to:
@@ -1814,6 +1838,12 @@ abstract class AppLocalizations {
   /// **'Ubicación detectada automáticamente: {coordenadas}'**
   String m0602UbicacionDetectada(String coordenadas);
 
+  /// M06-02 sin ubicación: la dirección es obligatoria
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe la dirección a la que debe llegar el prestador.'**
+  String get m0602DireccionRequerida;
+
   /// M06-02 tiempo del prestador elegido
   ///
   /// In es, this message translates to:
@@ -1843,6 +1873,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Solicitud confirmada'**
   String get m0604aTitulo;
+
+  /// M06-04a pedida con la dirección a mano: sin coordenadas no hay tiempo estimado
+  ///
+  /// In es, this message translates to:
+  /// **'{nombre} está en camino a la dirección que indicaste.'**
+  String m0604aMensajeSinTiempo(String nombre);
 
   /// M06-04a detalle; el tiempo se lee completo, sin abreviar
   ///

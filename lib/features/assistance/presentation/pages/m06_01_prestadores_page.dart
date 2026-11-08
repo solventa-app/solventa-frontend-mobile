@@ -16,10 +16,18 @@ import '../widgets/mapa_prestadores.dart';
 /// ruta en la app de mapas del teléfono; «Solicitar» lleva al formulario
 /// (M06-02, KAN-265).
 class M0601PrestadoresPage extends ConsumerStatefulWidget {
-  const M0601PrestadoresPage({super.key, required this.onSolicitar});
+  const M0601PrestadoresPage({
+    super.key,
+    required this.onSolicitar,
+    required this.onSolicitarConDireccion,
+  });
 
   /// El prestador de la fila y la ubicación del cliente (adónde debe llegar).
   final void Function(PrestadorCercano cercano, Coordenada origen) onSolicitar;
+
+  /// Sin ubicación: el prestador de la fila; la dirección se escribe en M06-02
+  /// (CA-M06-02).
+  final void Function(Prestador prestador) onSolicitarConDireccion;
 
   @override
   ConsumerState<M0601PrestadoresPage> createState() =>
@@ -57,6 +65,11 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
   String _tipo(TipoPrestador t) => switch (t) {
     TipoPrestador.medico => context.l10n.m0601TipoMedico,
     TipoPrestador.mecanico => context.l10n.m0601TipoMecanico,
+  };
+
+  SolProviderType _tipoFila(TipoPrestador t) => switch (t) {
+    TipoPrestador.medico => SolProviderType.medico,
+    TipoPrestador.mecanico => SolProviderType.mecanico,
   };
 
   Future<void> _abrirRuta(PrestadorCercano c) async {
@@ -101,8 +114,42 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                     await notifier.abrirAjustes();
                   }
                 : notifier.cargar,
+            accionSecundaria: l10n.m0601EscribirDireccion,
+            onAccionSecundaria: notifier.escribirDireccion,
           ),
         ),
+      PrestadoresSinOrden(:final prestadores) => SingleChildScrollView(
+        padding: const EdgeInsets.all(SolSpacing.screen),
+        child: SolAdaptiveBody(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SolSectionHeader(title: l10n.m0601TituloSinOrden),
+              SolInlineNote(
+                icon: SolIcons.location,
+                text: l10n.m0601NotaSinOrden,
+              ),
+              const SizedBox(height: SolSpacing.sm),
+              for (final (i, p) in prestadores.indexed) ...[
+                if (i > 0) const SolDivider(),
+                SolProviderRow(
+                  name: p.nombre,
+                  type: _tipoFila(p.tipo),
+                  typeLabel: _tipo(p.tipo),
+                  distance: p.ciudad,
+                  requestLabel: l10n.m0601Solicitar,
+                  onRequest: () => widget.onSolicitarConDireccion(p),
+                ),
+              ],
+              const SizedBox(height: SolSpacing.lg),
+              SolButton.tonal(
+                label: l10n.m0601UsarUbicacion,
+                onPressed: () => unawaited(notifier.cargar()),
+              ),
+            ],
+          ),
+        ),
+      ),
       PrestadoresListos(:final origen, :final cercanos) => SolSheetLayout(
         maxSheetFactor: _mapaFallo ? 1 : 0.6,
         background: _mapaFallo
@@ -138,10 +185,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                   if (i > 0) const SolDivider(),
                   SolProviderRow(
                     name: c.prestador.nombre,
-                    type: switch (c.prestador.tipo) {
-                      TipoPrestador.medico => SolProviderType.medico,
-                      TipoPrestador.mecanico => SolProviderType.mecanico,
-                    },
+                    type: _tipoFila(c.prestador.tipo),
                     typeLabel: _tipo(c.prestador.tipo),
                     distance: SolFormat.distanceKm(c.distanciaKm),
                     eta: SolFormat.minutes(c.minutosEstimados),
@@ -177,12 +221,16 @@ class _Aviso extends StatelessWidget {
     required this.accion,
     required this.onAccion,
     this.icono,
+    this.accionSecundaria,
+    this.onAccionSecundaria,
   });
 
   final String texto;
   final String? accion;
   final Future<void> Function() onAccion;
   final IconData? icono;
+  final String? accionSecundaria;
+  final Future<void> Function()? onAccionSecundaria;
 
   @override
   Widget build(BuildContext context) {
@@ -199,6 +247,13 @@ class _Aviso extends StatelessWidget {
           SolButton.tonal(
             label: accion!,
             onPressed: () => unawaited(onAccion()),
+          ),
+        ],
+        if (accionSecundaria != null) ...[
+          const SizedBox(height: SolSpacing.sm),
+          SolButton.text(
+            label: accionSecundaria!,
+            onPressed: () => unawaited(onAccionSecundaria!()),
           ),
         ],
       ],

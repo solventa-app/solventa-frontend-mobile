@@ -56,6 +56,12 @@ void main() {
                     .iniciar(cercano, origen);
                 context.push(AsistenciaRoutes.solicitud);
               },
+              onSolicitarConDireccion: (prestador) {
+                contenedor
+                    .read(solicitudProvider.notifier)
+                    .iniciarConDireccion(prestador);
+                context.push(AsistenciaRoutes.solicitud);
+              },
             ),
           ),
         ),

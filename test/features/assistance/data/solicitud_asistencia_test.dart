@@ -34,6 +34,30 @@ void main() {
     repo = AsistenciaRepositoryImpl(bff, MemoriaCatalogoLocalDataSource());
   });
 
+  test(
+    'sin ubicación va por la operación de la dirección a mano (v0.41)',
+    () async {
+      final r = await repo.solicitar(
+        SolicitudAsistencia(
+          idSolicitud: id,
+          prestador: clinica,
+          tipo: TipoPrestador.medico,
+          ubicacion: null,
+          descripcion: '  ',
+          direccion: ' Cra 45 # 22-18 ',
+        ),
+      );
+      expect(r, isA<Exito<Asistencia>>());
+      expect(bff.solicitudes.single, {
+        'idSolicitud': id,
+        'prestadorId': 'prs-bog-001',
+        'tipoAsistencia': 'MEDICO',
+        'direccion': 'Cra 45 # 22-18',
+        'descripcion': null,
+      });
+    },
+  );
+
   test('la entrada lleva el contrato y los textos vacíos viajan como null', () {
     expect(entradaSolicitud(solicitud(descripcion: '  ')), {
       'idSolicitud': id,

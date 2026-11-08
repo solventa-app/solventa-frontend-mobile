@@ -55,7 +55,13 @@ final class AsistenciaRepositoryImpl implements AsistenciaRepository {
 
   @override
   Future<Resultado<Asistencia>> solicitar(SolicitudAsistencia solicitud) =>
-      _union(() => _remote.solicitarAsistencia(entradaSolicitud(solicitud)));
+      _union(
+        () => solicitud.ubicacion == null
+            ? _remote.solicitarAsistenciaConDireccion(
+                entradaSolicitudConDireccion(solicitud),
+              )
+            : _remote.solicitarAsistencia(entradaSolicitud(solicitud)),
+      );
 
   @override
   Future<Resultado<Asistencia>> cancelar(String id) =>

@@ -727,6 +727,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0601AbrirAjustes => 'Open settings';
 
   @override
+  String get m0601EscribirDireccion => 'Enter my address';
+
+  @override
+  String get m0601TituloSinOrden => 'Choose a provider';
+
+  @override
+  String get m0601NotaSinOrden =>
+      'Without your location we can\'t sort them by distance. You\'ll enter your address in the next step.';
+
+  @override
+  String get m0601UsarUbicacion => 'Use my location';
+
+  @override
   String get m0601Reintentar => 'Try again';
 
   @override
@@ -992,6 +1005,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get m0602DireccionRequerida =>
+      'Enter the address the provider should go to.';
+
+  @override
   String m0602TiempoLlegada(String tiempo) {
     return 'Estimated arrival time: $tiempo';
   }
@@ -1011,6 +1028,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0604aTitulo => 'Request confirmed';
+
+  @override
+  String m0604aMensajeSinTiempo(String nombre) {
+    return '$nombre is on the way to the address you entered.';
+  }
 
   @override
   String m0604aMensaje(String nombre, int minutos) {

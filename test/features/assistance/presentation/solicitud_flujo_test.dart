@@ -134,6 +134,39 @@ void main() {
   });
 
   testWidgets(
+    'CA-M06-02: sin ubicación la dirección es obligatoria y no hay tiempo estimado',
+    (tester) async {
+      await abrir(tester);
+      contenedor.read(solicitudProvider.notifier).iniciarConDireccion(clinica);
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Tiempo estimado de llegada'), findsNothing);
+      expect(find.textContaining('Ubicación detectada'), findsNothing);
+
+      await elegirTipo(tester, 'Médica');
+      await enviar(tester);
+      expect(
+        find.text('Escribe la dirección a la que debe llegar el prestador.'),
+        findsOneWidget,
+      );
+      expect(bff.solicitudes, isEmpty);
+
+      bff.confirmarSiempre = true;
+      await tester.enterText(find.byType(TextField).last, 'Cra 45 # 22-18');
+      await tester.pumpAndSettle();
+      await enviar(tester);
+
+      final entrada = bff.solicitudes.single;
+      expect(entrada['direccion'], 'Cra 45 # 22-18');
+      expect(entrada.containsKey('latitud'), isFalse);
+      expect(
+        find.textContaining('en camino a la dirección que indicaste'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('minutos'), findsNothing);
+    },
+  );
+
+  testWidgets(
     'sin tipo de asistencia no envía y el error queda bajo el campo',
     (tester) async {
       await abrir(tester);
