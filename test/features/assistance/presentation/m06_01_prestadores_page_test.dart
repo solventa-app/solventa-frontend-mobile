@@ -10,12 +10,14 @@ import 'package:solventa_mobile/features/assistance/data/datasources/ruta_extern
 import 'package:solventa_mobile/features/assistance/domain/entities/prestador.dart';
 import 'package:solventa_mobile/features/assistance/presentation/pages/m06_01_prestadores_page.dart';
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
+import 'package:solventa_mobile/features/assistance/presentation/widgets/mapa_prestadores.dart';
 
 void main() {
   late FakeAsistenciaRemoteDataSource bff;
   late FakeUbicacionService gps;
   late FakeRutaExternaService rutas;
   late List<Prestador> solicitados;
+  late List<Prestador> conDireccion;
 
   Future<void> abrir(WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 748);
@@ -40,6 +42,7 @@ void main() {
           home: Scaffold(
             body: M0601PrestadoresPage(
               onSolicitar: (c, _) => solicitados.add(c.prestador),
+              onSolicitarConDireccion: conDireccion.add,
             ),
           ),
         ),
@@ -53,6 +56,7 @@ void main() {
     gps = FakeUbicacionService();
     rutas = FakeRutaExternaService();
     solicitados = [];
+    conDireccion = [];
   });
 
   testWidgets('CA-M06-01: muestra los 3 prestadores con distancia y tiempo', (
@@ -104,6 +108,58 @@ void main() {
     await tester.tap(find.text('Permitir ubicación'));
     await tester.pumpAndSettle();
     expect(find.byType(SolProviderRow), findsNWidgets(3));
+  });
+
+  testWidgets(
+    'CA-M06-02: sin permiso se puede seguir con la dirección a mano',
+    (tester) async {
+      gps.resultado = const UbicacionSinPermiso(permanente: true);
+      await abrir(tester);
+      await tester.tap(find.text('Escribir mi dirección'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Elige un prestador'), findsOneWidget);
+      expect(find.byType(MapaPrestadores), findsNothing);
+      final filas = find.byType(SolProviderRow);
+      expect(filas, findsWidgets);
+      // Sin coordenadas no hay tiempo: la fila dice la ciudad.
+      expect(find.textContaining(' min'), findsNothing);
+      expect(find.textContaining('Bogotá'), findsWidgets);
+
+      await tester.tap(find.text('Solicitar').first);
+      expect(conDireccion, hasLength(1));
+      expect(solicitados, isEmpty);
+    },
+  );
+
+  testWidgets('CA-M06-02: con el GPS apagado también, y se puede volver a él', (
+    tester,
+  ) async {
+    gps.resultado = const UbicacionNoDisponible();
+    await abrir(tester);
+    await tester.tap(find.text('Escribir mi dirección'));
+    await tester.pumpAndSettle();
+
+    gps.resultado = const UbicacionObtenida(Coordenada(4.6767, -74.0483));
+    final volver = find.text('Usar mi ubicación');
+    await tester.ensureVisible(volver);
+    await tester.pumpAndSettle();
+    await tester.tap(volver);
+    await tester.pumpAndSettle();
+    expect(find.byType(MapaPrestadores), findsOneWidget);
+    expect(find.byType(SolProviderRow), findsNWidgets(3));
+  });
+
+  testWidgets('CA-M06-04: si el mapa falla queda la lista, no un error', (
+    tester,
+  ) async {
+    await abrir(tester);
+    tester.widget<MapaPrestadores>(find.byType(MapaPrestadores)).onFallo();
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MapaPrestadores), findsNothing);
+    expect(find.byType(SolProviderRow), findsNWidgets(3));
+    expect(find.text('Prestadores cercanos'), findsOneWidget);
   });
 
   testWidgets('permiso negado para siempre o GPS apagado: «Abrir ajustes»', (

@@ -29,6 +29,14 @@ final class PrestadoresSinUbicacion extends PrestadoresState {
   final bool gpsApagado;
 }
 
+/// Sin ubicación, el cliente eligió escribir la dirección (CA-M06-02): el
+/// catálogo sin ordenar por cercanía.
+final class PrestadoresSinOrden extends PrestadoresState {
+  const PrestadoresSinOrden(this.prestadores);
+
+  final List<Prestador> prestadores;
+}
+
 final class PrestadoresFallidos extends PrestadoresState {
   const PrestadoresFallidos(this.falla);
   final Falla falla;

@@ -38,6 +38,7 @@ final class SolicitudState {
   const SolicitudState({
     required this.idSolicitud,
     this.cercano,
+    this.prestadorElegido,
     this.origen,
     this.tipo,
     this.descripcion = '',
@@ -51,6 +52,9 @@ final class SolicitudState {
   final String idSolicitud;
   final PrestadorCercano? cercano;
 
+  /// El prestador elegido sin ubicación (CA-M06-02): no hay distancia ni tiempo.
+  final Prestador? prestadorElegido;
+
   /// Ubicación del cliente al abrir el mapa: adónde debe llegar el prestador.
   final Coordenada? origen;
   final TipoPrestador? tipo;
@@ -63,15 +67,18 @@ final class SolicitudState {
   final bool cancelando;
   final Falla? falloCancelar;
 
-  Prestador? get prestador => cercano?.prestador;
+  Prestador? get prestador => cercano?.prestador ?? prestadorElegido;
+
+  /// Sin ubicación, la dirección es lo único que dice adónde ir (CA-M06-02).
+  bool get faltaDireccion => origen == null && direccion.trim().isEmpty;
 
   /// El tipo elegido no lo atiende el prestador (CA de M06-02).
   bool get tipoNoAtendido =>
       tipo != null && prestador != null && tipo != prestador!.tipo;
 
   bool get listoParaEnviar =>
-      cercano != null &&
-      origen != null &&
+      prestador != null &&
+      !faltaDireccion &&
       tipo != null &&
       !tipoNoAtendido &&
       descripcion.trim().length <= ReglasSolicitud.maxDescripcion &&
@@ -94,6 +101,7 @@ final class SolicitudState {
   }) => SolicitudState(
     idSolicitud: idSolicitud,
     cercano: cercano,
+    prestadorElegido: prestadorElegido,
     origen: origen,
     tipo: tipo ?? this.tipo,
     descripcion: descripcion ?? this.descripcion,
@@ -122,6 +130,13 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
   void iniciar(PrestadorCercano cercano, Coordenada origen) => state =
       SolicitudState(idSolicitud: uuidV4(), cercano: cercano, origen: origen);
 
+  /// «Solicitar» en M06-01 sin ubicación (CA-M06-02): la dirección se escribe
+  /// en M06-02.
+  void iniciarConDireccion(Prestador prestador) => state = SolicitudState(
+    idSolicitud: uuidV4(),
+    prestadorElegido: prestador,
+  );
+
   void fijarTipo(TipoPrestador tipo) => state = state.copyWith(tipo: tipo);
 
   void fijarTextos({String? descripcion, String? direccion}) =>
@@ -141,7 +156,7 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
             idSolicitud: s.idSolicitud,
             prestador: s.prestador!,
             tipo: s.tipo!,
-            ubicacion: s.origen!,
+            ubicacion: s.origen,
             descripcion: s.descripcion,
             direccion: s.direccion,
           ),

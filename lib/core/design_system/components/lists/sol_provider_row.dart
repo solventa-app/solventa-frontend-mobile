@@ -24,8 +24,8 @@ class SolProviderRow extends StatelessWidget {
     required this.name,
     required this.type,
     required this.distance,
-    required this.eta,
     required this.onRequest,
+    this.eta,
     this.requestLabel = 'Solicitar',
     this.typeLabel,
   });
@@ -39,8 +39,8 @@ class SolProviderRow extends StatelessWidget {
   /// Texto ya formateado, p. ej. `1.2 km` o `SolFormat.distanceKm(1.2)`.
   final String distance;
 
-  /// Texto ya formateado, p. ej. `6 min`.
-  final String eta;
+  /// Texto ya formateado, p. ej. `6 min`. Sin ubicación del cliente no hay.
+  final String? eta;
   final VoidCallback? onRequest;
   final String requestLabel;
 
@@ -67,7 +67,7 @@ class SolProviderRow extends StatelessWidget {
         20.0,
       ),
     };
-    final meta = '${typeLabel ?? type.label} · $distance · $eta';
+    final meta = [typeLabel ?? type.label, distance, ?eta].join(' · ');
 
     final iconBadge = ExcludeSemantics(
       child: Container(

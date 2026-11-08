@@ -609,6 +609,22 @@
   "@m0601AbrirAjustes": {
     "description": "M06-01 abrir ajustes"
   },
+  "m0601EscribirDireccion": "Escribir mi dirección",
+  "@m0601EscribirDireccion": {
+    "description": "M06-01 sin ubicación: pedir asistencia con la dirección a mano (CA-M06-02)"
+  },
+  "m0601TituloSinOrden": "Elige un prestador",
+  "@m0601TituloSinOrden": {
+    "description": "M06-01 sin ubicación: título de la lista"
+  },
+  "m0601NotaSinOrden": "Sin tu ubicación no podemos ordenarlos por cercanía. En el siguiente paso escribes tu dirección.",
+  "@m0601NotaSinOrden": {
+    "description": "M06-01 sin ubicación: nota sobre la lista"
+  },
+  "m0601UsarUbicacion": "Usar mi ubicación",
+  "@m0601UsarUbicacion": {
+    "description": "M06-01 sin ubicación: volver a intentar con el GPS"
+  },
   "m0601Reintentar": "Reintentar",
   "@m0601Reintentar": {
     "description": "M06-01 reintentar"
@@ -983,6 +999,10 @@
       }
     }
   },
+  "m0602DireccionRequerida": "Escribe la dirección a la que debe llegar el prestador.",
+  "@m0602DireccionRequerida": {
+    "description": "M06-02 sin ubicación: la dirección es obligatoria"
+  },
   "m0602TiempoLlegada": "Tiempo estimado de llegada: {tiempo}",
   "@m0602TiempoLlegada": {
     "description": "M06-02 tiempo del prestador elegido",
@@ -1017,6 +1037,15 @@
   "m0604aTitulo": "Solicitud confirmada",
   "@m0604aTitulo": {
     "description": "M06-04a título del éxito"
+  },
+  "m0604aMensajeSinTiempo": "{nombre} está en camino a la dirección que indicaste.",
+  "@m0604aMensajeSinTiempo": {
+    "description": "M06-04a pedida con la dirección a mano: sin coordenadas no hay tiempo estimado",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
   },
   "m0604aMensaje": "{nombre} está en camino. Llegada estimada en {minutos} minutos.",
   "@m0604aMensaje": {

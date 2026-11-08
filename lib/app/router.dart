@@ -344,6 +344,10 @@ class _RootShell extends ConsumerWidget {
           ref.read(solicitudProvider.notifier).iniciar(cercano, origen);
           context.push(AsistenciaRoutes.solicitud);
         },
+        onSolicitarConDireccion: (prestador) {
+          ref.read(solicitudProvider.notifier).iniciarConDireccion(prestador);
+          context.push(AsistenciaRoutes.solicitud);
+        },
       ),
       pestana: ref.watch(pestanaInicioProvider),
       onWordmarkLongPress: kDebugMode

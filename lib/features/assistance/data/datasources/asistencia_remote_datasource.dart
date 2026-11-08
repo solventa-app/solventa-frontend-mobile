@@ -19,6 +19,12 @@ abstract interface class AsistenciaRemoteDataSource {
     Map<String, Object?> entrada,
   );
 
+  /// `data.solicitarAsistenciaConDireccion` (contrato v0.41, CA-M06-02).
+  /// [entrada] es un `SolicitudAsistenciaDireccionInput`.
+  Future<Map<String, Object?>> solicitarAsistenciaConDireccion(
+    Map<String, Object?> entrada,
+  );
+
   /// `data.cancelarAsistencia` (contrato v0.40).
   Future<Map<String, Object?>> cancelarAsistencia(String id);
 }
@@ -57,6 +63,21 @@ final class GqlAsistenciaRemoteDataSource
       }).toJson(),
     );
     return Mutation$SolicitarAsistencia.fromJson(data).solicitarAsistencia
+        .toJson();
+  }
+
+  @override
+  Future<Map<String, Object?>> solicitarAsistenciaConDireccion(
+    Map<String, Object?> entrada,
+  ) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationSolicitarAsistenciaConDireccion,
+      variables: Variables$Mutation$SolicitarAsistenciaConDireccion.fromJson({
+        'entrada': entrada,
+      }).toJson(),
+    );
+    return Mutation$SolicitarAsistenciaConDireccion.fromJson(data)
+        .solicitarAsistenciaConDireccion
         .toJson();
   }
 
@@ -136,12 +157,20 @@ final class FakeAsistenciaRemoteDataSource
             estado: confirmar ? 'CONFIRMADA' : 'NO_CONFIRMADA',
             prestador: prestador,
             tipoAsistencia: entrada['tipoAsistencia']! as String,
-            minutosEstimados: confirmar ? 6 : null,
+            // Sin coordenadas no hay cómo estimarlo (contrato v0.41).
+            minutosEstimados: confirmar && entrada.containsKey('latitud')
+                ? 6
+                : null,
             motivo: confirmar ? null : 'PRESTADOR_SIN_RESPUESTA',
           );
     asistencias[id] = respuesta;
     return respuesta;
   }
+
+  @override
+  Future<Map<String, Object?>> solicitarAsistenciaConDireccion(
+    Map<String, Object?> entrada,
+  ) => solicitarAsistencia(entrada);
 
   @override
   Future<Map<String, Object?>> cancelarAsistencia(String id) async {

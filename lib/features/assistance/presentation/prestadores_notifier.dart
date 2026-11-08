@@ -47,6 +47,25 @@ final class PrestadoresNotifier extends Notifier<PrestadoresState> {
     }
   }
 
+  /// «Escribir mi dirección» desde el aviso sin ubicación (CA-M06-02): sin
+  /// coordenadas no se puede ordenar por cercanía, así que va por ciudad.
+  Future<void> escribirDireccion() async {
+    state = const PrestadoresCargando();
+    final r = await ref
+        .read(asistenciaRepositoryProvider)
+        .catalogoPrestadores();
+    if (!ref.mounted) return;
+    state = switch (r) {
+      Exito(:final valor) => PrestadoresSinOrden(
+        [...valor.prestadores]..sort((a, b) {
+          final ciudad = a.ciudad.compareTo(b.ciudad);
+          return ciudad != 0 ? ciudad : a.nombre.compareTo(b.nombre);
+        }),
+      ),
+      Fracaso(:final falla) => PrestadoresFallidos(falla),
+    };
+  }
+
   /// «Abrir ajustes» desde el aviso sin ubicación; al volver se reintenta.
   Future<void> abrirAjustes() async {
     final s = state;

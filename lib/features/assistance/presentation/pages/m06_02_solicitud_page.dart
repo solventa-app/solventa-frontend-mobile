@@ -25,6 +25,7 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
   late final TextEditingController _descripcion;
   late final TextEditingController _direccion;
   final _claveTipo = GlobalKey();
+  final _claveDireccion = GlobalKey();
   bool _intentoEnviar = false;
 
   @override
@@ -78,6 +79,9 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
       if (s.tipo == null || s.tipoNoAtendido) {
         final destino = _claveTipo.currentContext;
         if (destino != null) Scrollable.ensureVisible(destino);
+      } else if (s.faltaDireccion) {
+        final destino = _claveDireccion.currentContext;
+        if (destino != null) Scrollable.ensureVisible(destino);
       }
       return;
     }
@@ -90,8 +94,8 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
     final estado = ref.watch(solicitudProvider);
     final notifier = ref.read(solicitudProvider.notifier);
     final cercano = estado.cercano;
-    if (cercano == null) return const SizedBox.shrink();
-    final prestador = cercano.prestador;
+    final prestador = estado.prestador;
+    if (prestador == null) return const SizedBox.shrink();
 
     final errorTipo = !_intentoEnviar
         ? null
@@ -145,15 +149,20 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
             onChanged: (v) => notifier.fijarTextos(descripcion: v),
           ),
           const SizedBox(height: SolSpacing.lg),
-          SolTextField(
-            label: l10n.m0602Direccion,
-            hint: l10n.m0602DireccionHint,
-            controller: _direccion,
-            textInputAction: TextInputAction.done,
-            errorText: direccionLarga
-                ? l10n.m0602TextoLargo(ReglasSolicitud.maxDireccion)
-                : null,
-            onChanged: (v) => notifier.fijarTextos(direccion: v),
+          KeyedSubtree(
+            key: _claveDireccion,
+            child: SolTextField(
+              label: l10n.m0602Direccion,
+              hint: l10n.m0602DireccionHint,
+              controller: _direccion,
+              textInputAction: TextInputAction.done,
+              errorText: direccionLarga
+                  ? l10n.m0602TextoLargo(ReglasSolicitud.maxDireccion)
+                  : _intentoEnviar && estado.faltaDireccion
+                  ? l10n.m0602DireccionRequerida
+                  : null,
+              onChanged: (v) => notifier.fijarTextos(direccion: v),
+            ),
           ),
           if (estado.origen case final u?) ...[
             const SizedBox(height: SolSpacing.md),
@@ -165,13 +174,15 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
               ),
             ),
           ],
-          const SizedBox(height: SolSpacing.sm),
-          SolInlineNote(
-            icon: SolIcons.schedule,
-            text: l10n.m0602TiempoLlegada(
-              SolFormat.minutes(cercano.minutosEstimados),
+          if (cercano != null) ...[
+            const SizedBox(height: SolSpacing.sm),
+            SolInlineNote(
+              icon: SolIcons.schedule,
+              text: l10n.m0602TiempoLlegada(
+                SolFormat.minutes(cercano.minutosEstimados),
+              ),
             ),
-          ),
+          ],
         ],
       ),
       actions: [SolButton.primary(label: l10n.m0602Enviar, onPressed: _enviar)],

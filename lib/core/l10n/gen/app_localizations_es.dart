@@ -728,6 +728,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0601AbrirAjustes => 'Abrir ajustes';
 
   @override
+  String get m0601EscribirDireccion => 'Escribir mi dirección';
+
+  @override
+  String get m0601TituloSinOrden => 'Elige un prestador';
+
+  @override
+  String get m0601NotaSinOrden =>
+      'Sin tu ubicación no podemos ordenarlos por cercanía. En el siguiente paso escribes tu dirección.';
+
+  @override
+  String get m0601UsarUbicacion => 'Usar mi ubicación';
+
+  @override
   String get m0601Reintentar => 'Reintentar';
 
   @override
@@ -996,6 +1009,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get m0602DireccionRequerida =>
+      'Escribe la dirección a la que debe llegar el prestador.';
+
+  @override
   String m0602TiempoLlegada(String tiempo) {
     return 'Tiempo estimado de llegada: $tiempo';
   }
@@ -1015,6 +1032,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0604aTitulo => 'Solicitud confirmada';
+
+  @override
+  String m0604aMensajeSinTiempo(String nombre) {
+    return '$nombre está en camino a la dirección que indicaste.';
+  }
 
   @override
   String m0604aMensaje(String nombre, int minutos) {

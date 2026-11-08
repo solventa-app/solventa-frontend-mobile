@@ -125,7 +125,10 @@ class _Confirmada extends ConsumerWidget {
       status: SolStatus.success,
       message:
           '${l10n.m0604aTitulo}\n'
-          '${l10n.m0604aMensaje(asistencia.prestador.nombre, asistencia.minutosEstimados ?? 0)}',
+          '${switch (asistencia.minutosEstimados) {
+            final minutos? => l10n.m0604aMensaje(asistencia.prestador.nombre, minutos),
+            null => l10n.m0604aMensajeSinTiempo(asistencia.prestador.nombre),
+          }}',
       actionLabel: l10n.m0604aVerMapa,
       onAction: () => _verEnMapa(context, ref),
       onBack: () => navegarDespues(context, onIrAlMapa),

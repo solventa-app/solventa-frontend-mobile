@@ -272,6 +272,10 @@
   "@m0601AbrirAjustes": {
     "description": "M06-01 abrir ajustes"
   },
+  "m0601EscribirDireccion": "Enter my address",
+  "m0601TituloSinOrden": "Choose a provider",
+  "m0601NotaSinOrden": "Without your location we can't sort them by distance. You'll enter your address in the next step.",
+  "m0601UsarUbicacion": "Use my location",
   "m0601Reintentar": "Try again",
   "@m0601Reintentar": {
     "description": "M06-01 reintentar"
@@ -589,11 +593,13 @@
   "m0602Direccion": "Address or landmark",
   "m0602DireccionHint": "E.g. 45th St, across from the park",
   "m0602UbicacionDetectada": "Location detected automatically: {coordenadas}",
+  "m0602DireccionRequerida": "Enter the address the provider should go to.",
   "m0602TiempoLlegada": "Estimated arrival time: {tiempo}",
   "m0602Enviar": "Send request",
   "m0603Mensaje": "Confirming availability with {nombre}…",
   "m0603bMensaje": "Resending your request to {nombre}…",
   "m0604aTitulo": "Request confirmed",
+  "m0604aMensajeSinTiempo": "{nombre} is on the way to the address you entered.",
   "m0604aMensaje": "{nombre} is on the way. Estimated arrival in {minutos} minutes.",
   "m0604aVerMapa": "View on the map",
   "m0604aCancelar": "Cancel assistance",

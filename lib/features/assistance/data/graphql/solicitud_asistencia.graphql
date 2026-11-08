@@ -27,6 +27,34 @@ mutation SolicitarAsistencia($entrada: SolicitudAsistenciaInput!) {
   }
 }
 
+# Contrato v0.41 (KAN-264, CA-M06-02): sin ubicación, con la dirección a mano.
+mutation SolicitarAsistenciaConDireccion($entrada: SolicitudAsistenciaDireccionInput!) {
+  solicitarAsistenciaConDireccion(entrada: $entrada) {
+    ... on Asistencia {
+      id
+      estado
+      tipoAsistencia
+      minutosEstimados
+      motivo
+      solicitadaEn
+      canceladaEn
+      prestador {
+        id
+        nombre
+        tipo
+        ciudad
+        latitud
+        longitud
+        activo
+      }
+    }
+    ... on ErrorAsistencia {
+      codigo
+      mensaje
+    }
+  }
+}
+
 mutation CancelarAsistencia($id: ID!) {
   cancelarAsistencia(id: $id) {
     ... on Asistencia {
