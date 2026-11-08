@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:solventa_mobile/main.dart' as app;
 
+import 'soporte/capturas.dart';
+
 /// Prueba de humo en dispositivo: la app arranca y pinta su primera
 /// pantalla. Corre en los emuladores de GitHub Actions (emuladores.yml) y
 /// en Firebase Test Lab (test-lab.yml). Cada HU con un recorrido agrega aquí
@@ -15,6 +17,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(WidgetsApp), findsOneWidget);
+    await capturar(tester, 'Primera pantalla');
     expect(tester.takeException(), isNull);
   });
 }

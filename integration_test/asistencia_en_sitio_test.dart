@@ -18,6 +18,8 @@ import 'package:solventa_mobile/features/assistance/presentation/pages/m06_06_ca
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
 import 'package:solventa_mobile/features/assistance/presentation/solicitud_notifier.dart';
 
+import 'soporte/capturas.dart';
+
 /// HU-M06 (KAN-36) en dispositivo: del mapa de prestadores (M06-01) a la
 /// asistencia confirmada y cancelada (M06-06), con el fake del BFF (contrato
 /// v0.40, que simula como CLAIMS: el primer envío no se confirma). El GPS se
@@ -99,6 +101,7 @@ void main() {
     await tester.tap(find.text('Solicitar').first);
     await tester.pumpAndSettle();
     expect(find.text('Clínica Norte'), findsOneWidget);
+    await capturar(tester, 'M06-02 · solicitud');
 
     await tester.tap(find.byType(SolTextField).first);
     await tester.pumpAndSettle();
@@ -108,14 +111,19 @@ void main() {
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Enviar solicitud'));
+    // ensureVisible solo mueve el scroll: sin este pump el tap usa la posición
+    // de antes y en el emulador cae fuera del botón (o fuera de la pantalla).
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Enviar solicitud'));
     await tester.pumpAndSettle();
 
     // M06-04b → M06-03b → M06-04a.
     expect(find.textContaining('No pudimos confirmar'), findsOneWidget);
+    await capturar(tester, 'M06-04b · sin confirmar');
     await tester.tap(find.text('Reintentar'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Solicitud confirmada'), findsOneWidget);
+    await capturar(tester, 'M06-04a · confirmada');
     expect(bff.asistencias, hasLength(1));
 
     // M06-05 → M06-06.
@@ -124,6 +132,7 @@ void main() {
     await tester.tap(find.text('Sí, cancelar'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Tu solicitud fue cancelada'), findsOneWidget);
+    await capturar(tester, 'M06-06 · cancelada');
     expect(bff.asistencias.values.single['estado'], 'CANCELADA');
   });
 }
