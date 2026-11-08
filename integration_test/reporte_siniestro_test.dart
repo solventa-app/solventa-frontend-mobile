@@ -110,6 +110,9 @@ void main() {
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Enviar reporte'));
+    // ensureVisible solo mueve el scroll: sin este pump el tap usa la posición
+    // de antes y en el emulador cae fuera del botón (o fuera de la pantalla).
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Enviar reporte'));
     await tester.pumpAndSettle();
   }

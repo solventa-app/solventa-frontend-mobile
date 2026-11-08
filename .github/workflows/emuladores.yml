@@ -3,7 +3,10 @@ name: Emuladores
 # integration_test/ en emuladores Android de varios tamaños y versiones (docs/ci-cd.md, "Granja de dispositivos").
 # El emulador necesita KVM, que no hay dentro de nuestro contenedor: corre directo en el runner, con la misma
 # versión de Flutter que fija pubspec.yaml (tool/verificar-versiones.sh lo comprueba).
+# También en cada PR a develop: los tres emuladores son checks obligatorios de la regla «develop protegida».
 on:
+  pull_request:
+    branches: [develop]
   push:
     branches: [develop]
   workflow_dispatch:

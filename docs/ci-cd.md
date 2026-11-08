@@ -46,7 +46,7 @@ Título del PR (`pr-titulo.yml`): `tipo(alcance): KAN-N descripción`. Tipos: `f
 | `seguridad.yml` | Todo PR, push a `develop`, cada lunes, manual | Jobs `Secretos (gitleaks)`, `Dependencias (osv-scanner)` (informativo), `Workflows (actionlint)` con revisión de acciones por SHA |
 | `pr-titulo.yml`, `pr-rama.yml` | PR abierto o editado | Título y rama |
 | `develop.yml` | Push a `develop`, manual | `apk-dev` (firmado con la llave de dev, versión `X.Y.Z-dev.N`, artifact 14 días), `App Distribution`, `MobSF` (informativo, reporte como artifact `mobsf`) |
-| `emuladores.yml` | Push a `develop`, manual | `integration_test` en emuladores: teléfono pequeño API 28 (Nexus 5, 360 dp, el mínimo soportado), teléfono grande API 34, tablet API 34. Corre en el runner (necesita KVM) con la versión de Flutter de `pubspec.yaml` |
+| `emuladores.yml` | PR a `develop` (checks obligatorios), push a `develop`, manual | `integration_test` en emuladores: teléfono pequeño API 28 (Nexus 5, 360 dp, el mínimo soportado), teléfono grande API 34, tablet API 34. Corre en el runner (necesita KVM) con la versión de Flutter de `pubspec.yaml` |
 | `test-lab.yml` | Manual (cada `release/sprint-N`) | Robo test e `integration_test` en teléfonos reales de Firebase Test Lab |
 | `cd.yml` | Push a `main`, manual | Build prod y GitHub Release con APK, AAB, mapping y símbolos. Desde otra rama compila sin tag ni Release |
 | `rollback.yml` | Manual | Vuelve a publicar un tag anterior con un build nuevo |
@@ -85,7 +85,7 @@ Comparado con el web: ESLint ↔ `flutter analyze`, Prettier ↔ `dart format`, 
 | Goldens de componentes | alchemist | Devcontainer, en cada PR | Llega con el PR del sistema de diseño (KAN-239): 360 y 390 dp, texto al 100 % y 200 % |
 | Goldens de pantallas | alchemist | Devcontainer, en cada PR | Hoy (HU-M01 y HU-M02): 360 y 390 dp con texto al 100 % y 200 % en español, 390 dp en inglés y 600 dp. Pendiente: variante horizontal de 640 × 360. Se regeneran con `tool/goldens.sh` |
 | Accesibilidad (contraste, tap targets) | `meetsGuideline` | Cada PR | Llega con KAN-239 |
-| Integración en emuladores | `integration_test` | `emuladores.yml`, cada merge a `develop` | Hoy (prueba de humo; cada HU con recorrido agrega la suya en `integration_test/`) |
+| Integración en emuladores | `integration_test` | `emuladores.yml`, cada PR y cada merge a `develop` | Hoy (prueba de humo; cada HU con recorrido agrega la suya en `integration_test/`) |
 | Integración y exploración en teléfonos reales | `integration_test` y Robo test | `test-lab.yml`, cada release | Listo, falta cuenta |
 | Exploratoria manual | Guía y plantilla | Una sesión por sprint | Hoy |
 | Resiliencia sin conexión, biometría, cámara, GPS, push, Wallet | Dobles de los plugins en `flutter_test`; dispositivo real en Test Lab | Con cada HU |
@@ -100,7 +100,7 @@ Tres niveles, todos sin costo. Ninguno corre dentro de la imagen del devcontaine
 
 | Nivel | Qué es | Cuándo | Costo |
 |---|---|---|---|
-| Emuladores en GitHub Actions | `reactivecircus/android-emulator-runner` en el runner de Linux con KVM, matriz de tamaños y versiones | Cada merge a `develop` | Gratis (repo público) |
+| Emuladores en GitHub Actions | `reactivecircus/android-emulator-runner` en el runner de Linux con KVM, matriz de tamaños y versiones | Cada PR y cada merge a `develop` | Gratis (repo público) |
 | Firebase Test Lab, Robo test | Un robot recorre la app sin pruebas escritas: toca, llena campos, toma capturas y video, reporta cierres y ANR. En Flutter se guía por el árbol de semántica | Manual, en cada `release/sprint-N` | Plan Spark gratis (a la fecha, unas 10 pruebas al día en virtuales y 5 en físicos; verificar en la consola) |
 | Firebase Test Lab, `integration_test` | Nuestras pruebas en teléfonos reales, a través de `android/app/src/androidTest/.../MainActivityTest.java` | Junto al Robo | La misma cuota |
 
