@@ -108,6 +108,11 @@ jobs:
     timeout-minutes: 20
     continue-on-error: true
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: tool/mobsf-suprimir.txt
+          persist-credentials: false
+
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: apk-dev
@@ -125,6 +130,12 @@ jobs:
           apk=$(ls dist/*.apk)
           hash=$(curl -sf -F "file=@$apk" http://localhost:8000/api/v1/upload -H "Authorization: $llave" | jq -r .hash)
           curl -sf -X POST --data "hash=$hash" http://localhost:8000/api/v1/scan -H "Authorization: $llave" > /dev/null
+          # Falsos positivos de librerías, en tool/mobsf-suprimir.txt. Si MobSF rechaza alguna regla, solo avisa.
+          grep -v '^#' tool/mobsf-suprimir.txt | while read -r tipo regla _; do
+            [ -n "$regla" ] || continue
+            curl -sf -X POST --data "hash=$hash&type=$tipo&rule=$regla" http://localhost:8000/api/v1/suppress_by_rule \
+              -H "Authorization: $llave" > /dev/null || echo "::warning::MobSF no suprimió $tipo/$regla"
+          done
           mkdir -p mobsf
           curl -sf -X POST --data "hash=$hash" http://localhost:8000/api/v1/report_json -H "Authorization: $llave" > mobsf/reporte.json
           curl -sf -X POST --data "hash=$hash" http://localhost:8000/api/v1/download_pdf -H "Authorization: $llave" > mobsf/reporte.pdf

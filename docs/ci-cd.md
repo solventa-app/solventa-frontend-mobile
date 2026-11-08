@@ -116,7 +116,7 @@ Dispositivos por defecto de `test-lab.yml`: Pixel 6 (API 33) y Pixel 5 (API 30).
 | actionlint | Valida sintaxis, expresiones y scripts de los workflows | Job `Workflows (actionlint)`, bloquea | Hoy |
 | Acciones fijadas por SHA | `uses: accion@<sha> # vX`, para que nadie cambie una acción por debajo | El mismo job falla si una acción no tiene SHA | Hoy |
 | osv-scanner | Revisa `pubspec.lock` contra la base OSV de Google | Job `Dependencias (osv-scanner)`, informativo hasta confirmar cero hallazgos | Hoy |
-| MobSF | Análisis estático del APK: permisos, manifest, cifrado, llaves embebidas, librerías inseguras | `develop.yml`, sobre el APK de dev. Puntaje en el resumen del job, reporte PDF y JSON como artifact. Informativo | Hoy |
+| MobSF | Análisis estático del APK: permisos, manifest, cifrado, llaves embebidas, librerías inseguras | `develop.yml`, sobre el APK de dev. Puntaje en el resumen del job, reporte PDF y JSON como artifact. Los falsos positivos de librerías se suprimen con `tool/mobsf-suprimir.txt`. Informativo | Hoy |
 | Trivy | Vulnerabilidades de la imagen del devcontainer | `imagen-devcontainer.yml`, informativo | Hoy |
 | Dependabot | PRs con versiones nuevas o vulnerables de pub, acciones e imagen base | `.github/dependabot.yml`, hacia `develop` | Hoy |
 | Endurecimiento del APK | R8, Dart ofuscado en prod, sin copia de seguridad (`allowBackup="false"` y `data_extraction_rules.xml`), sin tráfico en claro en prod | Ver la sección siguiente | Hoy |
@@ -172,7 +172,7 @@ Flavors de Android + `--dart-define-from-file`:
 | Versión visible | `1.3.0-dev.214` | `1.3.0` |
 | Configuración de Dart | `config/dev.json` | `config/prod.json` |
 | Firmado | Llave de dev (environment `dev`) | Llave de subida (environment `production`) |
-| Tráfico `http` | Permitido (backend local) | Bloqueado |
+| Tráfico `http` | Bloqueado; solo los builds debug (`flutter run`) lo permiten hacia `10.0.2.2` y `localhost` (backend local) | Bloqueado |
 | Dart ofuscado | No | Sí |
 | Se entrega por | Artifact `apk-dev` y App Distribution (testers del grupo `qa`) | APK firmado en el GitHub Release (sin tienda por ahora) |
 

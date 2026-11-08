@@ -1,0 +1,15 @@
+# Hallazgos de MobSF que se suprimen en el reporte de develop.yml. Formato: tipo regla motivo
+# Solo se suprime lo que NO viene de código ni de configuración nuestra: está en librerías (Sentry,
+# geolocator, flutter_secure_storage y otros plugins) o es un componente estándar de AndroidX.
+# Antes de añadir una regla, confirma en el reporte (sección "files") que ningún archivo es nuestro.
+# No se suprimen: usesCleartextTraffic, minSdk ni permisos; esos son decisiones de la app.
+code cbc_padding_oracle Plugin de almacenamiento seguro, ofuscado por R8
+code android_insecure_random Librerías
+code android_temp_file Librerías
+code android_hardcoded Constantes de librerías y DSN de Sentry (público por diseño)
+code android_sha1 Sentry
+code android_su_detect Sentry
+code android_read_write_external Sentry y plugins; la app no usa almacenamiento compartido
+code android_logging geolocator y librerías
+code android_clipboard_copy Librerías
+manifest exported_protected_permission_not_defined ProfileInstallReceiver de AndroidX, protegido con DUMP (permiso de firma del sistema)
