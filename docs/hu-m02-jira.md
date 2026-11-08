@@ -116,6 +116,11 @@ Al abrir el PR 4, agregar en KAN-226:
 > teléfono» (D2) y no se muestran la nota de prototipado ni el halo difuminado de M02-03. Pruebas de notifier, widget,
 > goldens (sin imágenes) e `integration_test/hu_m02_test.dart` escritas sin correr: las corre el compañero (5.8).
 
+Tras la prueba con biometría real (2026-11-08), agregar en KAN-226 y KAN-135:
+> En Android el fallo de una huella lo muestra el diálogo del sistema («Not recognized») y tras 5 intentos la app avisa
+> y ofrece «Usar PIN del teléfono». M02-01a queda como estado de respaldo: casi no aparece con huella real y en pruebas
+> manuales se ve con el disparador de demo. Decisión y resultados: `docs/evidencias/2026-11-08-hu-m02-biometria-real.md`.
+
 **5.5 · KAN-225 y KAN-115 (D3, D4, 5 min):**
 > D3: el refresh se cifra con una llave RSA-2048 del Android Keystore; la pública cifra sin pedir nada (permite guardar
 > el refresh rotado en segundo plano) y la privada solo descifra durante 10 s después de una huella fuerte o del PIN del
