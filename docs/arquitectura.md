@@ -338,6 +338,10 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
   sesión está abierta y su refresh quedó guardado, `GestorSesion.bloquear()` olvida el JWT y el refresh en claro y la
   app vuelve a M02-01. Si el refresh no se pudo guardar (teléfono sin bloqueo de pantalla) no se bloquea, porque no
   habría con qué desbloquear.
+- **M02-01a es un estado de respaldo en Android (D6, 2026-11-07).** Con una huella que no coincide, `BiometricPrompt`
+  mantiene el diálogo abierto con «Not recognized» y no responde a la app; tras 5 intentos responde bloqueo temporal y
+  M02-01 ofrece el PIN del teléfono. M02-01a («No te reconocimos») solo aparece si `local_auth` devuelve `false`
+  (`NoReconocido`). Se conserva con sus pruebas; a mano se ve con el disparador de demo.
 - **Deuda conocida.** (1) Una huella nueva no invalida la sesión (D4): Android solo lo hace con llaves por operación.
   (2) La ventana de 10 s permite usar la llave a código que ya corre dentro de la app. (3) El código Kotlin no tiene
   pruebas instrumentadas. (4) Un rostro clasificado como «débil» no abre la llave: la app ofrece el PIN del teléfono
