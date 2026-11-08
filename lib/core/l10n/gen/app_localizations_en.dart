@@ -743,4 +743,317 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0601Atribucion => '© OpenStreetMap contributors';
+
+  @override
+  String get homeReportarTile => 'Report a claim';
+
+  @override
+  String get m05Titulo => 'Report a claim';
+
+  @override
+  String get m05Continuar => 'Continue';
+
+  @override
+  String get m05Reintentar => 'Try again';
+
+  @override
+  String get m0501Poliza => 'Which policy?';
+
+  @override
+  String m0501PolizaNumero(String numero) {
+    return 'Policy $numero';
+  }
+
+  @override
+  String m0501Vigencia(String fecha) {
+    return 'Valid until $fecha';
+  }
+
+  @override
+  String get m0501Cargando => 'Looking for your policies…';
+
+  @override
+  String get m0501SinPolizas => 'You have no issued policies to report on.';
+
+  @override
+  String get m0501Fecha => 'When did it happen?';
+
+  @override
+  String get m0501FechaFuera =>
+      'That date is outside the policy\'s coverage period.';
+
+  @override
+  String get m0502Titulo => 'Photos of the damage';
+
+  @override
+  String get m0502Instruccion =>
+      'Take 1 to 3 photos of the damage. Each photo records where you took it.';
+
+  @override
+  String get m0502Tomar => 'Take photo';
+
+  @override
+  String m0502Contador(int cantidad) {
+    return '$cantidad of 3 photos';
+  }
+
+  @override
+  String m0502Quitar(int numero) {
+    return 'Remove photo $numero';
+  }
+
+  @override
+  String get m0502Ubicada => 'Location ready: your photos are geotagged.';
+
+  @override
+  String get m0502SinUbicacion =>
+      'We need your location to place the claim. Turn it on to continue.';
+
+  @override
+  String get m0502PermitirUbicacion => 'Allow location';
+
+  @override
+  String get m0502AbrirAjustes => 'Open settings';
+
+  @override
+  String get m0502CamaraNoDisponible =>
+      'We couldn\'t use the camera. Check the camera permission and try again.';
+
+  @override
+  String get m0502Visor => 'Camera viewfinder';
+
+  @override
+  String get m0503Titulo => 'What happened?';
+
+  @override
+  String get m0503Relato => 'Tell us what happened';
+
+  @override
+  String get m0503RelatoAyuda => '10 to 1000 characters.';
+
+  @override
+  String get m0503Lugar => 'Where did it happen?';
+
+  @override
+  String get m0503LugarAyuda => 'Address or landmark.';
+
+  @override
+  String get m0503Ciudad => 'City';
+
+  @override
+  String get m0503Requerido => 'Fill in this field.';
+
+  @override
+  String get m0503Enviar => 'Send report';
+
+  @override
+  String get m0504Titulo => 'Sending your report';
+
+  @override
+  String get m0504Mensaje =>
+      'We\'re uploading your photos and registering your case…';
+
+  @override
+  String get m0505Exito => 'We received your report';
+
+  @override
+  String m0505ExitoMensaje(String radicado, String fecha) {
+    return 'Your case $radicado is pending review. We\'ll get back to you by $fecha.';
+  }
+
+  @override
+  String get m0505Error => 'We couldn\'t send your report';
+
+  @override
+  String get m0505VolverInicio => 'Back to home';
+
+  @override
+  String get m0505Revisar => 'Review the report';
+
+  @override
+  String get m0505FotoNoConfirmada =>
+      'One of the photos didn\'t upload correctly. Please take it again.';
+
+  @override
+  String get homeMisSiniestrosTile => 'My claims';
+
+  @override
+  String get m0505VerMisSiniestros => 'See my claims';
+
+  @override
+  String get m0506Titulo => 'My claims';
+
+  @override
+  String get m0506Cargando => 'Looking for your reports…';
+
+  @override
+  String get m0506Vacio => 'You haven\'t reported any claims yet.';
+
+  @override
+  String m0506Reportado(String fecha, int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos photos',
+      one: '1 photo',
+    );
+    return 'Reported on $fecha · $_temp0';
+  }
+
+  @override
+  String get m0506Pendiente => 'Pending';
+
+  @override
+  String m0506PendienteDetalle(String fecha) {
+    return 'We\'ll review it by $fecha.';
+  }
+
+  @override
+  String get m0506EnRevision => 'Under review';
+
+  @override
+  String get m0506EnRevisionDetalle => 'An adjuster is evaluating your case.';
+
+  @override
+  String get m0506Aprobado => 'Approved';
+
+  @override
+  String get m0506AprobadoDetalle => 'Your payout is being processed.';
+
+  @override
+  String get m0506Rechazado => 'Rejected';
+
+  @override
+  String get m0506RechazadoDetalle =>
+      'We sent you the reason and how to appeal.';
+
+  @override
+  String get m0602Titulo => 'Request assistance';
+
+  @override
+  String get m0602PrestadorAsignado => 'Assigned provider';
+
+  @override
+  String get m0602Tipo => 'Type of assistance';
+
+  @override
+  String get m0602TipoMedica => 'Medical';
+
+  @override
+  String get m0602TipoMecanica => 'Mechanical';
+
+  @override
+  String get m0602TipoElegir => 'Choose an option';
+
+  @override
+  String get m0602TipoRequerido => 'Choose the type of assistance.';
+
+  @override
+  String m0602TipoNoAtendido(String nombre) {
+    return '$nombre doesn\'t handle this type of assistance. Choose another provider on the map.';
+  }
+
+  @override
+  String get m0602Descripcion => 'Briefly describe what happened';
+
+  @override
+  String get m0602DescripcionHint => 'E.g. chest pain, dizziness…';
+
+  @override
+  String m0602TextoLargo(int maximo) {
+    return 'Use $maximo characters at most.';
+  }
+
+  @override
+  String get m0602Direccion => 'Address or landmark';
+
+  @override
+  String get m0602DireccionHint => 'E.g. 45th St, across from the park';
+
+  @override
+  String m0602UbicacionDetectada(String coordenadas) {
+    return 'Location detected automatically: $coordenadas';
+  }
+
+  @override
+  String m0602TiempoLlegada(String tiempo) {
+    return 'Estimated arrival time: $tiempo';
+  }
+
+  @override
+  String get m0602Enviar => 'Send request';
+
+  @override
+  String m0603Mensaje(String nombre) {
+    return 'Confirming availability with $nombre…';
+  }
+
+  @override
+  String m0603bMensaje(String nombre) {
+    return 'Resending your request to $nombre…';
+  }
+
+  @override
+  String get m0604aTitulo => 'Request confirmed';
+
+  @override
+  String m0604aMensaje(String nombre, int minutos) {
+    return '$nombre is on the way. Estimated arrival in $minutos minutes.';
+  }
+
+  @override
+  String get m0604aVerMapa => 'View on the map';
+
+  @override
+  String get m0604aCancelar => 'Cancel assistance';
+
+  @override
+  String get m0604aCancelarFallo =>
+      'We couldn\'t cancel the assistance. Please try again.';
+
+  @override
+  String get m0604bTitulo => 'We couldn\'t confirm your request';
+
+  @override
+  String m0604bSinRespuesta(String nombre) {
+    return '$nombre didn\'t respond in time. You can choose another provider or try again.';
+  }
+
+  @override
+  String m0604bNoDisponible(String nombre) {
+    return '$nombre is no longer available. Choose another nearby provider.';
+  }
+
+  @override
+  String get m0604bElegirOtro => 'Choose another provider';
+
+  @override
+  String get m0604bReintentar => 'Try again';
+
+  @override
+  String get m0605Titulo => 'Are you sure you want to cancel?';
+
+  @override
+  String m0605Mensaje(String nombre) {
+    return '$nombre is already on the way. If you cancel now, you\'ll have to request assistance again from scratch.';
+  }
+
+  @override
+  String get m0605Confirmar => 'Yes, cancel';
+
+  @override
+  String get m0605Mantener => 'No, keep request';
+
+  @override
+  String get m0606Titulo => 'Cancel assistance';
+
+  @override
+  String get m0606Mensaje =>
+      'Your request was cancelled. The assigned service no longer applies and there will be no charges for this request.';
+
+  @override
+  String get m0606VolverInicio => 'Back to home';
+
+  @override
+  String get m0606SolicitarDeNuevo => 'Request again';
 }

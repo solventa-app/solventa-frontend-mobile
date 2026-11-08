@@ -1,4 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solventa_mobile/features/assistance/data/fixtures/asistencia_fixtures.dart';
+import 'package:solventa_mobile/features/assistance/data/graphql/solicitud_asistencia.graphql.dart';
+import 'package:solventa_mobile/features/claims/data/fixtures/reporte_siniestro_fixtures.dart';
+import 'package:solventa_mobile/features/claims/data/graphql/reporte_siniestro.graphql.dart';
 import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
 import 'package:solventa_mobile/features/onboarding/data/graphql/onboarding.graphql.dart';
 
@@ -16,6 +20,75 @@ void main() {
           Map<String, dynamic> Function(Map<String, dynamic>),
         )
       >{
+        // HU-M06 (contrato v0.40): las respuestas que sirve el fake.
+        'solicitarAsistencia · no confirmada': (
+          {
+            '__typename': 'Mutation',
+            'solicitarAsistencia': AsistenciaFixtures.asistencia(
+              id: 'id-1',
+              estado: 'NO_CONFIRMADA',
+              motivo: 'PRESTADOR_SIN_RESPUESTA',
+            ),
+          },
+          (j) => Mutation$SolicitarAsistencia.fromJson(j).toJson(),
+        ),
+        'solicitarAsistencia · confirmada': (
+          {
+            '__typename': 'Mutation',
+            'solicitarAsistencia': AsistenciaFixtures.asistencia(
+              id: 'id-1',
+              estado: 'CONFIRMADA',
+              minutosEstimados: 6,
+            ),
+          },
+          (j) => Mutation$SolicitarAsistencia.fromJson(j).toJson(),
+        ),
+        'solicitarAsistencia · rechazada': (
+          {
+            '__typename': 'Mutation',
+            'solicitarAsistencia': AsistenciaFixtures.errorAsistencia(
+              'PRESTADOR_NO_DISPONIBLE',
+            ),
+          },
+          (j) => Mutation$SolicitarAsistencia.fromJson(j).toJson(),
+        ),
+        'cancelarAsistencia': (
+          {
+            '__typename': 'Mutation',
+            'cancelarAsistencia': AsistenciaFixtures.asistencia(
+              id: 'id-1',
+              estado: 'CANCELADA',
+              canceladaEn: '2026-11-07T15:05:00+00:00',
+            ),
+          },
+          (j) => Mutation$CancelarAsistencia.fromJson(j).toJson(),
+        ),
+        // HU-M05 (contrato v0.35).
+        'polizasParaReporte': (
+          ReporteSiniestroFixtures.polizas,
+          (j) => Query$PolizasParaReporte.fromJson(j).toJson(),
+        ),
+        'solicitarSubidaEvidenciaSiniestro': (
+          ReporteSiniestroFixtures.subida('arch-1'),
+          (j) =>
+              Mutation$SolicitarSubidaEvidenciaSiniestro.fromJson(j).toJson(),
+        ),
+        'confirmarSubidaEvidencia': (
+          ReporteSiniestroFixtures.confirmada('arch-1'),
+          (j) => Mutation$ConfirmarSubidaEvidencia.fromJson(j).toJson(),
+        ),
+        'reportarSiniestro': (
+          ReporteSiniestroFixtures.reportado('id-1', 2),
+          (j) => Mutation$ReportarSiniestro.fromJson(j).toJson(),
+        ),
+        'misSiniestros': (
+          ReporteSiniestroFixtures.misSiniestros(nuevos: ['id-1']),
+          (j) => Query$MisSiniestros.fromJson(j).toJson(),
+        ),
+        'reportarSiniestro · rechazado': (
+          ReporteSiniestroFixtures.rechazado,
+          (j) => Mutation$ReportarSiniestro.fromJson(j).toJson(),
+        ),
         'iniciarOnboarding': (
           OnboardingFixtures.iniciar,
           (j) => Mutation$IniciarOnboarding.fromJson(j).toJson(),

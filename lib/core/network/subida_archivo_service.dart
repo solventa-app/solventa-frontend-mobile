@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 
-import '../../../../core/network/network_exceptions.dart';
+import 'network_exceptions.dart';
 
 /// PUT directo a la URL firmada del almacenamiento: las imágenes nunca pasan
 /// por el BFF. Usa un `Dio` propio, sin `baseUrl` ni el JWT de la sesión.

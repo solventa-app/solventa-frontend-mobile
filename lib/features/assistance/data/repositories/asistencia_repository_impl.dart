@@ -1,9 +1,11 @@
 import '../../../../core/errors/guardar_fallas.dart';
 import '../../../../core/errors/resultado.dart';
+import '../../domain/entities/asistencia.dart';
 import '../../domain/entities/prestador.dart';
 import '../../domain/repositories/asistencia_repository.dart';
 import '../datasources/asistencia_remote_datasource.dart';
 import '../datasources/catalogo_local_datasource.dart';
+import '../mappers/asistencia_mapper.dart';
 import '../mappers/prestador_mapper.dart';
 
 /// El catálogo es un dato maestro: se usa la copia del teléfono mientras esté
@@ -49,5 +51,27 @@ final class AsistenciaRepositoryImpl implements AsistenciaRepository {
       return guardarFallas(() async => catalogoDesdeMapa(copia.catalogo));
     }
     return r;
+  }
+
+  @override
+  Future<Resultado<Asistencia>> solicitar(SolicitudAsistencia solicitud) =>
+      _union(() => _remote.solicitarAsistencia(entradaSolicitud(solicitud)));
+
+  @override
+  Future<Resultado<Asistencia>> cancelar(String id) =>
+      _union(() => _remote.cancelarAsistencia(id));
+
+  /// Las fallas técnicas (red, 503, contrato) las convierte `guardarFallas`;
+  /// el `ErrorAsistencia` de la union vuelve como valor con su código.
+  Future<Resultado<Asistencia>> _union(
+    Future<Map<String, Object?>> Function() llamada,
+  ) async {
+    final r = await guardarFallas(
+      () async => asistenciaDesdeMapa(await llamada()),
+    );
+    return switch (r) {
+      Exito(:final valor) => valor,
+      Fracaso(:final falla) => Fracaso(falla),
+    };
   }
 }

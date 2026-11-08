@@ -17,6 +17,7 @@ class SolAppShell extends StatefulWidget {
     this.initialIndex = 0,
     this.onLocaleTap,
     this.onWordmarkLongPress,
+    this.pestana,
   });
 
   final Widget home;
@@ -25,6 +26,10 @@ class SolAppShell extends StatefulWidget {
   final int initialIndex;
   final VoidCallback? onLocaleTap;
   final VoidCallback? onWordmarkLongPress;
+
+  /// Control opcional de la pestaña activa desde fuera (p. ej. volver a
+  /// Asistencia al terminar un recorrido). Se mantiene al día con los toques.
+  final ValueNotifier<int>? pestana;
 
   static const int homeIndex = 0;
   static const int assistanceIndex = 1;
@@ -42,6 +47,32 @@ class _SolAppShellState extends State<SolAppShell> {
   /// después conserva su estado en el [IndexedStack].
   late final Set<int> _visitadas = {widget.initialIndex};
 
+  @override
+  void initState() {
+    super.initState();
+    widget.pestana?.addListener(_desdeFuera);
+  }
+
+  @override
+  void didUpdateWidget(SolAppShell old) {
+    super.didUpdateWidget(old);
+    if (old.pestana != widget.pestana) {
+      old.pestana?.removeListener(_desdeFuera);
+      widget.pestana?.addListener(_desdeFuera);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.pestana?.removeListener(_desdeFuera);
+    super.dispose();
+  }
+
+  void _desdeFuera() {
+    final i = widget.pestana!.value;
+    if (i != _index) _select(i);
+  }
+
   void _select(int i) {
     if (i == SolAppShell.logoutIndex) {
       widget.onLogout();
@@ -51,6 +82,7 @@ class _SolAppShellState extends State<SolAppShell> {
       _index = i;
       _visitadas.add(i);
     });
+    widget.pestana?.value = i;
   }
 
   @override
@@ -58,7 +90,7 @@ class _SolAppShellState extends State<SolAppShell> {
     return PopScope(
       canPop: _index == SolAppShell.homeIndex,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) setState(() => _index = SolAppShell.homeIndex);
+        if (!didPop) _select(SolAppShell.homeIndex);
       },
       child: SolTopLevelScaffold(
         selectedIndex: _index,

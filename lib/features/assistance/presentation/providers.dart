@@ -4,14 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/network/network_providers.dart';
+import '../../../core/ubicacion/ubicacion_service.dart';
 import '../data/datasources/asistencia_remote_datasource.dart';
 import '../data/datasources/catalogo_local_datasource.dart';
 import '../data/datasources/ruta_externa_service.dart';
-import '../data/datasources/ubicacion_service.dart';
 import '../data/repositories/asistencia_repository_impl.dart';
 import '../domain/repositories/asistencia_repository.dart';
 import 'prestadores_notifier.dart';
 import 'prestadores_state.dart';
+import 'solicitud_notifier.dart';
 
 bool get _enPruebas => Platform.environment.containsKey('FLUTTER_TEST');
 
@@ -60,3 +61,9 @@ final prestadoresProvider =
     NotifierProvider.autoDispose<PrestadoresNotifier, PrestadoresState>(
       PrestadoresNotifier.new,
     );
+
+/// Recorrido desde «Solicitar» (M06-02 a M06-06). No se descarta al cambiar
+/// de pantalla: la asistencia confirmada sigue disponible para cancelarla.
+final solicitudProvider = NotifierProvider<SolicitudNotifier, SolicitudState>(
+  SolicitudNotifier.new,
+);

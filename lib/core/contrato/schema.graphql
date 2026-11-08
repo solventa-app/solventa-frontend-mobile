@@ -35,6 +35,10 @@ input ConsentimientoInput {
   tipoDato: String = null
   fuenteDatos: String = null
   canal: String = null
+  # v0.38 (T20): tipo del documento (de `Jurisdiccion.tiposDocumento`) y país (uno de los siete). Con alguno de
+  # los dos, el número se valida con el formato del país y ambos entran al titular; sin ninguno, cédula colombiana.
+  tipoDocumento: String = null
+  pais: String = null
 }
 
 # ---------- Oferta (CA-W01-03/04/05/06) ----------
@@ -120,6 +124,13 @@ input SolicitudOfertaInput {
   # Obligatorio para un ASESOR. Un CLIENTE con documento en su cuenta no lo manda: el BFF lo toma de AUTH y valida que
   # coincida con el titular del consentimiento (v0.18, W03-34).
   documentoIdentidad: String = null
+  # v0.38 (T20): como en `ConsentimientoInput`; deben ser los mismos del consentimiento. El CLIENTE con documento en
+  # su cuenta tampoco los manda.
+  tipoDocumento: String = null
+  pais: String = null
+  # v0.39 (T19): el `placeId` elegido en `autocompletarDireccion`. Con él, la dirección se normaliza con Places y una de
+  # un país no soportado se rechaza; sin él, o si Places no responde, la dirección escrita se usa «sin verificar».
+  placeId: String = null
   valorCredito: String!
   plazoMeses: Int!
   direccionInmueble: String!
@@ -524,6 +535,11 @@ type Usuario {
   # `usuarios`, `crearUsuario` y los demás cambios va en null, y null si no tiene (solo los CLIENTE guardan correo).
   # Nunca viaja dentro del JWT. El teléfono sigue sin volver por GraphQL.
   correo: String
+  # v0.38 (T20): tipo del documento del CLIENTE (CC, CE, CURP...; nunca el número), null si no tiene documento.
+  tipoDocumento: String
+  # v0.38 (T20): país de la cuenta (uno de los siete); el CLIENTE lo trae de su documento y cualquiera lo cambia en
+  # `actualizarPreferencias`. Null si nunca se fijó.
+  pais: String
 }
 
 type Sesion {
@@ -575,11 +591,15 @@ input CrearUsuarioInput {
   # v0.18 (W03-27): obligatorio para un CLIENTE, junto con el correo. Se guarda cifrado y como titular (el mismo HMAC
   # del consentimiento): el BACKOFFICE da por verificada la identidad al crearlo.
   documentoIdentidad: String = null
+  # v0.38 (T20): tipo del documento del CLIENTE (del catálogo del país) y país de la cuenta (cualquier rol).
+  tipoDocumento: String = null
+  pais: String = null
 }
 
 input PreferenciasInput {
   idioma: String! # ES | EN
   moneda: String! # COP | USD | EUR | MXN | BRL | CLP | PEN
+  pais: String = null # v0.38 (T20): uno de los siete; si no llega, se conserva
 }
 
 # Al menos uno de los dos; lo que no llega se conserva (HU-W03, bloque 8).
@@ -1031,6 +1051,55 @@ type CatalogoPrestadores {
   prestadores: [Prestador!]! # completa (activos e inactivos) cuando vigente = false
 }
 
+# v0.40 (HU-M06, KAN-265 y KAN-266). Solicitar y cancelar la asistencia en sitio. Transaccional: lo escribe CLAIMS en
+# la primaria. Aquí sí viaja la ubicación del cliente (adónde debe llegar el prestador): CLAIMS la guarda cifrada y
+# nunca va a logs ni vuelve en la respuesta. Mientras no haya prestadores reales el desenlace es simulado: el primer
+# intento queda NO_CONFIRMADA y el reintento con el mismo `idSolicitud` se confirma (M06-04b y M06-04a).
+enum EstadoAsistencia {
+  CONFIRMADA # el prestador va en camino (`minutosEstimados`)
+  NO_CONFIRMADA # no se pudo confirmar (`motivo`); reenviar con el mismo idSolicitud reintenta
+  CANCELADA
+}
+
+enum MotivoNoConfirmada {
+  PRESTADOR_SIN_RESPUESTA
+}
+
+enum CodigoErrorAsistencia {
+  PRESTADOR_NO_DISPONIBLE # dado de baja o inexistente: elegir otro desde el mapa
+  TIPO_NO_ATENDIDO # el prestador no atiende ese tipo de asistencia
+  DATOS_INVALIDOS # idSolicitud mal formado o de otra persona, o textos demasiado largos
+  NO_ENCONTRADA # cancelar una asistencia que no existe o no es del cliente
+}
+
+input SolicitudAsistenciaInput {
+  idSolicitud: ID! # UUID generado por la app: es el id de la asistencia y su clave de idempotencia
+  prestadorId: ID!
+  tipoAsistencia: TipoPrestador!
+  descripcion: String = null # opcional, hasta 500 caracteres
+  direccion: String = null # la que el cliente confirmó o corrigió, hasta 200 caracteres
+  latitud: Float! # WGS84, del GPS del teléfono
+  longitud: Float!
+}
+
+type Asistencia {
+  id: ID!
+  estado: EstadoAsistencia!
+  tipoAsistencia: TipoPrestador!
+  prestador: Prestador!
+  minutosEstimados: Int # solo CONFIRMADA (mismas reglas que la app: 20 km/h + 2 min)
+  motivo: MotivoNoConfirmada # solo NO_CONFIRMADA
+  solicitadaEn: DateTime!
+  canceladaEn: DateTime
+}
+
+type ErrorAsistencia {
+  codigo: CodigoErrorAsistencia!
+  mensaje: String!
+}
+
+union ResultadoAsistencia = Asistencia | ErrorAsistencia
+
 type Query {
   # v0.32 (T19). Places detrás del ACL Worker (timeout 700 ms; sin llave, un stub). Lista vacía si no responde.
   autocompletarDireccion(texto: String!, pais: String = null): [SugerenciaDireccion!]!
@@ -1182,4 +1251,10 @@ type Mutation {
   # URL firmada para una foto del caso que va a reportar (tipo `siniestro-foto`, a nombre de `idReporte`).
   solicitarSubidaEvidenciaSiniestro(idReporte: ID!, tipoContenido: String!, tamanoBytes: Int!): ResultadoSubidaArchivo!
   reportarSiniestro(entrada: ReporteSiniestroInput!): ResultadoReporteSiniestro!
+  # ---------- v0.40 (HU-M06): asistencia en sitio, solo CLIENTE ----------
+  # Idempotente por `idSolicitud`: reenviar una CONFIRMADA o CANCELADA la devuelve sin cambios; una NO_CONFIRMADA
+  # reintenta confirmarla. Sin sesión: SIN_SESION. CLAIMS caído: error público con reintento (nunca un 5xx).
+  solicitarAsistencia(entrada: SolicitudAsistenciaInput!): ResultadoAsistencia!
+  # Idempotente: cancelar dos veces devuelve la misma asistencia CANCELADA.
+  cancelarAsistencia(id: ID!): ResultadoAsistencia!
 }

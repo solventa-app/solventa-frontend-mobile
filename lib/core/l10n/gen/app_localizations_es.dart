@@ -744,4 +744,320 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0601Atribucion => '© colaboradores de OpenStreetMap';
+
+  @override
+  String get homeReportarTile => 'Reportar un siniestro';
+
+  @override
+  String get m05Titulo => 'Reportar siniestro';
+
+  @override
+  String get m05Continuar => 'Continuar';
+
+  @override
+  String get m05Reintentar => 'Reintentar';
+
+  @override
+  String get m0501Poliza => '¿Sobre qué póliza?';
+
+  @override
+  String m0501PolizaNumero(String numero) {
+    return 'Póliza $numero';
+  }
+
+  @override
+  String m0501Vigencia(String fecha) {
+    return 'Vigente hasta el $fecha';
+  }
+
+  @override
+  String get m0501Cargando => 'Buscando tus pólizas…';
+
+  @override
+  String get m0501SinPolizas =>
+      'No tienes pólizas emitidas sobre las que reportar.';
+
+  @override
+  String get m0501Fecha => '¿Cuándo pasó?';
+
+  @override
+  String get m0501FechaFuera =>
+      'Esa fecha está fuera de la vigencia de la póliza.';
+
+  @override
+  String get m0502Titulo => 'Fotos del daño';
+
+  @override
+  String get m0502Instruccion =>
+      'Toma de 1 a 3 fotos del daño. Cada foto guarda dónde la tomaste.';
+
+  @override
+  String get m0502Tomar => 'Tomar foto';
+
+  @override
+  String m0502Contador(int cantidad) {
+    return '$cantidad de 3 fotos';
+  }
+
+  @override
+  String m0502Quitar(int numero) {
+    return 'Quitar la foto $numero';
+  }
+
+  @override
+  String get m0502Ubicada =>
+      'Ubicación lista: tus fotos quedan geoetiquetadas.';
+
+  @override
+  String get m0502SinUbicacion =>
+      'Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.';
+
+  @override
+  String get m0502PermitirUbicacion => 'Permitir ubicación';
+
+  @override
+  String get m0502AbrirAjustes => 'Abrir ajustes';
+
+  @override
+  String get m0502CamaraNoDisponible =>
+      'No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.';
+
+  @override
+  String get m0502Visor => 'Visor de la cámara';
+
+  @override
+  String get m0503Titulo => '¿Qué pasó?';
+
+  @override
+  String get m0503Relato => 'Cuéntanos qué pasó';
+
+  @override
+  String get m0503RelatoAyuda => 'De 10 a 1000 caracteres.';
+
+  @override
+  String get m0503Lugar => '¿Dónde pasó?';
+
+  @override
+  String get m0503LugarAyuda => 'Dirección o punto de referencia.';
+
+  @override
+  String get m0503Ciudad => 'Ciudad';
+
+  @override
+  String get m0503Requerido => 'Completa este campo.';
+
+  @override
+  String get m0503Enviar => 'Enviar reporte';
+
+  @override
+  String get m0504Titulo => 'Enviando tu reporte';
+
+  @override
+  String get m0504Mensaje =>
+      'Estamos subiendo tus fotos y registrando tu caso…';
+
+  @override
+  String get m0505Exito => 'Recibimos tu reporte';
+
+  @override
+  String m0505ExitoMensaje(String radicado, String fecha) {
+    return 'Tu caso $radicado quedó pendiente de revisión. Te daremos una respuesta a más tardar el $fecha.';
+  }
+
+  @override
+  String get m0505Error => 'No pudimos enviar tu reporte';
+
+  @override
+  String get m0505VolverInicio => 'Volver al inicio';
+
+  @override
+  String get m0505Revisar => 'Revisar el reporte';
+
+  @override
+  String get m0505FotoNoConfirmada =>
+      'Una de las fotos no se subió bien. Tómala de nuevo.';
+
+  @override
+  String get homeMisSiniestrosTile => 'Mis siniestros';
+
+  @override
+  String get m0505VerMisSiniestros => 'Ver mis siniestros';
+
+  @override
+  String get m0506Titulo => 'Mis siniestros';
+
+  @override
+  String get m0506Cargando => 'Buscando tus reportes…';
+
+  @override
+  String get m0506Vacio => 'Aún no has reportado siniestros.';
+
+  @override
+  String m0506Reportado(String fecha, int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos fotos',
+      one: '1 foto',
+    );
+    return 'Reportado el $fecha · $_temp0';
+  }
+
+  @override
+  String get m0506Pendiente => 'Pendiente';
+
+  @override
+  String m0506PendienteDetalle(String fecha) {
+    return 'Lo revisaremos a más tardar el $fecha.';
+  }
+
+  @override
+  String get m0506EnRevision => 'En revisión';
+
+  @override
+  String get m0506EnRevisionDetalle => 'Un perito está evaluando tu caso.';
+
+  @override
+  String get m0506Aprobado => 'Aprobado';
+
+  @override
+  String get m0506AprobadoDetalle =>
+      'Tu indemnización está en proceso de pago.';
+
+  @override
+  String get m0506Rechazado => 'Rechazado';
+
+  @override
+  String get m0506RechazadoDetalle =>
+      'Te enviamos el motivo y cómo presentar un recurso.';
+
+  @override
+  String get m0602Titulo => 'Solicitar asistencia';
+
+  @override
+  String get m0602PrestadorAsignado => 'Prestador asignado';
+
+  @override
+  String get m0602Tipo => 'Tipo de asistencia';
+
+  @override
+  String get m0602TipoMedica => 'Médica';
+
+  @override
+  String get m0602TipoMecanica => 'Mecánica';
+
+  @override
+  String get m0602TipoElegir => 'Elige una opción';
+
+  @override
+  String get m0602TipoRequerido => 'Elige el tipo de asistencia.';
+
+  @override
+  String m0602TipoNoAtendido(String nombre) {
+    return '$nombre no atiende este tipo de asistencia. Elige otro prestador en el mapa.';
+  }
+
+  @override
+  String get m0602Descripcion => 'Describe brevemente qué pasó';
+
+  @override
+  String get m0602DescripcionHint => 'Ej. dolor en el pecho, mareo…';
+
+  @override
+  String m0602TextoLargo(int maximo) {
+    return 'Usa máximo $maximo caracteres.';
+  }
+
+  @override
+  String get m0602Direccion => 'Dirección o punto de referencia';
+
+  @override
+  String get m0602DireccionHint => 'Ej. Cra 45 # 22-18, frente al parque';
+
+  @override
+  String m0602UbicacionDetectada(String coordenadas) {
+    return 'Ubicación detectada automáticamente: $coordenadas';
+  }
+
+  @override
+  String m0602TiempoLlegada(String tiempo) {
+    return 'Tiempo estimado de llegada: $tiempo';
+  }
+
+  @override
+  String get m0602Enviar => 'Enviar solicitud';
+
+  @override
+  String m0603Mensaje(String nombre) {
+    return 'Confirmando disponibilidad con $nombre…';
+  }
+
+  @override
+  String m0603bMensaje(String nombre) {
+    return 'Reenviando tu solicitud a $nombre…';
+  }
+
+  @override
+  String get m0604aTitulo => 'Solicitud confirmada';
+
+  @override
+  String m0604aMensaje(String nombre, int minutos) {
+    return '$nombre está en camino. Llegada estimada en $minutos minutos.';
+  }
+
+  @override
+  String get m0604aVerMapa => 'Ver en el mapa';
+
+  @override
+  String get m0604aCancelar => 'Cancelar asistencia';
+
+  @override
+  String get m0604aCancelarFallo =>
+      'No pudimos cancelar la asistencia. Intenta de nuevo.';
+
+  @override
+  String get m0604bTitulo => 'No pudimos confirmar tu solicitud';
+
+  @override
+  String m0604bSinRespuesta(String nombre) {
+    return '$nombre no respondió a tiempo. Puedes elegir otro prestador o intentar de nuevo.';
+  }
+
+  @override
+  String m0604bNoDisponible(String nombre) {
+    return '$nombre ya no está disponible. Elige otro prestador cercano.';
+  }
+
+  @override
+  String get m0604bElegirOtro => 'Elegir otro prestador';
+
+  @override
+  String get m0604bReintentar => 'Reintentar';
+
+  @override
+  String get m0605Titulo => '¿Seguro que quieres cancelar?';
+
+  @override
+  String m0605Mensaje(String nombre) {
+    return '$nombre ya está en camino. Si cancelas ahora, tendrás que solicitar asistencia de nuevo desde cero.';
+  }
+
+  @override
+  String get m0605Confirmar => 'Sí, cancelar';
+
+  @override
+  String get m0605Mantener => 'No, mantener solicitud';
+
+  @override
+  String get m0606Titulo => 'Cancelar asistencia';
+
+  @override
+  String get m0606Mensaje =>
+      'Tu solicitud fue cancelada. El servicio asignado quedó sin efecto y no se realizarán cobros asociados a esta solicitud.';
+
+  @override
+  String get m0606VolverInicio => 'Volver al inicio';
+
+  @override
+  String get m0606SolicitarDeNuevo => 'Solicitar de nuevo';
 }

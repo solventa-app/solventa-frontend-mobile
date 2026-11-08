@@ -23,6 +23,8 @@ class HomePage extends StatelessWidget {
     required this.userName,
     required this.onCompleteRegistration,
     required this.onRequestAssistance,
+    this.onReportClaim,
+    this.onMyClaims,
     this.verificacion,
     this.motivoRechazo,
     this.onCheckStatus,
@@ -32,6 +34,12 @@ class HomePage extends StatelessWidget {
   final String userName;
   final VoidCallback onCompleteRegistration;
   final VoidCallback onRequestAssistance;
+
+  /// HU-M05: entrada al reporte de siniestro. Sin ella no se muestra.
+  final VoidCallback? onReportClaim;
+
+  /// HU-M05: los siniestros que reportó y su estado (M05-06).
+  final VoidCallback? onMyClaims;
   final EstadoVerificacion? verificacion;
   final String? motivoRechazo;
   final VoidCallback? onCheckStatus;
@@ -239,6 +247,22 @@ class HomePage extends StatelessWidget {
             title: l10n?.homeAsistenciaTile ?? 'Solicitar asistencia en sitio',
             onTap: onRequestAssistance,
           ),
+          if (onReportClaim case final reportar?) ...[
+            const SizedBox(height: SolSpacing.sm),
+            SolActionTile(
+              icon: SolIcons.camera,
+              title: l10n?.homeReportarTile ?? 'Reportar un siniestro',
+              onTap: reportar,
+            ),
+          ],
+          if (onMyClaims case final misSiniestros?) ...[
+            const SizedBox(height: SolSpacing.sm),
+            SolActionTile(
+              icon: SolIcons.success,
+              title: l10n?.homeMisSiniestrosTile ?? 'Mis siniestros',
+              onTap: misSiniestros,
+            ),
+          ],
           const SizedBox(height: SolSpacing.xl),
           SolInlineNote(
             icon: SolIcons.wallet,

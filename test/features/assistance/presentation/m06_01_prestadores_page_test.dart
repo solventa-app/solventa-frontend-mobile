@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
+import 'package:solventa_mobile/core/ubicacion/ubicacion_service.dart';
 import 'package:solventa_mobile/features/assistance/data/datasources/asistencia_remote_datasource.dart';
 import 'package:solventa_mobile/features/assistance/data/datasources/catalogo_local_datasource.dart';
 import 'package:solventa_mobile/features/assistance/data/datasources/ruta_externa_service.dart';
-import 'package:solventa_mobile/features/assistance/data/datasources/ubicacion_service.dart';
 import 'package:solventa_mobile/features/assistance/domain/entities/prestador.dart';
 import 'package:solventa_mobile/features/assistance/presentation/pages/m06_01_prestadores_page.dart';
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
@@ -38,7 +38,9 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           home: Scaffold(
-            body: M0601PrestadoresPage(onSolicitar: solicitados.add),
+            body: M0601PrestadoresPage(
+              onSolicitar: (c, _) => solicitados.add(c.prestador),
+            ),
           ),
         ),
       ),

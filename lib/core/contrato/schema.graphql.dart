@@ -8,6 +8,8 @@ class Input$ConsentimientoInput {
     String? tipoDato,
     String? fuenteDatos,
     String? canal,
+    String? tipoDocumento,
+    String? pais,
   }) => Input$ConsentimientoInput._({
     r'finalidad': finalidad,
     r'versionTexto': versionTexto,
@@ -15,6 +17,8 @@ class Input$ConsentimientoInput {
     if (tipoDato != null) r'tipoDato': tipoDato,
     if (fuenteDatos != null) r'fuenteDatos': fuenteDatos,
     if (canal != null) r'canal': canal,
+    if (tipoDocumento != null) r'tipoDocumento': tipoDocumento,
+    if (pais != null) r'pais': pais,
   });
 
   Input$ConsentimientoInput._(this._$data);
@@ -41,6 +45,14 @@ class Input$ConsentimientoInput {
       final l$canal = data['canal'];
       result$data['canal'] = (l$canal as String?);
     }
+    if (data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = data['tipoDocumento'];
+      result$data['tipoDocumento'] = (l$tipoDocumento as String?);
+    }
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
     return Input$ConsentimientoInput._(result$data);
   }
 
@@ -57,6 +69,10 @@ class Input$ConsentimientoInput {
   String? get fuenteDatos => (_$data['fuenteDatos'] as String?);
 
   String? get canal => (_$data['canal'] as String?);
+
+  String? get tipoDocumento => (_$data['tipoDocumento'] as String?);
+
+  String? get pais => (_$data['pais'] as String?);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -79,6 +95,14 @@ class Input$ConsentimientoInput {
     if (_$data.containsKey('canal')) {
       final l$canal = canal;
       result$data['canal'] = l$canal;
+    }
+    if (_$data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = tipoDocumento;
+      result$data['tipoDocumento'] = l$tipoDocumento;
+    }
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
     }
     return result$data;
   }
@@ -137,6 +161,23 @@ class Input$ConsentimientoInput {
     if (l$canal != lOther$canal) {
       return false;
     }
+    final l$tipoDocumento = tipoDocumento;
+    final lOther$tipoDocumento = other.tipoDocumento;
+    if (_$data.containsKey('tipoDocumento') !=
+        other._$data.containsKey('tipoDocumento')) {
+      return false;
+    }
+    if (l$tipoDocumento != lOther$tipoDocumento) {
+      return false;
+    }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
     return true;
   }
 
@@ -148,6 +189,8 @@ class Input$ConsentimientoInput {
     final l$tipoDato = tipoDato;
     final l$fuenteDatos = fuenteDatos;
     final l$canal = canal;
+    final l$tipoDocumento = tipoDocumento;
+    final l$pais = pais;
     return Object.hashAll([
       l$finalidad,
       l$versionTexto,
@@ -157,6 +200,8 @@ class Input$ConsentimientoInput {
       _$data.containsKey('tipoDato') ? l$tipoDato : const {},
       _$data.containsKey('fuenteDatos') ? l$fuenteDatos : const {},
       _$data.containsKey('canal') ? l$canal : const {},
+      _$data.containsKey('tipoDocumento') ? l$tipoDocumento : const {},
+      _$data.containsKey('pais') ? l$pais : const {},
     ]);
   }
 }
@@ -165,12 +210,18 @@ class Input$SolicitudOfertaInput {
   factory Input$SolicitudOfertaInput({
     required String consentimientoId,
     String? documentoIdentidad,
+    String? tipoDocumento,
+    String? pais,
+    String? placeId,
     required String valorCredito,
     required int plazoMeses,
     required String direccionInmueble,
   }) => Input$SolicitudOfertaInput._({
     r'consentimientoId': consentimientoId,
     if (documentoIdentidad != null) r'documentoIdentidad': documentoIdentidad,
+    if (tipoDocumento != null) r'tipoDocumento': tipoDocumento,
+    if (pais != null) r'pais': pais,
+    if (placeId != null) r'placeId': placeId,
     r'valorCredito': valorCredito,
     r'plazoMeses': plazoMeses,
     r'direccionInmueble': direccionInmueble,
@@ -185,6 +236,18 @@ class Input$SolicitudOfertaInput {
     if (data.containsKey('documentoIdentidad')) {
       final l$documentoIdentidad = data['documentoIdentidad'];
       result$data['documentoIdentidad'] = (l$documentoIdentidad as String?);
+    }
+    if (data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = data['tipoDocumento'];
+      result$data['tipoDocumento'] = (l$tipoDocumento as String?);
+    }
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
+    if (data.containsKey('placeId')) {
+      final l$placeId = data['placeId'];
+      result$data['placeId'] = (l$placeId as String?);
     }
     final l$valorCredito = data['valorCredito'];
     result$data['valorCredito'] = (l$valorCredito as String);
@@ -201,6 +264,12 @@ class Input$SolicitudOfertaInput {
 
   String? get documentoIdentidad => (_$data['documentoIdentidad'] as String?);
 
+  String? get tipoDocumento => (_$data['tipoDocumento'] as String?);
+
+  String? get pais => (_$data['pais'] as String?);
+
+  String? get placeId => (_$data['placeId'] as String?);
+
   String get valorCredito => (_$data['valorCredito'] as String);
 
   int get plazoMeses => (_$data['plazoMeses'] as int);
@@ -214,6 +283,18 @@ class Input$SolicitudOfertaInput {
     if (_$data.containsKey('documentoIdentidad')) {
       final l$documentoIdentidad = documentoIdentidad;
       result$data['documentoIdentidad'] = l$documentoIdentidad;
+    }
+    if (_$data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = tipoDocumento;
+      result$data['tipoDocumento'] = l$tipoDocumento;
+    }
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
+    }
+    if (_$data.containsKey('placeId')) {
+      final l$placeId = placeId;
+      result$data['placeId'] = l$placeId;
     }
     final l$valorCredito = valorCredito;
     result$data['valorCredito'] = l$valorCredito;
@@ -247,6 +328,31 @@ class Input$SolicitudOfertaInput {
     if (l$documentoIdentidad != lOther$documentoIdentidad) {
       return false;
     }
+    final l$tipoDocumento = tipoDocumento;
+    final lOther$tipoDocumento = other.tipoDocumento;
+    if (_$data.containsKey('tipoDocumento') !=
+        other._$data.containsKey('tipoDocumento')) {
+      return false;
+    }
+    if (l$tipoDocumento != lOther$tipoDocumento) {
+      return false;
+    }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
+    final l$placeId = placeId;
+    final lOther$placeId = other.placeId;
+    if (_$data.containsKey('placeId') != other._$data.containsKey('placeId')) {
+      return false;
+    }
+    if (l$placeId != lOther$placeId) {
+      return false;
+    }
     final l$valorCredito = valorCredito;
     final lOther$valorCredito = other.valorCredito;
     if (l$valorCredito != lOther$valorCredito) {
@@ -269,6 +375,9 @@ class Input$SolicitudOfertaInput {
   int get hashCode {
     final l$consentimientoId = consentimientoId;
     final l$documentoIdentidad = documentoIdentidad;
+    final l$tipoDocumento = tipoDocumento;
+    final l$pais = pais;
+    final l$placeId = placeId;
     final l$valorCredito = valorCredito;
     final l$plazoMeses = plazoMeses;
     final l$direccionInmueble = direccionInmueble;
@@ -277,6 +386,9 @@ class Input$SolicitudOfertaInput {
       _$data.containsKey('documentoIdentidad')
           ? l$documentoIdentidad
           : const {},
+      _$data.containsKey('tipoDocumento') ? l$tipoDocumento : const {},
+      _$data.containsKey('pais') ? l$pais : const {},
+      _$data.containsKey('placeId') ? l$placeId : const {},
       l$valorCredito,
       l$plazoMeses,
       l$direccionInmueble,
@@ -873,6 +985,8 @@ class Input$CrearUsuarioInput {
     String? correo,
     String? telefono,
     String? documentoIdentidad,
+    String? tipoDocumento,
+    String? pais,
   }) => Input$CrearUsuarioInput._({
     r'usuario': usuario,
     r'clave': clave,
@@ -881,6 +995,8 @@ class Input$CrearUsuarioInput {
     if (correo != null) r'correo': correo,
     if (telefono != null) r'telefono': telefono,
     if (documentoIdentidad != null) r'documentoIdentidad': documentoIdentidad,
+    if (tipoDocumento != null) r'tipoDocumento': tipoDocumento,
+    if (pais != null) r'pais': pais,
   });
 
   Input$CrearUsuarioInput._(this._$data);
@@ -909,6 +1025,14 @@ class Input$CrearUsuarioInput {
       final l$documentoIdentidad = data['documentoIdentidad'];
       result$data['documentoIdentidad'] = (l$documentoIdentidad as String?);
     }
+    if (data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = data['tipoDocumento'];
+      result$data['tipoDocumento'] = (l$tipoDocumento as String?);
+    }
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
     return Input$CrearUsuarioInput._(result$data);
   }
 
@@ -927,6 +1051,10 @@ class Input$CrearUsuarioInput {
   String? get telefono => (_$data['telefono'] as String?);
 
   String? get documentoIdentidad => (_$data['documentoIdentidad'] as String?);
+
+  String? get tipoDocumento => (_$data['tipoDocumento'] as String?);
+
+  String? get pais => (_$data['pais'] as String?);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -951,6 +1079,14 @@ class Input$CrearUsuarioInput {
     if (_$data.containsKey('documentoIdentidad')) {
       final l$documentoIdentidad = documentoIdentidad;
       result$data['documentoIdentidad'] = l$documentoIdentidad;
+    }
+    if (_$data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = tipoDocumento;
+      result$data['tipoDocumento'] = l$tipoDocumento;
+    }
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
     }
     return result$data;
   }
@@ -1012,6 +1148,23 @@ class Input$CrearUsuarioInput {
     if (l$documentoIdentidad != lOther$documentoIdentidad) {
       return false;
     }
+    final l$tipoDocumento = tipoDocumento;
+    final lOther$tipoDocumento = other.tipoDocumento;
+    if (_$data.containsKey('tipoDocumento') !=
+        other._$data.containsKey('tipoDocumento')) {
+      return false;
+    }
+    if (l$tipoDocumento != lOther$tipoDocumento) {
+      return false;
+    }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
     return true;
   }
 
@@ -1024,6 +1177,8 @@ class Input$CrearUsuarioInput {
     final l$correo = correo;
     final l$telefono = telefono;
     final l$documentoIdentidad = documentoIdentidad;
+    final l$tipoDocumento = tipoDocumento;
+    final l$pais = pais;
     return Object.hashAll([
       l$usuario,
       l$clave,
@@ -1034,6 +1189,8 @@ class Input$CrearUsuarioInput {
       _$data.containsKey('documentoIdentidad')
           ? l$documentoIdentidad
           : const {},
+      _$data.containsKey('tipoDocumento') ? l$tipoDocumento : const {},
+      _$data.containsKey('pais') ? l$pais : const {},
     ]);
   }
 }
@@ -1042,7 +1199,12 @@ class Input$PreferenciasInput {
   factory Input$PreferenciasInput({
     required String idioma,
     required String moneda,
-  }) => Input$PreferenciasInput._({r'idioma': idioma, r'moneda': moneda});
+    String? pais,
+  }) => Input$PreferenciasInput._({
+    r'idioma': idioma,
+    r'moneda': moneda,
+    if (pais != null) r'pais': pais,
+  });
 
   Input$PreferenciasInput._(this._$data);
 
@@ -1052,6 +1214,10 @@ class Input$PreferenciasInput {
     result$data['idioma'] = (l$idioma as String);
     final l$moneda = data['moneda'];
     result$data['moneda'] = (l$moneda as String);
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
     return Input$PreferenciasInput._(result$data);
   }
 
@@ -1061,12 +1227,18 @@ class Input$PreferenciasInput {
 
   String get moneda => (_$data['moneda'] as String);
 
+  String? get pais => (_$data['pais'] as String?);
+
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$idioma = idioma;
     result$data['idioma'] = l$idioma;
     final l$moneda = moneda;
     result$data['moneda'] = l$moneda;
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
+    }
     return result$data;
   }
 
@@ -1088,6 +1260,14 @@ class Input$PreferenciasInput {
     if (l$moneda != lOther$moneda) {
       return false;
     }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
     return true;
   }
 
@@ -1095,7 +1275,12 @@ class Input$PreferenciasInput {
   int get hashCode {
     final l$idioma = idioma;
     final l$moneda = moneda;
-    return Object.hashAll([l$idioma, l$moneda]);
+    final l$pais = pais;
+    return Object.hashAll([
+      l$idioma,
+      l$moneda,
+      _$data.containsKey('pais') ? l$pais : const {},
+    ]);
   }
 }
 
@@ -1797,6 +1982,168 @@ class Input$ReporteSiniestroInput {
       l$descripcion,
       l$ubicacion,
       Object.hashAll(l$fotos.map((v) => v)),
+    ]);
+  }
+}
+
+class Input$SolicitudAsistenciaInput {
+  factory Input$SolicitudAsistenciaInput({
+    required String idSolicitud,
+    required String prestadorId,
+    required Enum$TipoPrestador tipoAsistencia,
+    String? descripcion,
+    String? direccion,
+    required double latitud,
+    required double longitud,
+  }) => Input$SolicitudAsistenciaInput._({
+    r'idSolicitud': idSolicitud,
+    r'prestadorId': prestadorId,
+    r'tipoAsistencia': tipoAsistencia,
+    if (descripcion != null) r'descripcion': descripcion,
+    if (direccion != null) r'direccion': direccion,
+    r'latitud': latitud,
+    r'longitud': longitud,
+  });
+
+  Input$SolicitudAsistenciaInput._(this._$data);
+
+  factory Input$SolicitudAsistenciaInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$idSolicitud = data['idSolicitud'];
+    result$data['idSolicitud'] = (l$idSolicitud as String);
+    final l$prestadorId = data['prestadorId'];
+    result$data['prestadorId'] = (l$prestadorId as String);
+    final l$tipoAsistencia = data['tipoAsistencia'];
+    result$data['tipoAsistencia'] = fromJson$Enum$TipoPrestador(
+      (l$tipoAsistencia as String),
+    );
+    if (data.containsKey('descripcion')) {
+      final l$descripcion = data['descripcion'];
+      result$data['descripcion'] = (l$descripcion as String?);
+    }
+    if (data.containsKey('direccion')) {
+      final l$direccion = data['direccion'];
+      result$data['direccion'] = (l$direccion as String?);
+    }
+    final l$latitud = data['latitud'];
+    result$data['latitud'] = (l$latitud as num).toDouble();
+    final l$longitud = data['longitud'];
+    result$data['longitud'] = (l$longitud as num).toDouble();
+    return Input$SolicitudAsistenciaInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get idSolicitud => (_$data['idSolicitud'] as String);
+
+  String get prestadorId => (_$data['prestadorId'] as String);
+
+  Enum$TipoPrestador get tipoAsistencia =>
+      (_$data['tipoAsistencia'] as Enum$TipoPrestador);
+
+  String? get descripcion => (_$data['descripcion'] as String?);
+
+  String? get direccion => (_$data['direccion'] as String?);
+
+  double get latitud => (_$data['latitud'] as double);
+
+  double get longitud => (_$data['longitud'] as double);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$idSolicitud = idSolicitud;
+    result$data['idSolicitud'] = l$idSolicitud;
+    final l$prestadorId = prestadorId;
+    result$data['prestadorId'] = l$prestadorId;
+    final l$tipoAsistencia = tipoAsistencia;
+    result$data['tipoAsistencia'] = toJson$Enum$TipoPrestador(l$tipoAsistencia);
+    if (_$data.containsKey('descripcion')) {
+      final l$descripcion = descripcion;
+      result$data['descripcion'] = l$descripcion;
+    }
+    if (_$data.containsKey('direccion')) {
+      final l$direccion = direccion;
+      result$data['direccion'] = l$direccion;
+    }
+    final l$latitud = latitud;
+    result$data['latitud'] = l$latitud;
+    final l$longitud = longitud;
+    result$data['longitud'] = l$longitud;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$SolicitudAsistenciaInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$idSolicitud = idSolicitud;
+    final lOther$idSolicitud = other.idSolicitud;
+    if (l$idSolicitud != lOther$idSolicitud) {
+      return false;
+    }
+    final l$prestadorId = prestadorId;
+    final lOther$prestadorId = other.prestadorId;
+    if (l$prestadorId != lOther$prestadorId) {
+      return false;
+    }
+    final l$tipoAsistencia = tipoAsistencia;
+    final lOther$tipoAsistencia = other.tipoAsistencia;
+    if (l$tipoAsistencia != lOther$tipoAsistencia) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (_$data.containsKey('descripcion') !=
+        other._$data.containsKey('descripcion')) {
+      return false;
+    }
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    final l$direccion = direccion;
+    final lOther$direccion = other.direccion;
+    if (_$data.containsKey('direccion') !=
+        other._$data.containsKey('direccion')) {
+      return false;
+    }
+    if (l$direccion != lOther$direccion) {
+      return false;
+    }
+    final l$latitud = latitud;
+    final lOther$latitud = other.latitud;
+    if (l$latitud != lOther$latitud) {
+      return false;
+    }
+    final l$longitud = longitud;
+    final lOther$longitud = other.longitud;
+    if (l$longitud != lOther$longitud) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$idSolicitud = idSolicitud;
+    final l$prestadorId = prestadorId;
+    final l$tipoAsistencia = tipoAsistencia;
+    final l$descripcion = descripcion;
+    final l$direccion = direccion;
+    final l$latitud = latitud;
+    final l$longitud = longitud;
+    return Object.hashAll([
+      l$idSolicitud,
+      l$prestadorId,
+      l$tipoAsistencia,
+      _$data.containsKey('descripcion') ? l$descripcion : const {},
+      _$data.containsKey('direccion') ? l$direccion : const {},
+      l$latitud,
+      l$longitud,
     ]);
   }
 }
@@ -3210,6 +3557,115 @@ Enum$TipoPrestador fromJson$Enum$TipoPrestador(String value) {
   }
 }
 
+enum Enum$EstadoAsistencia {
+  CONFIRMADA,
+  NO_CONFIRMADA,
+  CANCELADA,
+  $unknown;
+
+  factory Enum$EstadoAsistencia.fromJson(String value) =>
+      fromJson$Enum$EstadoAsistencia(value);
+
+  String toJson() => toJson$Enum$EstadoAsistencia(this);
+}
+
+String toJson$Enum$EstadoAsistencia(Enum$EstadoAsistencia e) {
+  switch (e) {
+    case Enum$EstadoAsistencia.CONFIRMADA:
+      return r'CONFIRMADA';
+    case Enum$EstadoAsistencia.NO_CONFIRMADA:
+      return r'NO_CONFIRMADA';
+    case Enum$EstadoAsistencia.CANCELADA:
+      return r'CANCELADA';
+    case Enum$EstadoAsistencia.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$EstadoAsistencia fromJson$Enum$EstadoAsistencia(String value) {
+  switch (value) {
+    case r'CONFIRMADA':
+      return Enum$EstadoAsistencia.CONFIRMADA;
+    case r'NO_CONFIRMADA':
+      return Enum$EstadoAsistencia.NO_CONFIRMADA;
+    case r'CANCELADA':
+      return Enum$EstadoAsistencia.CANCELADA;
+    default:
+      return Enum$EstadoAsistencia.$unknown;
+  }
+}
+
+enum Enum$MotivoNoConfirmada {
+  PRESTADOR_SIN_RESPUESTA,
+  $unknown;
+
+  factory Enum$MotivoNoConfirmada.fromJson(String value) =>
+      fromJson$Enum$MotivoNoConfirmada(value);
+
+  String toJson() => toJson$Enum$MotivoNoConfirmada(this);
+}
+
+String toJson$Enum$MotivoNoConfirmada(Enum$MotivoNoConfirmada e) {
+  switch (e) {
+    case Enum$MotivoNoConfirmada.PRESTADOR_SIN_RESPUESTA:
+      return r'PRESTADOR_SIN_RESPUESTA';
+    case Enum$MotivoNoConfirmada.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$MotivoNoConfirmada fromJson$Enum$MotivoNoConfirmada(String value) {
+  switch (value) {
+    case r'PRESTADOR_SIN_RESPUESTA':
+      return Enum$MotivoNoConfirmada.PRESTADOR_SIN_RESPUESTA;
+    default:
+      return Enum$MotivoNoConfirmada.$unknown;
+  }
+}
+
+enum Enum$CodigoErrorAsistencia {
+  PRESTADOR_NO_DISPONIBLE,
+  TIPO_NO_ATENDIDO,
+  DATOS_INVALIDOS,
+  NO_ENCONTRADA,
+  $unknown;
+
+  factory Enum$CodigoErrorAsistencia.fromJson(String value) =>
+      fromJson$Enum$CodigoErrorAsistencia(value);
+
+  String toJson() => toJson$Enum$CodigoErrorAsistencia(this);
+}
+
+String toJson$Enum$CodigoErrorAsistencia(Enum$CodigoErrorAsistencia e) {
+  switch (e) {
+    case Enum$CodigoErrorAsistencia.PRESTADOR_NO_DISPONIBLE:
+      return r'PRESTADOR_NO_DISPONIBLE';
+    case Enum$CodigoErrorAsistencia.TIPO_NO_ATENDIDO:
+      return r'TIPO_NO_ATENDIDO';
+    case Enum$CodigoErrorAsistencia.DATOS_INVALIDOS:
+      return r'DATOS_INVALIDOS';
+    case Enum$CodigoErrorAsistencia.NO_ENCONTRADA:
+      return r'NO_ENCONTRADA';
+    case Enum$CodigoErrorAsistencia.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$CodigoErrorAsistencia fromJson$Enum$CodigoErrorAsistencia(String value) {
+  switch (value) {
+    case r'PRESTADOR_NO_DISPONIBLE':
+      return Enum$CodigoErrorAsistencia.PRESTADOR_NO_DISPONIBLE;
+    case r'TIPO_NO_ATENDIDO':
+      return Enum$CodigoErrorAsistencia.TIPO_NO_ATENDIDO;
+    case r'DATOS_INVALIDOS':
+      return Enum$CodigoErrorAsistencia.DATOS_INVALIDOS;
+    case r'NO_ENCONTRADA':
+      return Enum$CodigoErrorAsistencia.NO_ENCONTRADA;
+    default:
+      return Enum$CodigoErrorAsistencia.$unknown;
+  }
+}
+
 enum Enum$__TypeKind {
   SCALAR,
   OBJECT,
@@ -3413,4 +3869,5 @@ const possibleTypesMap = <String, Set<String>>{
   'ResultadoCodigoOnboarding': {'CodigoOnboardingEnviado', 'ErrorOnboarding'},
   'ResultadoResolucion': {'Siniestro', 'ErrorSiniestro'},
   'ResultadoReporteSiniestro': {'SiniestroReportado', 'ErrorSiniestro'},
+  'ResultadoAsistencia': {'Asistencia', 'ErrorAsistencia'},
 };

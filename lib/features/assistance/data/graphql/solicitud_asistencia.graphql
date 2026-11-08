@@ -1,0 +1,55 @@
+# HU-M06 (KAN-265 y KAN-266): solicitar y cancelar la asistencia en sitio, contrato v0.40. Idempotentes: reenviar con
+# el mismo `idSolicitud` no crea otra asistencia (si quedó NO_CONFIRMADA, reintenta confirmarla).
+mutation SolicitarAsistencia($entrada: SolicitudAsistenciaInput!) {
+  solicitarAsistencia(entrada: $entrada) {
+    ... on Asistencia {
+      id
+      estado
+      tipoAsistencia
+      minutosEstimados
+      motivo
+      solicitadaEn
+      canceladaEn
+      prestador {
+        id
+        nombre
+        tipo
+        ciudad
+        latitud
+        longitud
+        activo
+      }
+    }
+    ... on ErrorAsistencia {
+      codigo
+      mensaje
+    }
+  }
+}
+
+mutation CancelarAsistencia($id: ID!) {
+  cancelarAsistencia(id: $id) {
+    ... on Asistencia {
+      id
+      estado
+      tipoAsistencia
+      minutosEstimados
+      motivo
+      solicitadaEn
+      canceladaEn
+      prestador {
+        id
+        nombre
+        tipo
+        ciudad
+        latitud
+        longitud
+        activo
+      }
+    }
+    ... on ErrorAsistencia {
+      codigo
+      mensaje
+    }
+  }
+}

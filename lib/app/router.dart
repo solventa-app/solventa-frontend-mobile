@@ -10,7 +10,21 @@ import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/acceso/presentation/acceso_routes.dart';
 import '../features/acceso/presentation/pages/m02_01_desbloqueo_page.dart';
 import '../features/acceso/presentation/pages/m02_03_acceso_concedido_page.dart';
+import '../features/assistance/presentation/asistencia_routes.dart';
 import '../features/assistance/presentation/pages/m06_01_prestadores_page.dart';
+import '../features/assistance/presentation/pages/m06_02_solicitud_page.dart';
+import '../features/assistance/presentation/pages/m06_03_enviando_page.dart';
+import '../features/assistance/presentation/pages/m06_04_resultado_page.dart';
+import '../features/assistance/presentation/pages/m06_06_cancelada_page.dart';
+import '../features/assistance/presentation/providers.dart';
+import '../features/claims/presentation/pages/m05_01_poliza_page.dart';
+import '../features/claims/presentation/pages/m05_02_fotos_page.dart';
+import '../features/claims/presentation/pages/m05_03_relato_page.dart';
+import '../features/claims/presentation/pages/m05_04_enviando_page.dart';
+import '../features/claims/presentation/pages/m05_05_resultado_page.dart';
+import '../features/claims/presentation/pages/m05_06_mis_siniestros_page.dart';
+import '../features/claims/presentation/providers.dart';
+import '../features/claims/presentation/reporte_routes.dart';
 import '../features/home/presentation/home_page.dart';
 import '../features/onboarding/domain/entities/verificacion_identidad.dart';
 import '../features/onboarding/presentation/onboarding_notifier.dart';
@@ -74,6 +88,20 @@ class _RutaActualObserver extends NavigatorObserver {
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) =>
       _actualizar(newRoute);
+}
+
+/// Pestaña activa del inicio (G-03): los recorridos de HU-M06 vuelven a
+/// Asistencia o a Inicio al terminar.
+final pestanaInicioProvider = Provider<ValueNotifier<int>>((ref) {
+  final pestana = ValueNotifier<int>(SolAppShell.homeIndex);
+  ref.onDispose(pestana.dispose);
+  return pestana;
+});
+
+/// Cierra el recorrido de HU-M06 y deja el inicio en la pestaña [indice].
+void _volverAPestana(BuildContext context, int indice) {
+  ProviderScope.containerOf(context).read(pestanaInicioProvider).value = indice;
+  context.go('/');
 }
 
 /// Rutas de la app. El nombre de cada ruta es el id del plano de Figma.
@@ -162,6 +190,64 @@ GoRouter crearRouter({FaseAcceso Function()? fase, Listenable? refrescar}) =>
           name: 'g-05',
           builder: (_, _) => const ProfilePage(),
         ),
+        GoRoute(
+          path: ReporteRoutes.poliza,
+          name: 'm05-01',
+          builder: (_, _) => const M0501PolizaPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.fotos,
+          name: 'm05-02',
+          builder: (_, _) => const M0502FotosPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.relato,
+          name: 'm05-03',
+          builder: (_, _) => const M0503RelatoPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.enviando,
+          name: 'm05-04',
+          builder: (_, _) => const M0504EnviandoPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.resultado,
+          name: 'm05-05',
+          builder: (_, _) => const M0505ResultadoPage(),
+        ),
+        GoRoute(
+          path: ReporteRoutes.misSiniestros,
+          name: 'm05-06',
+          builder: (_, _) => const M0506MisSiniestrosPage(),
+        ),
+        GoRoute(
+          path: AsistenciaRoutes.solicitud,
+          name: 'm06-02',
+          builder: (_, _) => const M0602SolicitudPage(),
+        ),
+        GoRoute(
+          path: AsistenciaRoutes.enviando,
+          name: 'm06-03',
+          builder: (_, _) => const M0603EnviandoPage(),
+        ),
+        GoRoute(
+          path: AsistenciaRoutes.resultado,
+          name: 'm06-04',
+          builder: (context, _) => M0604ResultadoPage(
+            onIrAlMapa: () =>
+                _volverAPestana(context, SolAppShell.assistanceIndex),
+            onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
+          ),
+        ),
+        GoRoute(
+          path: AsistenciaRoutes.cancelada,
+          name: 'm06-06',
+          builder: (context, _) => M0606CanceladaPage(
+            onIrAlMapa: () =>
+                _volverAPestana(context, SolAppShell.assistanceIndex),
+            onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
+          ),
+        ),
         if (kDebugMode)
           GoRoute(
             path: SolGalleryPage.routeName,
@@ -233,10 +319,27 @@ class _RootShell extends ConsumerWidget {
         onOpenProfile: verificado
             ? () => context.push(OnboardingRoutes.perfil)
             : null,
-        onRequestAssistance: () {},
+        onRequestAssistance: () =>
+            ref.read(pestanaInicioProvider).value = SolAppShell.assistanceIndex,
+        // HU-M05: solo con la identidad verificada (el BFF lo exige igual).
+        onReportClaim: verificado
+            ? () {
+                ref.read(reporteProvider.notifier).reiniciar();
+                context.push(ReporteRoutes.poliza);
+              }
+            : null,
+        onMyClaims: verificado
+            ? () => context.push(ReporteRoutes.misSiniestros)
+            : null,
       ),
-      // «Solicitar» abrirá M06-02 (formulario) en KAN-265.
-      assistance: M0601PrestadoresPage(onSolicitar: (_) {}),
+      // «Solicitar» abre M06-02 con el prestador elegido (KAN-265).
+      assistance: M0601PrestadoresPage(
+        onSolicitar: (cercano, origen) {
+          ref.read(solicitudProvider.notifier).iniciar(cercano, origen);
+          context.push(AsistenciaRoutes.solicitud);
+        },
+      ),
+      pestana: ref.watch(pestanaInicioProvider),
       onWordmarkLongPress: kDebugMode
           ? () => context.push(SolGalleryPage.routeName)
           : null,

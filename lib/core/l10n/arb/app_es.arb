@@ -636,5 +636,451 @@
   "m0601Atribucion": "© colaboradores de OpenStreetMap",
   "@m0601Atribucion": {
     "description": "M06-01 atribución del mapa"
+  },
+  "homeReportarTile": "Reportar un siniestro",
+  "@homeReportarTile": {
+    "description": "Inicio: entrada a HU-M05"
+  },
+  "m05Titulo": "Reportar siniestro",
+  "@m05Titulo": {
+    "description": "M05 título de la barra"
+  },
+  "m05Continuar": "Continuar",
+  "@m05Continuar": {
+    "description": "M05 botón continuar"
+  },
+  "m05Reintentar": "Reintentar",
+  "@m05Reintentar": {
+    "description": "M05 reintentar"
+  },
+  "m0501Poliza": "¿Sobre qué póliza?",
+  "@m0501Poliza": {
+    "description": "M05-01 sección póliza"
+  },
+  "m0501PolizaNumero": "Póliza {numero}",
+  "@m0501PolizaNumero": {
+    "description": "M05-01 fila de póliza",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Vigencia": "Vigente hasta el {fecha}",
+  "@m0501Vigencia": {
+    "description": "M05-01 vigencia de la póliza",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Cargando": "Buscando tus pólizas…",
+  "@m0501Cargando": {
+    "description": "M05-01 cargando"
+  },
+  "m0501SinPolizas": "No tienes pólizas emitidas sobre las que reportar.",
+  "@m0501SinPolizas": {
+    "description": "M05-01 sin pólizas"
+  },
+  "m0501Fecha": "¿Cuándo pasó?",
+  "@m0501Fecha": {
+    "description": "M05-01 campo fecha"
+  },
+  "m0501FechaFuera": "Esa fecha está fuera de la vigencia de la póliza.",
+  "@m0501FechaFuera": {
+    "description": "M05-01 fecha fuera de vigencia"
+  },
+  "m0502Titulo": "Fotos del daño",
+  "@m0502Titulo": {
+    "description": "M05-02 título"
+  },
+  "m0502Instruccion": "Toma de 1 a 3 fotos del daño. Cada foto guarda dónde la tomaste.",
+  "@m0502Instruccion": {
+    "description": "M05-02 instrucción"
+  },
+  "m0502Tomar": "Tomar foto",
+  "@m0502Tomar": {
+    "description": "M05-02 botón de captura"
+  },
+  "m0502Contador": "{cantidad} de 3 fotos",
+  "@m0502Contador": {
+    "description": "M05-02 contador de fotos",
+    "placeholders": {
+      "cantidad": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Quitar": "Quitar la foto {numero}",
+  "@m0502Quitar": {
+    "description": "M05-02 lectura del botón quitar",
+    "placeholders": {
+      "numero": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Ubicada": "Ubicación lista: tus fotos quedan geoetiquetadas.",
+  "@m0502Ubicada": {
+    "description": "M05-02 ubicación obtenida"
+  },
+  "m0502SinUbicacion": "Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.",
+  "@m0502SinUbicacion": {
+    "description": "M05-02 sin permiso de ubicación"
+  },
+  "m0502PermitirUbicacion": "Permitir ubicación",
+  "@m0502PermitirUbicacion": {
+    "description": "M05-02 reintentar permiso"
+  },
+  "m0502AbrirAjustes": "Abrir ajustes",
+  "@m0502AbrirAjustes": {
+    "description": "M05-02 abrir ajustes"
+  },
+  "m0502CamaraNoDisponible": "No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.",
+  "@m0502CamaraNoDisponible": {
+    "description": "M05-02 sin cámara"
+  },
+  "m0502Visor": "Visor de la cámara",
+  "@m0502Visor": {
+    "description": "M05-02 lectura del visor"
+  },
+  "m0503Titulo": "¿Qué pasó?",
+  "@m0503Titulo": {
+    "description": "M05-03 título"
+  },
+  "m0503Relato": "Cuéntanos qué pasó",
+  "@m0503Relato": {
+    "description": "M05-03 campo relato"
+  },
+  "m0503RelatoAyuda": "De 10 a 1000 caracteres.",
+  "@m0503RelatoAyuda": {
+    "description": "M05-03 ayuda del relato"
+  },
+  "m0503Lugar": "¿Dónde pasó?",
+  "@m0503Lugar": {
+    "description": "M05-03 campo lugar"
+  },
+  "m0503LugarAyuda": "Dirección o punto de referencia.",
+  "@m0503LugarAyuda": {
+    "description": "M05-03 ayuda del lugar"
+  },
+  "m0503Ciudad": "Ciudad",
+  "@m0503Ciudad": {
+    "description": "M05-03 campo ciudad"
+  },
+  "m0503Requerido": "Completa este campo.",
+  "@m0503Requerido": {
+    "description": "M05-03 campo obligatorio"
+  },
+  "m0503Enviar": "Enviar reporte",
+  "@m0503Enviar": {
+    "description": "M05-03 botón enviar"
+  },
+  "m0504Titulo": "Enviando tu reporte",
+  "@m0504Titulo": {
+    "description": "M05-04 título"
+  },
+  "m0504Mensaje": "Estamos subiendo tus fotos y registrando tu caso…",
+  "@m0504Mensaje": {
+    "description": "M05-04 mensaje"
+  },
+  "m0505Exito": "Recibimos tu reporte",
+  "@m0505Exito": {
+    "description": "M05-05 título de éxito"
+  },
+  "m0505ExitoMensaje": "Tu caso {radicado} quedó pendiente de revisión. Te daremos una respuesta a más tardar el {fecha}.",
+  "@m0505ExitoMensaje": {
+    "description": "M05-05 mensaje de éxito",
+    "placeholders": {
+      "radicado": {
+        "type": "String"
+      },
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505Error": "No pudimos enviar tu reporte",
+  "@m0505Error": {
+    "description": "M05-05 título de error"
+  },
+  "m0505VolverInicio": "Volver al inicio",
+  "@m0505VolverInicio": {
+    "description": "M05-05 volver al inicio"
+  },
+  "m0505Revisar": "Revisar el reporte",
+  "@m0505Revisar": {
+    "description": "M05-05 volver a corregir"
+  },
+  "m0505FotoNoConfirmada": "Una de las fotos no se subió bien. Tómala de nuevo.",
+  "@m0505FotoNoConfirmada": {
+    "description": "M05-05 foto sin confirmar"
+  },
+  "homeMisSiniestrosTile": "Mis siniestros",
+  "@homeMisSiniestrosTile": {
+    "description": "Inicio: entrada a M05-06"
+  },
+  "m0505VerMisSiniestros": "Ver mis siniestros",
+  "@m0505VerMisSiniestros": {
+    "description": "M05-05 enlace a M05-06"
+  },
+  "m0506Titulo": "Mis siniestros",
+  "@m0506Titulo": {
+    "description": "M05-06 título"
+  },
+  "m0506Cargando": "Buscando tus reportes…",
+  "@m0506Cargando": {
+    "description": "M05-06 cargando"
+  },
+  "m0506Vacio": "Aún no has reportado siniestros.",
+  "@m0506Vacio": {
+    "description": "M05-06 lista vacía"
+  },
+  "m0506Reportado": "Reportado el {fecha} · {fotos, plural, =1{1 foto} other{{fotos} fotos}}",
+  "@m0506Reportado": {
+    "description": "M05-06 fecha y fotos del caso",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506Pendiente": "Pendiente",
+  "@m0506Pendiente": {
+    "description": "M05-06 estado PENDIENTE"
+  },
+  "m0506PendienteDetalle": "Lo revisaremos a más tardar el {fecha}.",
+  "@m0506PendienteDetalle": {
+    "description": "M05-06 detalle PENDIENTE",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506EnRevision": "En revisión",
+  "@m0506EnRevision": {
+    "description": "M05-06 estado EN_REVISION"
+  },
+  "m0506EnRevisionDetalle": "Un perito está evaluando tu caso.",
+  "@m0506EnRevisionDetalle": {
+    "description": "M05-06 detalle EN_REVISION"
+  },
+  "m0506Aprobado": "Aprobado",
+  "@m0506Aprobado": {
+    "description": "M05-06 estado APROBADO"
+  },
+  "m0506AprobadoDetalle": "Tu indemnización está en proceso de pago.",
+  "@m0506AprobadoDetalle": {
+    "description": "M05-06 detalle APROBADO"
+  },
+  "m0506Rechazado": "Rechazado",
+  "@m0506Rechazado": {
+    "description": "M05-06 estado RECHAZADO"
+  },
+  "m0506RechazadoDetalle": "Te enviamos el motivo y cómo presentar un recurso.",
+  "@m0506RechazadoDetalle": {
+    "description": "M05-06 detalle RECHAZADO"
+  },
+  "m0602Titulo": "Solicitar asistencia",
+  "@m0602Titulo": {
+    "description": "M06-02 título de la barra"
+  },
+  "m0602PrestadorAsignado": "Prestador asignado",
+  "@m0602PrestadorAsignado": {
+    "description": "M06-02 rótulo de la tarjeta del prestador"
+  },
+  "m0602Tipo": "Tipo de asistencia",
+  "@m0602Tipo": {
+    "description": "M06-02 etiqueta del selector"
+  },
+  "m0602TipoMedica": "Médica",
+  "@m0602TipoMedica": {
+    "description": "M06-02 opción del selector"
+  },
+  "m0602TipoMecanica": "Mecánica",
+  "@m0602TipoMecanica": {
+    "description": "M06-02 opción del selector"
+  },
+  "m0602TipoElegir": "Elige una opción",
+  "@m0602TipoElegir": {
+    "description": "M06-02 selector sin valor"
+  },
+  "m0602TipoRequerido": "Elige el tipo de asistencia.",
+  "@m0602TipoRequerido": {
+    "description": "M06-02 error del selector vacío"
+  },
+  "m0602TipoNoAtendido": "{nombre} no atiende este tipo de asistencia. Elige otro prestador en el mapa.",
+  "@m0602TipoNoAtendido": {
+    "description": "M06-02 y M06-04b: el prestador no atiende el tipo elegido",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0602Descripcion": "Describe brevemente qué pasó",
+  "@m0602Descripcion": {
+    "description": "M06-02 etiqueta de la descripción (opcional)"
+  },
+  "m0602DescripcionHint": "Ej. dolor en el pecho, mareo…",
+  "@m0602DescripcionHint": {
+    "description": "M06-02 ejemplo de la descripción"
+  },
+  "m0602TextoLargo": "Usa máximo {maximo} caracteres.",
+  "@m0602TextoLargo": {
+    "description": "M06-02 error de texto largo",
+    "placeholders": {
+      "maximo": {
+        "type": "int"
+      }
+    }
+  },
+  "m0602Direccion": "Dirección o punto de referencia",
+  "@m0602Direccion": {
+    "description": "M06-02 etiqueta de la dirección (opcional, editable)"
+  },
+  "m0602DireccionHint": "Ej. Cra 45 # 22-18, frente al parque",
+  "@m0602DireccionHint": {
+    "description": "M06-02 ejemplo de la dirección"
+  },
+  "m0602UbicacionDetectada": "Ubicación detectada automáticamente: {coordenadas}",
+  "@m0602UbicacionDetectada": {
+    "description": "M06-02 ubicación del GPS que se enviará",
+    "placeholders": {
+      "coordenadas": {
+        "type": "String"
+      }
+    }
+  },
+  "m0602TiempoLlegada": "Tiempo estimado de llegada: {tiempo}",
+  "@m0602TiempoLlegada": {
+    "description": "M06-02 tiempo del prestador elegido",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0602Enviar": "Enviar solicitud",
+  "@m0602Enviar": {
+    "description": "M06-02 botón principal"
+  },
+  "m0603Mensaje": "Confirmando disponibilidad con {nombre}…",
+  "@m0603Mensaje": {
+    "description": "M06-03 estado transitorio",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0603bMensaje": "Reenviando tu solicitud a {nombre}…",
+  "@m0603bMensaje": {
+    "description": "M06-03b estado transitorio del reintento",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0604aTitulo": "Solicitud confirmada",
+  "@m0604aTitulo": {
+    "description": "M06-04a título del éxito"
+  },
+  "m0604aMensaje": "{nombre} está en camino. Llegada estimada en {minutos} minutos.",
+  "@m0604aMensaje": {
+    "description": "M06-04a detalle; el tiempo se lee completo, sin abreviar",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      },
+      "minutos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0604aVerMapa": "Ver en el mapa",
+  "@m0604aVerMapa": {
+    "description": "M06-04a abre la ruta al prestador"
+  },
+  "m0604aCancelar": "Cancelar asistencia",
+  "@m0604aCancelar": {
+    "description": "M06-04a acción destructiva"
+  },
+  "m0604aCancelarFallo": "No pudimos cancelar la asistencia. Intenta de nuevo.",
+  "@m0604aCancelarFallo": {
+    "description": "M06-04a aviso si cancelar falla"
+  },
+  "m0604bTitulo": "No pudimos confirmar tu solicitud",
+  "@m0604bTitulo": {
+    "description": "M06-04b título del fallo"
+  },
+  "m0604bSinRespuesta": "{nombre} no respondió a tiempo. Puedes elegir otro prestador o intentar de nuevo.",
+  "@m0604bSinRespuesta": {
+    "description": "M06-04b causa PRESTADOR_SIN_RESPUESTA",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0604bNoDisponible": "{nombre} ya no está disponible. Elige otro prestador cercano.",
+  "@m0604bNoDisponible": {
+    "description": "M06-04b causa PRESTADOR_NO_DISPONIBLE",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0604bElegirOtro": "Elegir otro prestador",
+  "@m0604bElegirOtro": {
+    "description": "M06-04b vuelve al mapa"
+  },
+  "m0604bReintentar": "Reintentar",
+  "@m0604bReintentar": {
+    "description": "M06-04b reenvía los mismos datos (M06-03b)"
+  },
+  "m0605Titulo": "¿Seguro que quieres cancelar?",
+  "@m0605Titulo": {
+    "description": "M06-05 título del diálogo"
+  },
+  "m0605Mensaje": "{nombre} ya está en camino. Si cancelas ahora, tendrás que solicitar asistencia de nuevo desde cero.",
+  "@m0605Mensaje": {
+    "description": "M06-05 consecuencia de cancelar",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0605Confirmar": "Sí, cancelar",
+  "@m0605Confirmar": {
+    "description": "M06-05 acción destructiva"
+  },
+  "m0605Mantener": "No, mantener solicitud",
+  "@m0605Mantener": {
+    "description": "M06-05 acción segura"
+  },
+  "m0606Titulo": "Cancelar asistencia",
+  "@m0606Titulo": {
+    "description": "M06-06 título de la barra"
+  },
+  "m0606Mensaje": "Tu solicitud fue cancelada. El servicio asignado quedó sin efecto y no se realizarán cobros asociados a esta solicitud.",
+  "@m0606Mensaje": {
+    "description": "M06-06 confirmación explícita de la cancelación"
+  },
+  "m0606VolverInicio": "Volver al inicio",
+  "@m0606VolverInicio": {
+    "description": "M06-06 acción principal"
+  },
+  "m0606SolicitarDeNuevo": "Solicitar de nuevo",
+  "@m0606SolicitarDeNuevo": {
+    "description": "M06-06 vuelve al mapa de prestadores"
   }
 }
