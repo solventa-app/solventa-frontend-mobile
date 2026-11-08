@@ -18,7 +18,8 @@ import '../widgets/mapa_prestadores.dart';
 class M0601PrestadoresPage extends ConsumerStatefulWidget {
   const M0601PrestadoresPage({super.key, required this.onSolicitar});
 
-  final ValueChanged<Prestador> onSolicitar;
+  /// El prestador de la fila y la ubicación del cliente (adónde debe llegar).
+  final void Function(PrestadorCercano cercano, Coordenada origen) onSolicitar;
 
   @override
   ConsumerState<M0601PrestadoresPage> createState() =>
@@ -145,7 +146,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                     distance: SolFormat.distanceKm(c.distanciaKm),
                     eta: SolFormat.minutes(c.minutosEstimados),
                     requestLabel: l10n.m0601Solicitar,
-                    onRequest: () => widget.onSolicitar(c.prestador),
+                    onRequest: () => widget.onSolicitar(c, origen),
                   ),
                 ],
             ],

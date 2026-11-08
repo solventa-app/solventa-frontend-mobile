@@ -2,8 +2,8 @@
 /// carga el backend (`docs/hu-m06/prestadores-semilla.json`). La prueba
 /// `test/contract/prestadores_semilla_test.dart` falla si se desalinean.
 ///
-/// El contrato del BFF todavía no tiene la operación (KAN-263); la forma es la
-/// propuesta en `docs/hu-m06-backend.md`.
+/// Las respuestas de `solicitarAsistencia` y `cancelarAsistencia` (contrato
+/// v0.40) tienen la forma del BFF, con `__typename` de la union.
 abstract final class AsistenciaFixtures {
   static const String version = '2026-11-04.1';
 
@@ -130,5 +130,35 @@ abstract final class AsistenciaFixtures {
     'version': version,
     'vigente': true,
     'prestadores': <Map<String, Object?>>[],
+  };
+
+  /// `data.solicitarAsistencia` (o `cancelarAsistencia`) cuando responde una
+  /// `Asistencia`. Por defecto, Clínica Norte.
+  static Map<String, Object?> asistencia({
+    required String id,
+    required String estado,
+    Map<String, Object?>? prestador,
+    String tipoAsistencia = 'MEDICO',
+    int? minutosEstimados,
+    String? motivo,
+    String solicitadaEn = '2026-11-07T15:00:00+00:00',
+    String? canceladaEn,
+  }) => {
+    '__typename': 'Asistencia',
+    'id': id,
+    'estado': estado,
+    'tipoAsistencia': tipoAsistencia,
+    'minutosEstimados': minutosEstimados,
+    'motivo': motivo,
+    'solicitadaEn': solicitadaEn,
+    'canceladaEn': canceladaEn,
+    'prestador': {'__typename': 'Prestador', ...(prestador ?? prestadores[0])},
+  };
+
+  /// `data.solicitarAsistencia` cuando CLAIMS la rechaza.
+  static Map<String, Object?> errorAsistencia(String codigo) => {
+    '__typename': 'ErrorAsistencia',
+    'codigo': codigo,
+    'mensaje': 'Mensaje de CLAIMS.',
   };
 }

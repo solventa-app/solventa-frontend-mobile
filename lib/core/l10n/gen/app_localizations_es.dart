@@ -829,4 +829,134 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get m0506RechazadoDetalle =>
       'Te enviamos el motivo y cómo presentar un recurso.';
+
+  @override
+  String get m0602Titulo => 'Solicitar asistencia';
+
+  @override
+  String get m0602PrestadorAsignado => 'Prestador asignado';
+
+  @override
+  String get m0602Tipo => 'Tipo de asistencia';
+
+  @override
+  String get m0602TipoMedica => 'Médica';
+
+  @override
+  String get m0602TipoMecanica => 'Mecánica';
+
+  @override
+  String get m0602TipoElegir => 'Elige una opción';
+
+  @override
+  String get m0602TipoRequerido => 'Elige el tipo de asistencia.';
+
+  @override
+  String m0602TipoNoAtendido(String nombre) {
+    return '$nombre no atiende este tipo de asistencia. Elige otro prestador en el mapa.';
+  }
+
+  @override
+  String get m0602Descripcion => 'Describe brevemente qué pasó';
+
+  @override
+  String get m0602DescripcionHint => 'Ej. dolor en el pecho, mareo…';
+
+  @override
+  String m0602TextoLargo(int maximo) {
+    return 'Usa máximo $maximo caracteres.';
+  }
+
+  @override
+  String get m0602Direccion => 'Dirección o punto de referencia';
+
+  @override
+  String get m0602DireccionHint => 'Ej. Cra 45 # 22-18, frente al parque';
+
+  @override
+  String m0602UbicacionDetectada(String coordenadas) {
+    return 'Ubicación detectada automáticamente: $coordenadas';
+  }
+
+  @override
+  String m0602TiempoLlegada(String tiempo) {
+    return 'Tiempo estimado de llegada: $tiempo';
+  }
+
+  @override
+  String get m0602Enviar => 'Enviar solicitud';
+
+  @override
+  String m0603Mensaje(String nombre) {
+    return 'Confirmando disponibilidad con $nombre…';
+  }
+
+  @override
+  String m0603bMensaje(String nombre) {
+    return 'Reenviando tu solicitud a $nombre…';
+  }
+
+  @override
+  String get m0604aTitulo => 'Solicitud confirmada';
+
+  @override
+  String m0604aMensaje(String nombre, int minutos) {
+    return '$nombre está en camino. Llegada estimada en $minutos minutos.';
+  }
+
+  @override
+  String get m0604aVerMapa => 'Ver en el mapa';
+
+  @override
+  String get m0604aCancelar => 'Cancelar asistencia';
+
+  @override
+  String get m0604aCancelarFallo =>
+      'No pudimos cancelar la asistencia. Intenta de nuevo.';
+
+  @override
+  String get m0604bTitulo => 'No pudimos confirmar tu solicitud';
+
+  @override
+  String m0604bSinRespuesta(String nombre) {
+    return '$nombre no respondió a tiempo. Puedes elegir otro prestador o intentar de nuevo.';
+  }
+
+  @override
+  String m0604bNoDisponible(String nombre) {
+    return '$nombre ya no está disponible. Elige otro prestador cercano.';
+  }
+
+  @override
+  String get m0604bElegirOtro => 'Elegir otro prestador';
+
+  @override
+  String get m0604bReintentar => 'Reintentar';
+
+  @override
+  String get m0605Titulo => '¿Seguro que quieres cancelar?';
+
+  @override
+  String m0605Mensaje(String nombre) {
+    return '$nombre ya está en camino. Si cancelas ahora, tendrás que solicitar asistencia de nuevo desde cero.';
+  }
+
+  @override
+  String get m0605Confirmar => 'Sí, cancelar';
+
+  @override
+  String get m0605Mantener => 'No, mantener solicitud';
+
+  @override
+  String get m0606Titulo => 'Cancelar asistencia';
+
+  @override
+  String get m0606Mensaje =>
+      'Tu solicitud fue cancelada. El servicio asignado quedó sin efecto y no se realizarán cobros asociados a esta solicitud.';
+
+  @override
+  String get m0606VolverInicio => 'Volver al inicio';
+
+  @override
+  String get m0606SolicitarDeNuevo => 'Solicitar de nuevo';
 }

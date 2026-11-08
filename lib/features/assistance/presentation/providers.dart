@@ -12,6 +12,7 @@ import '../data/repositories/asistencia_repository_impl.dart';
 import '../domain/repositories/asistencia_repository.dart';
 import 'prestadores_notifier.dart';
 import 'prestadores_state.dart';
+import 'solicitud_notifier.dart';
 
 bool get _enPruebas => Platform.environment.containsKey('FLUTTER_TEST');
 
@@ -60,3 +61,9 @@ final prestadoresProvider =
     NotifierProvider.autoDispose<PrestadoresNotifier, PrestadoresState>(
       PrestadoresNotifier.new,
     );
+
+/// Recorrido desde «Solicitar» (M06-02 a M06-06). No se descarta al cambiar
+/// de pantalla: la asistencia confirmada sigue disponible para cancelarla.
+final solicitudProvider = NotifierProvider<SolicitudNotifier, SolicitudState>(
+  SolicitudNotifier.new,
+);

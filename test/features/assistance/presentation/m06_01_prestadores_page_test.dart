@@ -38,7 +38,9 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           home: Scaffold(
-            body: M0601PrestadoresPage(onSolicitar: solicitados.add),
+            body: M0601PrestadoresPage(
+              onSolicitar: (c, _) => solicitados.add(c.prestador),
+            ),
           ),
         ),
       ),

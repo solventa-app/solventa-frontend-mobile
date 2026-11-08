@@ -2,8 +2,14 @@
 
 > **Estado (2026-11-05):** implementado por el backend en el contrato **v0.36** (PR #502, KAN-263): `catalogoPrestadores`
 > servido por CLAIMS desde la réplica, con el catálogo en `services/claims/migrations/datos/prestadores.json` (idéntico a
-> `docs/hu-m06/prestadores-semilla.json`). La app ya lo consume fuera de `mock`. Lo de la sección 6 (solicitar y
-> cancelar) sigue pendiente para KAN-265 y KAN-266.
+> `docs/hu-m06/prestadores-semilla.json`). La app ya lo consume fuera de `mock`.
+>
+> **Estado (2026-11-07):** la sección 6 quedó en el contrato **v0.40** (KAN-265 y KAN-266, rama
+> `feat/KAN-265-solicitar-asistencia` del backend): `solicitarAsistencia` y `cancelarAsistencia` devuelven la union
+> `ResultadoAsistencia` (`Asistencia | ErrorAsistencia` con `codigo`). CLAIMS guarda la asistencia en la colección
+> `asistencias` (migración `0006`) con la ubicación y la descripción cifradas, y simula el desenlace
+> (`ASISTENCIA_SIMULACION=primero_falla`: el primer intento queda NO_CONFIRMADA y el reintento se confirma). La app lo
+> consume en M06-02 a M06-06 (`lib/features/assistance/presentation/pages/`).
 
 Para el equipo y los agentes de `solventa-backend`. Historia **KAN-36** (HU-M06, Journey 3); tarea de backend **KAN-263**
 (`S3-M06-1`). Escrito desde la app móvil el 2026-11-04, con la app ya construida contra un fake con estos mismos datos

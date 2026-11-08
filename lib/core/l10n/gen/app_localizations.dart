@@ -1531,6 +1531,222 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Te enviamos el motivo y cómo presentar un recurso.'**
   String get m0506RechazadoDetalle;
+
+  /// M06-02 título de la barra
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitar asistencia'**
+  String get m0602Titulo;
+
+  /// M06-02 rótulo de la tarjeta del prestador
+  ///
+  /// In es, this message translates to:
+  /// **'Prestador asignado'**
+  String get m0602PrestadorAsignado;
+
+  /// M06-02 etiqueta del selector
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de asistencia'**
+  String get m0602Tipo;
+
+  /// M06-02 opción del selector
+  ///
+  /// In es, this message translates to:
+  /// **'Médica'**
+  String get m0602TipoMedica;
+
+  /// M06-02 opción del selector
+  ///
+  /// In es, this message translates to:
+  /// **'Mecánica'**
+  String get m0602TipoMecanica;
+
+  /// M06-02 selector sin valor
+  ///
+  /// In es, this message translates to:
+  /// **'Elige una opción'**
+  String get m0602TipoElegir;
+
+  /// M06-02 error del selector vacío
+  ///
+  /// In es, this message translates to:
+  /// **'Elige el tipo de asistencia.'**
+  String get m0602TipoRequerido;
+
+  /// M06-02 y M06-04b: el prestador no atiende el tipo elegido
+  ///
+  /// In es, this message translates to:
+  /// **'{nombre} no atiende este tipo de asistencia. Elige otro prestador en el mapa.'**
+  String m0602TipoNoAtendido(String nombre);
+
+  /// M06-02 etiqueta de la descripción (opcional)
+  ///
+  /// In es, this message translates to:
+  /// **'Describe brevemente qué pasó'**
+  String get m0602Descripcion;
+
+  /// M06-02 ejemplo de la descripción
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. dolor en el pecho, mareo…'**
+  String get m0602DescripcionHint;
+
+  /// M06-02 error de texto largo
+  ///
+  /// In es, this message translates to:
+  /// **'Usa máximo {maximo} caracteres.'**
+  String m0602TextoLargo(int maximo);
+
+  /// M06-02 etiqueta de la dirección (opcional, editable)
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección o punto de referencia'**
+  String get m0602Direccion;
+
+  /// M06-02 ejemplo de la dirección
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Cra 45 # 22-18, frente al parque'**
+  String get m0602DireccionHint;
+
+  /// M06-02 ubicación del GPS que se enviará
+  ///
+  /// In es, this message translates to:
+  /// **'Ubicación detectada automáticamente: {coordenadas}'**
+  String m0602UbicacionDetectada(String coordenadas);
+
+  /// M06-02 tiempo del prestador elegido
+  ///
+  /// In es, this message translates to:
+  /// **'Tiempo estimado de llegada: {tiempo}'**
+  String m0602TiempoLlegada(String tiempo);
+
+  /// M06-02 botón principal
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar solicitud'**
+  String get m0602Enviar;
+
+  /// M06-03 estado transitorio
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmando disponibilidad con {nombre}…'**
+  String m0603Mensaje(String nombre);
+
+  /// M06-03b estado transitorio del reintento
+  ///
+  /// In es, this message translates to:
+  /// **'Reenviando tu solicitud a {nombre}…'**
+  String m0603bMensaje(String nombre);
+
+  /// M06-04a título del éxito
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitud confirmada'**
+  String get m0604aTitulo;
+
+  /// M06-04a detalle; el tiempo se lee completo, sin abreviar
+  ///
+  /// In es, this message translates to:
+  /// **'{nombre} está en camino. Llegada estimada en {minutos} minutos.'**
+  String m0604aMensaje(String nombre, int minutos);
+
+  /// M06-04a abre la ruta al prestador
+  ///
+  /// In es, this message translates to:
+  /// **'Ver en el mapa'**
+  String get m0604aVerMapa;
+
+  /// M06-04a acción destructiva
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar asistencia'**
+  String get m0604aCancelar;
+
+  /// M06-04a aviso si cancelar falla
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cancelar la asistencia. Intenta de nuevo.'**
+  String get m0604aCancelarFallo;
+
+  /// M06-04b título del fallo
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos confirmar tu solicitud'**
+  String get m0604bTitulo;
+
+  /// M06-04b causa PRESTADOR_SIN_RESPUESTA
+  ///
+  /// In es, this message translates to:
+  /// **'{nombre} no respondió a tiempo. Puedes elegir otro prestador o intentar de nuevo.'**
+  String m0604bSinRespuesta(String nombre);
+
+  /// M06-04b causa PRESTADOR_NO_DISPONIBLE
+  ///
+  /// In es, this message translates to:
+  /// **'{nombre} ya no está disponible. Elige otro prestador cercano.'**
+  String m0604bNoDisponible(String nombre);
+
+  /// M06-04b vuelve al mapa
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir otro prestador'**
+  String get m0604bElegirOtro;
+
+  /// M06-04b reenvía los mismos datos (M06-03b)
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get m0604bReintentar;
+
+  /// M06-05 título del diálogo
+  ///
+  /// In es, this message translates to:
+  /// **'¿Seguro que quieres cancelar?'**
+  String get m0605Titulo;
+
+  /// M06-05 consecuencia de cancelar
+  ///
+  /// In es, this message translates to:
+  /// **'{nombre} ya está en camino. Si cancelas ahora, tendrás que solicitar asistencia de nuevo desde cero.'**
+  String m0605Mensaje(String nombre);
+
+  /// M06-05 acción destructiva
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, cancelar'**
+  String get m0605Confirmar;
+
+  /// M06-05 acción segura
+  ///
+  /// In es, this message translates to:
+  /// **'No, mantener solicitud'**
+  String get m0605Mantener;
+
+  /// M06-06 título de la barra
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar asistencia'**
+  String get m0606Titulo;
+
+  /// M06-06 confirmación explícita de la cancelación
+  ///
+  /// In es, this message translates to:
+  /// **'Tu solicitud fue cancelada. El servicio asignado quedó sin efecto y no se realizarán cobros asociados a esta solicitud.'**
+  String get m0606Mensaje;
+
+  /// M06-06 acción principal
+  ///
+  /// In es, this message translates to:
+  /// **'Volver al inicio'**
+  String get m0606VolverInicio;
+
+  /// M06-06 vuelve al mapa de prestadores
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitar de nuevo'**
+  String get m0606SolicitarDeNuevo;
 }
 
 class _AppLocalizationsDelegate
