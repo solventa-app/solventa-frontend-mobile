@@ -1,6 +1,7 @@
 package com.solventa.solventa_mobile
 
 import android.app.Activity
+import android.app.KeyguardManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.hardware.biometrics.BiometricManager
@@ -12,9 +13,13 @@ import io.flutter.plugin.common.MethodChannel
 
 /**
  * «Ir a ajustes» de M01-08 y de los avisos de M02 (HU-M02, F4). Sin librería nueva:
- * - Android 11+ (API 30): pantalla para registrar huella o rostro, aceptando también el PIN del teléfono;
- * - Android 8 a 10: ajustes de seguridad (bloqueo de pantalla y huella);
+ * - Android 11+ (API 30) sin bloqueo de pantalla: pantalla para crear el bloqueo (PIN, patrón o clave);
+ * - Android 11+ con bloqueo y sin huella o rostro: pantalla para registrarlos;
+ * - si ya tiene las dos cosas, o en Android 8 a 10: ajustes de seguridad;
  * - si el fabricante no tiene esa pantalla, los ajustes generales.
+ *
+ * `ACTION_BIOMETRIC_ENROLL` se cierra solo, sin abrir nada, cuando lo que pide ya está
+ * cumplido (p. ej. con PIN y `DEVICE_CREDENTIAL`): por eso solo se usa si falta algo.
  */
 class AjustesSeguridad(
     private val actividad: Activity,
@@ -30,15 +35,7 @@ class AjustesSeguridad(
             return
         }
         val intentos = buildList {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                add(
-                    Intent(Settings.ACTION_BIOMETRIC_ENROLL).putExtra(
-                        Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
-                        BiometricManager.Authenticators.BIOMETRIC_STRONG or
-                            BiometricManager.Authenticators.DEVICE_CREDENTIAL,
-                    ),
-                )
-            }
+            inscripcion()?.let(::add)
             add(Intent(Settings.ACTION_SECURITY_SETTINGS))
             add(Intent(Settings.ACTION_SETTINGS))
         }
@@ -54,6 +51,23 @@ class AjustesSeguridad(
             }
         }
         result.error("SIN_AJUSTES", null, null)
+    }
+
+    /** La pantalla de inscripción que falta, o `null` si no falta nada (o Android < 11). */
+    private fun inscripcion(): Intent? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return null
+        val conBloqueo = actividad.getSystemService(KeyguardManager::class.java)?.isDeviceSecure ?: false
+        val autenticadores = if (!conBloqueo) {
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                BiometricManager.Authenticators.DEVICE_CREDENTIAL
+        } else {
+            val biometria = actividad.getSystemService(BiometricManager::class.java)
+                ?.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+            if (biometria != BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED) return null
+            BiometricManager.Authenticators.BIOMETRIC_STRONG
+        }
+        return Intent(Settings.ACTION_BIOMETRIC_ENROLL)
+            .putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED, autenticadores)
     }
 
     companion object {
