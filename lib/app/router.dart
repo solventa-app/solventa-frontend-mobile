@@ -308,12 +308,18 @@ class _RootShell extends ConsumerWidget {
         onCompleteRegistration: () async {
           if (estado.verificacion == EstadoVerificacion.rechazada &&
               estado.intentosRestantes > 0) {
-            if (await notifier.reintentarCaptura() && context.mounted) {
-              await context.push(OnboardingRoutes.frente);
+            if (await notifier.reintentarCaptura()) {
+              if (context.mounted) await context.push(OnboardingRoutes.frente);
+              return;
             }
-            return;
+            // El recorrido en memoria no se pudo reintentar (la app se
+            // reabrió o el token de 30 min venció): se empieza uno nuevo
+            // desde la bienvenida en vez de quedarse con el error.
+            notifier.limpiarFalla();
           }
-          await context.push(OnboardingRoutes.bienvenida);
+          if (context.mounted) {
+            await context.push(OnboardingRoutes.bienvenida);
+          }
         },
         onCheckStatus: () => context.push(OnboardingRoutes.verificando),
         onOpenProfile: verificado

@@ -7,6 +7,22 @@ import 'resultado.dart';
 /// `extensions.codigo` (los de sesión viven en `network_exceptions.dart`).
 const _mensajesSinPermiso = {'No tienes permiso para esta operación.'};
 
+/// Error de negocio que el BFF devolvió dentro de una respuesta 200 (por
+/// ejemplo `ErrorOnboarding { codigo }`). Los repositorios lo lanzan y
+/// [guardarFallas] lo convierte en [FallaNegocio] con su código, y lo registra
+/// con ese código para que Sentry lo agrupe (antes salía solo como
+/// «_Rechazo», sin saber cuál).
+final class RechazoNegocio implements Exception {
+  const RechazoNegocio(this.codigo, {this.segundosRestantes});
+  final String codigo;
+
+  /// Solo con `ESPERA_REQUERIDA` (v0.31).
+  final int? segundosRestantes;
+
+  @override
+  String toString() => 'RechazoNegocio($codigo)';
+}
+
 /// Ejecuta [operacion] y convierte cualquier error en una [Falla].
 ///
 /// La usan todos los repositorios: así ninguna excepción de red, de GraphQL
@@ -30,6 +46,16 @@ Future<Resultado<T>> guardarFallas<T>(Future<T> Function() operacion) async {
       );
     }
     return Fracaso(falla);
+  } on RechazoNegocio catch (e, st) {
+    SolLog.severe(
+      'Rechazo de negocio del BFF (${e.codigo})',
+      error: e,
+      stackTrace: st,
+      codigo: e.codigo,
+    );
+    return Fracaso(
+      FallaNegocio(e.codigo, segundosRestantes: e.segundosRestantes),
+    );
   } catch (e, st) {
     // TypeError o FormatException del fromJson: la respuesta no cumple el contrato.
     SolLog.severe(

@@ -35,7 +35,7 @@ abstract interface class CapturaService {
 }
 
 /// Captura desde el visor embebido (`package:camera` dentro de
-/// `SolLiveCameraFrame` en `ResolutionPreset.medium` ~720p) sin abrir nunca la
+/// `SolLiveCameraFrame` en `ResolutionPreset.high`, 1280x720) sin abrir nunca la
 /// aplicación de cámara externa del sistema.
 ///
 /// [permitirRespaldo] solo es `true` con `API_ENV=mock`: sin cámara (emulador

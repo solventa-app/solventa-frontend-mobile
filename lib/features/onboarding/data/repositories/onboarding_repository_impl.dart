@@ -10,14 +10,17 @@ import '../datasources/onboarding_remote_datasource.dart';
 import '../graphql/onboarding.graphql.dart';
 import '../mappers/onboarding_mapper.dart';
 
-/// `ErrorOnboarding` del contrato, convertido en `FallaNegocio` con su código.
-final class _Rechazo implements Exception {
-  const _Rechazo(this.codigo, {this.segundosRestantes});
-  final String codigo;
+/// `ErrorOnboarding` del contrato: `guardarFallas` lo convierte en
+/// `FallaNegocio` con su código.
+typedef _Rechazo = RechazoNegocio;
 
-  /// Solo con `ESPERA_REQUERIDA` (v0.31).
-  final int? segundosRestantes;
-}
+/// Códigos con los que el backend dice que el recorrido en memoria ya no sirve
+/// para empezar de nuevo (M01-02 abre entonces un recorrido nuevo).
+const _recorridoAgotado = {
+  'ESTADO_INVALIDO',
+  'TOKEN_INVALIDO',
+  'SESION_NO_ENCONTRADA',
+};
 
 /// Códigos de `ErrorOnboarding` que tiene sentido reintentar tal cual.
 const _reintentables = {
@@ -48,14 +51,9 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
 
   Future<Resultado<T>> _guardar<T>(Future<T> Function() op) async {
     final r = await guardarFallas(op);
-    if (r case Fracaso(falla: Inesperada(causa: final _Rechazo rechazo))) {
-      return Fracaso(
-        FallaNegocio(
-          rechazo.codigo,
-          reintentable: _reintentables.contains(rechazo.codigo),
-          segundosRestantes: rechazo.segundosRestantes,
-        ),
-      );
+    if (r case Fracaso(falla: FallaNegocio(:final motivo))
+        when _reintentables.contains(motivo)) {
+      return Fracaso(FallaNegocio(motivo, reintentable: true));
     }
     return r;
   }
@@ -101,11 +99,25 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     required String versionTexto,
   }) => _guardar(() async {
     await _asegurarRecorrido();
+    try {
+      return await _registrarConsentimiento(versionTexto);
+    } on _Rechazo catch (e) {
+      // El recorrido en memoria ya no admite un intento nuevo: quedó RECHAZADA
+      // sin intentos, EN_REVISION, EN_VERIFICACION o su token de 30 min venció.
+      // El backend sí deja abrir otro, así que se descarta y se empieza uno.
+      if (!_recorridoAgotado.contains(e.codigo)) rethrow;
+      descartarRecorrido();
+      await _asegurarRecorrido();
+      return _registrarConsentimiento(versionTexto);
+    }
+  });
+
+  Future<Onboarding> _registrarConsentimiento(String versionTexto) async {
     final r = _recorrido;
     return _resultado(
       await _remoto.registrarConsentimiento(r.token, r.id, versionTexto),
     );
-  });
+  }
 
   @override
   Future<Resultado<Onboarding>> subir(
