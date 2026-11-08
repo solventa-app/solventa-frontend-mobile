@@ -65,27 +65,35 @@ class SolScreenFrame extends StatelessWidget {
       ],
     );
 
-    final scroll = CustomScrollView(
-      slivers: [
-        if (centerBody)
-          // El padding va dentro para que el centrado sea exacto.
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Padding(
-              padding: padding,
-              child: SolAdaptiveBody(
-                alignment: Alignment.center,
-                child: content,
+    final Widget scroll = centerBody
+        // No se usa SliverFillRemaining: mide con el ancho de la pantalla y no
+        // con los 600 dp de SolAdaptiveBody, y en una tablet en horizontal con
+        // poco alto el texto ocupa más líneas de las medidas y se desborda.
+        ? LayoutBuilder(
+            builder: (context, limites) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: limites.maxHeight),
+                // El padding va dentro para que el centrado sea exacto.
+                child: Padding(
+                  padding: padding,
+                  child: SolAdaptiveBody(
+                    alignment: Alignment.center,
+                    child: content,
+                  ),
+                ),
               ),
             ),
           )
-        else
-          SliverPadding(
-            padding: padding,
-            sliver: SliverToBoxAdapter(child: SolAdaptiveBody(child: content)),
-          ),
-      ],
-    );
+        : CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: padding,
+                sliver: SliverToBoxAdapter(
+                  child: SolAdaptiveBody(child: content),
+                ),
+              ),
+            ],
+          );
 
     return Scaffold(
       backgroundColor: backgroundColor,
