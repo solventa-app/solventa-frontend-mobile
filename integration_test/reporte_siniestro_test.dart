@@ -18,6 +18,8 @@ import 'package:solventa_mobile/features/claims/presentation/pages/m05_05_result
 import 'package:solventa_mobile/features/claims/presentation/providers.dart';
 import 'package:solventa_mobile/features/claims/presentation/reporte_routes.dart';
 
+import 'soporte/capturas.dart';
+
 /// HU-M05 (KAN-278) en dispositivo: el recorrido completo del reporte de
 /// siniestro con el fake del BFF (contrato v0.35). La cámara y el GPS se fijan
 /// para que corra igual en los emuladores del CI y en Test Lab; la prueba con
@@ -91,12 +93,14 @@ void main() {
         .read(reporteProvider.notifier)
         .fijarFecha(DateTime(2026, 11, 4, 13));
     await tester.pumpAndSettle();
+    await capturar(tester, 'M05-01 · póliza y fecha');
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Tomar foto'));
     await tester.pumpAndSettle();
     expect(find.text('1 de 3 fotos'), findsOneWidget);
+    await capturar(tester, 'M05-02 · fotos');
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
 
@@ -109,7 +113,11 @@ void main() {
     await tester.enterText(campos.at(2), 'Bogotá');
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
+    await capturar(tester, 'M05-03 · relato');
     await tester.ensureVisible(find.text('Enviar reporte'));
+    // ensureVisible solo mueve el scroll: sin este pump el tap usa la posición
+    // de antes y en el emulador cae fuera del botón (o fuera de la pantalla).
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Enviar reporte'));
     await tester.pumpAndSettle();
   }
@@ -122,6 +130,7 @@ void main() {
 
     expect(find.text('Recibimos tu reporte'), findsOneWidget);
     expect(find.textContaining('SIN-2026-1001'), findsOneWidget);
+    await capturar(tester, 'M05-05 · radicado');
     expect(bff.reportes.single.fotos.single.latitud, 4.6767);
   });
 
@@ -131,6 +140,7 @@ void main() {
     await completarReporte(tester);
 
     expect(find.text('No pudimos enviar tu reporte'), findsOneWidget);
+    await capturar(tester, 'M05-05 · sin red');
     await tester.tap(find.text('Reintentar'));
     await tester.pumpAndSettle();
     expect(find.text('Recibimos tu reporte'), findsOneWidget);

@@ -46,7 +46,7 @@ Título del PR (`pr-titulo.yml`): `tipo(alcance): KAN-N descripción`. Tipos: `f
 | `seguridad.yml` | Todo PR, push a `develop`, cada lunes, manual | Jobs `Secretos (gitleaks)`, `Dependencias (osv-scanner)` (informativo), `Workflows (actionlint)` con revisión de acciones por SHA |
 | `pr-titulo.yml`, `pr-rama.yml` | PR abierto o editado | Título y rama |
 | `develop.yml` | Push a `develop`, manual | `apk-dev` (firmado con la llave de dev, versión `X.Y.Z-dev.N`, artifact 14 días), `App Distribution`, `MobSF` (informativo, reporte como artifact `mobsf`) |
-| `emuladores.yml` | Push a `develop`, manual | `integration_test` en emuladores: teléfono pequeño API 28 (Nexus 5, 360 dp, el mínimo soportado), teléfono grande API 34, tablet API 34. Corre en el runner (necesita KVM) con la versión de Flutter de `pubspec.yaml` |
+| `emuladores.yml` | Push a `develop`, manual | `integration_test` en emuladores: teléfono pequeño API 28 (Nexus 5, 360 dp, el mínimo soportado), teléfono grande API 34, tablet API 34. Corre en el runner (necesita KVM) con la versión de Flutter de `pubspec.yaml`. El job `Reporte` deja el artifact `reporte-emuladores` (ver abajo) |
 | `test-lab.yml` | Manual (cada `release/sprint-N`) | Robo test e `integration_test` en teléfonos reales de Firebase Test Lab |
 | `cd.yml` | Push a `main`, manual | Build prod y GitHub Release con APK, AAB, mapping y símbolos. Desde otra rama compila sin tag ni Release |
 | `rollback.yml` | Manual | Vuelve a publicar un tag anterior con un build nuevo |
@@ -86,6 +86,8 @@ Comparado con el web: ESLint ↔ `flutter analyze`, Prettier ↔ `dart format`, 
 | Goldens de pantallas | alchemist | Devcontainer, en cada PR | Hoy (HU-M01 y HU-M02): 360 y 390 dp con texto al 100 % y 200 % en español, 390 dp en inglés y 600 dp. Pendiente: variante horizontal de 640 × 360. Se regeneran con `tool/goldens.sh` |
 | Accesibilidad (contraste, tap targets) | `meetsGuideline` | Cada PR | Llega con KAN-239 |
 | Integración en emuladores | `integration_test` | `emuladores.yml`, cada merge a `develop` | Hoy (prueba de humo; cada HU con recorrido agrega la suya en `integration_test/`) |
+
+**Reporte de emuladores.** Cada corrida de `emuladores.yml`, pase o falle, deja el artifact `reporte-emuladores`: un HTML con cada prueba en los tres emuladores, el error de las que fallaron y capturas de pantalla. Revisarlo después de cada merge a `develop`. No bloquea merges: los emuladores corren después del merge, no en el PR. Para sumar capturas a una prueba se llama `capturar(tester, 'M05-03 · relato')` (`integration_test/soporte/capturas.dart`). Toda prueba que falla deja además una captura de cómo quedó la pantalla (`integration_test/flutter_test_config.dart`). Las capturas solo se toman con `--dart-define=CAPTURAS=true`, y el HTML lo arma `tool/reporte-emuladores.py`.
 | Integración y exploración en teléfonos reales | `integration_test` y Robo test | `test-lab.yml`, cada release | Listo, falta cuenta |
 | Exploratoria manual | Guía y plantilla | Una sesión por sprint | Hoy |
 | Resiliencia sin conexión, biometría, cámara, GPS, push, Wallet | Dobles de los plugins en `flutter_test`; dispositivo real en Test Lab | Con cada HU |

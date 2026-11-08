@@ -25,12 +25,15 @@ jobs:
       matrix:
         include:
           - nombre: Teléfono pequeño (API 28)
+            clave: pequeno-api28
             api: 28
             perfil: Nexus 5 # 360 dp de ancho, el mínimo soportado
           - nombre: Teléfono grande (API 34)
+            clave: grande-api34
             api: 34
             perfil: pixel_7_pro
           - nombre: Tablet (API 34)
+            clave: tablet-api34
             api: 34
             perfil: pixel_tablet
     steps:
@@ -71,4 +74,58 @@ jobs:
           profile: ${{ matrix.perfil }}
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: flutter test integration_test --flavor dev --dart-define-from-file=config/mock.json
+          # CAPTURAS y el reporter JSON alimentan el reporte HTML (job «Reporte»).
+          script: |
+            mkdir -p build/reporte
+            flutter test integration_test --flavor dev --dart-define-from-file=config/mock.json --dart-define=CAPTURAS=true --file-reporter json:build/reporte/resultados.json
+
+      - name: Datos del emulador para el reporte
+        if: always()
+        env:
+          NOMBRE: ${{ matrix.nombre }}
+        run: |
+          mkdir -p build/reporte
+          printf '%s\n' "$NOMBRE" > build/reporte/dispositivo.txt
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: resultados-${{ matrix.clave }}
+          path: build/reporte/
+          retention-days: 3
+          if-no-files-found: ignore
+
+  # Un solo HTML con los tres emuladores: qué pasó y qué falló, el error y capturas de pantalla.
+  # Corre siempre (pase o falle) para que alguien lo revise rápido. No bloquea: Emuladores solo
+  # corre después del merge a develop.
+  reporte:
+    name: Reporte
+    needs: emulador
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: resultados-*
+          path: build/resultados
+
+      - name: Generar reporte
+        env:
+          SHA: ${{ github.sha }}
+          RAMA: ${{ github.ref_name }}
+          CORRIDA: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          mkdir -p build/resultados dist
+          for d in build/resultados/*/; do
+            [ -d "$d" ] && printf 'Commit <code>%s</code> en <code>%s</code> · <a href="%s">ver la corrida</a>\n' "${SHA:0:7}" "$RAMA" "$CORRIDA" > "$d/contexto.txt"
+          done
+          python3 tool/reporte-emuladores.py build/resultados dist/reporte-emuladores.html "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reporte-emuladores
+          path: dist/reporte-emuladores.html
+          retention-days: 14
