@@ -691,6 +691,32 @@
   "@m0501FechaFuera": {
     "description": "M05-01 fecha fuera de vigencia"
   },
+  "m0501FechaAntes": "Tu póliza empezó a cubrirte el {desde}. Elige una fecha y hora desde ese momento.",
+  "@m0501FechaAntes": {
+    "description": "M05-01 fecha anterior al inicio de la vigencia",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501FechaElegir": "Elige el día y la hora",
+  "@m0501FechaElegir": {
+    "description": "M05-01 valor del campo fecha sin elegir"
+  },
+  "m0501ElegirPoliza": "Primero elige la póliza afectada.",
+  "@m0501ElegirPoliza": {
+    "description": "M05-01 ayuda del campo fecha sin póliza elegida"
+  },
+  "m0501CubreDesde": "Tu póliza cubre desde el {desde}.",
+  "@m0501CubreDesde": {
+    "description": "M05-01 ayuda del campo fecha con el inicio de la vigencia",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      }
+    }
+  },
   "m0502Titulo": "Fotos del daño",
   "@m0502Titulo": {
     "description": "M05-02 título"

@@ -9,6 +9,7 @@ import 'package:solventa_mobile/core/network/network_providers.dart';
 import 'package:solventa_mobile/core/network/subida_archivo_service.dart';
 import 'package:solventa_mobile/core/ubicacion/ubicacion_service.dart';
 import 'package:solventa_mobile/features/claims/data/datasources/reporte_siniestro_remote_datasource.dart';
+import 'package:solventa_mobile/features/claims/domain/entities/reporte_siniestro.dart';
 import 'package:solventa_mobile/features/claims/presentation/pages/m05_01_poliza_page.dart';
 import 'package:solventa_mobile/features/claims/presentation/pages/m05_02_fotos_page.dart';
 import 'package:solventa_mobile/features/claims/presentation/pages/m05_03_relato_page.dart';
@@ -211,4 +212,108 @@ void main() {
       expect(continuar.onPressed, isNull);
     },
   );
+
+  bool continuarActivo(WidgetTester tester) =>
+      tester
+          .widget<SolButton>(find.widgetWithText(SolButton, 'Continuar'))
+          .onPressed !=
+      null;
+
+  testWidgets(
+    'M05-01 con los selectores reales: sin hora no se fija la fecha',
+    (tester) async {
+      await abrir(tester);
+      expect(find.text('Primero elige la póliza afectada.'), findsOneWidget);
+      await tester.tap(find.text('Póliza SOL-2026-000123'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Tu póliza cubre desde el'), findsOneWidget);
+
+      // Antes, cancelar la hora dejaba la medianoche y podía caer fuera de
+      // la vigencia sin que el cliente supiera por qué.
+      await tester.tap(find.text('Elige el día y la hora'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('ACEPTAR'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Cancelar'));
+      await tester.pumpAndSettle();
+      expect(find.text('Elige el día y la hora'), findsOneWidget);
+      expect(continuarActivo(tester), isFalse);
+
+      await tester.tap(find.text('Elige el día y la hora'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('ACEPTAR'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('ACEPTAR'));
+      await tester.pumpAndSettle();
+      expect(
+        contenedor.read(reporteProvider).ocurridoEn,
+        DateTime(2026, 11, 4, 15),
+      );
+      expect(continuarActivo(tester), isTrue);
+    },
+  );
+
+  testWidgets('una fecha antes de la vigencia dice desde cuándo cubre', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await tester.tap(find.text('Póliza SOL-2026-000123'));
+    contenedor
+        .read(reporteProvider.notifier)
+        .fijarFecha(DateTime(2026, 1, 15, 9));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Tu póliza empezó a cubrirte el'),
+      findsOneWidget,
+    );
+    expect(continuarActivo(tester), isFalse);
+  });
+
+  group('fechaDelSiniestro', () {
+    final desde = DateTime(2026, 11, 7, 15, 32, 45);
+    final recien = PolizaReportable(
+      id: 'p',
+      numero: 'PRUEBA-2026-1',
+      vigenciaDesde: desde,
+      vigenciaHasta: DateTime(2031, 11, 7),
+    );
+    final hoy = DateTime(2026, 11, 7);
+    final ahora = DateTime(2026, 11, 7, 15, 33, 10);
+
+    test('póliza emitida en el mismo minuto: toma el inicio de vigencia', () {
+      expect(
+        fechaDelSiniestro(
+          hoy,
+          const TimeOfDay(hour: 15, minute: 32),
+          ahora: ahora,
+          poliza: recien,
+        ),
+        desde,
+      );
+    });
+
+    test('nunca en el futuro', () {
+      expect(
+        fechaDelSiniestro(
+          hoy,
+          const TimeOfDay(hour: 18, minute: 0),
+          ahora: ahora,
+          poliza: recien,
+        ),
+        ahora,
+      );
+    });
+
+    test('una hora claramente anterior se respeta (y la pantalla avisa)', () {
+      expect(
+        fechaDelSiniestro(
+          hoy,
+          const TimeOfDay(hour: 10, minute: 0),
+          ahora: ahora,
+          poliza: recien,
+        ),
+        DateTime(2026, 11, 7, 10),
+      );
+    });
+  });
 }

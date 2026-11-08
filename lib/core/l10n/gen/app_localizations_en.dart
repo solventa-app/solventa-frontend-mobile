@@ -783,6 +783,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'That date is outside the policy\'s coverage period.';
 
   @override
+  String m0501FechaAntes(String desde) {
+    return 'Your policy started covering you on $desde. Choose a date and time from then on.';
+  }
+
+  @override
+  String get m0501FechaElegir => 'Choose the day and time';
+
+  @override
+  String get m0501ElegirPoliza => 'First choose the affected policy.';
+
+  @override
+  String m0501CubreDesde(String desde) {
+    return 'Your policy covers from $desde.';
+  }
+
+  @override
   String get m0502Titulo => 'Photos of the damage';
 
   @override
