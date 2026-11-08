@@ -297,6 +297,7 @@ final class GestorSesion {
 
   Future<void> _limpiar() async {
     bloquear();
+    SolLog.olvidarSesion();
     _refreshPersistido = false;
     try {
       await _store.borrar();

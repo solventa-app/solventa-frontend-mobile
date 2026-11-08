@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solventa_mobile/core/log/sol_log.dart';
 import 'package:solventa_mobile/core/network/network_exceptions.dart';
 import 'package:solventa_mobile/core/sesion/gestor_sesion.dart';
 import 'package:solventa_mobile/core/sesion/llavero_sesion.dart';
@@ -220,6 +221,20 @@ void main() {
     expect(remota.cerrados, ['refresh-0']);
     expect(gestor.token, isNull);
     expect(await store.hayRefresh(), isFalse);
+  });
+
+  test('cerrar y vencer olvidan el código de soporte de Sentry', () async {
+    await abrir();
+    SolLog.obtenerCodigoSoporte();
+    expect(SolLog.codigoSoporteActual, isNotNull);
+    await gestor.cerrar();
+    expect(SolLog.codigoSoporteActual, isNull);
+
+    await abrir();
+    SolLog.obtenerCodigoSoporte();
+    remota.respuestas.add(const RenovacionRechazada());
+    expect(await gestor.renovar(), ResultadoRenovar.vencida);
+    expect(SolLog.codigoSoporteActual, isNull);
   });
 
   test('bloquear olvida lo de memoria y conserva lo guardado', () async {
