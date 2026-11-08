@@ -146,9 +146,17 @@ void main() {
     await abrirApp(tester);
     await iniciarSesion(tester);
 
-    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    // Transiciones válidas de AppLifecycleListener: en el dispositivo
+    // `hidden → resumed` directo dispara una aserción.
+    void cambiarCiclo(List<AppLifecycleState> estados) {
+      for (final estado in estados) {
+        tester.binding.handleAppLifecycleStateChanged(estado);
+      }
+    }
+
+    cambiarCiclo([AppLifecycleState.inactive, AppLifecycleState.hidden]);
     ahora = ahora.add(const Duration(minutes: 5));
-    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    cambiarCiclo([AppLifecycleState.inactive, AppLifecycleState.resumed]);
     await tester.pumpAndSettle();
 
     // M02-01 abrió el diálogo y, con la huella, volvió al Home.
