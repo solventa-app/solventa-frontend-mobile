@@ -32,6 +32,11 @@ void main() {
   late ProviderContainer contenedor;
 
   Future<void> abrir(WidgetTester tester) async {
+    // En el emulador enterText abre el teclado real, que encoge la pantalla de
+    // forma asíncrona: a veces justo antes del toque, y «Enviar reporte» queda
+    // fuera de vista. Con el teclado de prueba el recorrido no depende de eso.
+    tester.testTextInput.register();
+    addTearDown(tester.testTextInput.unregister);
     bff = FakeReporteSiniestroRemoteDataSource(latencia: Duration.zero);
     contenedor = ProviderContainer(
       overrides: [
