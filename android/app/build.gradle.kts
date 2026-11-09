@@ -65,14 +65,11 @@ android {
             applicationIdSuffix = ".dev"
             signingConfig = firma("dev")
             manifestPlaceholders["appName"] = "Solventa Dev"
-            // Permite http hacia el gateway local (10.0.2.2:8080).
-            manifestPlaceholders["usesCleartextTraffic"] = "true"
         }
         create("prod") {
             dimension = "ambiente"
             signingConfig = firma("prod")
             manifestPlaceholders["appName"] = "Solventa"
-            manifestPlaceholders["usesCleartextTraffic"] = "false"
         }
     }
 
