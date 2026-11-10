@@ -91,10 +91,10 @@ final duracionAccesoConcedidoProvider = Provider<Duration>(
 
 /// Ingreso con biometría (HU-M02): arranque con sesión guardada (F6),
 /// desbloqueo con huella, rostro o PIN del teléfono (D1, D2) y bloqueo tras
-/// 5 minutos en segundo plano.
+/// 15 minutos en segundo plano.
 class AccesoNotifier extends Notifier<AccesoState> {
   /// Tiempo en segundo plano tras el que se vuelve a pedir la huella.
-  static const bloqueoTrasSegundoPlano = Duration(minutes: 5);
+  static const bloqueoTrasSegundoPlano = Duration(minutes: 15);
 
   DateTime? _enSegundoPlanDesde;
 
@@ -322,7 +322,7 @@ class AccesoNotifier extends Notifier<AccesoState> {
     if (!gestor.abierta || !gestor.refreshPersistido) return;
     final ahora = ref.read(relojAccesoProvider)();
     if (ahora.difference(desde) < bloqueoTrasSegundoPlano) return;
-    SolLog.info('Sesión bloqueada tras 5 min en segundo plano');
+    SolLog.info('Sesión bloqueada tras 15 min en segundo plano');
     gestor.bloquear();
     state = const AccesoState(fase: FaseAcceso.bloqueada);
   }
