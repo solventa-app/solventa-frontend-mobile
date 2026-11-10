@@ -143,6 +143,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0108AhoraNo => 'Ahora no, ir al inicio';
 
   @override
+  String get m0108AvisoLuego => 'Puedes activar tu huella o rostro cuando quieras en Mi perfil.';
+
+  @override
   String get m0108Requisito =>
       'Puedes activarla después en los ajustes del teléfono: Solventa la usará apenas esté lista. Mientras tanto entrarás con tu correo y clave.';
 
@@ -537,6 +540,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get perfilBiometria => 'Huella o rostro del teléfono';
+
+  @override
+  String get homeBiometriaPista => 'Activa tu huella o rostro para entrar más rápido.';
+
+  @override
+  String get homeBiometriaActivar => 'Activar';
+
+  @override
+  String get homeBiometriaCerrar => 'Cerrar aviso';
+
+  @override
+  String get perfilBiometriaActiva => 'Activada';
+
+  @override
+  String get perfilBiometriaInactiva => 'Sin activar · Toca para activar';
 
   @override
   String get perfilNotaLegal =>

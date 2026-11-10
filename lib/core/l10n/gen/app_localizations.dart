@@ -338,6 +338,12 @@ abstract class AppLocalizations {
   /// **'Ahora no, ir al inicio'**
   String get m0108AhoraNo;
 
+  /// No description provided for @m0108AvisoLuego.
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes activar tu huella o rostro cuando quieras en Mi perfil.'**
+  String get m0108AvisoLuego;
+
   /// M01-08 nota
   ///
   /// In es, this message translates to:
@@ -1039,6 +1045,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Huella o rostro del teléfono'**
   String get perfilBiometria;
+
+  /// No description provided for @homeBiometriaPista.
+  ///
+  /// In es, this message translates to:
+  /// **'Activa tu huella o rostro para entrar más rápido.'**
+  String get homeBiometriaPista;
+
+  /// No description provided for @homeBiometriaActivar.
+  ///
+  /// In es, this message translates to:
+  /// **'Activar'**
+  String get homeBiometriaActivar;
+
+  /// No description provided for @homeBiometriaCerrar.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar aviso'**
+  String get homeBiometriaCerrar;
+
+  /// No description provided for @perfilBiometriaActiva.
+  ///
+  /// In es, this message translates to:
+  /// **'Activada'**
+  String get perfilBiometriaActiva;
+
+  /// No description provided for @perfilBiometriaInactiva.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin activar · Toca para activar'**
+  String get perfilBiometriaInactiva;
 
   /// No description provided for @perfilNotaLegal.
   ///

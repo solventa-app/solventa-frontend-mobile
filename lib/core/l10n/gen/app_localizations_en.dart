@@ -140,6 +140,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0108AhoraNo => 'Not now, go to home';
 
   @override
+  String get m0108AvisoLuego => 'You can turn on your fingerprint or face unlock any time in My profile.';
+
+  @override
   String get m0108Requisito =>
       'You can turn it on later in your phone settings: Solventa will use it as soon as it is ready. Until then you will sign in with your email and password.';
 
@@ -535,6 +538,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get perfilBiometria => 'Phone fingerprint or face unlock';
+
+  @override
+  String get homeBiometriaPista => 'Turn on your fingerprint or face unlock to sign in faster.';
+
+  @override
+  String get homeBiometriaActivar => 'Turn on';
+
+  @override
+  String get homeBiometriaCerrar => 'Dismiss';
+
+  @override
+  String get perfilBiometriaActiva => 'On';
+
+  @override
+  String get perfilBiometriaInactiva => 'Off · Tap to turn on';
 
   @override
   String get perfilNotaLegal =>

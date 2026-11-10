@@ -29,6 +29,8 @@ class HomePage extends StatelessWidget {
     this.motivoRechazo,
     this.onCheckStatus,
     this.onOpenProfile,
+    this.onActivarBiometria,
+    this.onCerrarPistaBiometria,
   });
 
   final String userName;
@@ -44,6 +46,11 @@ class HomePage extends StatelessWidget {
   final String? motivoRechazo;
   final VoidCallback? onCheckStatus;
   final VoidCallback? onOpenProfile;
+
+  /// Pista para activar la huella o el rostro (M01-08 es opcional). Sin ella
+  /// (o con la biometría ya activa) no se muestra.
+  final VoidCallback? onActivarBiometria;
+  final VoidCallback? onCerrarPistaBiometria;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +84,13 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
+          if (onActivarBiometria != null) ...[
+            const SizedBox(height: SolSpacing.sm),
+            _PistaBiometria(
+              onActivar: onActivarBiometria!,
+              onCerrar: onCerrarPistaBiometria,
+            ),
+          ],
           const SizedBox(height: SolSpacing.lg),
           switch (verificacion) {
             EstadoVerificacion.enRevision => SolCard(
@@ -292,6 +306,51 @@ class _AvisoAcceso extends StatelessWidget {
     return SolInlineNote(
       icon: SolIcons.info,
       text: verificada ? l10n.homeVerificadaWeb : l10n.homeSoloAppAviso,
+    );
+  }
+}
+
+/// Línea discreta bajo el saludo: activa la huella o el rostro; se cierra.
+class _PistaBiometria extends StatelessWidget {
+  const _PistaBiometria({required this.onActivar, this.onCerrar});
+
+  final VoidCallback onActivar;
+  final VoidCallback? onCerrar;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = Localizations.of<AppLocalizations>(context, AppLocalizations);
+    if (l10n == null) return const SizedBox.shrink();
+    final colors = context.colors;
+    return Row(
+      children: [
+        ExcludeSemantics(
+          child: Icon(
+            SolIcons.fingerprint,
+            size: 20,
+            color: colors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(width: SolSpacing.sm),
+        Expanded(
+          child: Text(
+            l10n.homeBiometriaPista,
+            style: context.solText.note.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: onActivar,
+          child: Text(l10n.homeBiometriaActivar),
+        ),
+        if (onCerrar != null)
+          IconButton(
+            tooltip: l10n.homeBiometriaCerrar,
+            onPressed: onCerrar,
+            icon: const Icon(SolIcons.close, size: 20),
+          ),
+      ],
     );
   }
 }

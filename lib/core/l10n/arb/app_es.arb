@@ -165,6 +165,7 @@
     "description": "M01-08 botón principal"
   },
   "m0108AhoraNo": "Ahora no, ir al inicio",
+  "m0108AvisoLuego": "Puedes activar tu huella o rostro cuando quieras en Mi perfil.",
   "m0108Requisito": "Puedes activarla después en los ajustes del teléfono: Solventa la usará apenas esté lista. Mientras tanto entrarás con tu correo y clave.",
   "@m0108Requisito": {
     "description": "M01-08 nota"
@@ -403,6 +404,11 @@
   "perfilGuardarPreferencias": "Guardar preferencias",
   "perfilPreferenciasGuardadas": "Preferencias guardadas.",
   "perfilBiometria": "Huella o rostro del teléfono",
+  "homeBiometriaPista": "Activa tu huella o rostro para entrar más rápido.",
+  "homeBiometriaActivar": "Activar",
+  "homeBiometriaCerrar": "Cerrar aviso",
+  "perfilBiometriaActiva": "Activada",
+  "perfilBiometriaInactiva": "Sin activar · Toca para activar",
   "perfilNotaLegal": "Los datos de tu cuenta provienen de tu documento verificado y son de solo lectura. Tus datos personales se tratan conforme a la Ley 1581 de 2012 de Habeas Data.",
   "cerrarSesionTitulo": "¿Quieres cerrar sesión?",
   "cerrarSesionMensaje": "Tendrás que ingresar de nuevo para usar Solventa.",

@@ -106,6 +106,20 @@ void main() {
     expect(biometria.autenticaciones, isEmpty);
   });
 
+  testWidgets('«Ahora no» avisa dónde activarla después', (tester) async {
+    await montar(tester);
+
+    await tester.tap(find.text('Ahora no, ir al inicio'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(
+        'Puedes activar tu huella o rostro cuando quieras en Mi perfil.',
+      ),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('sin bloqueo de pantalla también deja ir al inicio', (
     tester,
   ) async {

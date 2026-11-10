@@ -93,6 +93,14 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
     });
   }
 
+  /// Sigue sin biometría y le dice a la persona dónde activarla después.
+  void _ahoraNo() {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.m0108AvisoLuego)));
+    context.go('/');
+  }
+
   /// Aviso según el último intento o, si no hubo, según el estado.
   (SolStatus, String)? _aviso(AppLocalizations l10n) {
     final ultimo = _ultimo;
@@ -245,7 +253,7 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
         // M02 la usa sola en cuanto el teléfono la tenga activada.
         SolButton.text(
           label: l10n.m0108AhoraNo,
-          onPressed: _comprobando ? null : () => context.go('/'),
+          onPressed: _comprobando ? null : _ahoraNo,
         ),
         const SizedBox(height: SolSpacing.lg),
         Padding(
