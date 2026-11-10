@@ -1,5 +1,7 @@
 package com.solventa.solventa_mobile
 
+import android.content.Context
+import android.hardware.biometrics.BiometricManager
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
@@ -15,9 +17,12 @@ import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.security.PrivateKey
 import java.security.PublicKey
+import java.security.UnrecoverableKeyException
 import java.security.spec.MGF1ParameterSpec
 import java.security.spec.X509EncodedKeySpec
 import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
 import javax.crypto.spec.OAEPParameterSpec
 import javax.crypto.spec.PSource
 
@@ -31,10 +36,17 @@ import javax.crypto.spec.PSource
  *   con biometría fuerte o con el PIN/patrón del teléfono (lo impone el hardware, no este código).
  *
  * Si el usuario quita el bloqueo de pantalla, Android invalida la llave: `descifrar` responde
- * [ERROR_LLAVE_INVALIDADA] y Dart vuelve a pedir correo y clave. Ni el texto claro ni el cifrado se
+ * [ERROR_LLAVE_INVALIDADA] y Dart vuelve a pedir correo y clave.
+ *
+ * Llave testigo (deuda D4): con la ventana de [VENTANA_SEGUNDOS] Android no invalida la llave principal
+ * al registrar una huella o un rostro nuevo. Por eso, si el teléfono tiene biometría fuerte registrada,
+ * junto a ella se guarda una llave AES que exige autenticación en cada uso y se invalida con cada
+ * biometría nueva. Nunca se usa para cifrar nada: `descifrar` solo comprueba que siga viva (`init`
+ * no pide la huella) y, si Android la invalidó, trata la sesión como invalidada. Sin biometría
+ * fuerte (solo PIN) no hay testigo y todo sigue igual. Ni el texto claro ni el cifrado se
  * registran nunca; los errores salen solo con su código.
  */
-class LlaveroSesion(messenger: BinaryMessenger) : MethodChannel.MethodCallHandler {
+class LlaveroSesion(messenger: BinaryMessenger, private val contexto: Context) : MethodChannel.MethodCallHandler {
     init {
         MethodChannel(messenger, CANAL).setMethodCallHandler(this)
     }
@@ -55,12 +67,20 @@ class LlaveroSesion(messenger: BinaryMessenger) : MethodChannel.MethodCallHandle
                 "cifrar" -> {
                     val texto = call.argument<String>("texto")
                     if (texto == null) result.error(ERROR_ARGUMENTO, null, null)
-                    else result.success(cifrar(alias, texto))
+                    else {
+                        // Cada guardado arma el testigo si aún no existe (p. ej. si la huella se
+                        // registró después de crear la sesión).
+                        asegurarTestigo(alias)
+                        result.success(cifrar(alias, texto))
+                    }
                 }
                 "descifrar" -> {
                     val cifrado = call.argument<String>("cifrado")
                     if (cifrado == null) result.error(ERROR_ARGUMENTO, null, null)
-                    else result.success(descifrar(alias, cifrado))
+                    else {
+                        verificarTestigo(alias)
+                        result.success(descifrar(alias, cifrado))
+                    }
                 }
                 "borrar" -> {
                     borrar(alias)
@@ -131,8 +151,70 @@ class LlaveroSesion(messenger: BinaryMessenger) : MethodChannel.MethodCallHandle
         try {
             val almacen = almacen()
             if (almacen.containsAlias(alias)) almacen.deleteEntry(alias)
+            if (almacen.containsAlias(aliasTestigo(alias))) almacen.deleteEntry(aliasTestigo(alias))
         } catch (_: Exception) {
             // Sin llave que borrar: nada que hacer.
+        }
+    }
+
+    private fun aliasTestigo(alias: String) = "$alias.testigo"
+
+    /** `true` si el teléfono tiene huella o rostro fuertes registrados (el testigo solo se puede crear así). */
+    private fun hayBiometriaFuerte(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
+        val gestor = contexto.getSystemService(BiometricManager::class.java) ?: return false
+        return gestor.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) ==
+            BiometricManager.BIOMETRIC_SUCCESS
+    }
+
+    /**
+     * Crea el testigo si falta y el teléfono tiene biometría fuerte. Es de mejor esfuerzo: si Android
+     * no deja crearlo (p. ej. justo se quitó la huella), la sesión sigue protegida solo por la llave
+     * principal.
+     */
+    private fun asegurarTestigo(alias: String) {
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return
+            if (almacen().containsAlias(aliasTestigo(alias)) || !hayBiometriaFuerte()) return
+            val especificacion = KeyGenParameterSpec.Builder(
+                aliasTestigo(alias),
+                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT,
+            )
+                .setKeySize(256)
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .setUserAuthenticationRequired(true)
+                .setInvalidatedByBiometricEnrollment(true)
+                // Autenticación en cada uso (duración 0): la única forma en que Android invalida la llave
+                // al registrar una biometría nueva.
+                .setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG)
+            KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, PROVEEDOR).apply {
+                init(especificacion.build())
+                generateKey()
+            }
+        } catch (_: Exception) {
+            // Sin testigo: sigue la protección de la llave principal.
+        }
+    }
+
+    /**
+     * Si hay testigo, `init` falla con [KeyPermanentlyInvalidatedException] cuando Android lo invalidó
+     * por una biometría nueva; el `catch` de [onMethodCall] borra todo y Dart pide correo y clave.
+     * `init` no pide la huella (la autenticación se exige al cifrar, que aquí no se hace).
+     */
+    private fun verificarTestigo(alias: String) {
+        val almacen = almacen()
+        if (!almacen.containsAlias(aliasTestigo(alias))) return
+        try {
+            val testigo = almacen.getKey(aliasTestigo(alias), null) as? SecretKey
+                ?: throw KeyPermanentlyInvalidatedException()
+            Cipher.getInstance("AES/GCM/NoPadding").init(Cipher.ENCRYPT_MODE, testigo)
+        } catch (e: KeyPermanentlyInvalidatedException) {
+            throw e
+        } catch (_: UnrecoverableKeyException) {
+            throw KeyPermanentlyInvalidatedException()
+        } catch (_: UserNotAuthenticatedException) {
+            // Pide autenticación, pero la llave está viva: no es una invalidación.
         }
     }
 
