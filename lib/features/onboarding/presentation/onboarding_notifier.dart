@@ -427,6 +427,24 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     }
   }
 
+  /// M02-04: pide el enlace para elegir una clave nueva. No guarda el correo ni
+  /// dice si la cuenta existe; solo informa si el BFF respondió.
+  Future<bool> solicitarRestablecimientoClave(String correo) async {
+    if (state.ocupado) return false;
+    state = state.copyWith(ocupado: true, limpiarFalla: true);
+    final r = await ref
+        .read(onboardingRepositoryProvider)
+        .solicitarRestablecimientoClave(correo: correo);
+    switch (r) {
+      case Exito():
+        state = state.copyWith(ocupado: false);
+        return true;
+      case Fracaso(:final falla):
+        state = state.copyWith(ocupado: false, falla: falla);
+        return false;
+    }
+  }
+
   /// Reenvía un nuevo código de 6 dígitos al correo pendiente.
   Future<bool> reenviarCodigoCorreo() async {
     final correo = state.correoPendiente;

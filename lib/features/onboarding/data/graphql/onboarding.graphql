@@ -230,3 +230,8 @@ mutation ActualizarPreferencias($entrada: PreferenciasInput!) {
     }
   }
 }
+
+# «Olvidé mi contraseña» (v0.43): siempre responde `true`, exista o no la cuenta.
+mutation SolicitarRestablecimientoClave($correo: String!) {
+  solicitarRestablecimientoClave(correo: $correo)
+}

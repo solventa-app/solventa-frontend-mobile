@@ -8353,3 +8353,161 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$ErrorUsuario
     return true;
   }
 }
+
+class Variables$Mutation$SolicitarRestablecimientoClave {
+  factory Variables$Mutation$SolicitarRestablecimientoClave({
+    required String correo,
+  }) =>
+      Variables$Mutation$SolicitarRestablecimientoClave._({r'correo': correo});
+
+  Variables$Mutation$SolicitarRestablecimientoClave._(this._$data);
+
+  factory Variables$Mutation$SolicitarRestablecimientoClave.fromJson(
+    Map<String, dynamic> data,
+  ) {
+    final result$data = <String, dynamic>{};
+    final l$correo = data['correo'];
+    result$data['correo'] = (l$correo as String);
+    return Variables$Mutation$SolicitarRestablecimientoClave._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get correo => (_$data['correo'] as String);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$correo = correo;
+    result$data['correo'] = l$correo;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Variables$Mutation$SolicitarRestablecimientoClave ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$correo = correo;
+    final lOther$correo = other.correo;
+    if (l$correo != lOther$correo) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$correo = correo;
+    return Object.hashAll([l$correo]);
+  }
+}
+
+class Mutation$SolicitarRestablecimientoClave {
+  Mutation$SolicitarRestablecimientoClave({
+    required this.solicitarRestablecimientoClave,
+    this.$__typename = 'Mutation',
+  });
+
+  factory Mutation$SolicitarRestablecimientoClave.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$solicitarRestablecimientoClave =
+        json['solicitarRestablecimientoClave'];
+    final l$$__typename = json['__typename'];
+    return Mutation$SolicitarRestablecimientoClave(
+      solicitarRestablecimientoClave:
+          (l$solicitarRestablecimientoClave as bool),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final bool solicitarRestablecimientoClave;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$solicitarRestablecimientoClave = solicitarRestablecimientoClave;
+    _resultData['solicitarRestablecimientoClave'] =
+        l$solicitarRestablecimientoClave;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$solicitarRestablecimientoClave = solicitarRestablecimientoClave;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$solicitarRestablecimientoClave, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$SolicitarRestablecimientoClave ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$solicitarRestablecimientoClave = solicitarRestablecimientoClave;
+    final lOther$solicitarRestablecimientoClave =
+        other.solicitarRestablecimientoClave;
+    if (l$solicitarRestablecimientoClave !=
+        lOther$solicitarRestablecimientoClave) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeMutationSolicitarRestablecimientoClave = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'SolicitarRestablecimientoClave'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'correo')),
+          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'solicitarRestablecimientoClave'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                name: NameNode(value: 'correo'),
+                value: VariableNode(name: NameNode(value: 'correo')),
+              ),
+            ],
+            directives: [],
+            selectionSet: null,
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+  ],
+);

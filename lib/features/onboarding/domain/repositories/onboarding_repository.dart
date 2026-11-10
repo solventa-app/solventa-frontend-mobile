@@ -22,6 +22,12 @@ abstract interface class OnboardingRepository {
   /// Envía un código OTP de 6 dígitos al correo (inicia recorrido si no existe).
   Future<Resultado<CodigoOnboarding>> enviarCodigo({required String correo});
 
+  /// «Olvidé mi contraseña»: pide el enlace al correo. Siempre sale bien si el
+  /// BFF respondió: no se dice si la cuenta existe.
+  Future<Resultado<void>> solicitarRestablecimientoClave({
+    required String correo,
+  });
+
   /// Verifica el código OTP de 6 dígitos enviado al correo.
   Future<Resultado<CodigoOnboarding>> verificarCodigo({
     required String correo,

@@ -40,6 +40,7 @@ import '../features/onboarding/presentation/pages/m01_05c_codigo_page.dart';
 import '../features/onboarding/presentation/pages/m01_06_verificando_page.dart';
 import '../features/onboarding/presentation/pages/m01_07_resultado_page.dart';
 import '../features/onboarding/presentation/pages/m01_08_biometria_page.dart';
+import '../features/onboarding/presentation/pages/m02_04_recuperar_clave_page.dart';
 import '../features/profile/presentation/profile_page.dart';
 
 const bool _openGallery = bool.fromEnvironment('SOL_GALLERY');
@@ -172,6 +173,11 @@ GoRouter crearRouter({FaseAcceso Function()? fase, Listenable? refrescar}) =>
           path: OnboardingRoutes.codigoCorreo,
           name: 'm01-05c',
           builder: (_, _) => const M0105cCodigoPage(),
+        ),
+        GoRoute(
+          path: OnboardingRoutes.recuperarClave,
+          name: 'm02-04',
+          builder: (_, _) => const M0204RecuperarClavePage(),
         ),
         GoRoute(
           path: OnboardingRoutes.verificando,

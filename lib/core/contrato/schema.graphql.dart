@@ -206,6 +206,224 @@ class Input$ConsentimientoInput {
   }
 }
 
+class Input$SolicitudOfertaAutoInput {
+  factory Input$SolicitudOfertaAutoInput({
+    required String consentimientoId,
+    String? documentoIdentidad,
+    String? tipoDocumento,
+    String? pais,
+    required String placa,
+    required int kilometrajeAnual,
+    required String ciudadCirculacion,
+    Enum$UsoVehiculo? uso,
+    Enum$DeducibleAuto? deducible,
+  }) => Input$SolicitudOfertaAutoInput._({
+    r'consentimientoId': consentimientoId,
+    if (documentoIdentidad != null) r'documentoIdentidad': documentoIdentidad,
+    if (tipoDocumento != null) r'tipoDocumento': tipoDocumento,
+    if (pais != null) r'pais': pais,
+    r'placa': placa,
+    r'kilometrajeAnual': kilometrajeAnual,
+    r'ciudadCirculacion': ciudadCirculacion,
+    if (uso != null) r'uso': uso,
+    if (deducible != null) r'deducible': deducible,
+  });
+
+  Input$SolicitudOfertaAutoInput._(this._$data);
+
+  factory Input$SolicitudOfertaAutoInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$consentimientoId = data['consentimientoId'];
+    result$data['consentimientoId'] = (l$consentimientoId as String);
+    if (data.containsKey('documentoIdentidad')) {
+      final l$documentoIdentidad = data['documentoIdentidad'];
+      result$data['documentoIdentidad'] = (l$documentoIdentidad as String?);
+    }
+    if (data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = data['tipoDocumento'];
+      result$data['tipoDocumento'] = (l$tipoDocumento as String?);
+    }
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
+    final l$placa = data['placa'];
+    result$data['placa'] = (l$placa as String);
+    final l$kilometrajeAnual = data['kilometrajeAnual'];
+    result$data['kilometrajeAnual'] = (l$kilometrajeAnual as int);
+    final l$ciudadCirculacion = data['ciudadCirculacion'];
+    result$data['ciudadCirculacion'] = (l$ciudadCirculacion as String);
+    if (data.containsKey('uso')) {
+      final l$uso = data['uso'];
+      result$data['uso'] = fromJson$Enum$UsoVehiculo((l$uso as String));
+    }
+    if (data.containsKey('deducible')) {
+      final l$deducible = data['deducible'];
+      result$data['deducible'] = fromJson$Enum$DeducibleAuto(
+        (l$deducible as String),
+      );
+    }
+    return Input$SolicitudOfertaAutoInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get consentimientoId => (_$data['consentimientoId'] as String);
+
+  String? get documentoIdentidad => (_$data['documentoIdentidad'] as String?);
+
+  String? get tipoDocumento => (_$data['tipoDocumento'] as String?);
+
+  String? get pais => (_$data['pais'] as String?);
+
+  String get placa => (_$data['placa'] as String);
+
+  int get kilometrajeAnual => (_$data['kilometrajeAnual'] as int);
+
+  String get ciudadCirculacion => (_$data['ciudadCirculacion'] as String);
+
+  Enum$UsoVehiculo? get uso => (_$data['uso'] as Enum$UsoVehiculo?);
+
+  Enum$DeducibleAuto? get deducible =>
+      (_$data['deducible'] as Enum$DeducibleAuto?);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$consentimientoId = consentimientoId;
+    result$data['consentimientoId'] = l$consentimientoId;
+    if (_$data.containsKey('documentoIdentidad')) {
+      final l$documentoIdentidad = documentoIdentidad;
+      result$data['documentoIdentidad'] = l$documentoIdentidad;
+    }
+    if (_$data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = tipoDocumento;
+      result$data['tipoDocumento'] = l$tipoDocumento;
+    }
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
+    }
+    final l$placa = placa;
+    result$data['placa'] = l$placa;
+    final l$kilometrajeAnual = kilometrajeAnual;
+    result$data['kilometrajeAnual'] = l$kilometrajeAnual;
+    final l$ciudadCirculacion = ciudadCirculacion;
+    result$data['ciudadCirculacion'] = l$ciudadCirculacion;
+    if (_$data.containsKey('uso')) {
+      final l$uso = uso;
+      result$data['uso'] = toJson$Enum$UsoVehiculo((l$uso as Enum$UsoVehiculo));
+    }
+    if (_$data.containsKey('deducible')) {
+      final l$deducible = deducible;
+      result$data['deducible'] = toJson$Enum$DeducibleAuto(
+        (l$deducible as Enum$DeducibleAuto),
+      );
+    }
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$SolicitudOfertaAutoInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$consentimientoId = consentimientoId;
+    final lOther$consentimientoId = other.consentimientoId;
+    if (l$consentimientoId != lOther$consentimientoId) {
+      return false;
+    }
+    final l$documentoIdentidad = documentoIdentidad;
+    final lOther$documentoIdentidad = other.documentoIdentidad;
+    if (_$data.containsKey('documentoIdentidad') !=
+        other._$data.containsKey('documentoIdentidad')) {
+      return false;
+    }
+    if (l$documentoIdentidad != lOther$documentoIdentidad) {
+      return false;
+    }
+    final l$tipoDocumento = tipoDocumento;
+    final lOther$tipoDocumento = other.tipoDocumento;
+    if (_$data.containsKey('tipoDocumento') !=
+        other._$data.containsKey('tipoDocumento')) {
+      return false;
+    }
+    if (l$tipoDocumento != lOther$tipoDocumento) {
+      return false;
+    }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
+    final l$placa = placa;
+    final lOther$placa = other.placa;
+    if (l$placa != lOther$placa) {
+      return false;
+    }
+    final l$kilometrajeAnual = kilometrajeAnual;
+    final lOther$kilometrajeAnual = other.kilometrajeAnual;
+    if (l$kilometrajeAnual != lOther$kilometrajeAnual) {
+      return false;
+    }
+    final l$ciudadCirculacion = ciudadCirculacion;
+    final lOther$ciudadCirculacion = other.ciudadCirculacion;
+    if (l$ciudadCirculacion != lOther$ciudadCirculacion) {
+      return false;
+    }
+    final l$uso = uso;
+    final lOther$uso = other.uso;
+    if (_$data.containsKey('uso') != other._$data.containsKey('uso')) {
+      return false;
+    }
+    if (l$uso != lOther$uso) {
+      return false;
+    }
+    final l$deducible = deducible;
+    final lOther$deducible = other.deducible;
+    if (_$data.containsKey('deducible') !=
+        other._$data.containsKey('deducible')) {
+      return false;
+    }
+    if (l$deducible != lOther$deducible) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$consentimientoId = consentimientoId;
+    final l$documentoIdentidad = documentoIdentidad;
+    final l$tipoDocumento = tipoDocumento;
+    final l$pais = pais;
+    final l$placa = placa;
+    final l$kilometrajeAnual = kilometrajeAnual;
+    final l$ciudadCirculacion = ciudadCirculacion;
+    final l$uso = uso;
+    final l$deducible = deducible;
+    return Object.hashAll([
+      l$consentimientoId,
+      _$data.containsKey('documentoIdentidad')
+          ? l$documentoIdentidad
+          : const {},
+      _$data.containsKey('tipoDocumento') ? l$tipoDocumento : const {},
+      _$data.containsKey('pais') ? l$pais : const {},
+      l$placa,
+      l$kilometrajeAnual,
+      l$ciudadCirculacion,
+      _$data.containsKey('uso') ? l$uso : const {},
+      _$data.containsKey('deducible') ? l$deducible : const {},
+    ]);
+  }
+}
+
 class Input$SolicitudOfertaInput {
   factory Input$SolicitudOfertaInput({
     required String consentimientoId,
@@ -1847,6 +2065,7 @@ class Input$ReporteSiniestroInput {
   factory Input$ReporteSiniestroInput({
     required String idReporte,
     required String polizaId,
+    Enum$TipoSiniestroAuto? tipoSiniestroAuto,
     required DateTime ocurridoEn,
     required String descripcion,
     required Input$UbicacionReporteInput ubicacion,
@@ -1854,6 +2073,7 @@ class Input$ReporteSiniestroInput {
   }) => Input$ReporteSiniestroInput._({
     r'idReporte': idReporte,
     r'polizaId': polizaId,
+    if (tipoSiniestroAuto != null) r'tipoSiniestroAuto': tipoSiniestroAuto,
     r'ocurridoEn': ocurridoEn,
     r'descripcion': descripcion,
     r'ubicacion': ubicacion,
@@ -1868,6 +2088,12 @@ class Input$ReporteSiniestroInput {
     result$data['idReporte'] = (l$idReporte as String);
     final l$polizaId = data['polizaId'];
     result$data['polizaId'] = (l$polizaId as String);
+    if (data.containsKey('tipoSiniestroAuto')) {
+      final l$tipoSiniestroAuto = data['tipoSiniestroAuto'];
+      result$data['tipoSiniestroAuto'] = l$tipoSiniestroAuto == null
+          ? null
+          : fromJson$Enum$TipoSiniestroAuto((l$tipoSiniestroAuto as String));
+    }
     final l$ocurridoEn = data['ocurridoEn'];
     result$data['ocurridoEn'] = DateTime.parse((l$ocurridoEn as String));
     final l$descripcion = data['descripcion'];
@@ -1891,6 +2117,9 @@ class Input$ReporteSiniestroInput {
 
   String get polizaId => (_$data['polizaId'] as String);
 
+  Enum$TipoSiniestroAuto? get tipoSiniestroAuto =>
+      (_$data['tipoSiniestroAuto'] as Enum$TipoSiniestroAuto?);
+
   DateTime get ocurridoEn => (_$data['ocurridoEn'] as DateTime);
 
   String get descripcion => (_$data['descripcion'] as String);
@@ -1907,6 +2136,12 @@ class Input$ReporteSiniestroInput {
     result$data['idReporte'] = l$idReporte;
     final l$polizaId = polizaId;
     result$data['polizaId'] = l$polizaId;
+    if (_$data.containsKey('tipoSiniestroAuto')) {
+      final l$tipoSiniestroAuto = tipoSiniestroAuto;
+      result$data['tipoSiniestroAuto'] = l$tipoSiniestroAuto == null
+          ? null
+          : toJson$Enum$TipoSiniestroAuto(l$tipoSiniestroAuto);
+    }
     final l$ocurridoEn = ocurridoEn;
     result$data['ocurridoEn'] = l$ocurridoEn.toIso8601String();
     final l$descripcion = descripcion;
@@ -1935,6 +2170,15 @@ class Input$ReporteSiniestroInput {
     final l$polizaId = polizaId;
     final lOther$polizaId = other.polizaId;
     if (l$polizaId != lOther$polizaId) {
+      return false;
+    }
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    final lOther$tipoSiniestroAuto = other.tipoSiniestroAuto;
+    if (_$data.containsKey('tipoSiniestroAuto') !=
+        other._$data.containsKey('tipoSiniestroAuto')) {
+      return false;
+    }
+    if (l$tipoSiniestroAuto != lOther$tipoSiniestroAuto) {
       return false;
     }
     final l$ocurridoEn = ocurridoEn;
@@ -1971,6 +2215,7 @@ class Input$ReporteSiniestroInput {
   int get hashCode {
     final l$idReporte = idReporte;
     final l$polizaId = polizaId;
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
     final l$ocurridoEn = ocurridoEn;
     final l$descripcion = descripcion;
     final l$ubicacion = ubicacion;
@@ -1978,6 +2223,7 @@ class Input$ReporteSiniestroInput {
     return Object.hashAll([
       l$idReporte,
       l$polizaId,
+      _$data.containsKey('tipoSiniestroAuto') ? l$tipoSiniestroAuto : const {},
       l$ocurridoEn,
       l$descripcion,
       l$ubicacion,
@@ -2422,6 +2668,8 @@ Enum$NivelRiesgo fromJson$Enum$NivelRiesgo(String value) {
 }
 
 enum Enum$MotivoErrorOferta {
+  VEHICULO_NO_ENCONTRADO,
+  VEHICULO_NO_ASEGURABLE,
   CONSENTIMIENTO_NO_VIGENTE,
   DATOS_INSUFICIENTES,
   FUENTES_NO_DISPONIBLES,
@@ -2435,6 +2683,10 @@ enum Enum$MotivoErrorOferta {
 
 String toJson$Enum$MotivoErrorOferta(Enum$MotivoErrorOferta e) {
   switch (e) {
+    case Enum$MotivoErrorOferta.VEHICULO_NO_ENCONTRADO:
+      return r'VEHICULO_NO_ENCONTRADO';
+    case Enum$MotivoErrorOferta.VEHICULO_NO_ASEGURABLE:
+      return r'VEHICULO_NO_ASEGURABLE';
     case Enum$MotivoErrorOferta.CONSENTIMIENTO_NO_VIGENTE:
       return r'CONSENTIMIENTO_NO_VIGENTE';
     case Enum$MotivoErrorOferta.DATOS_INSUFICIENTES:
@@ -2448,6 +2700,10 @@ String toJson$Enum$MotivoErrorOferta(Enum$MotivoErrorOferta e) {
 
 Enum$MotivoErrorOferta fromJson$Enum$MotivoErrorOferta(String value) {
   switch (value) {
+    case r'VEHICULO_NO_ENCONTRADO':
+      return Enum$MotivoErrorOferta.VEHICULO_NO_ENCONTRADO;
+    case r'VEHICULO_NO_ASEGURABLE':
+      return Enum$MotivoErrorOferta.VEHICULO_NO_ASEGURABLE;
     case r'CONSENTIMIENTO_NO_VIGENTE':
       return Enum$MotivoErrorOferta.CONSENTIMIENTO_NO_VIGENTE;
     case r'DATOS_INSUFICIENTES':
@@ -2489,6 +2745,157 @@ Enum$OrigenFuente fromJson$Enum$OrigenFuente(String value) {
       return Enum$OrigenFuente.OPEN_DATA;
     default:
       return Enum$OrigenFuente.$unknown;
+  }
+}
+
+enum Enum$Producto {
+  VIDA_DEUDOR,
+  AUTO,
+  $unknown;
+
+  factory Enum$Producto.fromJson(String value) => fromJson$Enum$Producto(value);
+
+  String toJson() => toJson$Enum$Producto(this);
+}
+
+String toJson$Enum$Producto(Enum$Producto e) {
+  switch (e) {
+    case Enum$Producto.VIDA_DEUDOR:
+      return r'VIDA_DEUDOR';
+    case Enum$Producto.AUTO:
+      return r'AUTO';
+    case Enum$Producto.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$Producto fromJson$Enum$Producto(String value) {
+  switch (value) {
+    case r'VIDA_DEUDOR':
+      return Enum$Producto.VIDA_DEUDOR;
+    case r'AUTO':
+      return Enum$Producto.AUTO;
+    default:
+      return Enum$Producto.$unknown;
+  }
+}
+
+enum Enum$UsoVehiculo {
+  PARTICULAR,
+  COMERCIAL,
+  $unknown;
+
+  factory Enum$UsoVehiculo.fromJson(String value) =>
+      fromJson$Enum$UsoVehiculo(value);
+
+  String toJson() => toJson$Enum$UsoVehiculo(this);
+}
+
+String toJson$Enum$UsoVehiculo(Enum$UsoVehiculo e) {
+  switch (e) {
+    case Enum$UsoVehiculo.PARTICULAR:
+      return r'PARTICULAR';
+    case Enum$UsoVehiculo.COMERCIAL:
+      return r'COMERCIAL';
+    case Enum$UsoVehiculo.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$UsoVehiculo fromJson$Enum$UsoVehiculo(String value) {
+  switch (value) {
+    case r'PARTICULAR':
+      return Enum$UsoVehiculo.PARTICULAR;
+    case r'COMERCIAL':
+      return Enum$UsoVehiculo.COMERCIAL;
+    default:
+      return Enum$UsoVehiculo.$unknown;
+  }
+}
+
+enum Enum$DeducibleAuto {
+  DIEZ_POR_CIENTO,
+  SIN_DEDUCIBLE,
+  $unknown;
+
+  factory Enum$DeducibleAuto.fromJson(String value) =>
+      fromJson$Enum$DeducibleAuto(value);
+
+  String toJson() => toJson$Enum$DeducibleAuto(this);
+}
+
+String toJson$Enum$DeducibleAuto(Enum$DeducibleAuto e) {
+  switch (e) {
+    case Enum$DeducibleAuto.DIEZ_POR_CIENTO:
+      return r'DIEZ_POR_CIENTO';
+    case Enum$DeducibleAuto.SIN_DEDUCIBLE:
+      return r'SIN_DEDUCIBLE';
+    case Enum$DeducibleAuto.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$DeducibleAuto fromJson$Enum$DeducibleAuto(String value) {
+  switch (value) {
+    case r'DIEZ_POR_CIENTO':
+      return Enum$DeducibleAuto.DIEZ_POR_CIENTO;
+    case r'SIN_DEDUCIBLE':
+      return Enum$DeducibleAuto.SIN_DEDUCIBLE;
+    default:
+      return Enum$DeducibleAuto.$unknown;
+  }
+}
+
+enum Enum$TipoCobertura {
+  RESPONSABILIDAD_CIVIL,
+  PERDIDA_TOTAL_DANOS,
+  PERDIDA_PARCIAL_DANOS,
+  PERDIDA_TOTAL_HURTO,
+  PERDIDA_PARCIAL_HURTO,
+  ASISTENCIA,
+  $unknown;
+
+  factory Enum$TipoCobertura.fromJson(String value) =>
+      fromJson$Enum$TipoCobertura(value);
+
+  String toJson() => toJson$Enum$TipoCobertura(this);
+}
+
+String toJson$Enum$TipoCobertura(Enum$TipoCobertura e) {
+  switch (e) {
+    case Enum$TipoCobertura.RESPONSABILIDAD_CIVIL:
+      return r'RESPONSABILIDAD_CIVIL';
+    case Enum$TipoCobertura.PERDIDA_TOTAL_DANOS:
+      return r'PERDIDA_TOTAL_DANOS';
+    case Enum$TipoCobertura.PERDIDA_PARCIAL_DANOS:
+      return r'PERDIDA_PARCIAL_DANOS';
+    case Enum$TipoCobertura.PERDIDA_TOTAL_HURTO:
+      return r'PERDIDA_TOTAL_HURTO';
+    case Enum$TipoCobertura.PERDIDA_PARCIAL_HURTO:
+      return r'PERDIDA_PARCIAL_HURTO';
+    case Enum$TipoCobertura.ASISTENCIA:
+      return r'ASISTENCIA';
+    case Enum$TipoCobertura.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoCobertura fromJson$Enum$TipoCobertura(String value) {
+  switch (value) {
+    case r'RESPONSABILIDAD_CIVIL':
+      return Enum$TipoCobertura.RESPONSABILIDAD_CIVIL;
+    case r'PERDIDA_TOTAL_DANOS':
+      return Enum$TipoCobertura.PERDIDA_TOTAL_DANOS;
+    case r'PERDIDA_PARCIAL_DANOS':
+      return Enum$TipoCobertura.PERDIDA_PARCIAL_DANOS;
+    case r'PERDIDA_TOTAL_HURTO':
+      return Enum$TipoCobertura.PERDIDA_TOTAL_HURTO;
+    case r'PERDIDA_PARCIAL_HURTO':
+      return Enum$TipoCobertura.PERDIDA_PARCIAL_HURTO;
+    case r'ASISTENCIA':
+      return Enum$TipoCobertura.ASISTENCIA;
+    default:
+      return Enum$TipoCobertura.$unknown;
   }
 }
 
@@ -3569,6 +3976,54 @@ Enum$MotivoRechazo fromJson$Enum$MotivoRechazo(String value) {
   }
 }
 
+enum Enum$TipoSiniestroAuto {
+  CHOQUE_PARCIAL,
+  PERDIDA_TOTAL_DANOS,
+  HURTO_TOTAL,
+  HURTO_PARCIAL,
+  RESPONSABILIDAD_CIVIL,
+  $unknown;
+
+  factory Enum$TipoSiniestroAuto.fromJson(String value) =>
+      fromJson$Enum$TipoSiniestroAuto(value);
+
+  String toJson() => toJson$Enum$TipoSiniestroAuto(this);
+}
+
+String toJson$Enum$TipoSiniestroAuto(Enum$TipoSiniestroAuto e) {
+  switch (e) {
+    case Enum$TipoSiniestroAuto.CHOQUE_PARCIAL:
+      return r'CHOQUE_PARCIAL';
+    case Enum$TipoSiniestroAuto.PERDIDA_TOTAL_DANOS:
+      return r'PERDIDA_TOTAL_DANOS';
+    case Enum$TipoSiniestroAuto.HURTO_TOTAL:
+      return r'HURTO_TOTAL';
+    case Enum$TipoSiniestroAuto.HURTO_PARCIAL:
+      return r'HURTO_PARCIAL';
+    case Enum$TipoSiniestroAuto.RESPONSABILIDAD_CIVIL:
+      return r'RESPONSABILIDAD_CIVIL';
+    case Enum$TipoSiniestroAuto.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoSiniestroAuto fromJson$Enum$TipoSiniestroAuto(String value) {
+  switch (value) {
+    case r'CHOQUE_PARCIAL':
+      return Enum$TipoSiniestroAuto.CHOQUE_PARCIAL;
+    case r'PERDIDA_TOTAL_DANOS':
+      return Enum$TipoSiniestroAuto.PERDIDA_TOTAL_DANOS;
+    case r'HURTO_TOTAL':
+      return Enum$TipoSiniestroAuto.HURTO_TOTAL;
+    case r'HURTO_PARCIAL':
+      return Enum$TipoSiniestroAuto.HURTO_PARCIAL;
+    case r'RESPONSABILIDAD_CIVIL':
+      return Enum$TipoSiniestroAuto.RESPONSABILIDAD_CIVIL;
+    default:
+      return Enum$TipoSiniestroAuto.$unknown;
+  }
+}
+
 enum Enum$ColorSalud {
   VERDE,
   AMARILLO,
@@ -3984,6 +4439,10 @@ const possibleTypesMap = <String, Set<String>>{
   'ResultadoInicioPago': {'SesionPago', 'ErrorPago'},
   'ResultadoPago': {'Poliza', 'ErrorPago'},
   'ResultadoSesion': {'Sesion', 'ErrorAutenticacion'},
+  'ResultadoRestablecimiento': {
+    'RestablecimientoExitoso',
+    'ErrorAutenticacion',
+  },
   'ResultadoUsuario': {'Usuario', 'ErrorUsuario'},
   'ResultadoSubidaArchivo': {'SubidaArchivo', 'ErrorArchivo'},
   'ResultadoArchivo': {'Archivo', 'ErrorArchivo'},

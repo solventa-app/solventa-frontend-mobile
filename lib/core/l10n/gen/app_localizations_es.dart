@@ -1324,4 +1324,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String m0402CuentaSemantica(String digitos) {
     return 'En tu cuenta terminada en $digitos';
   }
+
+  @override
+  String get cuentaOlvideClave => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get m0204Titulo => 'Recupera tu contraseña';
+
+  @override
+  String get m0204Intro =>
+      'Escribe el correo de tu cuenta y, si existe, te enviaremos un enlace para elegir una contraseña nueva.';
+
+  @override
+  String get m0204Enviar => 'Enviar enlace';
+
+  @override
+  String get m0204EnviadoTitulo => 'Revisa tu correo';
+
+  @override
+  String get m0204EnviadoTexto =>
+      'Si hay una cuenta con ese correo, te enviamos un enlace. Ábrelo para elegir tu contraseña nueva; vence en 30 minutos y sirve una sola vez.';
+
+  @override
+  String get m0204Volver => 'Volver a iniciar sesión';
 }
