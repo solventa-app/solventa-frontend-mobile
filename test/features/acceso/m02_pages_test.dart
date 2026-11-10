@@ -101,12 +101,10 @@ void main() {
 
       expect(find.text('Solventa'), findsOneWidget);
       expect(find.text('Desbloquea tu cuenta'), findsOneWidget);
-      expect(find.text('Huella o rostro'), findsOneWidget);
-      expect(find.text('Usar PIN del teléfono'), findsOneWidget);
-      expect(
-        find.bySemanticsLabel('Desbloquear con huella o rostro'),
-        findsOne,
-      );
+      // Un solo texto según lo configurado; el enlace del PIN solo sale con un aviso que lo menciona.
+      expect(find.text('Ingresa con tu huella'), findsOneWidget);
+      expect(find.text('Usar PIN del teléfono'), findsNothing);
+      expect(find.bySemanticsLabel('Ingresa con tu huella'), findsOne);
       expect(find.byType(SolLocaleChip), findsOneWidget);
       expect(biometria.autenticaciones, isEmpty);
     });
@@ -115,29 +113,50 @@ void main() {
       biometria.resultados.add(const Cancelado());
       await montar(tester, const M0201DesbloqueoPage(autoIniciar: false));
 
-      await tester.tap(
-        find.bySemanticsLabel('Desbloquear con huella o rostro'),
-      );
+      await tester.tap(find.bySemanticsLabel('Ingresa con tu huella'));
       await tester.pumpAndSettle();
 
       expect(biometria.autenticaciones, [false]);
       expect(find.byType(SolStatusBanner), findsNothing);
     });
 
-    testWidgets('«Usar PIN del teléfono» abre el diálogo con PIN (D2)', (
-      tester,
-    ) async {
-      final c = await montar(
-        tester,
-        const M0201DesbloqueoPage(autoIniciar: false),
-      );
+    testWidgets(
+      'con rostro, el ícono y el texto hablan de rostro y el texto también abre el diálogo',
+      (tester) async {
+        biometria.tipoActual = TipoBiometria.rostro;
+        biometria.resultados.add(const Cancelado());
+        await montar(tester, const M0201DesbloqueoPage(autoIniciar: false));
 
-      await tester.tap(find.text('Usar PIN del teléfono'));
-      await tester.pumpAndSettle();
+        expect(find.text('Ingresa con tu rostro'), findsOneWidget);
+        expect(find.byIcon(SolIcons.face), findsOneWidget);
+        expect(find.byIcon(SolIcons.fingerprint), findsNothing);
 
-      expect(biometria.autenticaciones, [true]);
-      expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
-    });
+        await tester.tap(find.text('Ingresa con tu rostro'));
+        await tester.pumpAndSettle();
+        expect(biometria.autenticaciones, [false]);
+      },
+    );
+
+    testWidgets(
+      'sin biometría registrada, el texto abre el diálogo con el PIN del teléfono (D2)',
+      (tester) async {
+        biometria.tipoActual = TipoBiometria.ninguna;
+        final c = await montar(
+          tester,
+          const M0201DesbloqueoPage(autoIniciar: false),
+        );
+
+        expect(
+          find.text('Ingresa con el bloqueo de tu teléfono'),
+          findsOneWidget,
+        );
+        await tester.tap(find.text('Ingresa con el bloqueo de tu teléfono'));
+        await tester.pumpAndSettle();
+
+        expect(biometria.autenticaciones, [true]);
+        expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
+      },
+    );
 
     testWidgets('bloqueo temporal: aviso', (tester) async {
       biometria.resultados.add(const BloqueoTemporal());
