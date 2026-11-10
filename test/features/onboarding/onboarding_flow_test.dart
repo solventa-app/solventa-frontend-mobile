@@ -14,17 +14,23 @@ import '../../helpers/sol_test_app.dart';
 void main() {
   late FakeOnboardingRemoteDataSource bff;
 
-  /// M01-05b: correo y clave (cumple la regla de T17), luego el código real
-  /// de M01-05c (el fake espera 123456), y sigue al inicio.
+  /// M01-05b: la entrada abre en «Inicia sesión»; desde ahí «Crear cuenta»,
+  /// correo, clave (cumple la regla de T17) y su confirmación, luego el código
+  /// real de M01-05c (el fake espera 123456), y sigue al inicio.
   Future<void> crearCuenta(
     WidgetTester tester, {
     String correo = 'maria@ejemplo.co',
     bool conCodigo = true,
   }) async {
+    if (find.text('Crea tu cuenta').evaluate().isEmpty) {
+      await tester.tap(find.text('¿No tienes cuenta? Crear cuenta'));
+      await tester.pumpAndSettle();
+    }
     expect(find.text('Crea tu cuenta'), findsOneWidget);
     final campos = find.byType(TextField);
     await tester.enterText(campos.at(0), correo);
     await tester.enterText(campos.at(1), 'Clave-segura-1');
+    await tester.enterText(campos.at(2), 'Clave-segura-1');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Crear cuenta'));
     await tester.pumpAndSettle();
@@ -63,7 +69,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    if (find.text('Crea tu cuenta').evaluate().isNotEmpty) {
+    if (find.text('¿No tienes cuenta? Crear cuenta').evaluate().isNotEmpty) {
       await crearCuenta(tester);
     }
     await tester.tap(find.text('Completar registro'));
@@ -254,6 +260,79 @@ void main() {
     await tester.tap(find.byTooltip('Mostrar clave').first);
     await tester.pump();
     expect(tester.widget<TextField>(campos.at(1)).obscureText, isFalse);
+  });
+
+  /// Abre «Crear cuenta» desde la entrada, sin llenar nada.
+  Future<void> abrirCrearCuenta(WidgetTester tester) async {
+    bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [fakeOnboardingProvider.overrideWithValue(bff)],
+        child: const SolventaApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('¿No tienes cuenta? Crear cuenta'));
+    await tester.pumpAndSettle();
+  }
+
+  // QA 2026-11-10: crear la cuenta vuelve a pedir la confirmación de la clave.
+  testWidgets('M01-05b: la confirmación distinta no deja crear la cuenta', (
+    tester,
+  ) async {
+    await abrirCrearCuenta(tester);
+    final campos = find.byType(TextField);
+    expect(campos, findsNWidgets(3));
+    await tester.enterText(campos.at(0), 'maria@ejemplo.co');
+    await tester.enterText(campos.at(1), 'Clave-segura-1');
+    // Mientras sea el comienzo de la clave no hay error.
+    await tester.enterText(campos.at(2), 'Clave-');
+    await tester.pumpAndSettle();
+    expect(find.text('Las claves no coinciden.'), findsNothing);
+    // En cuanto diverge, se avisa sin esperar a enviar.
+    await tester.enterText(campos.at(2), 'Clave-otra');
+    await tester.pumpAndSettle();
+    expect(find.text('Las claves no coinciden.'), findsOneWidget);
+    await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
+    expect(find.text('Verifica tu correo'), findsNothing);
+
+    await tester.enterText(campos.at(2), 'Clave-segura-1');
+    await tester.pumpAndSettle();
+    expect(find.text('Las claves no coinciden.'), findsNothing);
+    expect(find.text('Las claves coinciden.'), findsOneWidget);
+    await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
+    expect(find.text('Verifica tu correo'), findsOneWidget);
+  });
+
+  // QA 2026-11-10: los requisitos se ven desde el principio, en verde al
+  // cumplirse y en rojo los que faltan al intentar crear la cuenta.
+  testWidgets('M01-05b: los requisitos de la clave dicen qué falta', (
+    tester,
+  ) async {
+    await abrirCrearCuenta(tester);
+    expect(find.text('Tu clave debe tener:'), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp(r', pendiente$')), findsNWidgets(4));
+
+    final campos = find.byType(TextField);
+    await tester.enterText(campos.at(0), 'maria@ejemplo.co');
+    await tester.enterText(campos.at(1), 'clave');
+    await tester.pumpAndSettle();
+    expect(
+      find.bySemanticsLabel('Una letra minúscula, cumplido'),
+      findsOneWidget,
+    );
+
+    // El botón está activo: al tocarlo marca en rojo lo que falta.
+    await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
+    expect(find.text('Verifica tu correo'), findsNothing);
+    expect(find.bySemanticsLabel(RegExp(r', falta$')), findsNWidgets(3));
+    expect(find.bySemanticsLabel('Una letra mayúscula, falta'), findsOneWidget);
   });
 
   testWidgets('M01-05c: verifica código OTP de 6 dígitos enviado al correo', (

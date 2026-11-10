@@ -362,6 +362,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'Un carácter especial (por ejemplo ! ¿ @ # €)';
 
   @override
+  String get m0105bReqTitulo => 'Tu clave debe tener:';
+
+  @override
+  String get m0105bRequisitoIncumplido => 'falta';
+
+  @override
+  String get m0105bClavesCoinciden => 'Las claves coinciden.';
+
+  @override
   String get otpReenviado => 'Te enviamos un código nuevo a tu correo.';
 
   @override

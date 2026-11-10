@@ -14,13 +14,16 @@ class _SesionActivaNotifier extends OnboardingNotifier {
 
 void main() {
   testWidgets(
-    'La app arranca en Crea tu cuenta (M01-05b) con el tema de Solventa',
+    'La app arranca en Inicia sesión (M01-05b) y ofrece crear la cuenta debajo',
     (tester) async {
       await tester.pumpWidget(const ProviderScope(child: SolventaApp()));
       await tester.pumpAndSettle();
 
-      expect(find.text('Crea tu cuenta'), findsOneWidget);
-      expect(find.text('Crear cuenta'), findsOneWidget);
+      // QA 2026-11-10: la entrada por defecto es iniciar sesión.
+      expect(find.text('Inicia sesión'), findsOneWidget);
+      expect(find.text('Ingresar'), findsOneWidget);
+      expect(find.text('¿No tienes cuenta? Crear cuenta'), findsOneWidget);
+      expect(find.text('Crea tu cuenta'), findsNothing);
       expect(find.byType(M0105bCuentaPage), findsOneWidget);
 
       final context = tester.element(find.byType(M0105bCuentaPage));
