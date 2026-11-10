@@ -28,7 +28,7 @@
   "verificacionTitulo": "Verification",
   "m0106Validando": "Checking with the KYC/AML provider...",
   "m0107aMensaje": "Identity verified! Welcome to Solventa.",
-  "m0107aAccion": "Go to my account",
+  "m0107aAccion": "Turn on fingerprint or face unlock",
   "m0107bMensaje": "We're reviewing your identity, we'll let you know.",
   "m0107bAccion": "Got it",
   "m0107cMensaje": "We couldn't verify your document (unreadable image)",

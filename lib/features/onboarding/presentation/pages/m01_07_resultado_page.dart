@@ -91,6 +91,11 @@ class M0107ResultadoPage extends ConsumerWidget {
         actionLabel: l10n.m0107aAccion,
         onAction: () => context.go(OnboardingRoutes.biometria),
         onBack: inicio,
+        // La biometría es opcional: se puede ir al inicio sin activarla.
+        secondaryAction: SolButton.text(
+          label: l10n.irAlInicio,
+          onPressed: inicio,
+        ),
       ),
     };
   }

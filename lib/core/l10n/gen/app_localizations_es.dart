@@ -105,7 +105,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0107aMensaje => '¡Identidad verificada! Bienvenido a Solventa.';
 
   @override
-  String get m0107aAccion => 'Ir a mi cuenta';
+  String get m0107aAccion => 'Activar huella o rostro';
 
   @override
   String get m0107bMensaje => 'Estamos revisando tu identidad, te avisamos.';

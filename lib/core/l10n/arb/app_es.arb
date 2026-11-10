@@ -120,7 +120,7 @@
   "@m0107aMensaje": {
     "description": "M01-07a"
   },
-  "m0107aAccion": "Ir a mi cuenta",
+  "m0107aAccion": "Activar huella o rostro",
   "@m0107aAccion": {
     "description": "M01-07a botón"
   },
