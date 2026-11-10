@@ -265,7 +265,7 @@ final class GestorSesion {
     await _limpiar();
   }
 
-  /// Bloquea la sesión sin cerrarla (5 min en segundo plano, HU-M02): olvida
+  /// Bloquea la sesión sin cerrarla (15 min en segundo plano, HU-M02): olvida
   /// el JWT y el refresh en claro; el refresh cifrado sigue guardado.
   void bloquear() {
     _token = null;

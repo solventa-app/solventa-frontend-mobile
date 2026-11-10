@@ -154,7 +154,7 @@ void main() {
     expect(biometria.autenticaciones, isEmpty);
   });
 
-  testWidgets('5 min en segundo plano → M02-01 → huella → Home', (
+  testWidgets('15 min en segundo plano → M02-01 → huella → Home', (
     tester,
   ) async {
     await abrirApp(tester);
@@ -169,7 +169,7 @@ void main() {
     }
 
     cambiarCiclo([AppLifecycleState.inactive, AppLifecycleState.hidden]);
-    ahora = ahora.add(const Duration(minutes: 5));
+    ahora = ahora.add(const Duration(minutes: 15));
     cambiarCiclo([AppLifecycleState.inactive, AppLifecycleState.resumed]);
     await tester.pumpAndSettle();
 
