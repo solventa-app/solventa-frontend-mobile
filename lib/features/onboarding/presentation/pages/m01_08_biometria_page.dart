@@ -95,9 +95,9 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
 
   /// Sigue sin biometría y le dice a la persona dónde activarla después.
   void _ahoraNo() {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(context.l10n.m0108AvisoLuego)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.l10n.m0108AvisoLuego)),
+    );
     context.go('/');
   }
 
