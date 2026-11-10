@@ -140,7 +140,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0108AhoraNo => 'Not now, go to home';
 
   @override
-  String get m0108AvisoLuego => 'You can turn on your fingerprint or face unlock any time in My profile.';
+  String get m0108AvisoLuego =>
+      'You can turn on your fingerprint or face unlock any time in My profile.';
 
   @override
   String get m0108Requisito =>
@@ -540,7 +541,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get perfilBiometria => 'Phone fingerprint or face unlock';
 
   @override
-  String get homeBiometriaPista => 'Turn on your fingerprint or face unlock to sign in faster.';
+  String get homeBiometriaPista =>
+      'Turn on your fingerprint or face unlock to sign in faster.';
 
   @override
   String get homeBiometriaActivar => 'Turn on';

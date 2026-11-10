@@ -143,7 +143,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0108AhoraNo => 'Ahora no, ir al inicio';
 
   @override
-  String get m0108AvisoLuego => 'Puedes activar tu huella o rostro cuando quieras en Mi perfil.';
+  String get m0108AvisoLuego =>
+      'Puedes activar tu huella o rostro cuando quieras en Mi perfil.';
 
   @override
   String get m0108Requisito =>
@@ -542,7 +543,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get perfilBiometria => 'Huella o rostro del teléfono';
 
   @override
-  String get homeBiometriaPista => 'Activa tu huella o rostro para entrar más rápido.';
+  String get homeBiometriaPista =>
+      'Activa tu huella o rostro para entrar más rápido.';
 
   @override
   String get homeBiometriaActivar => 'Activar';
