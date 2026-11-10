@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:solventa_mobile/core/contrato/schema.graphql.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/core/network/network_exceptions.dart';
@@ -92,13 +93,29 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  Future<void> completarReporte(WidgetTester tester) async {
-    await tester.tap(find.text('Póliza SOL-2026-000123'));
+  Future<void> completarReporte(
+    WidgetTester tester, {
+    String poliza = 'Póliza SOL-2026-000123',
+    String? tipoAuto,
+  }) async {
+    await tester.tap(find.text(poliza));
     contenedor
         .read(reporteProvider.notifier)
         .fijarFecha(DateTime(2026, 11, 4, 13));
     await tester.pumpAndSettle();
-    await capturar(tester, 'M05-01 · póliza y fecha');
+    // KAN-290: en una póliza de auto se elige qué le pasó al vehículo.
+    if (tipoAuto != null) {
+      await tester.ensureVisible(find.text(tipoAuto));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(tipoAuto));
+      await tester.pumpAndSettle();
+    }
+    await capturar(
+      tester,
+      tipoAuto == null
+          ? 'M05-01 · póliza y fecha'
+          : 'M05-01 · póliza de auto y tipo de siniestro',
+    );
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
 
@@ -137,6 +154,24 @@ void main() {
     expect(find.textContaining('SIN-2026-1001'), findsOneWidget);
     await capturar(tester, 'M05-05 · radicado');
     expect(bff.reportes.single.fotos.single.latitud, 4.6767);
+  });
+
+  testWidgets('HU-W08: reporta un choque sobre la póliza de auto con su tipo', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await completarReporte(
+      tester,
+      poliza: 'Póliza SOL-2026-000456',
+      tipoAuto: 'Choque con daños que se pueden reparar',
+    );
+
+    expect(find.text('Recibimos tu reporte'), findsOneWidget);
+    expect(
+      bff.reportes.single.tipoSiniestroAuto,
+      Enum$TipoSiniestroAuto.CHOQUE_PARCIAL,
+    );
+    expect(bff.reportes.single.polizaId, 'pol-demo-02');
   });
 
   testWidgets('HU-M05: sin red reintenta sin duplicar el caso', (tester) async {
