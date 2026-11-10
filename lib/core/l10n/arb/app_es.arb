@@ -1476,5 +1476,9 @@
   "m0204Enviar": "Enviar enlace",
   "m0204EnviadoTitulo": "Revisa tu correo",
   "m0204EnviadoTexto": "Si hay una cuenta con ese correo, te enviamos un enlace. Ábrelo para elegir tu contraseña nueva; vence en 30 minutos y sirve una sola vez.",
-  "m0204Volver": "Volver a iniciar sesión"
+  "m0204Volver": "Volver a iniciar sesión",
+  "cuentaIngresarConHuella": "Ingresar con huella o rostro",
+  "accesoBiometricoMotivo": "Confirma que eres tú para entrar a Solventa",
+  "accesoBiometricoActivarMotivo": "Confirma tu huella o rostro para entrar sin escribir la contraseña",
+  "fallaDispositivoNoValido": "No pudimos verificar este teléfono. Ingresa con tu correo y contraseña."
 }

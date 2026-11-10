@@ -1354,4 +1354,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0204Volver => 'Back to sign in';
+
+  @override
+  String get cuentaIngresarConHuella => 'Sign in with fingerprint or face';
+
+  @override
+  String get accesoBiometricoMotivo =>
+      'Confirm it\'s you to sign in to Solventa';
+
+  @override
+  String get accesoBiometricoActivarMotivo =>
+      'Confirm your fingerprint or face to sign in without typing your password';
+
+  @override
+  String get fallaDispositivoNoValido =>
+      'We could not verify this phone. Sign in with your email and password.';
 }

@@ -79,6 +79,16 @@ abstract interface class OnboardingRemoteDataSource {
   /// cuenta existe). El enlace llega por correo y se abre en la web.
   Future<bool> solicitarRestablecimientoClave(String correo);
 
+  /// Con sesión: guarda la llave pública del teléfono. Devuelve el id.
+  Future<String> registrarDispositivo(String clavePublica);
+
+  /// Pública: el reto que el teléfono firma con su llave.
+  Future<String> desafioDispositivo(String dispositivoId);
+
+  /// Pública: entra con la firma del reto, sin clave.
+  Future<Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo>
+  iniciarSesionConDispositivo(String dispositivoId, String reto, String firma);
+
   /// Devuelve el usuario autenticado (`yo`).
   Future<Fragment$UsuarioCampos?> yo();
 
@@ -284,6 +294,47 @@ final class GqlOnboardingRemoteDataSource
     );
     return Mutation$VerificarCodigoOnboarding.fromJson(data)
         .verificarCodigoOnboarding;
+  }
+
+  @override
+  Future<String> registrarDispositivo(String clavePublica) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationRegistrarDispositivo,
+      variables: Variables$Mutation$RegistrarDispositivo(
+        clavePublica: clavePublica,
+      ).toJson(),
+    );
+    return Mutation$RegistrarDispositivo.fromJson(data).registrarDispositivo;
+  }
+
+  @override
+  Future<String> desafioDispositivo(String dispositivoId) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationDesafioDispositivo,
+      variables: Variables$Mutation$DesafioDispositivo(
+        dispositivoId: dispositivoId,
+      ).toJson(),
+    );
+    return Mutation$DesafioDispositivo.fromJson(data).desafioDispositivo.reto;
+  }
+
+  @override
+  Future<Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo>
+  iniciarSesionConDispositivo(
+    String dispositivoId,
+    String reto,
+    String firma,
+  ) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationIniciarSesionConDispositivo,
+      variables: Variables$Mutation$IniciarSesionConDispositivo(
+        dispositivoId: dispositivoId,
+        reto: reto,
+        firma: firma,
+      ).toJson(),
+    );
+    return Mutation$IniciarSesionConDispositivo.fromJson(data)
+        .iniciarSesionConDispositivo;
   }
 
   @override
