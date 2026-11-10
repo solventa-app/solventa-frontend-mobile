@@ -10,3 +10,8 @@ final biometriaServiceProvider = Provider<BiometriaService>(
       ? FakeBiometriaService()
       : LocalAuthBiometriaService(),
 );
+
+/// Qué método biométrico tiene el teléfono (ícono y texto de M02-01). Mientras carga se asume la huella.
+final tipoBiometriaProvider = FutureProvider<TipoBiometria>(
+  (ref) => ref.watch(biometriaServiceProvider).tipo(),
+);

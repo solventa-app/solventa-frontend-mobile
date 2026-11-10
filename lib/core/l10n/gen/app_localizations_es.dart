@@ -662,6 +662,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0201Escanear => 'Desbloquear con huella o rostro';
 
   @override
+  String get m0201IngresaHuella => 'Ingresa con tu huella';
+
+  @override
+  String get m0201IngresaRostro => 'Ingresa con tu rostro';
+
+  @override
+  String get m0201IngresaBiometria => 'Ingresa con huella o rostro';
+
+  @override
+  String get m0201IngresaBloqueo => 'Ingresa con el bloqueo de tu teléfono';
+
+  @override
   String get m0201Motivo => 'Desbloquea tu cuenta de Solventa';
 
   @override

@@ -17,6 +17,19 @@ enum EstadoBiometria {
   noDisponible,
 }
 
+/// Qué método biométrico tiene configurado el teléfono, para mostrar el ícono y el texto que corresponden en M02-01
+/// («Ingresa con tu huella», «con tu rostro»).
+enum TipoBiometria {
+  huella,
+  rostro,
+
+  /// Hay biometría pero el sistema no dice cuál (clase fuerte o débil): se habla de «huella o rostro».
+  generica,
+
+  /// Sin biometría registrada: se entra con el bloqueo de pantalla del teléfono.
+  ninguna,
+}
+
 /// Resultado de pedir la huella, el rostro o el PIN del teléfono (HU-M02 §3.6).
 sealed class ResultadoBiometria {
   const ResultadoBiometria();
@@ -67,6 +80,9 @@ final class NoDisponible extends ResultadoBiometria {
 abstract interface class BiometriaService {
   /// Qué tiene configurado el teléfono, sin abrir ningún diálogo.
   Future<EstadoBiometria> estado();
+
+  /// Qué método biométrico tiene el teléfono, sin abrir ningún diálogo.
+  Future<TipoBiometria> tipo();
 
   /// Abre el diálogo del sistema. Con [permitirCredencialDispositivo] el
   /// diálogo ofrece también el PIN, patrón o contraseña del teléfono (D2).
@@ -153,6 +169,20 @@ final class LocalAuthBiometriaService implements BiometriaService {
   }
 
   @override
+  Future<TipoBiometria> tipo() async {
+    try {
+      final inscritas = await _auth.getAvailableBiometrics();
+      if (inscritas.contains(BiometricType.face)) return TipoBiometria.rostro;
+      if (inscritas.contains(BiometricType.fingerprint)) {
+        return TipoBiometria.huella;
+      }
+      return inscritas.isEmpty ? TipoBiometria.ninguna : TipoBiometria.generica;
+    } on Object {
+      return TipoBiometria.ninguna;
+    }
+  }
+
+  @override
   Future<ResultadoBiometria> autenticar({
     required String motivo,
     required bool permitirCredencialDispositivo,
@@ -179,11 +209,15 @@ final class LocalAuthBiometriaService implements BiometriaService {
 final class FakeBiometriaService implements BiometriaService {
   FakeBiometriaService({
     this.estadoActual = EstadoBiometria.biometriaRegistrada,
+    this.tipoActual = TipoBiometria.huella,
     List<ResultadoBiometria>? resultados,
   }) : resultados = resultados ?? [];
 
   /// Lo que responde [estado].
   EstadoBiometria estadoActual;
+
+  /// Lo que responde [tipo].
+  TipoBiometria tipoActual;
 
   /// Respuestas de [autenticar] en orden; vacía → [Autenticado].
   final List<ResultadoBiometria> resultados;
@@ -194,6 +228,9 @@ final class FakeBiometriaService implements BiometriaService {
 
   @override
   Future<EstadoBiometria> estado() async => estadoActual;
+
+  @override
+  Future<TipoBiometria> tipo() async => tipoActual;
 
   @override
   Future<ResultadoBiometria> autenticar({

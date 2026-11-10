@@ -297,7 +297,7 @@ void main() {
     });
   });
 
-  group('bloqueo tras 5 min en segundo plano', () {
+  group('bloqueo tras 15 min en segundo plano', () {
     Future<ProviderContainer> conSesionAbierta() async {
       final c = await arrancar();
       await gestor.abrir(
@@ -309,7 +309,7 @@ void main() {
       return c;
     }
 
-    test('a los 5 min bloquea y olvida el JWT', () async {
+    test('a los 15 min bloquea y olvida el JWT', () async {
       final c = await conSesionAbierta();
       final notifier = c.read(accesoProvider.notifier)..alPasarASegundoPlano();
       ahora = ahora.add(AccesoNotifier.bloqueoTrasSegundoPlano);
@@ -320,10 +320,10 @@ void main() {
       expect(await store.hayRefresh(), isTrue);
     });
 
-    test('antes de 5 min no bloquea', () async {
+    test('antes de 15 min no bloquea', () async {
       final c = await conSesionAbierta();
       final notifier = c.read(accesoProvider.notifier)..alPasarASegundoPlano();
-      ahora = ahora.add(const Duration(minutes: 4, seconds: 59));
+      ahora = ahora.add(const Duration(minutes: 14, seconds: 59));
       notifier.alVolverAPrimerPlano();
 
       expect(c.read(accesoProvider).fase, FaseAcceso.normal);

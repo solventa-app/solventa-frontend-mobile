@@ -494,6 +494,22 @@
   "@m0201Escanear": {
     "description": "M02-01: lectura de TalkBack del botón del sensor"
   },
+  "m0201IngresaHuella": "Ingresa con tu huella",
+  "@m0201IngresaHuella": {
+    "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
+  },
+  "m0201IngresaRostro": "Ingresa con tu rostro",
+  "@m0201IngresaRostro": {
+    "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
+  },
+  "m0201IngresaBiometria": "Ingresa con huella o rostro",
+  "@m0201IngresaBiometria": {
+    "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
+  },
+  "m0201IngresaBloqueo": "Ingresa con el bloqueo de tu teléfono",
+  "@m0201IngresaBloqueo": {
+    "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
+  },
   "m0201Motivo": "Desbloquea tu cuenta de Solventa",
   "@m0201Motivo": {
     "description": "M02-01: texto del diálogo biométrico del sistema"

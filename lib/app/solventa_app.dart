@@ -43,7 +43,7 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
     _eventos = ref.read(gestorSesionProvider).eventos.listen((evento) {
       if (evento is SesionVencidaEvento) _router.go('/');
     });
-    // Bloqueo tras 5 min en segundo plano (HU-M02).
+    // Bloqueo tras 15 min en segundo plano (HU-M02).
     _ciclo = AppLifecycleListener(
       onHide: () => ref.read(accesoProvider.notifier).alPasarASegundoPlano(),
       onShow: () => ref.read(accesoProvider.notifier).alVolverAPrimerPlano(),
