@@ -1034,6 +1034,12 @@ abstract class AppLocalizations {
   /// **'Preferencias guardadas.'**
   String get perfilPreferenciasGuardadas;
 
+  /// No description provided for @perfilBiometria.
+  ///
+  /// In es, this message translates to:
+  /// **'Huella o rostro del teléfono'**
+  String get perfilBiometria;
+
   /// No description provided for @perfilNotaLegal.
   ///
   /// In es, this message translates to:

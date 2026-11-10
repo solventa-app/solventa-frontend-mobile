@@ -536,6 +536,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get perfilPreferenciasGuardadas => 'Preferencias guardadas.';
 
   @override
+  String get perfilBiometria => 'Huella o rostro del teléfono';
+
+  @override
   String get perfilNotaLegal =>
       'Los datos de tu cuenta provienen de tu documento verificado y son de solo lectura. Tus datos personales se tratan conforme a la Ley 1581 de 2012 de Habeas Data.';
 

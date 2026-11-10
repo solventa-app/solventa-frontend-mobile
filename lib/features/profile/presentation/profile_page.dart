@@ -6,6 +6,7 @@ import '../../../core/design_system/solventa_ui.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../onboarding/domain/entities/onboarding.dart';
 import '../../onboarding/presentation/onboarding_notifier.dart';
+import '../../onboarding/presentation/onboarding_routes.dart';
 import '../../onboarding/presentation/providers.dart';
 
 /// G-05 · Mi perfil (equivalente móvil de `MiPerfil.vue` en `solventa-frontend-web`).
@@ -375,8 +376,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               text: l10n.perfilNotaLegal,
               iconColor: colors.primary,
             ),
+            const SizedBox(height: SolSpacing.xl),
+            // La biometría es opcional (M01-08): desde aquí se activa luego.
+            SolButton.tonal(
+              label: l10n.perfilBiometria,
+              icon: SolIcons.fingerprint,
+              onPressed: () => context.push(OnboardingRoutes.biometria),
+            ),
             if (widget.onLogout != null) ...[
-              const SizedBox(height: SolSpacing.xl),
+              const SizedBox(height: SolSpacing.lg),
               SolButton.outlined(
                 label: l10n.navCerrarSesion,
                 icon: SolIcons.logout,

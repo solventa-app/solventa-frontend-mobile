@@ -73,6 +73,14 @@ void main() {
     expect(find.text('alias-opaco-7f3a'), findsNothing);
   });
 
+  testWidgets('ofrece activar la huella o el rostro luego (M01-08)', (
+    tester,
+  ) async {
+    await abrir(tester, completo);
+
+    expect(find.text('Huella o rostro del teléfono'), findsOneWidget);
+  });
+
   testWidgets('los datos están bloqueados: sin campos de texto y con candado', (
     tester,
   ) async {

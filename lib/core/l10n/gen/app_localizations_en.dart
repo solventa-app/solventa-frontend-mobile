@@ -535,6 +535,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get perfilPreferenciasGuardadas => 'Preferences saved.';
 
   @override
+  String get perfilBiometria => 'Phone fingerprint or face unlock';
+
+  @override
   String get perfilNotaLegal =>
       'Your account details come from your verified ID document and are read only. Your personal data is processed under Colombian Law 1581 of 2012 (Habeas Data).';
 

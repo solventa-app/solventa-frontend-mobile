@@ -172,6 +172,7 @@
   "perfilPreferenciasTexto": "Language and currency the app opens with every time you sign in.",
   "perfilGuardarPreferencias": "Save preferences",
   "perfilPreferenciasGuardadas": "Preferences saved.",
+  "perfilBiometria": "Phone fingerprint or face unlock",
   "perfilNotaLegal": "Your account details come from your verified ID document and are read only. Your personal data is processed under Colombian Law 1581 of 2012 (Habeas Data).",
   "cerrarSesionTitulo": "Do you want to sign out?",
   "cerrarSesionMensaje": "You will need to sign in again to use Solventa.",
