@@ -258,7 +258,7 @@ que avisa cuando cambia; `redirigirAcceso` decide:
 | Fase | Qué deja ver |
 |---|---|
 | `comprobando` (arranque, leyendo si hay refresh guardado) | Solo `/`, que pinta el fondo vacío: no hay parpadeo de G-03 a M02-01 |
-| `bloqueada` (hay sesión guardada o pasaron 5 min en segundo plano) | Solo M02-01 (`/acceso/desbloqueo`); el atrás cierra la app |
+| `bloqueada` (hay sesión guardada o pasaron 15 min en segundo plano) | Solo M02-01 (`/acceso/desbloqueo`); el atrás cierra la app |
 | `concedida` | Solo M02-03 (`/acceso/concedido`), que a los 1,5 s pasa a `normal` |
 | `normal` | Todas las rutas menos las de M02 |
 
@@ -334,7 +334,7 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
   (`android/.../LlaveroSesion.kt`): la pública cifra sin pedir nada (el refresh rotado se guarda en segundo plano); la
   privada exige autenticación reciente. No se usa `BiometricPrompt` con `CryptoObject` y `local_auth` sigue siendo el
   diálogo.
-- **Bloqueo tras 5 minutos en segundo plano.** `AppLifecycleListener` en `SolventaApp` (`hidden` → `show`): si la
+- **Bloqueo tras 15 minutos en segundo plano.** `AppLifecycleListener` en `SolventaApp` (`hidden` → `show`): si la
   sesión está abierta y su refresh quedó guardado, `GestorSesion.bloquear()` olvida el JWT y el refresh en claro y la
   app vuelve a M02-01. Si el refresh no se pudo guardar (teléfono sin bloqueo de pantalla) no se bloquea, porque no
   habría con qué desbloquear.

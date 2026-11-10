@@ -660,6 +660,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0201Escanear => 'Unlock with fingerprint or face';
 
   @override
+  String get m0201IngresaHuella => 'Sign in with your fingerprint';
+
+  @override
+  String get m0201IngresaRostro => 'Sign in with your face';
+
+  @override
+  String get m0201IngresaBiometria => 'Sign in with fingerprint or face';
+
+  @override
+  String get m0201IngresaBloqueo => 'Sign in with your phone\'s screen lock';
+
+  @override
   String get m0201Motivo => 'Unlock your Solventa account';
 
   @override

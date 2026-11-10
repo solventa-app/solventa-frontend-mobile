@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/biometria/biometria_providers.dart';
+import '../../../../core/biometria/biometria_service.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../acceso_notifier.dart';
@@ -64,6 +65,7 @@ class _M0201DesbloqueoPageState extends ConsumerState<M0201DesbloqueoPage>
   @override
   Widget build(BuildContext context) {
     final estado = ref.watch(accesoProvider);
+    final tipo = ref.watch(tipoBiometriaProvider).value ?? TipoBiometria.huella;
     return AccesoMarco(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 328),
@@ -75,7 +77,9 @@ class _M0201DesbloqueoPageState extends ConsumerState<M0201DesbloqueoPage>
               )
             : _Desbloqueo(
                 estado: estado,
-                onSensor: _desbloquear,
+                tipo: tipo,
+                onSensor: () =>
+                    _desbloquear(conPin: tipo == TipoBiometria.ninguna),
                 onUsarPin: () => _desbloquear(conPin: true),
                 onReintentar: _reintentar,
                 onAjustes: () =>
@@ -94,6 +98,7 @@ class _M0201DesbloqueoPageState extends ConsumerState<M0201DesbloqueoPage>
 class _Desbloqueo extends StatelessWidget {
   const _Desbloqueo({
     required this.estado,
+    required this.tipo,
     required this.onSensor,
     required this.onUsarPin,
     required this.onReintentar,
@@ -103,6 +108,7 @@ class _Desbloqueo extends StatelessWidget {
   });
 
   final AccesoState estado;
+  final TipoBiometria tipo;
   final VoidCallback onSensor;
   final VoidCallback onUsarPin;
   final VoidCallback onReintentar;
@@ -116,6 +122,17 @@ class _Desbloqueo extends StatelessWidget {
     final colors = context.colors;
     final ocupado = estado.autenticando;
     final aviso = estado.aviso;
+    final textoIngreso = switch (tipo) {
+      TipoBiometria.huella => l10n.m0201IngresaHuella,
+      TipoBiometria.rostro => l10n.m0201IngresaRostro,
+      TipoBiometria.generica => l10n.m0201IngresaBiometria,
+      TipoBiometria.ninguna => l10n.m0201IngresaBloqueo,
+    };
+    // Con un aviso que habla del PIN, el enlace sigue; en el caso normal el ícono y el texto ya abren la misma hoja.
+    final avisoConPin =
+        aviso == AvisoAcceso.bloqueoTemporal ||
+        aviso == AvisoAcceso.bloqueoPermanente ||
+        aviso == AvisoAcceso.faltaAutenticacion;
     final sinAutenticar =
         aviso == AvisoAcceso.sinBloqueoPantalla ||
         aviso == AvisoAcceso.noDisponible;
@@ -165,7 +182,7 @@ class _Desbloqueo extends StatelessWidget {
               child: Semantics(
                 button: true,
                 enabled: !ocupado && !sinAutenticar,
-                label: l10n.m0201Escanear,
+                label: textoIngreso,
                 excludeSemantics: true,
                 onTap: ocupado || sinAutenticar ? null : onSensor,
                 child: Material(
@@ -186,7 +203,9 @@ class _Desbloqueo extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        SolIcons.fingerprint,
+                        tipo == TipoBiometria.rostro
+                            ? SolIcons.face
+                            : SolIcons.fingerprint,
                         size: 44,
                         color: colors.secondary,
                       ),
@@ -196,11 +215,20 @@ class _Desbloqueo extends StatelessWidget {
               ),
             ),
             const SizedBox(height: SolSpacing.lg),
-            Text(
-              l10n.m0201Sensor,
-              textAlign: TextAlign.center,
-              style: context.solText.body.copyWith(
-                color: colors.onSurfaceVariant,
+            // El texto es tan tocable como el ícono: los dos abren lo mismo.
+            InkWell(
+              onTap: ocupado || sinAutenticar ? null : onSensor,
+              child: ExcludeSemantics(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: SolSpacing.xs),
+                  child: Text(
+                    textoIngreso,
+                    textAlign: TextAlign.center,
+                    style: context.solText.body.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                ),
               ),
             ),
             if (aviso != null) ...[
@@ -230,7 +258,7 @@ class _Desbloqueo extends StatelessWidget {
                 label: l10n.m0201UsarCorreo,
                 onPressed: onUsarCorreo,
               ),
-            ] else
+            ] else if (avisoConPin)
               SolLinkButton(
                 label: l10n.m0201UsarPin,
                 onPressed: ocupado ? null : onUsarPin,
