@@ -126,7 +126,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0108Explicacion =>
-      'Solventa protects your account with your phone\'s own security: to continue, your phone must have fingerprint or face unlock turned on. It\'s the same one you use to unlock your phone — Solventa never sees or stores that data.';
+      'Solventa protects your account with your phone\'s own security: with fingerprint or face unlock you get in faster and safer. It\'s the same one you use to unlock your phone — Solventa never sees or stores that data.';
 
   @override
   String get m0108Sello => 'Biometric check encrypted on your device';
@@ -138,8 +138,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0108Continuar => 'I turned it on, continue';
 
   @override
+  String get m0108AhoraNo => 'Not now, go to home';
+
+  @override
   String get m0108Requisito =>
-      'Without fingerprint or face unlock on the device the app can\'t be used — it\'s a requirement, not an option.';
+      'You can turn it on later in your phone settings: Solventa will use it as soon as it is ready. Until then you will sign in with your email and password.';
 
   @override
   String get fallaSinConexion =>

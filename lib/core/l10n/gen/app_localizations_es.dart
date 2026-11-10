@@ -128,7 +128,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0108Explicacion =>
-      'Solventa protege tu cuenta con la seguridad de tu propio teléfono: para continuar, tu celular debe tener huella dactilar o reconocimiento facial activado. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.';
+      'Solventa protege tu cuenta con la seguridad de tu propio teléfono: con huella dactilar o reconocimiento facial entras más rápido y seguro. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.';
 
   @override
   String get m0108Sello => 'Validación biométrica encriptada localmente';
@@ -140,8 +140,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0108Continuar => 'Ya lo activé, continuar';
 
   @override
+  String get m0108AhoraNo => 'Ahora no, ir al inicio';
+
+  @override
   String get m0108Requisito =>
-      'Sin huella o rostro activado en el equipo, la app no puede usarse — es un requisito, no una opción.';
+      'Puedes activarla después en los ajustes del teléfono: Solventa la usará apenas esté lista. Mientras tanto entrarás con tu correo y clave.';
 
   @override
   String get fallaSinConexion =>

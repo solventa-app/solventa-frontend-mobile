@@ -96,6 +96,28 @@ void main() {
     expect(biometria.autenticaciones, [true]);
   });
 
+  testWidgets('«Ahora no» va al inicio sin pedir la huella', (tester) async {
+    await montar(tester);
+
+    await tester.tap(find.text('Ahora no, ir al inicio'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('HOME'), findsOneWidget);
+    expect(biometria.autenticaciones, isEmpty);
+  });
+
+  testWidgets('sin bloqueo de pantalla también deja ir al inicio', (
+    tester,
+  ) async {
+    biometria.estadoActual = EstadoBiometria.sinBloqueoPantalla;
+    await montar(tester);
+
+    await tester.tap(find.text('Ahora no, ir al inicio'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('HOME'), findsOneWidget);
+  });
+
   testWidgets('solo PIN (D1): avisa y deja continuar', (tester) async {
     biometria.estadoActual = EstadoBiometria.soloCredencial;
     await montar(tester);

@@ -311,7 +311,7 @@ abstract class AppLocalizations {
   /// M01-08 explicación
   ///
   /// In es, this message translates to:
-  /// **'Solventa protege tu cuenta con la seguridad de tu propio teléfono: para continuar, tu celular debe tener huella dactilar o reconocimiento facial activado. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.'**
+  /// **'Solventa protege tu cuenta con la seguridad de tu propio teléfono: con huella dactilar o reconocimiento facial entras más rápido y seguro. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.'**
   String get m0108Explicacion;
 
   /// M01-08 sello de confianza
@@ -332,10 +332,16 @@ abstract class AppLocalizations {
   /// **'Ya lo activé, continuar'**
   String get m0108Continuar;
 
+  /// No description provided for @m0108AhoraNo.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora no, ir al inicio'**
+  String get m0108AhoraNo;
+
   /// M01-08 nota
   ///
   /// In es, this message translates to:
-  /// **'Sin huella o rostro activado en el equipo, la app no puede usarse — es un requisito, no una opción.'**
+  /// **'Puedes activarla después en los ajustes del teléfono: Solventa la usará apenas esté lista. Mientras tanto entrarás con tu correo y clave.'**
   String get m0108Requisito;
 
   /// Falla SinConexion

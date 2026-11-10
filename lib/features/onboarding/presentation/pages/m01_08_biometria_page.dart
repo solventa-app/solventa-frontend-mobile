@@ -240,14 +240,17 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
           loading: _comprobando,
           onPressed: _continuar,
         ),
+        const SizedBox(height: SolSpacing.sm),
+        // La biometría es opcional: sin ella se entra con correo y clave, y
+        // M02 la usa sola en cuanto el teléfono la tenga activada.
+        SolButton.text(
+          label: l10n.m0108AhoraNo,
+          onPressed: _comprobando ? null : () => context.go('/'),
+        ),
         const SizedBox(height: SolSpacing.lg),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: SolSpacing.sm),
-          child: SolInlineNote(
-            text: l10n.m0108Requisito,
-            center: true,
-            color: sol.warning,
-          ),
+          child: SolInlineNote(text: l10n.m0108Requisito, center: true),
         ),
       ],
     );
