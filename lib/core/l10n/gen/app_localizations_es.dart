@@ -1347,4 +1347,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0204Volver => 'Volver a iniciar sesión';
+
+  @override
+  String get cuentaIngresarConHuella => 'Ingresar con huella o rostro';
+
+  @override
+  String get accesoBiometricoMotivo =>
+      'Confirma que eres tú para entrar a Solventa';
+
+  @override
+  String get accesoBiometricoActivarMotivo =>
+      'Confirma tu huella o rostro para entrar sin escribir la contraseña';
+
+  @override
+  String get fallaDispositivoNoValido =>
+      'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.';
 }

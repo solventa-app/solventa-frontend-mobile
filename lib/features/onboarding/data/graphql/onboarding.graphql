@@ -235,3 +235,34 @@ mutation ActualizarPreferencias($entrada: PreferenciasInput!) {
 mutation SolicitarRestablecimientoClave($correo: String!) {
   solicitarRestablecimientoClave(correo: $correo)
 }
+
+# Acceso con huella o rostro tras cerrar sesión (v0.44): la llave privada vive en el Keystore del teléfono.
+mutation RegistrarDispositivo($clavePublica: String!) {
+  registrarDispositivo(clavePublica: $clavePublica)
+}
+
+mutation DesafioDispositivo($dispositivoId: ID!) {
+  desafioDispositivo(dispositivoId: $dispositivoId) {
+    reto
+    venceEn
+  }
+}
+
+mutation IniciarSesionConDispositivo($dispositivoId: ID!, $reto: String!, $firma: String!) {
+  iniciarSesionConDispositivo(dispositivoId: $dispositivoId, reto: $reto, firma: $firma) {
+    __typename
+    ... on Sesion {
+      token
+      expiraEn
+      refreshToken
+      refreshExpiraEn
+      usuario {
+        ...UsuarioCampos
+      }
+    }
+    ... on ErrorAutenticacion {
+      mensaje
+      codigo
+    }
+  }
+}
