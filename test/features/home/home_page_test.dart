@@ -20,6 +20,8 @@ void main() {
     WidgetTester tester, {
     EstadoVerificacion? verificacion,
     Locale locale = AppLocales.es,
+    VoidCallback? onActivarBiometria,
+    VoidCallback? onCerrarPistaBiometria,
   }) async {
     tester.view.physicalSize = const Size(390, 1800);
     tester.view.devicePixelRatio = 1;
@@ -39,6 +41,8 @@ void main() {
             verificacion: verificacion,
             onCompleteRegistration: () {},
             onRequestAssistance: () {},
+            onActivarBiometria: onActivarBiometria,
+            onCerrarPistaBiometria: onCerrarPistaBiometria,
           ),
         ),
       ),
@@ -95,5 +99,49 @@ void main() {
       find.textContaining('Your verification was successful'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('sin la pista de biometría no muestra nada de huella', (
+    tester,
+  ) async {
+    await abrir(tester, verificacion: EstadoVerificacion.verificada);
+
+    expect(find.textContaining('huella o rostro'), findsNothing);
+  });
+
+  testWidgets('la pista de biometría activa o se cierra', (tester) async {
+    var activada = 0;
+    var cerrada = 0;
+    await abrir(
+      tester,
+      verificacion: EstadoVerificacion.verificada,
+      onActivarBiometria: () => activada++,
+      onCerrarPistaBiometria: () => cerrada++,
+    );
+
+    expect(
+      find.text('Activa tu huella o rostro para entrar más rápido.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Activar'));
+    await tester.tap(find.byTooltip('Cerrar aviso'));
+
+    expect(activada, 1);
+    expect(cerrada, 1);
+  });
+
+  testWidgets('la pista de biometría sale en inglés', (tester) async {
+    await abrir(
+      tester,
+      verificacion: EstadoVerificacion.verificada,
+      locale: AppLocales.en,
+      onActivarBiometria: () {},
+    );
+
+    expect(
+      find.text('Turn on your fingerprint or face unlock to sign in faster.'),
+      findsOneWidget,
+    );
+    expect(find.text('Turn on'), findsOneWidget);
   });
 }

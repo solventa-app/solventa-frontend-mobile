@@ -105,7 +105,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0107aMensaje => '¡Identidad verificada! Bienvenido a Solventa.';
 
   @override
-  String get m0107aAccion => 'Ir a mi cuenta';
+  String get m0107aAccion => 'Activar huella o rostro';
 
   @override
   String get m0107bMensaje => 'Estamos revisando tu identidad, te avisamos.';
@@ -124,11 +124,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0108Titulo => 'Activación';
 
   @override
-  String get m0108Encabezado => 'Necesitamos activar tu huella o rostro';
+  String get m0108Encabezado => 'Activa tu huella o rostro';
 
   @override
   String get m0108Explicacion =>
-      'Solventa protege tu cuenta con la seguridad de tu propio teléfono: para continuar, tu celular debe tener huella dactilar o reconocimiento facial activado. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.';
+      'Solventa protege tu cuenta con la seguridad de tu propio teléfono: con huella dactilar o reconocimiento facial entras más rápido y seguro. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.';
 
   @override
   String get m0108Sello => 'Validación biométrica encriptada localmente';
@@ -140,8 +140,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0108Continuar => 'Ya lo activé, continuar';
 
   @override
+  String get m0108AhoraNo => 'Ahora no, ir al inicio';
+
+  @override
+  String get m0108AvisoLuego =>
+      'Puedes activar tu huella o rostro cuando quieras en Mi perfil.';
+
+  @override
   String get m0108Requisito =>
-      'Sin huella o rostro activado en el equipo, la app no puede usarse — es un requisito, no una opción.';
+      'Puedes activarla después en los ajustes del teléfono: Solventa la usará apenas esté lista. Mientras tanto entrarás con tu correo y clave.';
 
   @override
   String get fallaSinConexion =>
@@ -531,6 +538,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get perfilPreferenciasGuardadas => 'Preferencias guardadas.';
+
+  @override
+  String get perfilBiometria => 'Huella o rostro del teléfono';
+
+  @override
+  String get homeBiometriaPista =>
+      'Activa tu huella o rostro para entrar más rápido.';
+
+  @override
+  String get homeBiometriaActivar => 'Activar';
+
+  @override
+  String get homeBiometriaCerrar => 'Cerrar aviso';
+
+  @override
+  String get perfilBiometriaActiva => 'Activada';
+
+  @override
+  String get perfilBiometriaInactiva => 'Sin activar · Toca para activar';
 
   @override
   String get perfilNotaLegal =>

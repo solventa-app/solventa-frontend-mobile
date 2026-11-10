@@ -6,6 +6,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../core/design_system/solventa_ui.dart';
 import '../core/l10n/l10n.dart';
+import '../core/network/network_providers.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/acceso/presentation/acceso_routes.dart';
 import '../features/acceso/presentation/pages/m02_01_desbloqueo_page.dart';
@@ -97,6 +98,18 @@ final pestanaInicioProvider = Provider<ValueNotifier<int>>((ref) {
   ref.onDispose(pestana.dispose);
   return pestana;
 });
+
+/// Oculta la pista del Home para activar la huella o el rostro (se cierra con
+/// la X o al quedar activada). Dura lo que la sesión de la app.
+final pistaBiometriaCerradaProvider =
+    NotifierProvider<PistaBiometriaCerrada, bool>(PistaBiometriaCerrada.new);
+
+class PistaBiometriaCerrada extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void cerrar() => state = true;
+}
 
 /// Cierra el recorrido de HU-M06 y deja el inicio en la pestaña [indice].
 void _volverAPestana(BuildContext context, int indice) {
@@ -279,6 +292,9 @@ class _RootShell extends ConsumerWidget {
     final notifier = ref.read(onboardingProvider.notifier);
 
     final verificado = estado.verificacion == EstadoVerificacion.verificada;
+    final cerrada = ref.watch(pistaBiometriaCerradaProvider);
+    final pistaCerrada = ref.read(pistaBiometriaCerradaProvider.notifier);
+    final biometriaActiva = ref.read(gestorSesionProvider).refreshPersistido;
     final nombre = verificado
         ? (estado.perfil?.nombre?.trim().isNotEmpty ?? false)
               ? estado.perfil!.nombre!
@@ -337,6 +353,17 @@ class _RootShell extends ConsumerWidget {
         onMyClaims: verificado
             ? () => context.push(ReporteRoutes.misSiniestros)
             : null,
+        // M01-08 es opcional: mientras no esté activa, el Home la sugiere.
+        onActivarBiometria: verificado && !cerrada && !biometriaActiva
+            ? () async {
+                await context.push(OnboardingRoutes.biometria);
+                if (!context.mounted) return;
+                if (ref.read(gestorSesionProvider).refreshPersistido) {
+                  pistaCerrada.cerrar();
+                }
+              }
+            : null,
+        onCerrarPistaBiometria: pistaCerrada.cerrar,
       ),
       // «Solicitar» abre M06-02 con el prestador elegido (KAN-265).
       assistance: M0601PrestadoresPage(

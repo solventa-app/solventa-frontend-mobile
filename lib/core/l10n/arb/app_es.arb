@@ -120,7 +120,7 @@
   "@m0107aMensaje": {
     "description": "M01-07a"
   },
-  "m0107aAccion": "Ir a mi cuenta",
+  "m0107aAccion": "Activar huella o rostro",
   "@m0107aAccion": {
     "description": "M01-07a botón"
   },
@@ -144,11 +144,11 @@
   "@m0108Titulo": {
     "description": "M01-08 barra superior"
   },
-  "m0108Encabezado": "Necesitamos activar tu huella o rostro",
+  "m0108Encabezado": "Activa tu huella o rostro",
   "@m0108Encabezado": {
     "description": "M01-08 título"
   },
-  "m0108Explicacion": "Solventa protege tu cuenta con la seguridad de tu propio teléfono: para continuar, tu celular debe tener huella dactilar o reconocimiento facial activado. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.",
+  "m0108Explicacion": "Solventa protege tu cuenta con la seguridad de tu propio teléfono: con huella dactilar o reconocimiento facial entras más rápido y seguro. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.",
   "@m0108Explicacion": {
     "description": "M01-08 explicación"
   },
@@ -164,7 +164,9 @@
   "@m0108Continuar": {
     "description": "M01-08 botón principal"
   },
-  "m0108Requisito": "Sin huella o rostro activado en el equipo, la app no puede usarse — es un requisito, no una opción.",
+  "m0108AhoraNo": "Ahora no, ir al inicio",
+  "m0108AvisoLuego": "Puedes activar tu huella o rostro cuando quieras en Mi perfil.",
+  "m0108Requisito": "Puedes activarla después en los ajustes del teléfono: Solventa la usará apenas esté lista. Mientras tanto entrarás con tu correo y clave.",
   "@m0108Requisito": {
     "description": "M01-08 nota"
   },
@@ -401,6 +403,12 @@
   "perfilPreferenciasTexto": "Idioma y moneda con los que se abre la app cada vez que inicias sesión.",
   "perfilGuardarPreferencias": "Guardar preferencias",
   "perfilPreferenciasGuardadas": "Preferencias guardadas.",
+  "perfilBiometria": "Huella o rostro del teléfono",
+  "homeBiometriaPista": "Activa tu huella o rostro para entrar más rápido.",
+  "homeBiometriaActivar": "Activar",
+  "homeBiometriaCerrar": "Cerrar aviso",
+  "perfilBiometriaActiva": "Activada",
+  "perfilBiometriaInactiva": "Sin activar · Toca para activar",
   "perfilNotaLegal": "Los datos de tu cuenta provienen de tu documento verificado y son de solo lectura. Tus datos personales se tratan conforme a la Ley 1581 de 2012 de Habeas Data.",
   "cerrarSesionTitulo": "¿Quieres cerrar sesión?",
   "cerrarSesionMensaje": "Tendrás que ingresar de nuevo para usar Solventa.",

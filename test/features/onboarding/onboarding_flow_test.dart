@@ -126,12 +126,25 @@ void main() {
       find.text('¡Identidad verificada! Bienvenido a Solventa.'),
       findsOneWidget,
     );
-    await tester.tap(find.text('Ir a mi cuenta'));
+    await tester.tap(find.text('Activar huella o rostro'));
     await tester.pumpAndSettle();
-    expect(find.text('Necesitamos activar tu huella o rostro'), findsOneWidget);
+    expect(find.text('Activa tu huella o rostro'), findsOneWidget);
     await tester.tap(find.text('Ya lo activé, continuar'));
     await tester.pumpAndSettle();
     expect(find.text('Hola, María'), findsOneWidget);
+  });
+
+  testWidgets('M01-07a deja ir al inicio sin activar la biometría', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await hastaPruebaDeVida(tester);
+    await tester.tap(find.text('Continuar'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ir al inicio'));
+    await tester.pumpAndSettle();
+    expect(find.text('Hola, María'), findsOneWidget);
+    expect(find.text('Activa tu huella o rostro'), findsNothing);
   });
 
   testWidgets('M01-08 no deja seguir sin bloqueo de pantalla', (tester) async {
@@ -139,7 +152,7 @@ void main() {
     await hastaPruebaDeVida(tester);
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Ir a mi cuenta'));
+    await tester.tap(find.text('Activar huella o rostro'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ya lo activé, continuar'));
     await tester.pumpAndSettle();
