@@ -342,7 +342,13 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
   mantiene el diálogo abierto con «Not recognized» y no responde a la app; tras 5 intentos responde bloqueo temporal y
   M02-01 ofrece el PIN del teléfono. M02-01a («No te reconocimos») solo aparece si `local_auth` devuelve `false`
   (`NoReconocido`). Se conserva con sus pruebas; a mano se ve con el disparador de demo.
-- **Deuda conocida.** (1) Una huella nueva no invalida la sesión (D4): Android solo lo hace con llaves por operación.
+- **Llave testigo (D4).** Con la ventana de 10 s Android no invalida la llave principal al registrar una huella o un
+  rostro nuevo. Si el teléfono tiene biometría fuerte registrada, al guardar el refresh se crea además una llave AES
+  (`<alias>.testigo`) con autenticación en cada uso e invalidación por biometría nueva. Nunca cifra nada: al descifrar,
+  `verificarTestigo` solo hace `Cipher.init`, que no pide la huella; si Android invalidó la llave, responde
+  `LLAVE_INVALIDADA` y Dart pide correo y clave. Se arma en el siguiente guardado si faltaba (Android 11+).
+- **Deuda conocida.** (1) ~~Una huella nueva no invalida la sesión (D4)~~: resuelta con la llave testigo (ver arriba); sin biometría
+  fuerte registrada al guardar la sesión no hay testigo, y en Android 10 o menor tampoco.
   (2) La ventana de 10 s permite usar la llave a código que ya corre dentro de la app. (3) El código Kotlin no tiene
   pruebas instrumentadas. (4) Un rostro clasificado como «débil» no abre la llave: la app ofrece el PIN del teléfono
   (falta validarlo en un teléfono real). (5) Si la app muere entre recibir y guardar el refresh rotado y se reabre
