@@ -269,6 +269,42 @@ void main() {
     expect(continuarActivo(tester), isFalse);
   });
 
+  // KAN-290: en una póliza de auto el reporte pide qué le pasó al vehículo.
+  testWidgets('en una póliza de auto pide qué pasó antes de continuar', (
+    tester,
+  ) async {
+    await abrir(tester);
+    expect(find.text('¿Qué le pasó al vehículo?'), findsNothing);
+    expect(find.textContaining('Auto MAZDA ABC•••'), findsOneWidget);
+
+    await tester.tap(find.text('Póliza SOL-2026-000456'));
+    contenedor
+        .read(reporteProvider.notifier)
+        .fijarFecha(DateTime(2026, 11, 4, 13));
+    await tester.pumpAndSettle();
+    expect(find.text('¿Qué le pasó al vehículo?'), findsOneWidget);
+    expect(
+      find.text('Elige qué le pasó al vehículo para continuar.'),
+      findsOneWidget,
+    );
+    final continuar = find.widgetWithText(SolButton, 'Continuar');
+    expect(tester.widget<SolButton>(continuar).onPressed, isNull);
+
+    await tester.tap(find.text('Choque con daños que se pueden reparar'));
+    await tester.pumpAndSettle();
+    expect(
+      contenedor.read(reporteProvider).tipoAuto,
+      TipoSiniestroAuto.choqueParcial,
+    );
+    expect(tester.widget<SolButton>(continuar).onPressed, isNotNull);
+
+    // Volver a una póliza de vida olvida el tipo y oculta la pregunta.
+    await tester.tap(find.text('Póliza SOL-2026-000123'));
+    await tester.pumpAndSettle();
+    expect(contenedor.read(reporteProvider).tipoAuto, isNull);
+    expect(find.text('¿Qué le pasó al vehículo?'), findsNothing);
+  });
+
   group('fechaDelSiniestro', () {
     final desde = DateTime(2026, 11, 7, 15, 32, 45);
     final recien = PolizaReportable(

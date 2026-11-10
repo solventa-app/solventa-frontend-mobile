@@ -1331,4 +1331,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String m0402CuentaSemantica(String digitos) {
     return 'To your account ending in $digitos';
   }
+
+  @override
+  String m0501PolizaAuto(String vehiculo) {
+    return 'Car $vehiculo';
+  }
+
+  @override
+  String get m0501QuePaso => 'What happened to the vehicle?';
+
+  @override
+  String get m0501ElegirTipo =>
+      'Choose what happened to the vehicle to continue.';
+
+  @override
+  String get m05TipoChoqueParcial => 'Crash with repairable damage';
+
+  @override
+  String get m05TipoPerdidaTotal => 'Total loss from a crash';
+
+  @override
+  String get m05TipoHurtoTotal => 'My vehicle was stolen';
+
+  @override
+  String get m05TipoHurtoParcial => 'Parts of my vehicle were stolen';
+
+  @override
+  String get m05TipoResponsabilidadCivil =>
+      'I damaged another person or vehicle';
 }

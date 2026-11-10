@@ -677,5 +677,13 @@
   "m04EventoCancelacionVuelo": "Flight {ref} cancelled",
   "m04EventoLluvia": "Rainfall over the threshold",
   "m04DetalleLluvia": "{ciudad}, {detalle}",
-  "m0402CuentaSemantica": "To your account ending in {digitos}"
+  "m0402CuentaSemantica": "To your account ending in {digitos}",
+  "m0501PolizaAuto": "Car {vehiculo}",
+  "m0501QuePaso": "What happened to the vehicle?",
+  "m0501ElegirTipo": "Choose what happened to the vehicle to continue.",
+  "m05TipoChoqueParcial": "Crash with repairable damage",
+  "m05TipoPerdidaTotal": "Total loss from a crash",
+  "m05TipoHurtoTotal": "My vehicle was stolen",
+  "m05TipoHurtoParcial": "Parts of my vehicle were stolen",
+  "m05TipoResponsabilidadCivil": "I damaged another person or vehicle"
 }

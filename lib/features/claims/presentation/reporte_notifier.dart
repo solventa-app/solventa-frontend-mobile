@@ -48,10 +48,17 @@ final class ReporteState {
     this.lugar = '',
     this.ciudad = '',
     this.envio = const SinEnviar(),
+    this.tipoAuto,
   });
 
   final String idReporte;
   final PolizaReportable? poliza;
+
+  /// KAN-290: qué le pasó al vehículo; solo en una póliza de auto.
+  final TipoSiniestroAuto? tipoAuto;
+
+  /// En una póliza de auto falta elegir qué pasó.
+  bool get faltaTipoAuto => (poliza?.esAuto ?? false) && tipoAuto == null;
   final DateTime? ocurridoEn;
   final List<FotoSiniestro> fotos;
 
@@ -67,6 +74,7 @@ final class ReporteState {
 
   bool get listoParaEnviar =>
       poliza != null &&
+      !faltaTipoAuto &&
       ocurridoEn != null &&
       fotos.length >= ReglasReporte.minFotos &&
       ubicacion != null &&
@@ -84,8 +92,10 @@ final class ReporteState {
     String? lugar,
     String? ciudad,
     EnvioReporte? envio,
+    TipoSiniestroAuto? Function()? tipoAuto,
   }) => ReporteState(
     idReporte: idReporte,
+    tipoAuto: tipoAuto != null ? tipoAuto() : this.tipoAuto,
     poliza: poliza ?? this.poliza,
     ocurridoEn: ocurridoEn ?? this.ocurridoEn,
     fotos: fotos ?? this.fotos,
@@ -108,8 +118,12 @@ final class ReporteNotifier extends Notifier<ReporteState> {
   /// Empieza un reporte nuevo (otro `idReporte`): al entrar desde el inicio.
   void reiniciar() => state = ReporteState(idReporte: nuevoIdReporte());
 
+  /// Cambiar de póliza olvida el tipo elegido: puede que la nueva no sea de auto.
   void elegirPoliza(PolizaReportable poliza) =>
-      state = state.copyWith(poliza: poliza);
+      state = state.copyWith(poliza: poliza, tipoAuto: () => null);
+
+  void elegirTipoAuto(TipoSiniestroAuto tipo) =>
+      state = state.copyWith(tipoAuto: () => tipo);
 
   void fijarFecha(DateTime fecha) => state = state.copyWith(ocurridoEn: fecha);
 
@@ -171,6 +185,7 @@ final class ReporteNotifier extends Notifier<ReporteState> {
             ciudad: s.ciudad,
             ubicacion: s.ubicacion!,
             fotos: s.fotos,
+            tipoAuto: s.tipoAuto,
           ),
         );
     if (!ref.mounted) return;

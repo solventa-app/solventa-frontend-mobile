@@ -2347,6 +2347,54 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'En tu cuenta terminada en {digitos}'**
   String m0402CuentaSemantica(String digitos);
+
+  /// M05-01 (KAN-290): una póliza de auto, con la marca y la placa enmascarada
+  ///
+  /// In es, this message translates to:
+  /// **'Auto {vehiculo}'**
+  String m0501PolizaAuto(String vehiculo);
+
+  /// No description provided for @m0501QuePaso.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué le pasó al vehículo?'**
+  String get m0501QuePaso;
+
+  /// No description provided for @m0501ElegirTipo.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige qué le pasó al vehículo para continuar.'**
+  String get m0501ElegirTipo;
+
+  /// No description provided for @m05TipoChoqueParcial.
+  ///
+  /// In es, this message translates to:
+  /// **'Choque con daños que se pueden reparar'**
+  String get m05TipoChoqueParcial;
+
+  /// No description provided for @m05TipoPerdidaTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'Pérdida total por un choque'**
+  String get m05TipoPerdidaTotal;
+
+  /// No description provided for @m05TipoHurtoTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'Me robaron el vehículo'**
+  String get m05TipoHurtoTotal;
+
+  /// No description provided for @m05TipoHurtoParcial.
+  ///
+  /// In es, this message translates to:
+  /// **'Me robaron partes del vehículo'**
+  String get m05TipoHurtoParcial;
+
+  /// No description provided for @m05TipoResponsabilidadCivil.
+  ///
+  /// In es, this message translates to:
+  /// **'Le causé daños a otra persona o vehículo'**
+  String get m05TipoResponsabilidadCivil;
 }
 
 class _AppLocalizationsDelegate

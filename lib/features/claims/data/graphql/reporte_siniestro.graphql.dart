@@ -14,6 +14,7 @@ class Fragment$SiniestroReportadoCampos {
     required this.notificadoEn,
     required this.venceDictamenEn,
     required this.fotos,
+    this.tipoSiniestroAuto,
     this.$__typename = 'SiniestroReportado',
   });
 
@@ -28,6 +29,7 @@ class Fragment$SiniestroReportadoCampos {
     final l$notificadoEn = json['notificadoEn'];
     final l$venceDictamenEn = json['venceDictamenEn'];
     final l$fotos = json['fotos'];
+    final l$tipoSiniestroAuto = json['tipoSiniestroAuto'];
     final l$$__typename = json['__typename'];
     return Fragment$SiniestroReportadoCampos(
       id: (l$id as String),
@@ -38,6 +40,9 @@ class Fragment$SiniestroReportadoCampos {
       notificadoEn: DateTime.parse((l$notificadoEn as String)),
       venceDictamenEn: DateTime.parse((l$venceDictamenEn as String)),
       fotos: (l$fotos as int),
+      tipoSiniestroAuto: l$tipoSiniestroAuto == null
+          ? null
+          : fromJson$Enum$TipoSiniestroAuto((l$tipoSiniestroAuto as String)),
       $__typename: (l$$__typename as String),
     );
   }
@@ -57,6 +62,8 @@ class Fragment$SiniestroReportadoCampos {
   final DateTime venceDictamenEn;
 
   final int fotos;
+
+  final Enum$TipoSiniestroAuto? tipoSiniestroAuto;
 
   final String $__typename;
 
@@ -78,6 +85,10 @@ class Fragment$SiniestroReportadoCampos {
     _resultData['venceDictamenEn'] = l$venceDictamenEn.toIso8601String();
     final l$fotos = fotos;
     _resultData['fotos'] = l$fotos;
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    _resultData['tipoSiniestroAuto'] = l$tipoSiniestroAuto == null
+        ? null
+        : toJson$Enum$TipoSiniestroAuto(l$tipoSiniestroAuto);
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -93,6 +104,7 @@ class Fragment$SiniestroReportadoCampos {
     final l$notificadoEn = notificadoEn;
     final l$venceDictamenEn = venceDictamenEn;
     final l$fotos = fotos;
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -103,6 +115,7 @@ class Fragment$SiniestroReportadoCampos {
       l$notificadoEn,
       l$venceDictamenEn,
       l$fotos,
+      l$tipoSiniestroAuto,
       l$$__typename,
     ]);
   }
@@ -154,6 +167,11 @@ class Fragment$SiniestroReportadoCampos {
     final l$fotos = fotos;
     final lOther$fotos = other.fotos;
     if (l$fotos != lOther$fotos) {
+      return false;
+    }
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    final lOther$tipoSiniestroAuto = other.tipoSiniestroAuto;
+    if (l$tipoSiniestroAuto != lOther$tipoSiniestroAuto) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -227,6 +245,13 @@ const fragmentDefinitionSiniestroReportadoCampos = FragmentDefinitionNode(
       ),
       FieldNode(
         name: NameNode(value: 'fotos'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'tipoSiniestroAuto'),
         alias: null,
         arguments: [],
         directives: [],
@@ -376,6 +401,44 @@ const documentNodeQueryPolizasParaReporte = DocumentNode(
                               arguments: [],
                               directives: [],
                               selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'producto'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'vehiculo'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: SelectionSetNode(
+                                selections: [
+                                  FieldNode(
+                                    name: NameNode(value: 'marca'),
+                                    alias: null,
+                                    arguments: [],
+                                    directives: [],
+                                    selectionSet: null,
+                                  ),
+                                  FieldNode(
+                                    name: NameNode(value: 'placaEnmascarada'),
+                                    alias: null,
+                                    arguments: [],
+                                    directives: [],
+                                    selectionSet: null,
+                                  ),
+                                  FieldNode(
+                                    name: NameNode(value: '__typename'),
+                                    alias: null,
+                                    arguments: [],
+                                    directives: [],
+                                    selectionSet: null,
+                                  ),
+                                ],
+                              ),
                             ),
                             FieldNode(
                               name: NameNode(value: '__typename'),
@@ -566,6 +629,8 @@ class Query$PolizasParaReporte$propuestas$propuestas$poliza {
     required this.numero,
     required this.vigenciaDesde,
     required this.vigenciaHasta,
+    required this.producto,
+    this.vehiculo,
     this.$__typename = 'Poliza',
   });
 
@@ -576,12 +641,20 @@ class Query$PolizasParaReporte$propuestas$propuestas$poliza {
     final l$numero = json['numero'];
     final l$vigenciaDesde = json['vigenciaDesde'];
     final l$vigenciaHasta = json['vigenciaHasta'];
+    final l$producto = json['producto'];
+    final l$vehiculo = json['vehiculo'];
     final l$$__typename = json['__typename'];
     return Query$PolizasParaReporte$propuestas$propuestas$poliza(
       id: (l$id as String),
       numero: (l$numero as String),
       vigenciaDesde: DateTime.parse((l$vigenciaDesde as String)),
       vigenciaHasta: DateTime.parse((l$vigenciaHasta as String)),
+      producto: fromJson$Enum$Producto((l$producto as String)),
+      vehiculo: l$vehiculo == null
+          ? null
+          : Query$PolizasParaReporte$propuestas$propuestas$poliza$vehiculo.fromJson(
+              (l$vehiculo as Map<String, dynamic>),
+            ),
       $__typename: (l$$__typename as String),
     );
   }
@@ -593,6 +666,11 @@ class Query$PolizasParaReporte$propuestas$propuestas$poliza {
   final DateTime vigenciaDesde;
 
   final DateTime vigenciaHasta;
+
+  final Enum$Producto producto;
+
+  final Query$PolizasParaReporte$propuestas$propuestas$poliza$vehiculo?
+  vehiculo;
 
   final String $__typename;
 
@@ -606,6 +684,10 @@ class Query$PolizasParaReporte$propuestas$propuestas$poliza {
     _resultData['vigenciaDesde'] = l$vigenciaDesde.toIso8601String();
     final l$vigenciaHasta = vigenciaHasta;
     _resultData['vigenciaHasta'] = l$vigenciaHasta.toIso8601String();
+    final l$producto = producto;
+    _resultData['producto'] = toJson$Enum$Producto(l$producto);
+    final l$vehiculo = vehiculo;
+    _resultData['vehiculo'] = l$vehiculo?.toJson();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -617,12 +699,16 @@ class Query$PolizasParaReporte$propuestas$propuestas$poliza {
     final l$numero = numero;
     final l$vigenciaDesde = vigenciaDesde;
     final l$vigenciaHasta = vigenciaHasta;
+    final l$producto = producto;
+    final l$vehiculo = vehiculo;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
       l$numero,
       l$vigenciaDesde,
       l$vigenciaHasta,
+      l$producto,
+      l$vehiculo,
       l$$__typename,
     ]);
   }
@@ -654,6 +740,90 @@ class Query$PolizasParaReporte$propuestas$propuestas$poliza {
     final l$vigenciaHasta = vigenciaHasta;
     final lOther$vigenciaHasta = other.vigenciaHasta;
     if (l$vigenciaHasta != lOther$vigenciaHasta) {
+      return false;
+    }
+    final l$producto = producto;
+    final lOther$producto = other.producto;
+    if (l$producto != lOther$producto) {
+      return false;
+    }
+    final l$vehiculo = vehiculo;
+    final lOther$vehiculo = other.vehiculo;
+    if (l$vehiculo != lOther$vehiculo) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$PolizasParaReporte$propuestas$propuestas$poliza$vehiculo {
+  Query$PolizasParaReporte$propuestas$propuestas$poliza$vehiculo({
+    required this.marca,
+    required this.placaEnmascarada,
+    this.$__typename = 'VehiculoAsegurado',
+  });
+
+  factory Query$PolizasParaReporte$propuestas$propuestas$poliza$vehiculo.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$marca = json['marca'];
+    final l$placaEnmascarada = json['placaEnmascarada'];
+    final l$$__typename = json['__typename'];
+    return Query$PolizasParaReporte$propuestas$propuestas$poliza$vehiculo(
+      marca: (l$marca as String),
+      placaEnmascarada: (l$placaEnmascarada as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String marca;
+
+  final String placaEnmascarada;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$marca = marca;
+    _resultData['marca'] = l$marca;
+    final l$placaEnmascarada = placaEnmascarada;
+    _resultData['placaEnmascarada'] = l$placaEnmascarada;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$marca = marca;
+    final l$placaEnmascarada = placaEnmascarada;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$marca, l$placaEnmascarada, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$PolizasParaReporte$propuestas$propuestas$poliza$vehiculo ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$marca = marca;
+    final lOther$marca = other.marca;
+    if (l$marca != lOther$marca) {
+      return false;
+    }
+    final l$placaEnmascarada = placaEnmascarada;
+    final lOther$placaEnmascarada = other.placaEnmascarada;
+    if (l$placaEnmascarada != lOther$placaEnmascarada) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -2310,6 +2480,7 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     required this.notificadoEn,
     required this.venceDictamenEn,
     required this.fotos,
+    this.tipoSiniestroAuto,
     this.$__typename = 'SiniestroReportado',
   });
 
@@ -2324,6 +2495,7 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     final l$notificadoEn = json['notificadoEn'];
     final l$venceDictamenEn = json['venceDictamenEn'];
     final l$fotos = json['fotos'];
+    final l$tipoSiniestroAuto = json['tipoSiniestroAuto'];
     final l$$__typename = json['__typename'];
     return Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado(
       id: (l$id as String),
@@ -2334,6 +2506,9 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
       notificadoEn: DateTime.parse((l$notificadoEn as String)),
       venceDictamenEn: DateTime.parse((l$venceDictamenEn as String)),
       fotos: (l$fotos as int),
+      tipoSiniestroAuto: l$tipoSiniestroAuto == null
+          ? null
+          : fromJson$Enum$TipoSiniestroAuto((l$tipoSiniestroAuto as String)),
       $__typename: (l$$__typename as String),
     );
   }
@@ -2353,6 +2528,8 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
   final DateTime venceDictamenEn;
 
   final int fotos;
+
+  final Enum$TipoSiniestroAuto? tipoSiniestroAuto;
 
   final String $__typename;
 
@@ -2374,6 +2551,10 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     _resultData['venceDictamenEn'] = l$venceDictamenEn.toIso8601String();
     final l$fotos = fotos;
     _resultData['fotos'] = l$fotos;
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    _resultData['tipoSiniestroAuto'] = l$tipoSiniestroAuto == null
+        ? null
+        : toJson$Enum$TipoSiniestroAuto(l$tipoSiniestroAuto);
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -2389,6 +2570,7 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     final l$notificadoEn = notificadoEn;
     final l$venceDictamenEn = venceDictamenEn;
     final l$fotos = fotos;
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -2399,6 +2581,7 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
       l$notificadoEn,
       l$venceDictamenEn,
       l$fotos,
+      l$tipoSiniestroAuto,
       l$$__typename,
     ]);
   }
@@ -2451,6 +2634,11 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     final l$fotos = fotos;
     final lOther$fotos = other.fotos;
     if (l$fotos != lOther$fotos) {
+      return false;
+    }
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    final lOther$tipoSiniestroAuto = other.tipoSiniestroAuto;
+    if (l$tipoSiniestroAuto != lOther$tipoSiniestroAuto) {
       return false;
     }
     final l$$__typename = $__typename;
