@@ -367,6 +367,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'One special character (for example ! ? @ # €)';
 
   @override
+  String get m0105bReqTitulo => 'Your password needs:';
+
+  @override
+  String get m0105bRequisitoIncumplido => 'missing';
+
+  @override
+  String get m0105bClavesCoinciden => 'The passwords match.';
+
+  @override
   String get otpReenviado => 'We sent a new code to your email.';
 
   @override

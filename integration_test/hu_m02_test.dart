@@ -62,8 +62,8 @@ void main() {
   );
 
   Future<void> iniciarSesion(WidgetTester tester) async {
-    await tester.tap(find.text('¿Ya tienes cuenta? Inicia sesión'));
-    await tester.pumpAndSettle();
+    // La entrada ya abre en «Inicia sesión» (QA 2026-11-10).
+    expect(find.text('¿No tienes cuenta? Crear cuenta'), findsOneWidget);
     await tester.enterText(find.byType(TextField).at(0), 'maria@ejemplo.co');
     await tester.enterText(find.byType(TextField).at(1), 'Clave-segura-1');
     await tester.tap(find.text('Ingresar'));

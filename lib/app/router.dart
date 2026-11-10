@@ -283,9 +283,10 @@ class _RootShell extends ConsumerWidget {
       return const Scaffold(body: SizedBox.expand());
     }
 
-    // Sin sesión o cuenta creada, la pantalla de entrada es Crea tu cuenta / Inicia sesión.
+    // Sin sesión, la entrada abre siempre en «Inicia sesión» y debajo ofrece
+    // «Crear cuenta» (QA 2026-11-10).
     if (!estado.cuentaCreada) {
-      return M0105bCuentaPage(modoInicialLogin: estado.sesionCerrada);
+      return const M0105bCuentaPage(modoInicialLogin: true);
     }
 
     final l10n = context.l10n;

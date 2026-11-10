@@ -147,6 +147,7 @@ void main() {
   );
   pantalla('m01_05_prueba_vida', const M0105PruebaVidaPage());
   pantalla('m01_05b_cuenta', const M0105bCuentaPage());
+  pantalla('m01_05b_ingreso', const M0105bCuentaPage(modoInicialLogin: true));
   pantalla(
     'm01_05c_codigo_otp',
     const M0105cCodigoPage(),

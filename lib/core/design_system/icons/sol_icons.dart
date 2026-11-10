@@ -37,6 +37,9 @@ abstract final class SolIcons {
 
   // Estados (siempre con texto al lado).
   static const IconData success = Symbols.check_circle;
+
+  /// Requisito aún sin cumplir (lista de la clave de M01-05b).
+  static const IconData requisitoPendiente = Symbols.radio_button_unchecked;
   static const IconData inReview = Symbols.arrow_circle_right;
   static const IconData failure = Symbols.cancel;
   static const IconData warning = Symbols.warning;

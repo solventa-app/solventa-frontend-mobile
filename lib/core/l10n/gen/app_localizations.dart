@@ -716,6 +716,24 @@ abstract class AppLocalizations {
   /// **'Un carácter especial (por ejemplo ! ¿ @ # €)'**
   String get m0105bReqEspecial;
 
+  /// No description provided for @m0105bReqTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu clave debe tener:'**
+  String get m0105bReqTitulo;
+
+  /// No description provided for @m0105bRequisitoIncumplido.
+  ///
+  /// In es, this message translates to:
+  /// **'falta'**
+  String get m0105bRequisitoIncumplido;
+
+  /// No description provided for @m0105bClavesCoinciden.
+  ///
+  /// In es, this message translates to:
+  /// **'Las claves coinciden.'**
+  String get m0105bClavesCoinciden;
+
   /// No description provided for @otpReenviado.
   ///
   /// In es, this message translates to:
