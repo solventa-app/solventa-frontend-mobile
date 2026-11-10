@@ -305,7 +305,7 @@ abstract class AppLocalizations {
   /// M01-08 título
   ///
   /// In es, this message translates to:
-  /// **'Necesitamos activar tu huella o rostro'**
+  /// **'Activa tu huella o rostro'**
   String get m0108Encabezado;
 
   /// M01-08 explicación

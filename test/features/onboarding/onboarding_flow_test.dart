@@ -128,7 +128,7 @@ void main() {
     );
     await tester.tap(find.text('Ir a mi cuenta'));
     await tester.pumpAndSettle();
-    expect(find.text('Necesitamos activar tu huella o rostro'), findsOneWidget);
+    expect(find.text('Activa tu huella o rostro'), findsOneWidget);
     await tester.tap(find.text('Ya lo activé, continuar'));
     await tester.pumpAndSettle();
     expect(find.text('Hola, María'), findsOneWidget);

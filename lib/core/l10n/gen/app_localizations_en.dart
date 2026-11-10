@@ -121,8 +121,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0108Titulo => 'Activation';
 
   @override
-  String get m0108Encabezado =>
-      'We need to turn on your fingerprint or face unlock';
+  String get m0108Encabezado => 'Turn on your fingerprint or face unlock';
 
   @override
   String get m0108Explicacion =>

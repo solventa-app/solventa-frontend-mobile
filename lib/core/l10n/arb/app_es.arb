@@ -144,7 +144,7 @@
   "@m0108Titulo": {
     "description": "M01-08 barra superior"
   },
-  "m0108Encabezado": "Necesitamos activar tu huella o rostro",
+  "m0108Encabezado": "Activa tu huella o rostro",
   "@m0108Encabezado": {
     "description": "M01-08 título"
   },

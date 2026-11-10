@@ -124,7 +124,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0108Titulo => 'Activación';
 
   @override
-  String get m0108Encabezado => 'Necesitamos activar tu huella o rostro';
+  String get m0108Encabezado => 'Activa tu huella o rostro';
 
   @override
   String get m0108Explicacion =>
