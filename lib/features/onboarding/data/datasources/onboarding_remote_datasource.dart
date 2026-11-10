@@ -75,6 +75,10 @@ abstract interface class OnboardingRemoteDataSource {
     String clave,
   );
 
+  /// Pide el enlace para elegir una clave nueva (público; no revela si la
+  /// cuenta existe). El enlace llega por correo y se abre en la web.
+  Future<bool> solicitarRestablecimientoClave(String correo);
+
   /// Devuelve el usuario autenticado (`yo`).
   Future<Fragment$UsuarioCampos?> yo();
 
@@ -280,6 +284,18 @@ final class GqlOnboardingRemoteDataSource
     );
     return Mutation$VerificarCodigoOnboarding.fromJson(data)
         .verificarCodigoOnboarding;
+  }
+
+  @override
+  Future<bool> solicitarRestablecimientoClave(String correo) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationSolicitarRestablecimientoClave,
+      variables: Variables$Mutation$SolicitarRestablecimientoClave(
+        correo: correo,
+      ).toJson(),
+    );
+    return Mutation$SolicitarRestablecimientoClave.fromJson(data)
+        .solicitarRestablecimientoClave;
   }
 
   @override

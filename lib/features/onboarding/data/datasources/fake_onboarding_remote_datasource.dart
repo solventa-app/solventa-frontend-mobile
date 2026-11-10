@@ -218,6 +218,12 @@ final class FakeOnboardingRemoteDataSource
   }
 
   @override
+  Future<bool> solicitarRestablecimientoClave(String correo) async {
+    await _responder('solicitarRestablecimientoClave', const {});
+    return true;
+  }
+
+  @override
   Future<Mutation$EnviarCodigoOnboarding$enviarCodigoOnboarding> enviarCodigo(
     String token,
     String correo,

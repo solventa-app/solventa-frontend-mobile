@@ -677,5 +677,12 @@
   "m04EventoCancelacionVuelo": "Flight {ref} cancelled",
   "m04EventoLluvia": "Rainfall over the threshold",
   "m04DetalleLluvia": "{ciudad}, {detalle}",
-  "m0402CuentaSemantica": "To your account ending in {digitos}"
+  "m0402CuentaSemantica": "To your account ending in {digitos}",
+  "cuentaOlvideClave": "Forgot your password?",
+  "m0204Titulo": "Recover your password",
+  "m0204Intro": "Enter your account email and, if it exists, we will send you a link to choose a new password.",
+  "m0204Enviar": "Send link",
+  "m0204EnviadoTitulo": "Check your email",
+  "m0204EnviadoTexto": "If there is an account with that email, we sent you a link. Open it to choose your new password; it expires in 30 minutes and works only once.",
+  "m0204Volver": "Back to sign in"
 }

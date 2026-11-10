@@ -1469,5 +1469,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "cuentaOlvideClave": "¿Olvidaste tu contraseña?",
+  "m0204Titulo": "Recupera tu contraseña",
+  "m0204Intro": "Escribe el correo de tu cuenta y, si existe, te enviaremos un enlace para elegir una contraseña nueva.",
+  "m0204Enviar": "Enviar enlace",
+  "m0204EnviadoTitulo": "Revisa tu correo",
+  "m0204EnviadoTexto": "Si hay una cuenta con ese correo, te enviamos un enlace. Ábrelo para elegir tu contraseña nueva; vence en 30 minutos y sirve una sola vez.",
+  "m0204Volver": "Volver a iniciar sesión"
 }

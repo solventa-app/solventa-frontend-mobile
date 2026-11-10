@@ -191,6 +191,18 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
                     : null,
               ),
             ],
+            if (_modoLogin) ...[
+              const SizedBox(height: SolSpacing.xs),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: SolLinkButton(
+                  label: l10n.cuentaOlvideClave,
+                  onPressed: estado.ocupado
+                      ? null
+                      : () => context.push(OnboardingRoutes.recuperarClave),
+                ),
+              ),
+            ],
             if (falla != null && !correoRegistrado) ...[
               const SizedBox(height: SolSpacing.lg),
               SolStatusBanner(

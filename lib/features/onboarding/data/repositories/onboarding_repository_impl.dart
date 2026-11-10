@@ -163,6 +163,13 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
       });
 
   @override
+  Future<Resultado<void>> solicitarRestablecimientoClave({
+    required String correo,
+  }) => _guardar(() async {
+    await _remoto.solicitarRestablecimientoClave(correo);
+  });
+
+  @override
   Future<Resultado<CodigoOnboarding>> verificarCodigo({
     required String correo,
     required String codigo,

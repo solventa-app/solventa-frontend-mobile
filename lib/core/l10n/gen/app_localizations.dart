@@ -2347,6 +2347,48 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'En tu cuenta terminada en {digitos}'**
   String m0402CuentaSemantica(String digitos);
+
+  /// No description provided for @cuentaOlvideClave.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Olvidaste tu contraseña?'**
+  String get cuentaOlvideClave;
+
+  /// No description provided for @m0204Titulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Recupera tu contraseña'**
+  String get m0204Titulo;
+
+  /// No description provided for @m0204Intro.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe el correo de tu cuenta y, si existe, te enviaremos un enlace para elegir una contraseña nueva.'**
+  String get m0204Intro;
+
+  /// No description provided for @m0204Enviar.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar enlace'**
+  String get m0204Enviar;
+
+  /// No description provided for @m0204EnviadoTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu correo'**
+  String get m0204EnviadoTitulo;
+
+  /// No description provided for @m0204EnviadoTexto.
+  ///
+  /// In es, this message translates to:
+  /// **'Si hay una cuenta con ese correo, te enviamos un enlace. Ábrelo para elegir tu contraseña nueva; vence en 30 minutos y sirve una sola vez.'**
+  String get m0204EnviadoTexto;
+
+  /// No description provided for @m0204Volver.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a iniciar sesión'**
+  String get m0204Volver;
 }
 
 class _AppLocalizationsDelegate
