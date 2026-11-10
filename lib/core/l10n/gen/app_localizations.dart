@@ -269,7 +269,7 @@ abstract class AppLocalizations {
   /// M01-07a botón
   ///
   /// In es, this message translates to:
-  /// **'Ir a mi cuenta'**
+  /// **'Activar huella o rostro'**
   String get m0107aAccion;
 
   /// M01-07b
