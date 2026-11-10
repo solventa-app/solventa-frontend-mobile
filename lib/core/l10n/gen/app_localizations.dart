@@ -1256,6 +1256,30 @@ abstract class AppLocalizations {
   /// **'Desbloquear con huella o rostro'**
   String get m0201Escanear;
 
+  /// M02-01: texto bajo el sensor según lo que tiene el teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa con tu huella'**
+  String get m0201IngresaHuella;
+
+  /// M02-01: texto bajo el sensor según lo que tiene el teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa con tu rostro'**
+  String get m0201IngresaRostro;
+
+  /// M02-01: texto bajo el sensor según lo que tiene el teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa con huella o rostro'**
+  String get m0201IngresaBiometria;
+
+  /// M02-01: texto bajo el sensor según lo que tiene el teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa con el bloqueo de tu teléfono'**
+  String get m0201IngresaBloqueo;
+
   /// M02-01: texto del diálogo biométrico del sistema
   ///
   /// In es, this message translates to:
