@@ -1359,6 +1359,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get m05TipoResponsabilidadCivil =>
       'I damaged another person or vehicle';
+
+  @override
   String get cuentaOlvideClave => 'Forgot your password?';
 
   @override

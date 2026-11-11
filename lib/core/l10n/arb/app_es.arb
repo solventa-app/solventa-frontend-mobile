@@ -1485,7 +1485,7 @@
   "m05TipoPerdidaTotal": "Pérdida total por un choque",
   "m05TipoHurtoTotal": "Me robaron el vehículo",
   "m05TipoHurtoParcial": "Me robaron partes del vehículo",
-  "m05TipoResponsabilidadCivil": "Le causé daños a otra persona o vehículo"
+  "m05TipoResponsabilidadCivil": "Le causé daños a otra persona o vehículo",
   "cuentaOlvideClave": "¿Olvidaste tu contraseña?",
   "m0204Titulo": "Recupera tu contraseña",
   "m0204Intro": "Escribe el correo de tu cuenta y, si existe, te enviaremos un enlace para elegir una contraseña nueva.",

@@ -2395,6 +2395,7 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Le causé daños a otra persona o vehículo'**
   String get m05TipoResponsabilidadCivil;
+
   /// No description provided for @cuentaOlvideClave.
   ///
   /// In es, this message translates to:

@@ -1363,6 +1363,8 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get m05TipoResponsabilidadCivil =>
       'Le causé daños a otra persona o vehículo';
+
+  @override
   String get cuentaOlvideClave => '¿Olvidaste tu contraseña?';
 
   @override

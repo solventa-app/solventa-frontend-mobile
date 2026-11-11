@@ -685,7 +685,7 @@
   "m05TipoPerdidaTotal": "Total loss from a crash",
   "m05TipoHurtoTotal": "My vehicle was stolen",
   "m05TipoHurtoParcial": "Parts of my vehicle were stolen",
-  "m05TipoResponsabilidadCivil": "I damaged another person or vehicle"
+  "m05TipoResponsabilidadCivil": "I damaged another person or vehicle",
   "cuentaOlvideClave": "Forgot your password?",
   "m0204Titulo": "Recover your password",
   "m0204Intro": "Enter your account email and, if it exists, we will send you a link to choose a new password.",
