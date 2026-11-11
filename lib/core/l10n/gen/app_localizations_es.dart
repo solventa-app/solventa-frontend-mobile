@@ -1363,4 +1363,40 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get m05TipoResponsabilidadCivil =>
       'Le causé daños a otra persona o vehículo';
+  String get cuentaOlvideClave => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get m0204Titulo => 'Recupera tu contraseña';
+
+  @override
+  String get m0204Intro =>
+      'Escribe el correo de tu cuenta y, si existe, te enviaremos un enlace para elegir una contraseña nueva.';
+
+  @override
+  String get m0204Enviar => 'Enviar enlace';
+
+  @override
+  String get m0204EnviadoTitulo => 'Revisa tu correo';
+
+  @override
+  String get m0204EnviadoTexto =>
+      'Si hay una cuenta con ese correo, te enviamos un enlace. Ábrelo para elegir tu contraseña nueva; vence en 30 minutos y sirve una sola vez.';
+
+  @override
+  String get m0204Volver => 'Volver a iniciar sesión';
+
+  @override
+  String get cuentaIngresarConHuella => 'Ingresar con huella o rostro';
+
+  @override
+  String get accesoBiometricoMotivo =>
+      'Confirma que eres tú para entrar a Solventa';
+
+  @override
+  String get accesoBiometricoActivarMotivo =>
+      'Confirma tu huella o rostro para entrar sin escribir la contraseña';
+
+  @override
+  String get fallaDispositivoNoValido =>
+      'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.';
 }

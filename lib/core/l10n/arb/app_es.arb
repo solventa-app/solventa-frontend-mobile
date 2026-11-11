@@ -1486,4 +1486,15 @@
   "m05TipoHurtoTotal": "Me robaron el vehículo",
   "m05TipoHurtoParcial": "Me robaron partes del vehículo",
   "m05TipoResponsabilidadCivil": "Le causé daños a otra persona o vehículo"
+  "cuentaOlvideClave": "¿Olvidaste tu contraseña?",
+  "m0204Titulo": "Recupera tu contraseña",
+  "m0204Intro": "Escribe el correo de tu cuenta y, si existe, te enviaremos un enlace para elegir una contraseña nueva.",
+  "m0204Enviar": "Enviar enlace",
+  "m0204EnviadoTitulo": "Revisa tu correo",
+  "m0204EnviadoTexto": "Si hay una cuenta con ese correo, te enviamos un enlace. Ábrelo para elegir tu contraseña nueva; vence en 30 minutos y sirve una sola vez.",
+  "m0204Volver": "Volver a iniciar sesión",
+  "cuentaIngresarConHuella": "Ingresar con huella o rostro",
+  "accesoBiometricoMotivo": "Confirma que eres tú para entrar a Solventa",
+  "accesoBiometricoActivarMotivo": "Confirma tu huella o rostro para entrar sin escribir la contraseña",
+  "fallaDispositivoNoValido": "No pudimos verificar este teléfono. Ingresa con tu correo y contraseña."
 }

@@ -163,6 +163,61 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
       });
 
   @override
+  Future<Resultado<String>> registrarDispositivo({
+    required String clavePublica,
+  }) => _guardar(() => _remoto.registrarDispositivo(clavePublica));
+
+  @override
+  Future<Resultado<String>> desafioDispositivo({
+    required String dispositivoId,
+  }) => _guardar(() => _remoto.desafioDispositivo(dispositivoId));
+
+  @override
+  Future<Resultado<PerfilUsuario>> iniciarSesionConDispositivo({
+    required String dispositivoId,
+    required String reto,
+    required String firma,
+  }) => _guardar(() async {
+    final r = await _remoto.iniciarSesionConDispositivo(
+      dispositivoId,
+      reto,
+      firma,
+    );
+    switch (r) {
+      case Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo$$Sesion(
+        :final token,
+        :final expiraEn,
+        :final refreshToken,
+        :final refreshExpiraEn,
+        :final usuario,
+      ):
+        if (usuario.rol != Enum$RolUsuario.CLIENTE) {
+          throw const _Rechazo('DISPOSITIVO_NO_VALIDO');
+        }
+        await _sesion.abrir(
+          token: token,
+          expiraEn: expiraEn,
+          refresh: refreshToken,
+          refreshVenceEn: refreshExpiraEn,
+        );
+        return perfilUsuarioDesdeGql(usuario);
+      case Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo$$ErrorAutenticacion(
+        :final codigo,
+      ):
+        throw _Rechazo(codigo ?? 'DISPOSITIVO_NO_VALIDO');
+      default:
+        throw const _Rechazo('DISPOSITIVO_NO_VALIDO');
+    }
+  });
+
+  @override
+  Future<Resultado<void>> solicitarRestablecimientoClave({
+    required String correo,
+  }) => _guardar(() async {
+    await _remoto.solicitarRestablecimientoClave(correo);
+  });
+
+  @override
   Future<Resultado<CodigoOnboarding>> verificarCodigo({
     required String correo,
     required String codigo,

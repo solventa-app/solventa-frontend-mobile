@@ -686,4 +686,15 @@
   "m05TipoHurtoTotal": "My vehicle was stolen",
   "m05TipoHurtoParcial": "Parts of my vehicle were stolen",
   "m05TipoResponsabilidadCivil": "I damaged another person or vehicle"
+  "cuentaOlvideClave": "Forgot your password?",
+  "m0204Titulo": "Recover your password",
+  "m0204Intro": "Enter your account email and, if it exists, we will send you a link to choose a new password.",
+  "m0204Enviar": "Send link",
+  "m0204EnviadoTitulo": "Check your email",
+  "m0204EnviadoTexto": "If there is an account with that email, we sent you a link. Open it to choose your new password; it expires in 30 minutes and works only once.",
+  "m0204Volver": "Back to sign in",
+  "cuentaIngresarConHuella": "Sign in with fingerprint or face",
+  "accesoBiometricoMotivo": "Confirm it's you to sign in to Solventa",
+  "accesoBiometricoActivarMotivo": "Confirm your fingerprint or face to sign in without typing your password",
+  "fallaDispositivoNoValido": "We could not verify this phone. Sign in with your email and password."
 }

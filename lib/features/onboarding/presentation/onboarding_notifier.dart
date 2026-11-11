@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/biometria/biometria_providers.dart';
+import '../../../core/biometria/llave_dispositivo.dart';
 import '../../../core/errors/falla.dart';
 import '../../../core/errors/resultado.dart';
 import '../../../core/network/network_providers.dart';
@@ -9,6 +11,7 @@ import '../../../core/sesion/gestor_sesion.dart';
 import '../data/datasources/captura_service.dart';
 import '../domain/entities/onboarding.dart';
 import '../domain/entities/verificacion_identidad.dart';
+import '../domain/repositories/onboarding_repository.dart';
 import 'providers.dart';
 
 /// Estado del flujo de onboarding (M01-01 a M01-08) y cuenta del usuario.
@@ -427,6 +430,24 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     }
   }
 
+  /// M02-04: pide el enlace para elegir una clave nueva. No guarda el correo ni
+  /// dice si la cuenta existe; solo informa si el BFF respondió.
+  Future<bool> solicitarRestablecimientoClave(String correo) async {
+    if (state.ocupado) return false;
+    state = state.copyWith(ocupado: true, limpiarFalla: true);
+    final r = await ref
+        .read(onboardingRepositoryProvider)
+        .solicitarRestablecimientoClave(correo: correo);
+    switch (r) {
+      case Exito():
+        state = state.copyWith(ocupado: false);
+        return true;
+      case Fracaso(:final falla):
+        state = state.copyWith(ocupado: false, falla: falla);
+        return false;
+    }
+  }
+
   /// Reenvía un nuevo código de 6 dígitos al correo pendiente.
   Future<bool> reenviarCodigoCorreo() async {
     final correo = state.correoPendiente;
@@ -504,31 +525,123 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     final r = await repo.iniciarSesion(usuario: correo, clave: clave);
     switch (r) {
       case Exito(:final valor):
-        final rVerif = await repo.consultar();
-        final onb = switch (rVerif) {
-          Exito(:final valor) => valor,
-          _ => state.onboarding,
-        };
-        final verif = switch (onb?.estado) {
-          EstadoOnboarding.verificada => EstadoVerificacion.verificada,
-          EstadoOnboarding.rechazada => EstadoVerificacion.rechazada,
-          EstadoOnboarding.enRevision => EstadoVerificacion.enRevision,
-          _ =>
-            valor.verificado
-                ? EstadoVerificacion.verificada
-                : state.verificacion,
-        };
-        state = state.copyWith(
-          ocupado: false,
-          cuentaCreada: true,
-          perfil: valor,
-          onboarding: onb,
-          verificacion: verif,
-        );
+        await _alAbrirSesion(repo, valor);
         return true;
       case Fracaso(:final falla):
         state = state.copyWith(ocupado: false, falla: falla);
         return false;
+    }
+  }
+
+  /// Tras abrir la sesión (con clave o con la llave del teléfono): trae el
+  /// estado de la verificación de identidad y deja el estado listo.
+  Future<void> _alAbrirSesion(
+    OnboardingRepository repo,
+    PerfilUsuario valor,
+  ) async {
+    final rVerif = await repo.consultar();
+    final onb = switch (rVerif) {
+      Exito(:final valor) => valor,
+      _ => state.onboarding,
+    };
+    final verif = switch (onb?.estado) {
+      EstadoOnboarding.verificada => EstadoVerificacion.verificada,
+      EstadoOnboarding.rechazada => EstadoVerificacion.rechazada,
+      EstadoOnboarding.enRevision => EstadoVerificacion.enRevision,
+      _ =>
+        valor.verificado ? EstadoVerificacion.verificada : state.verificacion,
+    };
+    state = state.copyWith(
+      ocupado: false,
+      cuentaCreada: true,
+      perfil: valor,
+      onboarding: onb,
+      verificacion: verif,
+    );
+  }
+
+  /// `true` si este teléfono tiene un dispositivo registrado: el ingreso
+  /// ofrece «Ingresar con huella o rostro» aunque la sesión esté cerrada.
+  Future<bool> hayAccesoBiometrico() async =>
+      await ref.read(dispositivoStoreProvider).leer() != null;
+
+  /// Registra la llave del teléfono en AUTH para entrar luego sin clave. Es
+  /// de mejor esfuerzo: si no se puede (rostro débil, cancelado, sin red), la
+  /// persona sigue entrando con correo y clave y no se le muestra error.
+  Future<bool> activarAccesoBiometrico({required String motivo}) async {
+    final llave = ref.read(llaveDispositivoProvider);
+    final clavePublica = await llave.crear(motivo: motivo);
+    if (clavePublica == null) return false;
+    final r = await ref
+        .read(onboardingRepositoryProvider)
+        .registrarDispositivo(clavePublica: clavePublica);
+    switch (r) {
+      case Exito(:final valor):
+        await ref.read(dispositivoStoreProvider).guardar(valor);
+        return true;
+      case Fracaso():
+        await llave.borrar();
+        return false;
+    }
+  }
+
+  /// Olvida el dispositivo (AUTH ya no lo reconoce o la llave se invalidó).
+  Future<void> _olvidarDispositivo() async {
+    await ref.read(llaveDispositivoProvider).borrar();
+    await ref.read(dispositivoStoreProvider).borrar();
+  }
+
+  /// «Ingresar con huella o rostro»: pide un reto a AUTH, lo firma con la
+  /// llave del teléfono (tras la biometría) y abre la sesión. Si la persona
+  /// cancela no pasa nada; si AUTH ya no reconoce el dispositivo, se olvida y
+  /// se pide correo y clave.
+  Future<bool> iniciarSesionConHuella({required String motivo}) async {
+    if (state.ocupado) return false;
+    final id = await ref.read(dispositivoStoreProvider).leer();
+    if (id == null) return false;
+    state = state.copyWith(ocupado: true, limpiarFalla: true);
+    final repo = ref.read(onboardingRepositoryProvider);
+    final rReto = await repo.desafioDispositivo(dispositivoId: id);
+    final String reto;
+    switch (rReto) {
+      case Exito(:final valor):
+        reto = valor;
+      case Fracaso(:final falla):
+        state = state.copyWith(ocupado: false, falla: falla);
+        return false;
+    }
+    final firma = await ref
+        .read(llaveDispositivoProvider)
+        .firmar(reto, motivo: motivo);
+    switch (firma) {
+      case FirmaCancelada():
+        state = state.copyWith(ocupado: false);
+        return false;
+      case LlaveInvalida():
+        await _olvidarDispositivo();
+        state = state.copyWith(
+          ocupado: false,
+          falla: const FallaNegocio('DISPOSITIVO_NO_VALIDO'),
+        );
+        return false;
+      case Firmado(:final firma):
+        final r = await repo.iniciarSesionConDispositivo(
+          dispositivoId: id,
+          reto: reto,
+          firma: firma,
+        );
+        switch (r) {
+          case Exito(:final valor):
+            await _alAbrirSesion(repo, valor);
+            return true;
+          case Fracaso(:final falla):
+            if (falla is FallaNegocio &&
+                falla.motivo == 'DISPOSITIVO_NO_VALIDO') {
+              await _olvidarDispositivo();
+            }
+            state = state.copyWith(ocupado: false, falla: falla);
+            return false;
+        }
     }
   }
 
@@ -677,3 +790,11 @@ final onboardingProvider =
     NotifierProvider<OnboardingNotifier, OnboardingState>(
       OnboardingNotifier.new,
     );
+
+/// ¿Este teléfono tiene un dispositivo registrado? Si sí, el ingreso ofrece
+/// «Ingresar con huella o rostro». Se vuelve a leer al cambiar el estado del
+/// onboarding (p. ej. al cerrar sesión o al olvidarse el dispositivo).
+final accesoBiometricoDisponibleProvider = FutureProvider<bool>((ref) async {
+  ref.watch(onboardingProvider);
+  return await ref.read(dispositivoStoreProvider).leer() != null;
+});

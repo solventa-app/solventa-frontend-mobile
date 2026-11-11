@@ -8,7 +8,7 @@ class MainActivity : FlutterFragmentActivity() {
         super.configureFlutterEngine(flutterEngine)
         val mensajero = flutterEngine.dartExecutor.binaryMessenger
         // HU-M02: refresh cifrado con una llave del Keystore atada a la autenticación del usuario.
-        LlaveroSesion(mensajero)
+        LlaveroSesion(mensajero, applicationContext)
         // HU-M02: «Ir a ajustes» abre el registro de huella o los ajustes de seguridad.
         AjustesSeguridad(this, mensajero)
     }

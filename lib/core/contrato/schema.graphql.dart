@@ -4439,6 +4439,10 @@ const possibleTypesMap = <String, Set<String>>{
   'ResultadoInicioPago': {'SesionPago', 'ErrorPago'},
   'ResultadoPago': {'Poliza', 'ErrorPago'},
   'ResultadoSesion': {'Sesion', 'ErrorAutenticacion'},
+  'ResultadoRestablecimiento': {
+    'RestablecimientoExitoso',
+    'ErrorAutenticacion',
+  },
   'ResultadoUsuario': {'Usuario', 'ErrorUsuario'},
   'ResultadoSubidaArchivo': {'SubidaArchivo', 'ErrorArchivo'},
   'ResultadoArchivo': {'Archivo', 'ErrorArchivo'},

@@ -1359,4 +1359,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get m05TipoResponsabilidadCivil =>
       'I damaged another person or vehicle';
+  String get cuentaOlvideClave => 'Forgot your password?';
+
+  @override
+  String get m0204Titulo => 'Recover your password';
+
+  @override
+  String get m0204Intro =>
+      'Enter your account email and, if it exists, we will send you a link to choose a new password.';
+
+  @override
+  String get m0204Enviar => 'Send link';
+
+  @override
+  String get m0204EnviadoTitulo => 'Check your email';
+
+  @override
+  String get m0204EnviadoTexto =>
+      'If there is an account with that email, we sent you a link. Open it to choose your new password; it expires in 30 minutes and works only once.';
+
+  @override
+  String get m0204Volver => 'Back to sign in';
+
+  @override
+  String get cuentaIngresarConHuella => 'Sign in with fingerprint or face';
+
+  @override
+  String get accesoBiometricoMotivo =>
+      'Confirm it\'s you to sign in to Solventa';
+
+  @override
+  String get accesoBiometricoActivarMotivo =>
+      'Confirm your fingerprint or face to sign in without typing your password';
+
+  @override
+  String get fallaDispositivoNoValido =>
+      'We could not verify this phone. Sign in with your email and password.';
 }

@@ -77,6 +77,13 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
     return _validar || divergio ? l10n.m0105bErrorConfirmar : null;
   }
 
+  Future<void> _entrarConHuella(AppLocalizations l10n) async {
+    final ok = await ref
+        .read(onboardingProvider.notifier)
+        .iniciarSesionConHuella(motivo: l10n.accesoBiometricoMotivo);
+    if (ok && mounted) context.go('/');
+  }
+
   Future<void> _enviar(AppLocalizations l10n) async {
     setState(() => _validar = true);
     if (_errorCorreo(l10n) != null ||
@@ -191,6 +198,18 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
                     : null,
               ),
             ],
+            if (_modoLogin) ...[
+              const SizedBox(height: SolSpacing.xs),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: SolLinkButton(
+                  label: l10n.cuentaOlvideClave,
+                  onPressed: estado.ocupado
+                      ? null
+                      : () => context.push(OnboardingRoutes.recuperarClave),
+                ),
+              ),
+            ],
             if (falla != null && !correoRegistrado) ...[
               const SizedBox(height: SolSpacing.lg),
               SolStatusBanner(
@@ -209,6 +228,14 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
           // se marcan en rojo los requisitos pendientes.
           onPressed: () => _enviar(l10n),
         ),
+        if (_modoLogin &&
+            (ref.watch(accesoBiometricoDisponibleProvider).value ?? false)) ...[
+          const SizedBox(height: SolSpacing.sm),
+          SolButton.tonal(
+            label: l10n.cuentaIngresarConHuella,
+            onPressed: estado.ocupado ? null : () => _entrarConHuella(l10n),
+          ),
+        ],
         const SizedBox(height: SolSpacing.sm),
         Center(
           child: SolLinkButton(
