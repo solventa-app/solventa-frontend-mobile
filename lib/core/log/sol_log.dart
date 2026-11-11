@@ -15,6 +15,7 @@ import 'limpiar.dart';
 abstract final class SolLog {
   static final Logger _logger = Logger('Solventa');
   static final List<String> _historialPruebas = <String>[];
+  static String? _codigoSoporte;
 
   /// Historial en memoria para verificar en pruebas que ningún PII se filtró.
   @visibleForTesting
@@ -23,6 +24,10 @@ abstract final class SolLog {
 
   @visibleForTesting
   static void limpiarHistorialPruebas() => _historialPruebas.clear();
+
+  /// Código de soporte registrado como tag en Sentry (o `null` sin sesión).
+  @visibleForTesting
+  static String? get codigoSoporteActual => _codigoSoporte;
 
   static Map<String, dynamic> _datosPermitidos({
     String? id,
@@ -156,9 +161,23 @@ abstract final class SolLog {
     final codigo = candidato.length >= 8
         ? candidato.substring(0, 8)
         : candidato;
+    _codigoSoporte = codigo;
     if (Sentry.isEnabled) {
       Sentry.configureScope((s) => s.setTag('codigo_soporte', codigo));
     }
     return codigo;
+  }
+
+  /// Al cerrar o vencer la sesión: quita el tag `codigo_soporte` y los
+  /// breadcrumbs, para que el siguiente usuario del teléfono no herede el
+  /// contexto de la sesión anterior en sus reportes.
+  static void olvidarSesion() {
+    _codigoSoporte = null;
+    if (Sentry.isEnabled) {
+      Sentry.configureScope((s) {
+        s.removeTag('codigo_soporte');
+        s.clearBreadcrumbs();
+      });
+    }
   }
 }

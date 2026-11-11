@@ -263,7 +263,9 @@ final codigo = traceId.substring(0, 8);
 Sentry.configureScope((s) => s.setTag('codigo_soporte', codigo));
 ```
 
-Mostrar el código con botón de copiar, igual que en web. Los textos van en `lib/core/l10n/arb/app_es.arb`.
+Mostrar el código con botón de copiar, igual que en web.
+
+Al cerrar o vencer la sesión, `GestorSesion` llama a `SolLog.olvidarSesion()`, que quita el tag `codigo_soporte` y los breadcrumbs del scope: el siguiente usuario del teléfono no hereda el contexto de la sesión anterior. Los textos van en `lib/core/l10n/arb/app_es.arb`.
 
 ### 3.7 Desarrollo en el devcontainer
 
