@@ -240,6 +240,9 @@ class AccesoNotifier extends Notifier<AccesoState> {
       case DesbloqueoVencido():
         _onboarding.marcarSesionVencida();
         state = const AccesoState(fase: FaseAcceso.normal);
+      case DesbloqueoLlaveInvalidada():
+        _onboarding.marcarSeguridadTelefonoCambio();
+        state = const AccesoState(fase: FaseAcceso.normal);
     }
   }
 

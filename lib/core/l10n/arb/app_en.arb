@@ -85,6 +85,7 @@
   "fallaIntentosAgotados": "You have no attempts left for this code or verification. Request a new one.",
   "fallaCredencialesInvalidas": "Incorrect email or password. Check them and try again.",
   "fallaSesionVencida": "Your session expired. Please sign in again.",
+  "fallaSeguridadTelefono": "Your phone's fingerprint, face or screen lock changed. For your security, sign in with your email and password.",
   "fallaSinPermiso": "You do not have permission to perform this operation.",
   "cuentaModoCrear": "Create account",
   "cuentaModoIngresar": "Sign in",

@@ -53,9 +53,15 @@ final class DesbloqueoSinRed extends Desbloqueo {
   const DesbloqueoSinRed();
 }
 
-/// Ya no hay sesión que recuperar (vencida, revocada o llave invalidada).
+/// Ya no hay sesión que recuperar (vencida o revocada).
 final class DesbloqueoVencido extends Desbloqueo {
   const DesbloqueoVencido();
+}
+
+/// Android invalidó la llave: huella o rostro nuevos, o sin bloqueo de
+/// pantalla (D4). Lo guardado ya se borró; se pide correo y clave.
+final class DesbloqueoLlaveInvalidada extends Desbloqueo {
+  const DesbloqueoLlaveInvalidada();
 }
 
 /// Qué encontró [GestorSesion.consultarGuardado] al abrir la app.
@@ -177,7 +183,7 @@ final class GestorSesion {
     } on LlaveInvalidada {
       SolLog.info('Llave de la sesión invalidada: se pide iniciar sesión');
       await _limpiar();
-      return const DesbloqueoVencido();
+      return const DesbloqueoLlaveInvalidada();
     } on ErrorLlavero catch (e) {
       SolLog.warning('No se pudo leer la sesión guardada (${e.runtimeType})');
       return const FaltaAutenticacion();

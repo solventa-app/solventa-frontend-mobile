@@ -293,6 +293,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your session expired. Please sign in again.';
 
   @override
+  String get fallaSeguridadTelefono =>
+      'Your phone\'s fingerprint, face or screen lock changed. For your security, sign in with your email and password.';
+
+  @override
   String get fallaSinPermiso =>
       'You do not have permission to perform this operation.';
 

@@ -347,6 +347,9 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
   (`<alias>.testigo`) con autenticación en cada uso e invalidación por biometría nueva. Nunca cifra nada: al descifrar,
   `verificarTestigo` solo hace `Cipher.init`, que no pide la huella; si Android invalidó la llave, responde
   `LLAVE_INVALIDADA` y Dart pide correo y clave. Se arma en el siguiente guardado si faltaba (Android 11+).
+  `GestorSesion.desbloquear` devuelve `DesbloqueoLlaveInvalidada` y «Inicia sesión» muestra `fallaSeguridadTelefono`
+  («Cambió la huella, el rostro o el bloqueo de tu teléfono…»), no «Tu sesión venció». Probado en el emulador con
+  biometría real (`docs/evidencias/`).
 - **Deuda conocida.** (1) ~~Una huella nueva no invalida la sesión (D4)~~: resuelta con la llave testigo (ver arriba); sin biometría
   fuerte registrada al guardar la sesión no hay testigo, y en Android 10 o menor tampoco.
   (2) La ventana de 10 s permite usar la llave a código que ya corre dentro de la app. (3) El código Kotlin no tiene
