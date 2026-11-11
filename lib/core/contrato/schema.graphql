@@ -104,6 +104,27 @@ enum OrigenFuente {
   OPEN_DATA
 }
 
+# ---------- Historial de fuentes consultadas (v0.45, QA 2026-11-10, Q-08) ----------
+# Cada cotización deja un renglón en RISK (colección `consultas`): quién la hizo, cuándo, a qué documento (enmascarado),
+# qué tipo de oferta salió y el ESTADO de cada fuente, nunca sus datos. Se conserva aunque el consentimiento se revoque
+# o venza (el perfil sí se borra). Solo lo ve el ASESOR que cotizó: el filtro sale de su token.
+type ConsultaFuentes {
+  id: ID!
+  creadaEn: DateTime!
+  documentoEnmascarado: String! # «10••••3040»; el nombre del titular no se conoce al cotizar
+  tipoOferta: TipoOferta!
+  producto: Producto!
+  ofertaId: ID
+  fuentes: [FuenteConsultada!]!
+}
+
+type PaginaConsultasFuentes {
+  consultas: [ConsultaFuentes!]! # de la más reciente a la más antigua
+  total: Int!
+  pagina: Int!
+  tamano: Int!
+}
+
 type Oferta {
   id: ID!
   tipo: TipoOferta!
@@ -626,6 +647,8 @@ type Usuario {
   # v0.38 (T20): país de la cuenta (uno de los siete); el CLIENTE lo trae de su documento y cualquiera lo cambia en
   # `actualizarPreferencias`. Null si nunca se fijó.
   pais: String
+  # v0.45 (KAN-259): preferencia del propio cliente para el push (siempre viene; enciende por defecto).
+  notificacionesPush: Boolean!
 }
 
 type Sesion {
@@ -673,12 +696,27 @@ type ErrorUsuario {
 
 union ResultadoUsuario = Usuario | ErrorUsuario
 
+# v0.45 (KAN-259): la instalación de la app que inicia sesión, para la sesión única por cliente (D3) y el push.
+# Independiente del dispositivo de la llave de login sin clave (KAN-26).
+enum PlataformaMovil {
+  ANDROID
+  IOS
+}
+
+input DispositivoPushInput {
+  instalacionId: String!
+  plataforma: PlataformaMovil!
+}
+
 input CredencialesInput {
   usuario: String!
   clave: String!
   # v0.29 (T17): rol del chip elegido en la web. Si no es el de la cuenta, la respuesta es la de una clave errada
   # («Usuario o clave incorrectos.»): no se revela qué rol tiene. Opcional: los clientes viejos no lo mandan.
   rol: RolUsuario = null
+  # v0.45 (KAN-259): solo con sesión en la app; la app lo manda siempre que entra con usuario y clave. Al iniciar
+  # sesión en un dispositivo nuevo se revocan las demás sesiones `app` del cliente y su dispositivo de push.
+  dispositivo: DispositivoPushInput = null
 }
 
 input CrearUsuarioInput {
@@ -1016,6 +1054,46 @@ type SiniestroReportado {
 # identidad verificada o servicio caído con reintento).
 union ResultadoReporteSiniestro = SiniestroReportado | ErrorSiniestro
 
+# ---------- Indemnización y cobertura paramétrica (v0.48, KAN-259, HU-M04 Fase 5) ----------
+# Lo que la app móvil mostrará en la Fase 6 (fuera de este contrato) al tocar el push de una indemnización
+# paramétrica (vuelo o clima) ya liquidada automáticamente por CLAIMS (ver evento `evento.parametrico.recibido`).
+
+enum TipoEventoParametrico {
+  VUELO_RETRASO
+  VUELO_CANCELADO
+  # Las 3 variables de clima (precipitación, viento, temperatura) colapsan en un solo tipo por ahora.
+  CLIMA
+}
+
+enum EstadoIndemnizacion {
+  EN_PROCESO
+  # PAYMENTS todavía no dispersa de verdad (toda orden queda PENDIENTE_DISPERSION): este valor no se produce hoy.
+  PAGADA
+}
+
+type Indemnizacion {
+  id: ID!
+  tipo: TipoEventoParametrico!
+  referenciaEvento: String! # el vuelo (AV9340) o la celda ("lat,lon": sin reverse-geocoding)
+  detalleEvento: String! # cuánto superó el umbral: "+180min", "62 mm", "Cancelado"
+  fechaEvento: DateTime!
+  pagadoEn: DateTime!
+  monto: Monto!
+  estado: EstadoIndemnizacion!
+  # Nunca un número de cuenta real (regla #6): PAYMENTS solo guarda un método genérico de transferencia.
+  metodoTransferencia: String
+  polizaAnterior: Boolean! # la cobertura ya no estaba vigente al momento del evento
+}
+
+type ResumenCobertura {
+  producto: String!
+  numeroPoliza: String!
+  vigente: Boolean!
+  vigenteHasta: DateTime!
+  tope: Monto! # el monto fijo de la cobertura paramétrica: no hay un tope acumulado distinto hoy
+  movimientos: [Indemnizacion!]!
+}
+
 input UbicacionReporteInput {
   descripcion: String!
   ciudad: String!
@@ -1235,6 +1313,10 @@ type Query {
   # El archivo si existe y quien pregunta puede leerlo; si no, null.
   archivo(id: ID!): Archivo
   oferta(id: ID!): Oferta
+  # v0.45 (Q-08). Solo ASESOR y solo las suyas; los demás roles reciben el error de sin permiso. `consultaFuentes` de
+  # una ajena o inexistente devuelve null.
+  consultasFuentes(pagina: Int = 1, tamano: Int = 10): PaginaConsultasFuentes!
+  consultaFuentes(id: ID!): ConsultaFuentes
   cobros(polizaId: ID, estado: EstadoCobro, pagina: Int = 1, tamano: Int = 10): [Cobro!]!
   # v0.43 (KAN-26): ¿sirve el enlace de la cabecera `X-Enlace-Clave`? Público; solo dice sí o no.
   enlaceRestablecimientoVigente: Boolean!
@@ -1270,6 +1352,13 @@ type Query {
   # ---------- v0.36 (HU-M06) ----------
   # Sesión de CLIENTE (SIN_SESION si no hay). versionLocal null o distinta de la vigente: la lista completa.
   catalogoPrestadores(versionLocal: String = null): CatalogoPrestadores!
+  # ---------- v0.48 (KAN-259, HU-M04 Fase 5) ----------
+  # Sesión de CLIENTE: el detalle de una indemnización paramétrica. null si no existe, no es paramétrica o la
+  # póliza no es del cliente del token (nunca filtra el expediente de otro cliente).
+  indemnizacion(id: ID!): Indemnizacion
+  # Sesión de CLIENTE: su cobertura paramétrica vigente, con las indemnizaciones ya liquidadas. null si no tiene
+  # ninguna póliza paramétrica.
+  miCoberturaParametrica: ResumenCobertura
 }
 
 type Mutation {
@@ -1352,7 +1441,13 @@ type Mutation {
   desafioDispositivo(dispositivoId: ID!): DesafioDispositivo!
   # v0.44: pública, solo canal app. Entra con la firma del reto (ECDSA SHA-256, DER en base64). Cualquier fallo responde
   # ErrorAutenticacion con codigo DISPOSITIVO_NO_VALIDO; la app pide entonces correo y contraseña.
-  iniciarSesionConDispositivo(dispositivoId: ID!, reto: String!, firma: String!): ResultadoSesion!
+  # v0.45 (KAN-259): `dispositivo` aplica la misma sesión única por cliente (D3) que con usuario y clave.
+  iniciarSesionConDispositivo(
+    dispositivoId: ID!
+    reto: String!
+    firma: String!
+    dispositivo: DispositivoPushInput = null
+  ): ResultadoSesion!
   # v0.43 (KAN-26): «olvidé mi contraseña». Responde `true` siempre, exista o no la cuenta (o se tope el límite de 3 por
   # correo y 10 por IP por hora): nunca revela quién está registrado. Si hay cuenta activa envía un enlace que vence a los
   # 30 minutos, sirve una vez y reemplaza al anterior.
@@ -1384,6 +1479,12 @@ type Mutation {
   renovarSesion(refreshToken: String = null): ResultadoSesion!
   # Revoca la cadena del refresh (y borra la cookie en la web, con la misma cabecera anti-CSRF). Idempotente.
   cerrarSesion(refreshToken: String = null): Boolean!
+  # ---------- v0.45 (KAN-259): dispositivos de push ----------
+  # Solo CLIENTE, en la app. Al obtener el token de FCM y en `onTokenRefresh`; solo lo acepta sobre el dispositivo
+  # que la sesión actual (`iniciarSesion`/`iniciarSesionConDispositivo` con `dispositivo`) dejó activo.
+  registrarTokenPush(instalacionId: String!, tokenFcm: String!): Boolean!
+  # Solo CLIENTE. Enciende o apaga el push del propio cliente (el id sale del token).
+  actualizarPreferenciaPush(habilitado: Boolean!): Boolean!
   # ---------- v0.21 (HU-W04): mesa de siniestros, solo BACKOFFICE ----------
   # Aprobar registra la orden de pago de la indemnización en PAYMENTS (sin
   # dispersión); si no se puede registrar, responde ErrorSiniestro y el caso sigue abierto.

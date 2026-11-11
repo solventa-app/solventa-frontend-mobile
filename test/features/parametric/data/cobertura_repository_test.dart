@@ -26,7 +26,7 @@ void main() {
     expect((favor as Exito<ResumenCobertura>).valor.saldo!.monto, 38500);
     expect((contra as Exito<ResumenCobertura>).valor.saldo!.monto, -38500);
     expect(favor.valor.movimientos, hasLength(3));
-    expect(favor.valor.cuentaDestino, hasLength(16));
+    expect(favor.valor.movimientos.first.metodoTransferencia, isNotNull);
   });
 
   test('indemnización por id', () async {

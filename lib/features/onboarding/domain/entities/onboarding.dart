@@ -71,6 +71,7 @@ final class PerfilUsuario {
     this.nombre,
     this.documentoEnmascarado,
     this.correo,
+    this.notificacionesPush = true,
   });
 
   final String id;
@@ -86,6 +87,10 @@ final class PerfilUsuario {
   final String creadoEn;
   final String idioma;
   final String moneda;
+
+  /// Preferencia del cliente para el push (KAN-259, v0.45). Enciende por
+  /// defecto.
+  final bool notificacionesPush;
 
   bool get verificado => estado == 'ACTIVO';
 }

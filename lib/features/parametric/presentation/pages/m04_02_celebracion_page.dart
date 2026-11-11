@@ -136,8 +136,8 @@ class _Celebracion extends StatelessWidget {
         ),
         const SizedBox(height: SolSpacing.xs),
         Center(
-          child: CuentaEnmascarada(
-            cuenta: indemnizacion.cuentaDestino,
+          child: MetodoPago(
+            metodo: indemnizacion.metodoTransferencia,
             estilo: textoPequeno(context)
                 .copyWith(color: colors.onSurfaceVariant),
             texto: l10n.m0402Cuenta,

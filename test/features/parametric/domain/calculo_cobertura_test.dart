@@ -32,7 +32,6 @@ void main() {
       vigente: true,
       vigenteHasta: DateTime(2026, 11, 30),
       tope: 0,
-      cuentaDestino: CoberturaFixtures.cuenta,
       movimientos: CoberturaFixtures.movimientos,
     );
 
@@ -48,7 +47,6 @@ void main() {
       vigente: true,
       vigenteHasta: DateTime(2026, 11, 30),
       tope: 500000,
-      cuentaDestino: CoberturaFixtures.cuenta,
       movimientos: CoberturaFixtures.movimientos,
     );
 

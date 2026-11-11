@@ -3,10 +3,10 @@ import '../../domain/entities/cobertura.dart';
 /// Los tres estados de M04-04 (mockups de `docs/hu-m04/diseno/`).
 enum EscenarioCobertura { sinSaldo, aFavor, enContra }
 
-/// Datos de los mockups de HU-M04. Montos en pesos; la cuenta va completa
-/// (16 dígitos) y solo se muestran los últimos 4 (M04-D1).
+/// Datos de los mockups de HU-M04. Montos en pesos; el método de
+/// transferencia nunca es un número de cuenta real (regla #6 del backend).
 abstract final class CoberturaFixtures {
-  static const cuenta = '4532015112834821';
+  static const metodo = 'ACH Colombia Interbancario';
 
   static final retrasoVuelo = Indemnizacion(
     id: 'IND-2026-0912',
@@ -17,7 +17,7 @@ abstract final class CoberturaFixtures {
     pagadoEn: DateTime(2026, 9, 12, 11, 2),
     monto: 450000,
     estado: EstadoPago.pagado,
-    cuentaDestino: cuenta,
+    metodoTransferencia: metodo,
   );
 
   static final lluvia = Indemnizacion(
@@ -29,7 +29,7 @@ abstract final class CoberturaFixtures {
     pagadoEn: DateTime(2026, 8, 28, 16, 40),
     monto: 180000,
     estado: EstadoPago.pagado,
-    cuentaDestino: cuenta,
+    metodoTransferencia: metodo,
   );
 
   static final cancelacionVuelo = Indemnizacion(
@@ -41,7 +41,7 @@ abstract final class CoberturaFixtures {
     pagadoEn: DateTime(2026, 7, 3, 9, 15),
     monto: 320000,
     estado: EstadoPago.pagado,
-    cuentaDestino: cuenta,
+    metodoTransferencia: metodo,
     polizaAnterior: true,
   );
 
@@ -70,7 +70,6 @@ abstract final class CoberturaFixtures {
     vigente: true,
     vigenteHasta: DateTime(2026, 11, 30),
     tope: 2000000,
-    cuentaDestino: cuenta,
     movimientos: sinMovimientos ? const [] : movimientos,
     saldo: saldo(escenario),
   );

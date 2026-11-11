@@ -1,0 +1,47 @@
+# HU-M04 Fase 6 (KAN-259): indemnización y cobertura paramétrica del contrato v0.48. Ambas queries resuelven del
+# CLIENTE del token (sesión normal de la app, igual que `Yo`).
+
+fragment MontoCampos on Monto {
+  valor
+  moneda
+}
+
+fragment IndemnizacionCampos on Indemnizacion {
+  id
+  tipo
+  referenciaEvento
+  detalleEvento
+  fechaEvento
+  pagadoEn
+  estado
+  metodoTransferencia
+  polizaAnterior
+  monto {
+    ...MontoCampos
+  }
+}
+
+# M04-02 y M04-03: una indemnización paramétrica por su id. `null` si no existe, si no es paramétrica o si la
+# póliza no es del cliente del token (el BFF resuelve la propiedad contra POLICY).
+query Indemnizacion($id: ID!) {
+  indemnizacion(id: $id) {
+    ...IndemnizacionCampos
+  }
+}
+
+# M04-04: resumen de la cobertura paramétrica vigente del cliente. `null` si no tiene ninguna póliza EMITIDA con
+# cobertura paramétrica.
+query MiCoberturaParametrica {
+  miCoberturaParametrica {
+    producto
+    numeroPoliza
+    vigente
+    vigenteHasta
+    tope {
+      ...MontoCampos
+    }
+    movimientos {
+      ...IndemnizacionCampos
+    }
+  }
+}

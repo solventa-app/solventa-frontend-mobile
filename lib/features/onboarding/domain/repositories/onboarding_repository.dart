@@ -93,4 +93,13 @@ abstract interface class OnboardingRepository {
 
   /// Cierra la sesión actual borrando el token y el recorrido en memoria.
   Future<void> cerrarSesion();
+
+  /// HU-M04 Fase 6 (KAN-259): liga el token de FCM a esta instalación.
+  Future<Resultado<bool>> registrarTokenPush({
+    required String instalacionId,
+    required String tokenFcm,
+  });
+
+  /// Perfil, interruptor «Notificaciones push».
+  Future<Resultado<bool>> actualizarPreferenciaPush({required bool habilitado});
 }

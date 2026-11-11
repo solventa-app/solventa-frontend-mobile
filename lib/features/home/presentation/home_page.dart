@@ -25,6 +25,7 @@ class HomePage extends StatelessWidget {
     required this.onRequestAssistance,
     this.onReportClaim,
     this.onMyClaims,
+    this.onMyCoverage,
     this.verificacion,
     this.motivoRechazo,
     this.onCheckStatus,
@@ -42,6 +43,9 @@ class HomePage extends StatelessWidget {
 
   /// HU-M05: los siniestros que reportó y su estado (M05-06).
   final VoidCallback? onMyClaims;
+
+  /// HU-M04: cupo, movimientos y pagos de la cobertura paramétrica (M04-04).
+  final VoidCallback? onMyCoverage;
   final EstadoVerificacion? verificacion;
   final String? motivoRechazo;
   final VoidCallback? onCheckStatus;
@@ -275,6 +279,14 @@ class HomePage extends StatelessWidget {
               icon: SolIcons.success,
               title: l10n?.homeMisSiniestrosTile ?? 'Mis siniestros',
               onTap: misSiniestros,
+            ),
+          ],
+          if (onMyCoverage case final miCobertura?) ...[
+            const SizedBox(height: SolSpacing.sm),
+            SolActionTile(
+              icon: SolIcons.wallet,
+              title: l10n?.homeMiCoberturaTile ?? 'Mi cobertura',
+              onTap: miCobertura,
             ),
           ],
           const SizedBox(height: SolSpacing.xl),

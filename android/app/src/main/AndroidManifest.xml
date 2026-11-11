@@ -8,6 +8,9 @@
     <!-- HU-M06: ubicación solo con la app abierta (prestadores cercanos). -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- HU-M04 Fase 6 (KAN-259): aviso al liquidar una indemnización. Android 13+
+         lo pide en tiempo de ejecución (`requestPermission` de FirebaseMessaging). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- El plugin de cámara los declara, pero el video se graba sin audio y las
          capturas van a la caché privada: se quitan del manifest final. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />

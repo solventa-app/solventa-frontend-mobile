@@ -152,6 +152,7 @@ fragment UsuarioCampos on Usuario {
   tieneContacto
   documentoEnmascarado
   correo
+  notificacionesPush
 }
 
 fragment CodigoOnboardingCampos on CodigoOnboardingEnviado {
@@ -265,4 +266,14 @@ mutation IniciarSesionConDispositivo($dispositivoId: ID!, $reto: String!, $firma
       codigo
     }
   }
+}
+
+# HU-M04 Fase 6 (KAN-259): liga el token de FCM a esta instalación de la app.
+mutation RegistrarTokenPush($instalacionId: String!, $tokenFcm: String!) {
+  registrarTokenPush(instalacionId: $instalacionId, tokenFcm: $tokenFcm)
+}
+
+# Perfil, interruptor «Notificaciones push».
+mutation ActualizarPreferenciaPush($habilitado: Boolean!) {
+  actualizarPreferenciaPush(habilitado: $habilitado)
 }

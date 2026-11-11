@@ -43,6 +43,7 @@ abstract final class OnboardingFixtures {
     String idioma = 'ES',
     String moneda = 'COP',
     bool tieneContacto = true,
+    bool notificacionesPush = true,
   }) => {
     '__typename': 'Usuario',
     'id': id,
@@ -56,6 +57,7 @@ abstract final class OnboardingFixtures {
     'idioma': idioma,
     'moneda': moneda,
     'tieneContacto': tieneContacto,
+    'notificacionesPush': notificacionesPush,
   };
 
   static final iniciar = <String, dynamic>{

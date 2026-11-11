@@ -62,6 +62,11 @@ dependencies:
   geolocator: ^14.0.2
   url_launcher: ^6.3.2
   biometric_signature: ^13.3.0
+  # HU-M04 Fase 6 (KAN-259): push de indemnización liquidada. Sin
+  # `google-services.json` real en el repo (regla del CLAUDE.md): el
+  # servicio de push queda apagado hasta que exista (ver `lib/core/push/`).
+  firebase_core: ^4.3.0
+  firebase_messaging: ^16.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -305,6 +305,7 @@ class Fragment$UsuarioCampos {
     required this.tieneContacto,
     this.documentoEnmascarado,
     this.correo,
+    required this.notificacionesPush,
     this.$__typename = 'Usuario',
   });
 
@@ -320,6 +321,7 @@ class Fragment$UsuarioCampos {
     final l$tieneContacto = json['tieneContacto'];
     final l$documentoEnmascarado = json['documentoEnmascarado'];
     final l$correo = json['correo'];
+    final l$notificacionesPush = json['notificacionesPush'];
     final l$$__typename = json['__typename'];
     return Fragment$UsuarioCampos(
       id: (l$id as String),
@@ -333,6 +335,7 @@ class Fragment$UsuarioCampos {
       tieneContacto: (l$tieneContacto as bool),
       documentoEnmascarado: (l$documentoEnmascarado as String?),
       correo: (l$correo as String?),
+      notificacionesPush: (l$notificacionesPush as bool),
       $__typename: (l$$__typename as String),
     );
   }
@@ -358,6 +361,8 @@ class Fragment$UsuarioCampos {
   final String? documentoEnmascarado;
 
   final String? correo;
+
+  final bool notificacionesPush;
 
   final String $__typename;
 
@@ -385,6 +390,8 @@ class Fragment$UsuarioCampos {
     _resultData['documentoEnmascarado'] = l$documentoEnmascarado;
     final l$correo = correo;
     _resultData['correo'] = l$correo;
+    final l$notificacionesPush = notificacionesPush;
+    _resultData['notificacionesPush'] = l$notificacionesPush;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -403,6 +410,7 @@ class Fragment$UsuarioCampos {
     final l$tieneContacto = tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
     final l$correo = correo;
+    final l$notificacionesPush = notificacionesPush;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -416,6 +424,7 @@ class Fragment$UsuarioCampos {
       l$tieneContacto,
       l$documentoEnmascarado,
       l$correo,
+      l$notificacionesPush,
       l$$__typename,
     ]);
   }
@@ -481,6 +490,11 @@ class Fragment$UsuarioCampos {
     final l$correo = correo;
     final lOther$correo = other.correo;
     if (l$correo != lOther$correo) {
+      return false;
+    }
+    final l$notificacionesPush = notificacionesPush;
+    final lOther$notificacionesPush = other.notificacionesPush;
+    if (l$notificacionesPush != lOther$notificacionesPush) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -572,6 +586,13 @@ const fragmentDefinitionUsuarioCampos = FragmentDefinitionNode(
       ),
       FieldNode(
         name: NameNode(value: 'correo'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: null,
+      ),
+      FieldNode(
+        name: NameNode(value: 'notificacionesPush'),
         alias: null,
         arguments: [],
         directives: [],
@@ -8101,6 +8122,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     required this.tieneContacto,
     this.documentoEnmascarado,
     this.correo,
+    required this.notificacionesPush,
     this.$__typename = 'Usuario',
   });
 
@@ -8118,6 +8140,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     final l$tieneContacto = json['tieneContacto'];
     final l$documentoEnmascarado = json['documentoEnmascarado'];
     final l$correo = json['correo'];
+    final l$notificacionesPush = json['notificacionesPush'];
     final l$$__typename = json['__typename'];
     return Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario(
       id: (l$id as String),
@@ -8131,6 +8154,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
       tieneContacto: (l$tieneContacto as bool),
       documentoEnmascarado: (l$documentoEnmascarado as String?),
       correo: (l$correo as String?),
+      notificacionesPush: (l$notificacionesPush as bool),
       $__typename: (l$$__typename as String),
     );
   }
@@ -8156,6 +8180,8 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
   final String? documentoEnmascarado;
 
   final String? correo;
+
+  final bool notificacionesPush;
 
   final String $__typename;
 
@@ -8183,6 +8209,8 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     _resultData['documentoEnmascarado'] = l$documentoEnmascarado;
     final l$correo = correo;
     _resultData['correo'] = l$correo;
+    final l$notificacionesPush = notificacionesPush;
+    _resultData['notificacionesPush'] = l$notificacionesPush;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -8201,6 +8229,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     final l$tieneContacto = tieneContacto;
     final l$documentoEnmascarado = documentoEnmascarado;
     final l$correo = correo;
+    final l$notificacionesPush = notificacionesPush;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -8214,6 +8243,7 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
       l$tieneContacto,
       l$documentoEnmascarado,
       l$correo,
+      l$notificacionesPush,
       l$$__typename,
     ]);
   }
@@ -8281,6 +8311,11 @@ class Mutation$ActualizarPreferencias$actualizarPreferencias$$Usuario
     final l$correo = correo;
     final lOther$correo = other.correo;
     if (l$correo != lOther$correo) {
+      return false;
+    }
+    final l$notificacionesPush = notificacionesPush;
+    final lOther$notificacionesPush = other.notificacionesPush;
+    if (l$notificacionesPush != lOther$notificacionesPush) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -9569,3 +9604,336 @@ class Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo$$ErrorAut
     return true;
   }
 }
+
+class Variables$Mutation$RegistrarTokenPush {
+  factory Variables$Mutation$RegistrarTokenPush({
+    required String instalacionId,
+    required String tokenFcm,
+  }) => Variables$Mutation$RegistrarTokenPush._({
+    r'instalacionId': instalacionId,
+    r'tokenFcm': tokenFcm,
+  });
+
+  Variables$Mutation$RegistrarTokenPush._(this._$data);
+
+  factory Variables$Mutation$RegistrarTokenPush.fromJson(
+    Map<String, dynamic> data,
+  ) {
+    final result$data = <String, dynamic>{};
+    final l$instalacionId = data['instalacionId'];
+    result$data['instalacionId'] = (l$instalacionId as String);
+    final l$tokenFcm = data['tokenFcm'];
+    result$data['tokenFcm'] = (l$tokenFcm as String);
+    return Variables$Mutation$RegistrarTokenPush._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get instalacionId => (_$data['instalacionId'] as String);
+
+  String get tokenFcm => (_$data['tokenFcm'] as String);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$instalacionId = instalacionId;
+    result$data['instalacionId'] = l$instalacionId;
+    final l$tokenFcm = tokenFcm;
+    result$data['tokenFcm'] = l$tokenFcm;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Variables$Mutation$RegistrarTokenPush ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$instalacionId = instalacionId;
+    final lOther$instalacionId = other.instalacionId;
+    if (l$instalacionId != lOther$instalacionId) {
+      return false;
+    }
+    final l$tokenFcm = tokenFcm;
+    final lOther$tokenFcm = other.tokenFcm;
+    if (l$tokenFcm != lOther$tokenFcm) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$instalacionId = instalacionId;
+    final l$tokenFcm = tokenFcm;
+    return Object.hashAll([l$instalacionId, l$tokenFcm]);
+  }
+}
+
+class Mutation$RegistrarTokenPush {
+  Mutation$RegistrarTokenPush({
+    required this.registrarTokenPush,
+    this.$__typename = 'Mutation',
+  });
+
+  factory Mutation$RegistrarTokenPush.fromJson(Map<String, dynamic> json) {
+    final l$registrarTokenPush = json['registrarTokenPush'];
+    final l$$__typename = json['__typename'];
+    return Mutation$RegistrarTokenPush(
+      registrarTokenPush: (l$registrarTokenPush as bool),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final bool registrarTokenPush;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$registrarTokenPush = registrarTokenPush;
+    _resultData['registrarTokenPush'] = l$registrarTokenPush;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$registrarTokenPush = registrarTokenPush;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$registrarTokenPush, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$RegistrarTokenPush ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$registrarTokenPush = registrarTokenPush;
+    final lOther$registrarTokenPush = other.registrarTokenPush;
+    if (l$registrarTokenPush != lOther$registrarTokenPush) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeMutationRegistrarTokenPush = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'RegistrarTokenPush'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'instalacionId')),
+          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'tokenFcm')),
+          type: NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'registrarTokenPush'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                name: NameNode(value: 'instalacionId'),
+                value: VariableNode(name: NameNode(value: 'instalacionId')),
+              ),
+              ArgumentNode(
+                name: NameNode(value: 'tokenFcm'),
+                value: VariableNode(name: NameNode(value: 'tokenFcm')),
+              ),
+            ],
+            directives: [],
+            selectionSet: null,
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+  ],
+);
+
+class Variables$Mutation$ActualizarPreferenciaPush {
+  factory Variables$Mutation$ActualizarPreferenciaPush({
+    required bool habilitado,
+  }) => Variables$Mutation$ActualizarPreferenciaPush._({
+    r'habilitado': habilitado,
+  });
+
+  Variables$Mutation$ActualizarPreferenciaPush._(this._$data);
+
+  factory Variables$Mutation$ActualizarPreferenciaPush.fromJson(
+    Map<String, dynamic> data,
+  ) {
+    final result$data = <String, dynamic>{};
+    final l$habilitado = data['habilitado'];
+    result$data['habilitado'] = (l$habilitado as bool);
+    return Variables$Mutation$ActualizarPreferenciaPush._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  bool get habilitado => (_$data['habilitado'] as bool);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$habilitado = habilitado;
+    result$data['habilitado'] = l$habilitado;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Variables$Mutation$ActualizarPreferenciaPush ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$habilitado = habilitado;
+    final lOther$habilitado = other.habilitado;
+    if (l$habilitado != lOther$habilitado) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$habilitado = habilitado;
+    return Object.hashAll([l$habilitado]);
+  }
+}
+
+class Mutation$ActualizarPreferenciaPush {
+  Mutation$ActualizarPreferenciaPush({
+    required this.actualizarPreferenciaPush,
+    this.$__typename = 'Mutation',
+  });
+
+  factory Mutation$ActualizarPreferenciaPush.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$actualizarPreferenciaPush = json['actualizarPreferenciaPush'];
+    final l$$__typename = json['__typename'];
+    return Mutation$ActualizarPreferenciaPush(
+      actualizarPreferenciaPush: (l$actualizarPreferenciaPush as bool),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final bool actualizarPreferenciaPush;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$actualizarPreferenciaPush = actualizarPreferenciaPush;
+    _resultData['actualizarPreferenciaPush'] = l$actualizarPreferenciaPush;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$actualizarPreferenciaPush = actualizarPreferenciaPush;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$actualizarPreferenciaPush, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Mutation$ActualizarPreferenciaPush ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$actualizarPreferenciaPush = actualizarPreferenciaPush;
+    final lOther$actualizarPreferenciaPush = other.actualizarPreferenciaPush;
+    if (l$actualizarPreferenciaPush != lOther$actualizarPreferenciaPush) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeMutationActualizarPreferenciaPush = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'ActualizarPreferenciaPush'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'habilitado')),
+          type: NamedTypeNode(
+            name: NameNode(value: 'Boolean'),
+            isNonNull: true,
+          ),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'actualizarPreferenciaPush'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                name: NameNode(value: 'habilitado'),
+                value: VariableNode(name: NameNode(value: 'habilitado')),
+              ),
+            ],
+            directives: [],
+            selectionSet: null,
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+  ],
+);

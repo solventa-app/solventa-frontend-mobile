@@ -254,6 +254,9 @@ class _TarjetaTotal extends StatelessWidget {
         .copyWith(color: colors.onSurfaceVariant);
     final desde = resumen.desde;
     final saldo = resumen.saldo;
+    final ultimoMetodo = resumen.movimientos.isEmpty
+        ? null
+        : resumen.movimientos.first.metodoTransferencia;
     return SolCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -295,16 +298,16 @@ class _TarjetaTotal extends StatelessWidget {
               style: variante.copyWith(height: 1.45),
             ),
           ],
-          const SizedBox(height: SolSpacing.md),
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: SolStatusBadge(
-              status: SolStatus.success,
-              label: l10n.m0404Depositado(
-                SolFormat.maskedAccountFull(resumen.cuentaDestino),
+          if (ultimoMetodo != null) ...[
+            const SizedBox(height: SolSpacing.md),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: SolStatusBadge(
+                status: SolStatus.success,
+                label: l10n.m0404Depositado(ultimoMetodo),
               ),
             ),
-          ),
+          ],
           if (saldo != null) ...[
             const SizedBox(height: 14),
             _BloqueSaldo(saldo: saldo),
