@@ -140,6 +140,7 @@ extension FallaTextoX on AppLocalizations {
     FallaNegocio(motivo: 'CLAVE_DEBIL') => m0105bErrorContrasena,
     FallaNegocio(motivo: 'CREDENCIALES_INVALIDAS') =>
       fallaCredencialesInvalidas,
+    FallaNegocio(motivo: 'DISPOSITIVO_NO_VALIDO') => fallaDispositivoNoValido,
     FallaNegocio(motivo: 'CAMARA_NO_DISPONIBLE') => fallaCamaraNoDisponible,
     FallaNegocio(motivo: 'ROSTRO_NO_COINCIDE') => m0107cRostro,
     FallaNegocio(motivo: 'SUPLANTACION') => m0107cSuplantacion,

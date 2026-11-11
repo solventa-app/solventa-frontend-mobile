@@ -2389,6 +2389,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Volver a iniciar sesión'**
   String get m0204Volver;
+
+  /// No description provided for @cuentaIngresarConHuella.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresar con huella o rostro'**
+  String get cuentaIngresarConHuella;
+
+  /// No description provided for @accesoBiometricoMotivo.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirma que eres tú para entrar a Solventa'**
+  String get accesoBiometricoMotivo;
+
+  /// No description provided for @accesoBiometricoActivarMotivo.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirma tu huella o rostro para entrar sin escribir la contraseña'**
+  String get accesoBiometricoActivarMotivo;
+
+  /// No description provided for @fallaDispositivoNoValido.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.'**
+  String get fallaDispositivoNoValido;
 }
 
 class _AppLocalizationsDelegate

@@ -6,6 +6,7 @@ import '../../../../core/biometria/biometria_service.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/network/network_providers.dart';
+import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
 import '../providers.dart';
 
@@ -82,6 +83,14 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
       // Si al abrir la sesión no había bloqueo, el refresh quedó solo en
       // memoria: ahora que hay bloqueo se guarda cifrado.
       await ref.read(gestorSesionProvider).asegurarPersistencia();
+      if (!mounted) return;
+      // KAN-26: además del refresh guardado, registra la llave del teléfono para
+      // entrar con huella o rostro aunque se cierre la sesión. Mejor esfuerzo.
+      await ref
+          .read(onboardingProvider.notifier)
+          .activarAccesoBiometrico(
+            motivo: context.l10n.accesoBiometricoActivarMotivo,
+          );
       if (!mounted) return;
       context.go('/');
       return;

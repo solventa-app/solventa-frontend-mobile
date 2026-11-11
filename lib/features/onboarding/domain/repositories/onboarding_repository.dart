@@ -28,6 +28,22 @@ abstract interface class OnboardingRepository {
     required String correo,
   });
 
+  /// Con sesión: registra la llave pública del teléfono. Devuelve su id.
+  Future<Resultado<String>> registrarDispositivo({
+    required String clavePublica,
+  });
+
+  /// Pública: el reto que el teléfono firma con su llave.
+  Future<Resultado<String>> desafioDispositivo({required String dispositivoId});
+
+  /// Pública: abre la sesión con la firma del reto (sin clave). Si AUTH no
+  /// reconoce el dispositivo falla con el motivo `DISPOSITIVO_NO_VALIDO`.
+  Future<Resultado<PerfilUsuario>> iniciarSesionConDispositivo({
+    required String dispositivoId,
+    required String reto,
+    required String firma,
+  });
+
   /// Verifica el código OTP de 6 dígitos enviado al correo.
   Future<Resultado<CodigoOnboarding>> verificarCodigo({
     required String correo,

@@ -217,6 +217,50 @@ final class FakeOnboardingRemoteDataSource
     ).actualizarSesion;
   }
 
+  /// Llave pública que el fake «registró» y si la firma del reto debe fallar.
+  String? clavePublicaRegistrada;
+  bool rechazarDispositivo = false;
+
+  @override
+  Future<String> registrarDispositivo(String clavePublica) async {
+    await _responder('registrarDispositivo', const {});
+    clavePublicaRegistrada = clavePublica;
+    return 'dispositivo-demo';
+  }
+
+  @override
+  Future<String> desafioDispositivo(String dispositivoId) async {
+    await _responder('desafioDispositivo', const {});
+    return '$dispositivoId.nonce-demo';
+  }
+
+  @override
+  Future<Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo>
+  iniciarSesionConDispositivo(
+    String dispositivoId,
+    String reto,
+    String firma,
+  ) async {
+    final json = rechazarDispositivo
+        ? {
+            '__typename': 'Mutation',
+            'iniciarSesionConDispositivo': {
+              '__typename': 'ErrorAutenticacion',
+              'mensaje': 'No pudimos verificar este teléfono.',
+              'codigo': 'DISPOSITIVO_NO_VALIDO',
+            },
+          }
+        : {
+            '__typename': 'Mutation',
+            'iniciarSesionConDispositivo':
+                (respuestaIniciarSesion['iniciarSesion']! as Map)
+                    .cast<String, dynamic>(),
+          };
+    return Mutation$IniciarSesionConDispositivo.fromJson(
+      await _responder('iniciarSesionConDispositivo', json),
+    ).iniciarSesionConDispositivo;
+  }
+
   @override
   Future<bool> solicitarRestablecimientoClave(String correo) async {
     await _responder('solicitarRestablecimientoClave', const {});
