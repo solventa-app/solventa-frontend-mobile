@@ -14,6 +14,8 @@ abstract final class ReporteSiniestroFixtures {
             'numero': 'SOL-2026-000123',
             'vigenciaDesde': '2026-02-10T05:00:00+00:00',
             'vigenciaHasta': '2027-02-10T05:00:00+00:00',
+            'producto': 'VIDA_DEUDOR',
+            'vehiculo': null,
           },
         },
         {
@@ -24,6 +26,13 @@ abstract final class ReporteSiniestroFixtures {
             'numero': 'SOL-2026-000456',
             'vigenciaDesde': '2026-06-01T05:00:00+00:00',
             'vigenciaHasta': '2027-06-01T05:00:00+00:00',
+            // KAN-290: la póliza de auto de demo (Mazda de la placa ABC123).
+            'producto': 'AUTO',
+            'vehiculo': {
+              '__typename': 'VehiculoAsegurado',
+              'marca': 'MAZDA',
+              'placaEnmascarada': 'ABC•••',
+            },
           },
         },
       ],
@@ -68,6 +77,7 @@ abstract final class ReporteSiniestroFixtures {
       'notificadoEn': '2026-11-04T15:00:00+00:00',
       'venceDictamenEn': '2026-11-06T22:00:00+00:00',
       'fotos': fotos,
+      'tipoSiniestroAuto': null, // KAN-290: solo en pólizas de auto
     },
   };
 
@@ -95,6 +105,7 @@ abstract final class ReporteSiniestroFixtures {
     'notificadoEn': notificadoEn,
     'venceDictamenEn': '2026-11-06T22:00:00+00:00',
     'fotos': 2,
+    'tipoSiniestroAuto': null,
   };
 
   /// `misSiniestros`: los que reportó en esta sesión del fake (PENDIENTE) y,

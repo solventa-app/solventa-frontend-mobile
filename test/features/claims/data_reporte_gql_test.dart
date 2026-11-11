@@ -1,8 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/contrato/schema.graphql.dart';
+import 'package:solventa_mobile/core/ubicacion/coordenada.dart';
 import 'package:solventa_mobile/features/claims/data/datasources/reporte_siniestro_remote_datasource.dart';
 import 'package:solventa_mobile/features/claims/data/fixtures/reporte_siniestro_fixtures.dart';
 import 'package:solventa_mobile/features/claims/data/graphql/reporte_siniestro.graphql.dart';
+import 'package:solventa_mobile/features/claims/data/mappers/reporte_siniestro_mapper.dart';
+import 'package:solventa_mobile/features/claims/domain/entities/reporte_siniestro.dart';
 
 import '../../helpers/bff_de_prueba.dart';
 
@@ -86,6 +89,40 @@ void main() {
     expect(
       (bff.variables['entrada'] as Map<String, dynamic>)['idReporte'],
       'rep-1',
+    );
+  });
+
+  test('las pólizas de auto llegan marcadas con su vehículo', () async {
+    bff.responder(ReporteSiniestroFixtures.polizas);
+
+    final polizas = polizasDesdeGql(await remoto.polizas());
+
+    expect(polizas.map((p) => p.esAuto), [false, true]);
+    expect(polizas.last.vehiculo, 'MAZDA ABC•••');
+  });
+
+  test('el reporte de auto manda el tipo de siniestro (KAN-290)', () {
+    final reporte = ReporteSiniestro(
+      idReporte: 'rep-1',
+      poliza: PolizaReportable(
+        id: 'pol-demo-02',
+        numero: 'SOL-2026-000456',
+        vigenciaDesde: DateTime.utc(2026, 6),
+        vigenciaHasta: DateTime.utc(2027, 6),
+        esAuto: true,
+      ),
+      ocurridoEn: DateTime.utc(2026, 11, 4, 13),
+      descripcion: 'Choque leve en la calle 80 con 30.',
+      lugar: 'Calle 80 con 30',
+      ciudad: 'Bogotá',
+      ubicacion: const Coordenada(4.68, -74.07),
+      fotos: const [],
+      tipoAuto: TipoSiniestroAuto.hurtoParcial,
+    );
+
+    expect(
+      entradaReporte(reporte, const []).toJson()['tipoSiniestroAuto'],
+      'HURTO_PARCIAL',
     );
   });
 

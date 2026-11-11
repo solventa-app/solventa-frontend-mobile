@@ -1470,6 +1470,22 @@
       }
     }
   },
+  "m0501PolizaAuto": "Auto {vehiculo}",
+  "@m0501PolizaAuto": {
+    "description": "M05-01 (KAN-290): una póliza de auto, con la marca y la placa enmascarada",
+    "placeholders": {
+      "vehiculo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501QuePaso": "¿Qué le pasó al vehículo?",
+  "m0501ElegirTipo": "Elige qué le pasó al vehículo para continuar.",
+  "m05TipoChoqueParcial": "Choque con daños que se pueden reparar",
+  "m05TipoPerdidaTotal": "Pérdida total por un choque",
+  "m05TipoHurtoTotal": "Me robaron el vehículo",
+  "m05TipoHurtoParcial": "Me robaron partes del vehículo",
+  "m05TipoResponsabilidadCivil": "Le causé daños a otra persona o vehículo",
   "cuentaOlvideClave": "¿Olvidaste tu contraseña?",
   "m0204Titulo": "Recupera tu contraseña",
   "m0204Intro": "Escribe el correo de tu cuenta y, si existe, te enviaremos un enlace para elegir una contraseña nueva.",

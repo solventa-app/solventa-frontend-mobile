@@ -11,6 +11,11 @@ List<PolizaReportable> polizasDesdeGql(Query$PolizasParaReporte q) => [
         numero: poliza.numero,
         vigenciaDesde: poliza.vigenciaDesde,
         vigenciaHasta: poliza.vigenciaHasta,
+        esAuto: poliza.producto == Enum$Producto.AUTO,
+        vehiculo: switch (poliza.vehiculo) {
+          final v? => '${v.marca} ${v.placaEnmascarada}',
+          null => null,
+        },
       ),
 ];
 
@@ -32,6 +37,10 @@ Input$ReporteSiniestroInput entradaReporte(
 ) => Input$ReporteSiniestroInput(
   idReporte: reporte.idReporte,
   polizaId: reporte.poliza.id,
+  tipoSiniestroAuto: switch (reporte.tipoAuto) {
+    final tipo? => Enum$TipoSiniestroAuto.fromJson(tipo.codigo),
+    null => null,
+  },
   ocurridoEn: reporte.ocurridoEn.toUtc(),
   descripcion: reporte.descripcion.trim(),
   ubicacion: Input$UbicacionReporteInput(

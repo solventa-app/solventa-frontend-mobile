@@ -9,6 +9,8 @@ final class PolizaReportable {
     required this.numero,
     required this.vigenciaDesde,
     required this.vigenciaHasta,
+    this.esAuto = false,
+    this.vehiculo,
   });
 
   final String id;
@@ -16,8 +18,29 @@ final class PolizaReportable {
   final DateTime vigenciaDesde;
   final DateTime vigenciaHasta;
 
+  /// KAN-290: póliza de auto todo riesgo. Su reporte exige [TipoSiniestroAuto].
+  final bool esAuto;
+
+  /// «MAZDA ABC•••» en una póliza de auto (la placa llega enmascarada).
+  final String? vehiculo;
+
   bool cubre(DateTime fecha) =>
       !fecha.isBefore(vigenciaDesde) && !fecha.isAfter(vigenciaHasta);
+}
+
+/// KAN-290: qué le pasó al vehículo (contrato v0.42, `TipoSiniestroAuto`). Decide
+/// la cobertura y cómo se calcula la indemnización.
+enum TipoSiniestroAuto {
+  choqueParcial('CHOQUE_PARCIAL'),
+  perdidaTotalDanos('PERDIDA_TOTAL_DANOS'),
+  hurtoTotal('HURTO_TOTAL'),
+  hurtoParcial('HURTO_PARCIAL'),
+  responsabilidadCivil('RESPONSABILIDAD_CIVIL');
+
+  const TipoSiniestroAuto(this.codigo);
+
+  /// El valor del enum en el contrato.
+  final String codigo;
 }
 
 /// Foto del daño tomada en la app (M05-02). Vive solo en memoria hasta que se
@@ -50,10 +73,14 @@ final class ReporteSiniestro {
     required this.ciudad,
     required this.ubicacion,
     required this.fotos,
+    this.tipoAuto,
   });
 
   final String idReporte;
   final PolizaReportable poliza;
+
+  /// Solo en una póliza de auto.
+  final TipoSiniestroAuto? tipoAuto;
   final DateTime ocurridoEn;
   final String descripcion;
   final String lugar;

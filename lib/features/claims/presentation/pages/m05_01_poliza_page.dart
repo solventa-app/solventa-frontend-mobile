@@ -74,7 +74,10 @@ class M0501PolizaPage extends ConsumerWidget {
               poliza: p,
               elegida: estado.poliza?.id == p.id,
               titulo: l10n.m0501PolizaNumero(p.numero),
-              vigencia: l10n.m0501Vigencia(SolFormat.date(p.vigenciaHasta)),
+              vigencia: [
+                if (p.vehiculo case final v?) l10n.m0501PolizaAuto(v),
+                l10n.m0501Vigencia(SolFormat.date(p.vigenciaHasta)),
+              ].join(' · '),
               onTap: () => notifier.elegirPoliza(p),
             ),
             const SizedBox(height: SolSpacing.sm),
@@ -103,6 +106,20 @@ class M0501PolizaPage extends ConsumerWidget {
         children: [
           SolSectionHeader(title: l10n.m0501Poliza),
           lista,
+          // KAN-290: en una póliza de auto el cliente dice qué le pasó al vehículo;
+          // decide la cobertura y cómo se calcula la indemnización.
+          if (poliza?.esAuto ?? false) ...[
+            const SizedBox(height: SolSpacing.lg),
+            SolSectionHeader(title: l10n.m0501QuePaso),
+            for (final tipo in TipoSiniestroAuto.values) ...[
+              _FilaOpcion(
+                titulo: nombreTipoAuto(l10n, tipo),
+                elegida: estado.tipoAuto == tipo,
+                onTap: () => notifier.elegirTipoAuto(tipo),
+              ),
+              const SizedBox(height: SolSpacing.xs),
+            ],
+          ],
           const SizedBox(height: SolSpacing.lg),
           SolTextField.select(
             label: l10n.m0501Fecha,
@@ -112,6 +129,8 @@ class M0501PolizaPage extends ConsumerWidget {
             // Dice qué falta en lugar de dejar «Continuar» apagado sin más.
             helperText: poliza == null
                 ? l10n.m0501ElegirPoliza
+                : estado.faltaTipoAuto
+                ? l10n.m0501ElegirTipo
                 : l10n.m0501CubreDesde(
                     SolFormat.dateTime(poliza.vigenciaDesde),
                   ),
@@ -123,7 +142,11 @@ class M0501PolizaPage extends ConsumerWidget {
       actions: [
         SolButton.primary(
           label: l10n.m05Continuar,
-          onPressed: poliza != null && fecha != null && !fueraDeVigencia
+          onPressed:
+              poliza != null &&
+                  fecha != null &&
+                  !fueraDeVigencia &&
+                  !estado.faltaTipoAuto
               ? () => context.push(ReporteRoutes.fotos)
               : null,
         ),
@@ -151,6 +174,54 @@ DateTime fechaDelSiniestro(
     fecha = desde.isAfter(ahora) ? ahora : desde;
   }
   return fecha;
+}
+
+/// El nombre de cada tipo de siniestro de auto, en el idioma de la app.
+String nombreTipoAuto(AppLocalizations l10n, TipoSiniestroAuto tipo) =>
+    switch (tipo) {
+      TipoSiniestroAuto.choqueParcial => l10n.m05TipoChoqueParcial,
+      TipoSiniestroAuto.perdidaTotalDanos => l10n.m05TipoPerdidaTotal,
+      TipoSiniestroAuto.hurtoTotal => l10n.m05TipoHurtoTotal,
+      TipoSiniestroAuto.hurtoParcial => l10n.m05TipoHurtoParcial,
+      TipoSiniestroAuto.responsabilidadCivil =>
+        l10n.m05TipoResponsabilidadCivil,
+    };
+
+/// Una opción del tipo de siniestro: misma tarjeta que la póliza, con su marca de
+/// elegida (ícono, no solo color) y anunciada como opción excluyente.
+class _FilaOpcion extends StatelessWidget {
+  const _FilaOpcion({
+    required this.titulo,
+    required this.elegida,
+    required this.onTap,
+  });
+
+  final String titulo;
+  final bool elegida;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Semantics(
+      selected: elegida,
+      inMutuallyExclusiveGroup: true,
+      child: SolCard.outlined(
+        onTap: onTap,
+        semanticLabel: titulo,
+        child: Row(
+          children: [
+            Expanded(child: Text(titulo, style: context.solText.body)),
+            Icon(
+              elegida ? SolIcons.success : SolIcons.check,
+              fill: elegida ? 1 : 0,
+              color: elegida ? colors.primary : colors.outlineVariant,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _FilaPoliza extends StatelessWidget {

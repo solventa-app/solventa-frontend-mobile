@@ -10,6 +10,12 @@ query PolizasParaReporte {
         numero
         vigenciaDesde
         vigenciaHasta
+        # KAN-290 (v0.42): en una póliza de auto el reporte pide qué le pasó al vehículo.
+        producto
+        vehiculo {
+          marca
+          placaEnmascarada
+        }
       }
     }
   }
@@ -77,4 +83,5 @@ fragment SiniestroReportadoCampos on SiniestroReportado {
   notificadoEn
   venceDictamenEn
   fotos
+  tipoSiniestroAuto
 }
