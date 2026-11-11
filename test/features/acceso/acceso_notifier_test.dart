@@ -237,13 +237,14 @@ void main() {
       },
     );
 
-    test('llave invalidada (huella nueva): login con aviso', () async {
+    test('llave invalidada (huella nueva): login con su aviso', () async {
       store.erroresAlLeer.add(const LlaveInvalidada());
       final c = await bloqueada();
       await desbloquear(c);
 
       expect(c.read(accesoProvider).fase, FaseAcceso.normal);
-      expect(onboarding.vencidas, 1);
+      expect(onboarding.seguridadCambiada, 1);
+      expect(onboarding.vencidas, 0);
       expect(await store.hayRefresh(), isFalse);
     });
 

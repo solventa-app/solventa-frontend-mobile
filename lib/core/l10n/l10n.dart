@@ -121,6 +121,7 @@ extension FallaTextoX on AppLocalizations {
     SinConexion() => fallaSinConexion,
     ServicioNoDisponible() => fallaServicio,
     SesionVencida() => fallaSesionVencida,
+    SeguridadTelefonoCambio() => fallaSeguridadTelefono,
     SinPermiso() => fallaSinPermiso,
     FallaNegocio(registroVencido: true) => fallaRegistroVencido,
     FallaNegocio(motivo: 'ALMACENAMIENTO_NO_DISPONIBLE' || 'NO_DISPONIBLE') =>

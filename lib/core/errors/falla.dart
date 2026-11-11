@@ -33,6 +33,16 @@ final class SesionVencida extends Falla {
   bool get reintentable => false;
 }
 
+/// Android invalidó la llave de la sesión guardada: se registró una huella o
+/// un rostro nuevos, o se quitó el bloqueo de pantalla (HU-M02, D4). Hay que
+/// volver a iniciar sesión con correo y clave.
+final class SeguridadTelefonoCambio extends Falla {
+  const SeguridadTelefonoCambio();
+
+  @override
+  bool get reintentable => false;
+}
+
 /// El rol del usuario no tiene acceso a la operación.
 final class SinPermiso extends Falla {
   const SinPermiso();

@@ -294,6 +294,10 @@
   "fallaIntentosAgotados": "Agotaste los intentos de este código o verificación. Solicita uno nuevo.",
   "fallaCredencialesInvalidas": "El correo o la clave no son correctos. Revísalos e intenta de nuevo.",
   "fallaSesionVencida": "Tu sesión venció. Inicia sesión nuevamente.",
+  "fallaSeguridadTelefono": "Cambió la huella, el rostro o el bloqueo de tu teléfono. Por tu seguridad, inicia sesión con tu correo y clave.",
+  "@fallaSeguridadTelefono": {
+    "description": "HU-M02 (D4): Android invalidó la llave de la sesión guardada"
+  },
   "fallaSinPermiso": "No tienes permiso para realizar esta operación.",
   "cuentaModoCrear": "Crear cuenta",
   "cuentaModoIngresar": "Iniciar sesión",

@@ -170,16 +170,21 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     return const OnboardingState();
   }
 
-  void _alVencerSesion() {
+  void _alVencerSesion({Falla falla = const SesionVencida()}) {
     _capturasEnMemoria.clear();
     _subidas.clear();
     _epocaSesion++;
-    state = const OnboardingState(sesionCerrada: true, falla: SesionVencida());
+    state = OnboardingState(sesionCerrada: true, falla: falla);
   }
 
   /// HU-M02: la sesión guardada ya no sirve (venció, se revocó o Android
   /// invalidó la llave). Vuelve a «Inicia sesión» con `fallaSesionVencida`.
   void marcarSesionVencida() => _alVencerSesion();
+
+  /// HU-M02 (D4): Android invalidó la llave (huella o rostro nuevos, o sin
+  /// bloqueo de pantalla). Vuelve a «Inicia sesión» explicando por qué.
+  void marcarSeguridadTelefonoCambio() =>
+      _alVencerSesion(falla: const SeguridadTelefonoCambio());
 
   /// HU-M02: M02-01 abrió la sesión guardada. Marca la cuenta como abierta
   /// (para que `/` muestre el Home y no el login) y trae perfil y estado.

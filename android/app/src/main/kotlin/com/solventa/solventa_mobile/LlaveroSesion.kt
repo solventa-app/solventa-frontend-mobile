@@ -210,11 +210,25 @@ class LlaveroSesion(messenger: BinaryMessenger, private val contexto: Context) :
                 ?: throw KeyPermanentlyInvalidatedException()
             Cipher.getInstance("AES/GCM/NoPadding").init(Cipher.ENCRYPT_MODE, testigo)
         } catch (e: KeyPermanentlyInvalidatedException) {
-            throw e
+            testigoInvalidado(alias)
         } catch (_: UnrecoverableKeyException) {
-            throw KeyPermanentlyInvalidatedException()
+            testigoInvalidado(alias)
         } catch (_: UserNotAuthenticatedException) {
             // Pide autenticación, pero la llave está viva: no es una invalidación.
+        }
+    }
+
+    /**
+     * Android también invalida el testigo cuando se borran todas las huellas y rostros. Eso no agrega a
+     * nadie: si ya no queda biometría fuerte, el teléfono pasó a solo PIN (que desbloquea, D1) y se sigue
+     * sin testigo. Si queda biometría, hubo una nueva: se invalida la sesión.
+     */
+    private fun testigoInvalidado(alias: String) {
+        if (hayBiometriaFuerte()) throw KeyPermanentlyInvalidatedException()
+        try {
+            almacen().deleteEntry(aliasTestigo(alias))
+        } catch (_: Exception) {
+            // Ya no estaba: nada que hacer.
         }
     }
 

@@ -51,7 +51,7 @@ Las tomó el equipo con el líder técnico. Detalle técnico en `docs/arquitectu
 | D1 | Si el teléfono tiene PIN pero no huella, se entra con el PIN del teléfono | KAN-32, KAN-115 | Comentario en las dos (plantilla 5.1) |
 | D2 | M02-02 no es un teclado propio: «Usar PIN del teléfono» abre el diálogo del sistema. M02-02b no existe | KAN-136, KAN-174, KAN-226 | KAN-136: comentario + actualizar el criterio de aceptación (5.2). KAN-174: comentario y cierre como no aplicable (5.3). KAN-226: comentario (5.4) |
 | D3 | El refresh se cifra con una llave RSA del Keystore que solo descifra 10 s después de una huella o del PIN | KAN-225, KAN-115 | Comentario (5.5) |
-| D4 | Una huella nueva en el teléfono **no** cierra la sesión (deuda) | KAN-115 | Comentario de deuda (5.5) |
+| D4 | Una huella nueva en el teléfono cierra la sesión guardada: llave «testigo» (resuelta el 2026-11-09; antes era deuda) | KAN-115 | Comentario (5.5) |
 | D5 | Sin PIN propio de Solventa; se quitó el «PIN derivado» de la arquitectura | KAN-229 | Comentario (5.7) |
 | Gracia | AUTH acepta durante 30 s un reintento con el refresh anterior (respuesta perdida en la red) | KAN-227 | Comentario (5.6) |
 | 5 min | Volver del segundo plano después de 5 min pide de nuevo la huella (M02-01) | KAN-225 | Comentario (5.5) |

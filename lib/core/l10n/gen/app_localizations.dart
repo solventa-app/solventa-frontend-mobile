@@ -590,6 +590,12 @@ abstract class AppLocalizations {
   /// **'Tu sesión venció. Inicia sesión nuevamente.'**
   String get fallaSesionVencida;
 
+  /// HU-M02 (D4): Android invalidó la llave de la sesión guardada
+  ///
+  /// In es, this message translates to:
+  /// **'Cambió la huella, el rostro o el bloqueo de tu teléfono. Por tu seguridad, inicia sesión con tu correo y clave.'**
+  String get fallaSeguridadTelefono;
+
   /// No description provided for @fallaSinPermiso.
   ///
   /// In es, this message translates to:

@@ -175,16 +175,19 @@ void main() {
       expect(remota.usados, isEmpty);
     });
 
-    test('llave invalidada: sesión vencida y se borra lo guardado', () async {
-      final llavero = LlaveroSesionMemoria();
-      final segura = _StoreConLlavero(llavero);
-      final g = GestorSesion(store: segura, remota: remota);
-      await segura.guardarRefresh('refresh-0', null);
-      llavero.invalidar();
+    test(
+      'llave invalidada (huella nueva o sin bloqueo): se borra lo guardado',
+      () async {
+        final llavero = LlaveroSesionMemoria();
+        final segura = _StoreConLlavero(llavero);
+        final g = GestorSesion(store: segura, remota: remota);
+        await segura.guardarRefresh('refresh-0', null);
+        llavero.invalidar();
 
-      expect(await g.desbloquear(), isA<DesbloqueoVencido>());
-      expect(await segura.hayRefresh(), isFalse);
-    });
+        expect(await g.desbloquear(), isA<DesbloqueoLlaveInvalidada>());
+        expect(await segura.hayRefresh(), isFalse);
+      },
+    );
 
     test('sin red: conserva el refresh guardado', () async {
       await store.guardarRefresh('refresh-0', null);

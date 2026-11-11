@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solventa_mobile/core/errors/falla.dart';
 import 'package:solventa_mobile/features/onboarding/data/datasources/fake_onboarding_remote_datasource.dart';
 import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
 import 'package:solventa_mobile/features/onboarding/domain/entities/verificacion_identidad.dart';
@@ -231,6 +232,16 @@ void main() {
       expect(estado().sesionCerrada, isTrue);
       expect(estado().falla, isNotNull);
     });
+
+    test(
+      'marcarSeguridadTelefonoCambio vuelve a «Inicia sesión» con su falla',
+      () {
+        notifier().marcarSeguridadTelefonoCambio();
+
+        expect(estado().sesionCerrada, isTrue);
+        expect(estado().falla, isA<SeguridadTelefonoCambio>());
+      },
+    );
 
     test('cerrarSesion reinicia el estado en memoria', () async {
       await notifier().iniciarSesion(

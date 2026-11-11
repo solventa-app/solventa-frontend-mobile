@@ -39,6 +39,7 @@ final class StoreProgramable implements SesionStore {
 class OnboardingEspia extends OnboardingNotifier {
   int reanudadas = 0;
   int vencidas = 0;
+  int seguridadCambiada = 0;
   int cierres = 0;
 
   @override
@@ -53,6 +54,12 @@ class OnboardingEspia extends OnboardingNotifier {
   @override
   void marcarSesionVencida() {
     vencidas++;
+    state = const OnboardingState(sesionCerrada: true);
+  }
+
+  @override
+  void marcarSeguridadTelefonoCambio() {
+    seguridadCambiada++;
     state = const OnboardingState(sesionCerrada: true);
   }
 

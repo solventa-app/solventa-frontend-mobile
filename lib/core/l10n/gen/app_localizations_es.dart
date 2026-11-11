@@ -295,6 +295,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Tu sesión venció. Inicia sesión nuevamente.';
 
   @override
+  String get fallaSeguridadTelefono =>
+      'Cambió la huella, el rostro o el bloqueo de tu teléfono. Por tu seguridad, inicia sesión con tu correo y clave.';
+
+  @override
   String get fallaSinPermiso =>
       'No tienes permiso para realizar esta operación.';
 
