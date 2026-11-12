@@ -6,6 +6,12 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Push de HU-M04 (KAN-259): sin google-services.json (nunca va al repo) la app compila igual y el
+// push queda apagado. El CI lo escribe desde el secreto GOOGLE_SERVICES_JSON (tool/google-services.sh).
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 // Firmado por ambiente. El CI escribe estos archivos desde los secretos (tool/firma.sh); en tu máquina no
 // existen y el build de release se firma con la llave de debug, para que `flutter run --release` funcione.
 fun propiedades(nombre: String) = Properties().apply {
