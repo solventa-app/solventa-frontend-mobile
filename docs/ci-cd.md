@@ -180,7 +180,7 @@ Flavors de Android + `--dart-define-from-file`:
 - `flutter run` sin `--flavor` usa dev (`default-flavor: dev` en `pubspec.yaml`). Prod en local: `flutter run --flavor prod --dart-define-from-file=config/prod.json`.
 - Claves de `config/*.json`: `FLAVOR`, `API_ENV` (`mock`, `local`, `dev`, `prod`) y `API_BASE_URL`, leídas en `lib/core/config/app_config.dart`. Archivos: `mock.json` (fakes, sin red), `local.json` (backend en tu máquina), `dev.json` (staging) y `prod.json`; detalle en [`integracion-backend.md`](integracion-backend.md). `dev.json` y `prod.json` apuntan al gateway de staging (`gateway_url` del backend), y los APKs de dev (App Distribution) y prod (GitHub Releases) hablan con ese backend. Las pruebas del CI, los emuladores y Test Lab siguen con `config/mock.json`, sin red, para no depender de staging encendido.
 - En tu máquina no hay llaves: el build de release se firma con la de debug. En el CI, `tool/firma.sh` escribe `android/key.properties` (prod) o `android/key-dev.properties` (dev) desde los secretos.
-- FCM (`google-services.json`) y Google Maps (llave restringida por paquete) se configurarán por flavor con sus HU.
+- FCM: `develop.yml` y `cd.yml` escriben `android/app/google-services.json` desde el secreto `GOOGLE_SERVICES_JSON_BASE64` (`tool/google-services.sh`, proyecto Firebase `solventa-ec254`, un solo archivo con los paquetes de prod y `.dev`). Sin el secreto el APK compila igual con el push apagado; el plugin `com.google.gms.google-services` solo se aplica si el archivo existe. Google Maps (llave restringida por paquete) se configurará con su HU.
 
 ## Secretos y variables
 
