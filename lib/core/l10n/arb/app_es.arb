@@ -104,9 +104,9 @@
   "@m0105Titulo": {
     "description": "M01-05 barra superior"
   },
-  "m0105Instruccion": "Gira tu rostro lentamente dentro del marco (cámara frontal)",
+  "m0105Instruccion": "Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.",
   "@m0105Instruccion": {
-    "description": "M01-05 instrucción"
+    "description": "M01-05 instrucción antes de grabar"
   },
   "verificacionTitulo": "Verificación",
   "@verificacionTitulo": {
@@ -1555,5 +1555,30 @@
         "type": "String"
       }
     }
+  },
+  "m0105Grabar": "Grabar video",
+  "@m0105Grabar": {
+    "description": "M01-05 botón que toma la selfie y graba el video"
+  },
+  "m0105Grabando": "Grabando",
+  "@m0105Grabando": {
+    "description": "M01-05 etiqueta sobre el visor mientras graba"
+  },
+  "m0105GrabandoInstruccion": "Mueve la cabeza despacio de un lado a otro… {segundos}",
+  "@m0105GrabandoInstruccion": {
+    "description": "M01-05 instrucción mientras graba, con la cuenta regresiva",
+    "placeholders": {
+      "segundos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0105Capturado": "Listo, ya tenemos tu selfie y tu video.",
+  "@m0105Capturado": {
+    "description": "M01-05 capturas tomadas (la cámara ya se cerró)"
+  },
+  "m0105Verificando": "Estamos enviando tus fotos y verificando tu identidad con nuestro proveedor. Puede tardar unos segundos.",
+  "@m0105Verificando": {
+    "description": "M01-05 mientras sube y espera a Didit"
   }
 }

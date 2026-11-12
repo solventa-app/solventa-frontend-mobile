@@ -50,6 +50,9 @@ abstract final class SolIcons {
 
   // Captura de documento y prueba de vida.
   static const IconData camera = Symbols.photo_camera;
+
+  /// Grabando video (M01-05).
+  static const IconData recording = Symbols.radio_button_checked;
   static const IconData retry = Symbols.refresh;
   static const IconData idCard = Symbols.id_card;
   static const IconData lighting = Symbols.light_mode;

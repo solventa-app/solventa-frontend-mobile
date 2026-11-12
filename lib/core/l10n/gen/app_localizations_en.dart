@@ -89,7 +89,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0105Instruccion =>
-      'Slowly turn your face inside the frame (front camera)';
+      'Place your face inside the circle. When you tap “Record video” we\'ll record 3 seconds: slowly move your head from side to side.';
 
   @override
   String get verificacionTitulo => 'Verification';
@@ -1458,4 +1458,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fallaDispositivoNoValido =>
       'We could not verify this phone. Sign in with your email and password.';
+
+  @override
+  String get m0105Grabar => 'Record video';
+
+  @override
+  String get m0105Grabando => 'Recording';
+
+  @override
+  String m0105GrabandoInstruccion(int segundos) {
+    return 'Slowly move your head from side to side… $segundos';
+  }
+
+  @override
+  String get m0105Capturado => 'Done, we have your selfie and your video.';
+
+  @override
+  String get m0105Verificando =>
+      'We\'re sending your photos and verifying your identity with our provider. It may take a few seconds.';
 }

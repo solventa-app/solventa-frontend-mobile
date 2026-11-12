@@ -242,10 +242,10 @@ abstract class AppLocalizations {
   /// **'Prueba de vida'**
   String get m0105Titulo;
 
-  /// M01-05 instrucción
+  /// M01-05 instrucción antes de grabar
   ///
   /// In es, this message translates to:
-  /// **'Gira tu rostro lentamente dentro del marco (cámara frontal)'**
+  /// **'Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.'**
   String get m0105Instruccion;
 
   /// M01-06/07 barra superior
@@ -2515,6 +2515,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.'**
   String get fallaDispositivoNoValido;
+
+  /// M01-05 botón que toma la selfie y graba el video
+  ///
+  /// In es, this message translates to:
+  /// **'Grabar video'**
+  String get m0105Grabar;
+
+  /// M01-05 etiqueta sobre el visor mientras graba
+  ///
+  /// In es, this message translates to:
+  /// **'Grabando'**
+  String get m0105Grabando;
+
+  /// M01-05 instrucción mientras graba, con la cuenta regresiva
+  ///
+  /// In es, this message translates to:
+  /// **'Mueve la cabeza despacio de un lado a otro… {segundos}'**
+  String m0105GrabandoInstruccion(int segundos);
+
+  /// M01-05 capturas tomadas (la cámara ya se cerró)
+  ///
+  /// In es, this message translates to:
+  /// **'Listo, ya tenemos tu selfie y tu video.'**
+  String get m0105Capturado;
+
+  /// M01-05 mientras sube y espera a Didit
+  ///
+  /// In es, this message translates to:
+  /// **'Estamos enviando tus fotos y verificando tu identidad con nuestro proveedor. Puede tardar unos segundos.'**
+  String get m0105Verificando;
 }
 
 class _AppLocalizationsDelegate

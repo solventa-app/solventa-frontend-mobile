@@ -93,7 +93,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0105Instruccion =>
-      'Gira tu rostro lentamente dentro del marco (cámara frontal)';
+      'Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.';
 
   @override
   String get verificacionTitulo => 'Verificación';
@@ -1462,4 +1462,22 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get fallaDispositivoNoValido =>
       'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.';
+
+  @override
+  String get m0105Grabar => 'Grabar video';
+
+  @override
+  String get m0105Grabando => 'Grabando';
+
+  @override
+  String m0105GrabandoInstruccion(int segundos) {
+    return 'Mueve la cabeza despacio de un lado a otro… $segundos';
+  }
+
+  @override
+  String get m0105Capturado => 'Listo, ya tenemos tu selfie y tu video.';
+
+  @override
+  String get m0105Verificando =>
+      'Estamos enviando tus fotos y verificando tu identidad con nuestro proveedor. Puede tardar unos segundos.';
 }
