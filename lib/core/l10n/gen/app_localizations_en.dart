@@ -882,7 +882,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0501Cargando => 'Looking for your policies…';
 
   @override
-  String get m0501SinPolizas => 'You have no issued policies to report on.';
+  String get m0501SinPolizas => 'You have no issued car policies to report on.';
 
   @override
   String get m0501Fecha => 'When did it happen?';

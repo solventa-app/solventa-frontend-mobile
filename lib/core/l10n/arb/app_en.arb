@@ -369,7 +369,7 @@
   "@m0501Cargando": {
     "description": "M05-01 cargando"
   },
-  "m0501SinPolizas": "You have no issued policies to report on.",
+  "m0501SinPolizas": "You have no issued car policies to report on.",
   "@m0501SinPolizas": {
     "description": "M05-01 sin pólizas"
   },

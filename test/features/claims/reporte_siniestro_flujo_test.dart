@@ -90,11 +90,14 @@ void main() {
   Future<void> hastaElRelato(WidgetTester tester) async {
     // M05-01: póliza y fecha (la fecha se fija por el notifier: el selector
     // nativo de fecha no es parte de lo que se prueba).
-    expect(find.text('Póliza SOL-2026-000123'), findsOneWidget);
-    await tester.tap(find.text('Póliza SOL-2026-000123'));
+    expect(find.text('Póliza SOL-2026-000456'), findsOneWidget);
+    await tester.tap(find.text('Póliza SOL-2026-000456'));
     contenedor
         .read(reporteProvider.notifier)
         .fijarFecha(DateTime(2026, 11, 4, 13));
+    await tester.pumpAndSettle();
+    // En la póliza de auto se elige qué le pasó al vehículo.
+    await tester.tap(find.text('Choque con daños que se pueden reparar'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Continuar'));
     await tester.pumpAndSettle();
@@ -195,10 +198,12 @@ void main() {
     (tester) async {
       gps.resultado = const UbicacionSinPermiso(permanente: false);
       await abrir(tester);
-      await tester.tap(find.text('Póliza SOL-2026-000123'));
+      await tester.tap(find.text('Póliza SOL-2026-000456'));
       contenedor
           .read(reporteProvider.notifier)
           .fijarFecha(DateTime(2026, 11, 4, 13));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Choque con daños que se pueden reparar'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Continuar'));
       await tester.pumpAndSettle();
@@ -224,7 +229,9 @@ void main() {
     (tester) async {
       await abrir(tester);
       expect(find.text('Primero elige la póliza afectada.'), findsOneWidget);
-      await tester.tap(find.text('Póliza SOL-2026-000123'));
+      await tester.tap(find.text('Póliza SOL-2026-000456'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Choque con daños que se pueden reparar'));
       await tester.pumpAndSettle();
       expect(find.textContaining('Tu póliza cubre desde el'), findsOneWidget);
 
@@ -257,7 +264,7 @@ void main() {
     tester,
   ) async {
     await abrir(tester);
-    await tester.tap(find.text('Póliza SOL-2026-000123'));
+    await tester.tap(find.text('Póliza SOL-2026-000456'));
     contenedor
         .read(reporteProvider.notifier)
         .fijarFecha(DateTime(2026, 1, 15, 9));
@@ -297,12 +304,16 @@ void main() {
       TipoSiniestroAuto.choqueParcial,
     );
     expect(tester.widget<SolButton>(continuar).onPressed, isNotNull);
+  });
 
-    // Volver a una póliza de vida olvida el tipo y oculta la pregunta.
-    await tester.tap(find.text('Póliza SOL-2026-000123'));
-    await tester.pumpAndSettle();
-    expect(contenedor.read(reporteProvider).tipoAuto, isNull);
-    expect(find.text('¿Qué le pasó al vehículo?'), findsNothing);
+  testWidgets('solo ofrece las pólizas de auto: la de vida no sale', (
+    tester,
+  ) async {
+    await abrir(tester);
+
+    expect(find.text('Póliza SOL-2026-000456'), findsOneWidget);
+    expect(find.textContaining('Auto MAZDA ABC•••'), findsOneWidget);
+    expect(find.text('Póliza SOL-2026-000123'), findsNothing);
   });
 
   group('fechaDelSiniestro', () {

@@ -95,8 +95,8 @@ void main() {
 
   Future<void> completarReporte(
     WidgetTester tester, {
-    String poliza = 'Póliza SOL-2026-000123',
-    String? tipoAuto,
+    String poliza = 'Póliza SOL-2026-000456',
+    String? tipoAuto = 'Choque con daños que se pueden reparar',
   }) async {
     await tester.tap(find.text(poliza));
     contenedor

@@ -54,19 +54,15 @@ void main() {
     repo = ReporteSiniestroRepositoryImpl(bff, bucket);
   });
 
-  test(
-    'las pólizas emitidas del cliente salen del fixture del contrato',
-    () async {
-      final r = await repo.polizas();
-      final polizas = (r as Exito<List<PolizaReportable>>).valor;
-      expect(polizas.map((p) => p.numero), [
-        'SOL-2026-000123',
-        'SOL-2026-000456',
-      ]);
-      expect(polizas.first.cubre(DateTime.utc(2026, 11, 4)), isTrue);
-      expect(polizas.first.cubre(DateTime.utc(2025, 11, 4)), isFalse);
-    },
-  );
+  test('solo las pólizas de auto del fixture del contrato: la de vida no se ofrece', () async {
+    final r = await repo.polizas();
+    final polizas = (r as Exito<List<PolizaReportable>>).valor;
+    // El fixture trae la de vida (SOL-2026-000123) y la de auto (SOL-2026-000456).
+    expect(polizas.map((p) => p.numero), ['SOL-2026-000456']);
+    expect(polizas.single.esAuto, isTrue);
+    expect(polizas.first.cubre(DateTime.utc(2026, 11, 4)), isTrue);
+    expect(polizas.first.cubre(DateTime.utc(2025, 11, 4)), isFalse);
+  });
 
   test('sube cada foto, la confirma y crea el caso PENDIENTE', () async {
     final r = await repo.reportar(_reporte());

@@ -90,7 +90,7 @@ void main() {
       await hastaQueLleguen(tester);
 
       expect(find.byType(SolSkeleton), findsNothing);
-      expect(find.text('Póliza SOL-2026-000123'), findsOneWidget);
+      expect(find.text('Póliza SOL-2026-000456'), findsOneWidget);
       semantica.dispose();
     });
   });
