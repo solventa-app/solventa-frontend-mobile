@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/biometria/biometria_providers.dart';
 import '../../../../core/biometria/biometria_service.dart';
+import '../../../../core/biometria/tipo_biometria_icono.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../acceso_notifier.dart';
@@ -11,9 +12,11 @@ import '../widgets/acceso_widgets.dart';
 /// M02-01 · Desbloquea tu cuenta (2005:565) y su estado M02-01a · No te
 /// reconocimos (2005:472).
 ///
-/// Al entrar abre sola el diálogo del sistema. «Usar PIN del teléfono» lo
-/// abre aceptando el PIN, patrón o contraseña del teléfono (D2: sin PIN
-/// propio de la app). El atrás del sistema cierra la app: es la única ruta.
+/// Al entrar abre sola el diálogo del sistema. «Usar el bloqueo del teléfono»
+/// lo abre aceptando el PIN, patrón o contraseña del teléfono (D2: sin PIN
+/// propio de la app). Las fallas dejan siempre dos salidas visibles: el
+/// bloqueo del teléfono y el correo con contraseña. El atrás del sistema cierra
+/// la app: es la única ruta.
 class M0201DesbloqueoPage extends ConsumerStatefulWidget {
   const M0201DesbloqueoPage({super.key, this.autoIniciar = true});
 
@@ -54,13 +57,24 @@ class _M0201DesbloqueoPageState extends ConsumerState<M0201DesbloqueoPage>
     }
   }
 
+  /// Título, subtítulo y cancelar del diálogo del sistema, en el idioma de la app.
+  TextosDialogo get _dialogo => (
+    titulo: context.l10n.m0201DialogoTitulo,
+    subtitulo: context.l10n.m0201DialogoSubtitulo,
+    cancelar: context.l10n.m0201DialogoCancelar,
+  );
+
   Future<void> _desbloquear({bool conPin = false}) => ref
       .read(accesoProvider.notifier)
-      .desbloquear(motivo: context.l10n.m0201Motivo, conPin: conPin);
+      .desbloquear(
+        motivo: context.l10n.m0201Motivo,
+        dialogo: _dialogo,
+        conPin: conPin,
+      );
 
   Future<void> _reintentar() => ref
       .read(accesoProvider.notifier)
-      .reintentar(motivo: context.l10n.m0201Motivo);
+      .reintentar(motivo: context.l10n.m0201Motivo, dialogo: _dialogo);
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +88,8 @@ class _M0201DesbloqueoPageState extends ConsumerState<M0201DesbloqueoPage>
                 ocupado: estado.autenticando,
                 onReintentar: _desbloquear,
                 onUsarPin: () => _desbloquear(conPin: true),
+                onUsarCorreo: () =>
+                    ref.read(accesoProvider.notifier).usarCorreo(),
               )
             : _Desbloqueo(
                 estado: estado,
@@ -125,7 +141,7 @@ class _Desbloqueo extends StatelessWidget {
     final textoIngreso = switch (tipo) {
       TipoBiometria.huella => l10n.m0201IngresaHuella,
       TipoBiometria.rostro => l10n.m0201IngresaRostro,
-      TipoBiometria.generica => l10n.m0201IngresaBiometria,
+      TipoBiometria.generica => l10n.m0201IngresaSeguridad,
       TipoBiometria.ninguna => l10n.m0201IngresaBloqueo,
     };
     // Con un aviso que habla del PIN, el enlace sigue; en el caso normal el ícono y el texto ya abren la misma hoja.
@@ -203,9 +219,7 @@ class _Desbloqueo extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        tipo == TipoBiometria.rostro
-                            ? SolIcons.face
-                            : SolIcons.fingerprint,
+                        tipo.icono,
                         size: 44,
                         color: colors.secondary,
                       ),
@@ -258,11 +272,17 @@ class _Desbloqueo extends StatelessWidget {
                 label: l10n.m0201UsarCorreo,
                 onPressed: onUsarCorreo,
               ),
-            ] else if (avisoConPin)
+            ] else if (avisoConPin) ...[
+              // Siempre dos salidas: el bloqueo del teléfono y el correo.
               SolLinkButton(
-                label: l10n.m0201UsarPin,
+                label: l10n.m0201UsarBloqueo,
                 onPressed: ocupado ? null : onUsarPin,
               ),
+              SolLinkButton(
+                label: l10n.m0201UsarCorreo,
+                onPressed: ocupado ? null : onUsarCorreo,
+              ),
+            ],
             const SizedBox(height: SolSpacing.sm),
             SolDemoTrigger(
               label: l10n.m0201SimularNoReconoce,
@@ -292,11 +312,13 @@ class _NoReconocida extends StatelessWidget {
     required this.ocupado,
     required this.onReintentar,
     required this.onUsarPin,
+    required this.onUsarCorreo,
   });
 
   final bool ocupado;
   final VoidCallback onReintentar;
   final VoidCallback onUsarPin;
+  final VoidCallback onUsarCorreo;
 
   @override
   Widget build(BuildContext context) {
@@ -367,8 +389,13 @@ class _NoReconocida extends StatelessWidget {
             ),
             const SizedBox(height: SolSpacing.sm),
             SolButton.tonal(
-              label: l10n.m0201UsarPin,
+              label: l10n.m0201UsarBloqueo,
               onPressed: ocupado ? null : onUsarPin,
+            ),
+            const SizedBox(height: SolSpacing.xs),
+            SolLinkButton(
+              label: l10n.m0201UsarCorreo,
+              onPressed: ocupado ? null : onUsarCorreo,
             ),
           ],
         ),

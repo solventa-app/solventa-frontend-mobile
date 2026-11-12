@@ -79,6 +79,12 @@ final class AccesoState {
   );
 }
 
+/// Título, subtítulo y botón de cancelar del diálogo del sistema, ya traducidos (catálogo de idiomas). Sin ellos
+/// Android los escribe en inglés.
+typedef TextosDialogo = ({String? titulo, String? subtitulo, String? cancelar});
+
+const _sinTextosDialogo = (titulo: null, subtitulo: null, cancelar: null);
+
 /// Reloj del bloqueo por segundo plano (las pruebas lo sustituyen).
 final relojAccesoProvider = Provider<DateTime Function()>(
   (ref) => DateTime.now,
@@ -140,6 +146,7 @@ class AccesoNotifier extends Notifier<AccesoState> {
   /// teléfono; si no, solo biometría.
   Future<void> desbloquear({
     required String motivo,
+    TextosDialogo dialogo = _sinTextosDialogo,
     bool conPin = false,
   }) async {
     if (state.fase != FaseAcceso.bloqueada || state.autenticando) return;
@@ -166,11 +173,14 @@ class AccesoNotifier extends Notifier<AccesoState> {
     final resultado = await servicio.autenticar(
       motivo: motivo,
       permitirCredencialDispositivo: pin,
+      titulo: dialogo.titulo,
+      subtitulo: dialogo.subtitulo,
+      cancelar: dialogo.cancelar,
     );
     if (!ref.mounted) return;
     switch (resultado) {
       case Autenticado():
-        await _abrirSesion(motivo: motivo, conPin: pin);
+        await _abrirSesion(motivo: motivo, dialogo: dialogo, conPin: pin);
       case NoReconocido():
         _terminar(noReconocida: true);
       case Cancelado():
@@ -182,13 +192,13 @@ class AccesoNotifier extends Notifier<AccesoState> {
         if (pin) {
           _terminar(aviso: AvisoAcceso.bloqueoPermanente);
         } else {
-          await _reintentarConPin(motivo);
+          await _reintentarConPin(motivo, dialogo);
         }
       case SinBiometriaRegistrada():
         if (pin) {
           _terminar(aviso: AvisoAcceso.noDisponible);
         } else {
-          await _reintentarConPin(motivo);
+          await _reintentarConPin(motivo, dialogo);
         }
       case SinBloqueoPantalla():
         _terminar(aviso: AvisoAcceso.sinBloqueoPantalla);
@@ -197,15 +207,16 @@ class AccesoNotifier extends Notifier<AccesoState> {
     }
   }
 
-  Future<void> _reintentarConPin(String motivo) async {
+  Future<void> _reintentarConPin(String motivo, TextosDialogo dialogo) async {
     state = state.copyWith(autenticando: false);
-    await desbloquear(motivo: motivo, conPin: true);
+    await desbloquear(motivo: motivo, dialogo: dialogo, conPin: true);
   }
 
   /// Con el diálogo aceptado, descifra el refresh dentro de la ventana de
   /// 10 s de la llave y renueva la sesión.
   Future<void> _abrirSesion({
     required String motivo,
+    required TextosDialogo dialogo,
     required bool conPin,
   }) async {
     final gestor = ref.read(gestorSesionProvider);
@@ -216,7 +227,13 @@ class AccesoNotifier extends Notifier<AccesoState> {
       // el PIN del teléfono una vez.
       final otra = await ref
           .read(biometriaServiceProvider)
-          .autenticar(motivo: motivo, permitirCredencialDispositivo: true);
+          .autenticar(
+            motivo: motivo,
+            permitirCredencialDispositivo: true,
+            titulo: dialogo.titulo,
+            subtitulo: dialogo.subtitulo,
+            cancelar: dialogo.cancelar,
+          );
       if (!ref.mounted) return;
       if (otra is! Autenticado) {
         _terminar(aviso: AvisoAcceso.faltaAutenticacion);
@@ -256,10 +273,13 @@ class AccesoNotifier extends Notifier<AccesoState> {
 
   /// «Reintentar» del aviso sin red: renueva con el refresh que ya está en
   /// memoria; si ya no está, vuelve a pedir la huella.
-  Future<void> reintentar({required String motivo}) async {
+  Future<void> reintentar({
+    required String motivo,
+    TextosDialogo dialogo = _sinTextosDialogo,
+  }) async {
     if (state.fase != FaseAcceso.bloqueada || state.autenticando) return;
     if (state.aviso != AvisoAcceso.sinRed) {
-      return desbloquear(motivo: motivo);
+      return desbloquear(motivo: motivo, dialogo: dialogo);
     }
     state = state.copyWith(autenticando: true, limpiarAviso: true);
     final desbloqueo = await ref
@@ -268,7 +288,7 @@ class AccesoNotifier extends Notifier<AccesoState> {
     if (!ref.mounted) return;
     if (desbloqueo is FaltaAutenticacion) {
       state = state.copyWith(autenticando: false);
-      return desbloquear(motivo: motivo);
+      return desbloquear(motivo: motivo, dialogo: dialogo);
     }
     _aplicar(desbloqueo);
   }

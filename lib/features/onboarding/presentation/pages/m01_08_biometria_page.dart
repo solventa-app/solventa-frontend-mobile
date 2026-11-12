@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/biometria/biometria_providers.dart';
 import '../../../../core/biometria/biometria_service.dart';
+import '../../../../core/biometria/tipo_biometria_icono.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/network/network_providers.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
-import '../providers.dart';
 
 /// M01-08 · Activa tu biometría (2001:673).
 ///
@@ -142,6 +143,8 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
     final l10n = context.l10n;
     final colors = context.colors;
     final sol = context.solColors;
+    // Igual que M02-01: el método que el teléfono tiene, o la huella mientras se consulta.
+    final tipo = ref.watch(tipoBiometriaProvider).value ?? TipoBiometria.huella;
     return SolFlowScaffold(
       title: l10n.m0108Titulo,
       anchorActions: false,
@@ -162,11 +165,7 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
                 color: colors.secondaryContainer,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                SolIcons.fingerprint,
-                size: 56,
-                color: colors.primary,
-              ),
+              child: Icon(tipo.icono, size: 56, color: colors.primary),
             ),
           ),
           const SizedBox(height: SolSpacing.xxl),
@@ -175,7 +174,7 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
             child: Semantics(
               header: true,
               child: Text(
-                l10n.m0108Encabezado,
+                l10n.m0108Encabezado(tipo.clave),
                 textAlign: TextAlign.center,
                 style: context.solText.title.copyWith(color: colors.onSurface),
               ),
@@ -185,7 +184,7 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 316),
             child: Text(
-              l10n.m0108Explicacion,
+              l10n.m0108Explicacion(tipo.clave),
               textAlign: TextAlign.center,
               style: context.solText.body.copyWith(
                 color: colors.onSurfaceVariant,
@@ -252,7 +251,10 @@ class _M0108BiometriaPageState extends ConsumerState<M0108BiometriaPage>
         ),
         const SizedBox(height: SolSpacing.lg),
         SolButton.primary(
-          label: l10n.m0108Continuar,
+          // Con biometría ya registrada el paso es «Activar»; si falta algo, «Ya lo activé» tras ir a Ajustes.
+          label: _estado == EstadoBiometria.biometriaRegistrada
+              ? l10n.m0108Activar(tipo.clave)
+              : l10n.m0108Continuar,
           loading: _comprobando,
           onPressed: _continuar,
         ),

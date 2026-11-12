@@ -134,8 +134,8 @@ void main() {
     );
     await tester.tap(find.text('Activar huella o rostro'));
     await tester.pumpAndSettle();
-    expect(find.text('Activa tu huella o rostro'), findsOneWidget);
-    await tester.tap(find.text('Ya lo activé, continuar'));
+    expect(find.text('Activa tu huella'), findsOneWidget);
+    await tester.tap(find.text('Activar huella'));
     await tester.pumpAndSettle();
     expect(find.text('Hola, María'), findsOneWidget);
   });
@@ -150,7 +150,7 @@ void main() {
     await tester.tap(find.text('Ir al inicio'));
     await tester.pumpAndSettle();
     expect(find.text('Hola, María'), findsOneWidget);
-    expect(find.text('Activa tu huella o rostro'), findsNothing);
+    expect(find.text('Activa tu huella'), findsNothing);
   });
 
   testWidgets('M01-08 no deja seguir sin bloqueo de pantalla', (tester) async {

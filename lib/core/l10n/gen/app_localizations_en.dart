@@ -121,11 +121,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0108Titulo => 'Activation';
 
   @override
-  String get m0108Encabezado => 'Turn on your fingerprint or face unlock';
+  String m0108Encabezado(String tipo) {
+    String _temp0 = intl.Intl.selectLogic(tipo, {
+      'huella': 'Turn on your fingerprint',
+      'rostro': 'Turn on your face',
+      'bloqueo': 'Turn on your phone lock',
+      'other': 'Turn on your phone\'s security',
+    });
+    return '$_temp0';
+  }
 
   @override
-  String get m0108Explicacion =>
-      'Solventa protects your account with your phone\'s own security: with fingerprint or face unlock you get in faster and safer. It\'s the same one you use to unlock your phone — Solventa never sees or stores that data.';
+  String m0108Explicacion(String tipo) {
+    String _temp0 = intl.Intl.selectLogic(tipo, {
+      'huella': 'Get in faster without typing your password. We\'ll ask for your fingerprint just once.',
+      'rostro': 'Get in faster without typing your password. We\'ll ask for your face just once.',
+      'bloqueo': 'Get in faster without typing your password. We\'ll ask for your phone lock just once.',
+      'other': 'Get in faster without typing your password. We\'ll ask for your phone\'s security just once.',
+    });
+    return '$_temp0';
+  }
 
   @override
   String get m0108Sello => 'Biometric check encrypted on your device';
@@ -135,6 +150,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0108Continuar => 'I turned it on, continue';
+
+  @override
+  String m0108Activar(String tipo) {
+    String _temp0 = intl.Intl.selectLogic(tipo, {
+      'huella': 'Turn on fingerprint',
+      'rostro': 'Turn on face unlock',
+      'bloqueo': 'Turn on phone lock',
+      'other': 'Turn on phone security',
+    });
+    return '$_temp0';
+  }
 
   @override
   String get m0108AhoraNo => 'Not now, go to home';
@@ -681,7 +707,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0201IngresaRostro => 'Sign in with your face';
 
   @override
-  String get m0201IngresaBiometria => 'Sign in with fingerprint or face';
+  String get m0201IngresaSeguridad => 'Sign in with your phone\'s security';
 
   @override
   String get m0201IngresaBloqueo => 'Sign in with your phone\'s screen lock';
@@ -690,7 +716,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0201Motivo => 'Unlock your Solventa account';
 
   @override
-  String get m0201UsarPin => 'Use phone PIN';
+  String get m0201DialogoTitulo => 'Unlock Solventa';
+
+  @override
+  String get m0201DialogoSubtitulo => 'Confirm it\'s you';
+
+  @override
+  String get m0201DialogoCancelar => 'Cancel';
+
+  @override
+  String get m0201UsarBloqueo => 'Use your phone lock';
 
   @override
   String get m0201SimularNoReconoce => 'Simulate biometrics not recognized';
@@ -704,7 +739,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0201BloqueoTemporal =>
-      'Too many attempts. Wait a few seconds or use your phone PIN.';
+      'Too many attempts. Wait a few seconds or use your phone lock.';
 
   @override
   String get m0201BloqueoPermanente =>
@@ -712,7 +747,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0201FaltaAutenticacion =>
-      'Your phone couldn\'t confirm it\'s you securely enough. Use your phone PIN.';
+      'Your phone couldn\'t open your fingerprint or face. Use your phone lock.';
 
   @override
   String get m0201SinBloqueo =>
@@ -726,14 +761,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0201IrAjustes => 'Go to settings';
 
   @override
-  String get m0201UsarCorreo => 'Sign in with email and password';
+  String get m0201UsarCorreo => 'Use email and password';
 
   @override
   String get m0201aTitulo => 'We couldn\'t recognize you';
 
   @override
   String get m0201aMensaje =>
-      'We couldn\'t verify your fingerprint or face. Try again or sign in with your phone PIN.';
+      'We couldn\'t verify your fingerprint or face. Try again or use your phone lock.';
 
   @override
   String get m0203Titulo => 'Access granted';
@@ -1402,7 +1437,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0204Volver => 'Back to sign in';
 
   @override
-  String get cuentaIngresarConHuella => 'Sign in with fingerprint or face';
+  String cuentaIngresarConHuella(String tipo) {
+    String _temp0 = intl.Intl.selectLogic(tipo, {
+      'huella': 'Sign in with fingerprint',
+      'rostro': 'Sign in with face',
+      'bloqueo': 'Sign in with your phone lock',
+      'other': 'Sign in with your phone\'s security',
+    });
+    return '$_temp0';
+  }
 
   @override
   String get accesoBiometricoMotivo =>

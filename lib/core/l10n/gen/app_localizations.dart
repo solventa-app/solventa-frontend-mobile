@@ -302,17 +302,17 @@ abstract class AppLocalizations {
   /// **'Activación'**
   String get m0108Titulo;
 
-  /// M01-08 título
+  /// M01-08 título según el método del teléfono
   ///
   /// In es, this message translates to:
-  /// **'Activa tu huella o rostro'**
-  String get m0108Encabezado;
+  /// **'{tipo, select, huella{Activa tu huella} rostro{Activa tu rostro} bloqueo{Activa el bloqueo del teléfono} other{Activa la seguridad de tu teléfono}}'**
+  String m0108Encabezado(String tipo);
 
-  /// M01-08 explicación
+  /// M01-08 explicación según el método del teléfono
   ///
   /// In es, this message translates to:
-  /// **'Solventa protege tu cuenta con la seguridad de tu propio teléfono: con huella dactilar o reconocimiento facial entras más rápido y seguro. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.'**
-  String get m0108Explicacion;
+  /// **'{tipo, select, huella{Entra más rápido sin escribir tu contraseña. Te pediremos tu huella una sola vez.} rostro{Entra más rápido sin escribir tu contraseña. Te pediremos tu rostro una sola vez.} bloqueo{Entra más rápido sin escribir tu contraseña. Te pediremos el bloqueo de tu teléfono una sola vez.} other{Entra más rápido sin escribir tu contraseña. Te pediremos la seguridad de tu teléfono una sola vez.}}'**
+  String m0108Explicacion(String tipo);
 
   /// M01-08 sello de confianza
   ///
@@ -331,6 +331,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ya lo activé, continuar'**
   String get m0108Continuar;
+
+  /// M01-08 botón principal cuando el teléfono ya tiene biometría registrada
+  ///
+  /// In es, this message translates to:
+  /// **'{tipo, select, huella{Activar huella} rostro{Activar rostro} bloqueo{Activar bloqueo} other{Activar seguridad}}'**
+  String m0108Activar(String tipo);
 
   /// No description provided for @m0108AhoraNo.
   ///
@@ -1292,11 +1298,11 @@ abstract class AppLocalizations {
   /// **'Ingresa con tu rostro'**
   String get m0201IngresaRostro;
 
-  /// M02-01: texto bajo el sensor según lo que tiene el teléfono
+  /// M02-01: método biométrico desconocido (huella y rostro posibles a la vez, Android 8 o 9, o la consulta falló); ícono del escudo
   ///
   /// In es, this message translates to:
-  /// **'Ingresa con huella o rostro'**
-  String get m0201IngresaBiometria;
+  /// **'Ingresa con la seguridad de tu teléfono'**
+  String get m0201IngresaSeguridad;
 
   /// M02-01: texto bajo el sensor según lo que tiene el teléfono
   ///
@@ -1310,11 +1316,29 @@ abstract class AppLocalizations {
   /// **'Desbloquea tu cuenta de Solventa'**
   String get m0201Motivo;
 
+  /// Título del diálogo del sistema al desbloquear (Android lo muestra tal cual)
+  ///
+  /// In es, this message translates to:
+  /// **'Desbloquea Solventa'**
+  String get m0201DialogoTitulo;
+
+  /// Subtítulo del diálogo del sistema al desbloquear
+  ///
+  /// In es, this message translates to:
+  /// **'Confirma que eres tú'**
+  String get m0201DialogoSubtitulo;
+
+  /// Botón de abajo del diálogo del sistema cuando solo acepta biometría
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get m0201DialogoCancelar;
+
   /// M02-01 y M02-01a: abre el diálogo del sistema con el PIN, patrón o contraseña del teléfono (D2)
   ///
   /// In es, this message translates to:
-  /// **'Usar PIN del teléfono'**
-  String get m0201UsarPin;
+  /// **'Usar el bloqueo del teléfono'**
+  String get m0201UsarBloqueo;
 
   /// M02-01: disparador de demo (solo debug)
   ///
@@ -1337,7 +1361,7 @@ abstract class AppLocalizations {
   /// M02-01: sensor bloqueado temporalmente
   ///
   /// In es, this message translates to:
-  /// **'Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.'**
+  /// **'Hiciste demasiados intentos. Espera unos segundos o usa el bloqueo de tu teléfono.'**
   String get m0201BloqueoTemporal;
 
   /// M02-01: biometría bloqueada hasta usar la credencial del teléfono
@@ -1349,7 +1373,7 @@ abstract class AppLocalizations {
   /// M02-01: la llave del Keystore pidió una autenticación más fuerte
   ///
   /// In es, this message translates to:
-  /// **'Tu teléfono no confirmó tu identidad con la seguridad necesaria. Usa el PIN del teléfono.'**
+  /// **'Tu teléfono no pudo abrir tu huella o rostro. Usa el bloqueo de tu teléfono.'**
   String get m0201FaltaAutenticacion;
 
   /// M02-01: el teléfono no tiene bloqueo de pantalla
@@ -1373,7 +1397,7 @@ abstract class AppLocalizations {
   /// M02-01: salida cuando el teléfono no puede autenticar
   ///
   /// In es, this message translates to:
-  /// **'Ingresar con correo y clave'**
+  /// **'Usar correo y contraseña'**
   String get m0201UsarCorreo;
 
   /// M02-01a: título
@@ -1385,7 +1409,7 @@ abstract class AppLocalizations {
   /// M02-01a: explicación
   ///
   /// In es, this message translates to:
-  /// **'No pudimos verificar tu huella o rostro. Intenta de nuevo o ingresa con el PIN de tu teléfono.'**
+  /// **'No pudimos verificar tu huella o rostro. Intenta de nuevo o usa el bloqueo de tu teléfono.'**
   String get m0201aMensaje;
 
   /// M02-03: título
@@ -2468,11 +2492,11 @@ abstract class AppLocalizations {
   /// **'Volver a iniciar sesión'**
   String get m0204Volver;
 
-  /// No description provided for @cuentaIngresarConHuella.
+  /// Botón de «Inicia sesión» para entrar con la llave del teléfono, según su método
   ///
   /// In es, this message translates to:
-  /// **'Ingresar con huella o rostro'**
-  String get cuentaIngresarConHuella;
+  /// **'{tipo, select, huella{Ingresar con huella} rostro{Ingresar con rostro} bloqueo{Ingresar con el bloqueo del teléfono} other{Ingresar con la seguridad del teléfono}}'**
+  String cuentaIngresarConHuella(String tipo);
 
   /// No description provided for @accesoBiometricoMotivo.
   ///

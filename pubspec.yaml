@@ -51,6 +51,8 @@ dependencies:
   permission_handler: ^12.0.1
   path_provider: ^2.1.6
   local_auth: ^3.0.2
+  # Título y subtítulo del diálogo del sistema en el idioma de la app (`AndroidAuthMessages`); `local_auth` no los reexporta.
+  local_auth_android: ^2.3.0
   shared_preferences: ^2.5.6
   sentry_flutter: ^10.3.0
   sentry_dio: ^10.2.0

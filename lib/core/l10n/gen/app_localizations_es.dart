@@ -124,11 +124,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0108Titulo => 'Activación';
 
   @override
-  String get m0108Encabezado => 'Activa tu huella o rostro';
+  String m0108Encabezado(String tipo) {
+    String _temp0 = intl.Intl.selectLogic(tipo, {
+      'huella': 'Activa tu huella',
+      'rostro': 'Activa tu rostro',
+      'bloqueo': 'Activa el bloqueo del teléfono',
+      'other': 'Activa la seguridad de tu teléfono',
+    });
+    return '$_temp0';
+  }
 
   @override
-  String get m0108Explicacion =>
-      'Solventa protege tu cuenta con la seguridad de tu propio teléfono: con huella dactilar o reconocimiento facial entras más rápido y seguro. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.';
+  String m0108Explicacion(String tipo) {
+    String _temp0 = intl.Intl.selectLogic(tipo, {
+      'huella': 'Entra más rápido sin escribir tu contraseña. Te pediremos tu huella una sola vez.',
+      'rostro': 'Entra más rápido sin escribir tu contraseña. Te pediremos tu rostro una sola vez.',
+      'bloqueo': 'Entra más rápido sin escribir tu contraseña. Te pediremos el bloqueo de tu teléfono una sola vez.',
+      'other': 'Entra más rápido sin escribir tu contraseña. Te pediremos la seguridad de tu teléfono una sola vez.',
+    });
+    return '$_temp0';
+  }
 
   @override
   String get m0108Sello => 'Validación biométrica encriptada localmente';
@@ -138,6 +153,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0108Continuar => 'Ya lo activé, continuar';
+
+  @override
+  String m0108Activar(String tipo) {
+    String _temp0 = intl.Intl.selectLogic(tipo, {
+      'huella': 'Activar huella',
+      'rostro': 'Activar rostro',
+      'bloqueo': 'Activar bloqueo',
+      'other': 'Activar seguridad',
+    });
+    return '$_temp0';
+  }
 
   @override
   String get m0108AhoraNo => 'Ahora no, ir al inicio';
@@ -683,7 +709,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0201IngresaRostro => 'Ingresa con tu rostro';
 
   @override
-  String get m0201IngresaBiometria => 'Ingresa con huella o rostro';
+  String get m0201IngresaSeguridad => 'Ingresa con la seguridad de tu teléfono';
 
   @override
   String get m0201IngresaBloqueo => 'Ingresa con el bloqueo de tu teléfono';
@@ -692,7 +718,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0201Motivo => 'Desbloquea tu cuenta de Solventa';
 
   @override
-  String get m0201UsarPin => 'Usar PIN del teléfono';
+  String get m0201DialogoTitulo => 'Desbloquea Solventa';
+
+  @override
+  String get m0201DialogoSubtitulo => 'Confirma que eres tú';
+
+  @override
+  String get m0201DialogoCancelar => 'Cancelar';
+
+  @override
+  String get m0201UsarBloqueo => 'Usar el bloqueo del teléfono';
 
   @override
   String get m0201SimularNoReconoce => 'Simular que no reconoce la biometría';
@@ -706,7 +741,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0201BloqueoTemporal =>
-      'Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.';
+      'Hiciste demasiados intentos. Espera unos segundos o usa el bloqueo de tu teléfono.';
 
   @override
   String get m0201BloqueoPermanente =>
@@ -714,7 +749,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0201FaltaAutenticacion =>
-      'Tu teléfono no confirmó tu identidad con la seguridad necesaria. Usa el PIN del teléfono.';
+      'Tu teléfono no pudo abrir tu huella o rostro. Usa el bloqueo de tu teléfono.';
 
   @override
   String get m0201SinBloqueo =>
@@ -728,14 +763,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0201IrAjustes => 'Ir a ajustes';
 
   @override
-  String get m0201UsarCorreo => 'Ingresar con correo y clave';
+  String get m0201UsarCorreo => 'Usar correo y contraseña';
 
   @override
   String get m0201aTitulo => 'No te reconocimos';
 
   @override
   String get m0201aMensaje =>
-      'No pudimos verificar tu huella o rostro. Intenta de nuevo o ingresa con el PIN de tu teléfono.';
+      'No pudimos verificar tu huella o rostro. Intenta de nuevo o usa el bloqueo de tu teléfono.';
 
   @override
   String get m0203Titulo => 'Acceso concedido';
@@ -1406,7 +1441,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0204Volver => 'Volver a iniciar sesión';
 
   @override
-  String get cuentaIngresarConHuella => 'Ingresar con huella o rostro';
+  String cuentaIngresarConHuella(String tipo) {
+    String _temp0 = intl.Intl.selectLogic(tipo, {
+      'huella': 'Ingresar con huella',
+      'rostro': 'Ingresar con rostro',
+      'bloqueo': 'Ingresar con el bloqueo del teléfono',
+      'other': 'Ingresar con la seguridad del teléfono',
+    });
+    return '$_temp0';
+  }
 
   @override
   String get accesoBiometricoMotivo =>
