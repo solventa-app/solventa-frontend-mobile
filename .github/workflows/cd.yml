@@ -51,8 +51,12 @@ jobs:
 
       - name: Build de prod
         uses: ./.github/actions/devcontainer
+        env:
+          MAPBOX_PUBLIC_TOKEN: ${{ secrets.MAPBOX_PUBLIC_TOKEN }}
         with:
           run: tool/build-prod.sh ${{ steps.version.outputs.nombre }} ${{ steps.version.outputs.build }}
+          # HU-M06 (M0): token público de Mapbox (paso manual: crear el secreto, plan Anexo B.4).
+          env: MAPBOX_PUBLIC_TOKEN
 
       - name: Subir símbolos a Sentry
         if: env.PUBLICAR == 'true' && env.SENTRY_AUTH_TOKEN != ''

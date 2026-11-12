@@ -36,7 +36,15 @@ class SolProviderRow extends StatelessWidget {
     this.typeLabel,
     this.isPartner = false,
     this.partnerLabel = 'Aliado Solventa',
+    this.onTap,
+    this.selected = false,
   });
+
+  /// Tocar la fila fuera del botón (HU-M06, M5: enfoca el pin en el mapa).
+  final VoidCallback? onTap;
+
+  /// La fila del prestador elegido en el mapa queda marcada.
+  final bool selected;
 
   /// Aliado Solventa: cambia el color del ícono y muestra `verified` (M3).
   final bool isPartner;
@@ -84,7 +92,7 @@ class SolProviderRow extends StatelessWidget {
         ),
       ),
     );
-    final texts = MergeSemantics(
+    final textsColumn = MergeSemantics(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -120,6 +128,14 @@ class SolProviderRow extends StatelessWidget {
         ],
       ),
     );
+    final texts = onTap == null
+        ? textsColumn
+        : Semantics(
+            button: true,
+            selected: selected,
+            onTap: onTap,
+            child: textsColumn,
+          );
     final button = Semantics(
       button: true,
       label: '$requestLabel $name',
@@ -148,7 +164,7 @@ class SolProviderRow extends StatelessWidget {
     // el nombre no se corte.
     final stacked = MediaQuery.textScalerOf(context).scale(16) >= 24;
 
-    return ConstrainedBox(
+    final row = ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 56),
       child: Padding(
         // 10 + 48 (área táctil) + 10 = 68 dp, igual al Figma (12 + 44 + 12).
@@ -181,6 +197,14 @@ class SolProviderRow extends StatelessWidget {
                 ],
               ),
       ),
+    );
+    if (onTap == null && !selected) return row;
+    return Material(
+      color: selected
+          ? colors.primaryContainer.withValues(alpha: 0.45)
+          : Colors.transparent,
+      borderRadius: SolRadius.cardAll,
+      child: InkWell(onTap: onTap, borderRadius: SolRadius.cardAll, child: row),
     );
   }
 }

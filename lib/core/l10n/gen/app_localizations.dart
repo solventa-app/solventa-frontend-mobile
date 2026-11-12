@@ -1487,7 +1487,7 @@ abstract class AppLocalizations {
   /// M06-01 lista vacía
   ///
   /// In es, this message translates to:
-  /// **'No hay prestadores disponibles cerca de ti en este momento.'**
+  /// **'Aún no tenemos prestadores en tu zona.'**
   String get m0601SinPrestadores;
 
   /// M06-01 sin permiso de ubicación
@@ -1550,23 +1550,107 @@ abstract class AppLocalizations {
   /// **'Tu ubicación'**
   String get m0601TuUbicacion;
 
-  /// M06-01 lectura del pin de prestador; abre la app de mapas
-  ///
-  /// In es, this message translates to:
-  /// **'Cómo llegar a {nombre}, {tiempo}'**
-  String m0601ComoLlegar(String nombre, String tiempo);
-
   /// M06-01 sin app de mapas
   ///
   /// In es, this message translates to:
   /// **'No encontramos una app de mapas para abrir la ruta.'**
   String get m0601RutaNoDisponible;
 
-  /// M06-01 atribución del mapa
+  /// M06-01 lectura del pin del mapa; abre el detalle
   ///
   /// In es, this message translates to:
-  /// **'© colaboradores de OpenStreetMap'**
-  String get m0601Atribucion;
+  /// **'{nombre}, {tipo}, {tiempo}'**
+  String m0601PinSemantica(String nombre, String tipo, String tiempo);
+
+  /// M06-01 botón de capas (M14) cuando está en calles
+  ///
+  /// In es, this message translates to:
+  /// **'Ver satélite'**
+  String get m0601VerSatelite;
+
+  /// M06-01 botón de capas (M14) cuando está en satélite
+  ///
+  /// In es, this message translates to:
+  /// **'Ver calles'**
+  String get m0601VerCalles;
+
+  /// M06-01 botón «Volver a centrar» (M8)
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a centrar en mi ubicación'**
+  String get m0601Recentrar;
+
+  /// M06-01 acción de TalkBack del tirador de la hoja (M9)
+  ///
+  /// In es, this message translates to:
+  /// **'Expandir lista'**
+  String get m0601ExpandirLista;
+
+  /// M06-01 acción de TalkBack del tirador de la hoja (M9)
+  ///
+  /// In es, this message translates to:
+  /// **'Contraer lista'**
+  String get m0601ContraerLista;
+
+  /// M06-01 subtítulo de la hoja expandida (M9)
+  ///
+  /// In es, this message translates to:
+  /// **'Más prestadores en tu ciudad'**
+  String get m0601MasPrestadores;
+
+  /// M06-01 tiempo aproximado de los que no son de los 3 (M9)
+  ///
+  /// In es, this message translates to:
+  /// **'~{tiempo}'**
+  String m0601Aproximado(String tiempo);
+
+  /// Detalle del prestador (2.2): tipo y especialidad
+  ///
+  /// In es, this message translates to:
+  /// **'{tipo} · {especialidad}'**
+  String m0601DetalleTipo(String tipo, String especialidad);
+
+  /// Detalle del prestador (2.2): distancia y llegada
+  ///
+  /// In es, this message translates to:
+  /// **'{distancia} · llega en {tiempo}'**
+  String m0601DetalleLlegada(String distancia, String tiempo);
+
+  /// Detalle del prestador (2.2): botón primario
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitar asistencia'**
+  String get m0601SolicitarAsistencia;
+
+  /// Detalle del prestador (2.2): botón secundario (M13)
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo llegar'**
+  String get m0601ComoLlegarBoton;
+
+  /// Aviso al copiar la dirección
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección copiada'**
+  String get m0601DireccionCopiada;
+
+  /// Pista de TalkBack de la dirección del prestador
+  ///
+  /// In es, this message translates to:
+  /// **'Mantén pulsado para copiar la dirección'**
+  String get m0601CopiarDireccion;
+
+  /// Aviso sin app de mapas (M13): copiar la dirección
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar'**
+  String get m0601Copiar;
+
+  /// Aviso sin app de mapas (M13)
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get m0601Cerrar;
 
   /// Inicio: entrada a HU-M05
   ///

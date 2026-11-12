@@ -81,9 +81,11 @@ test/
 `lib/features/acceso/presentation/` (HU-M02) tampoco tiene `domain` ni `data`: la sesión es de `core/sesion/` y la
 biometría de `core/biometria/`; la feature solo tiene `AccesoNotifier`, M02-01 (con su estado M02-01a) y M02-03.
 
-`lib/features/assistance/` (HU-M06) ya tiene sus tres capas: mapa con `flutter_map` y teselas de OpenStreetMap
-(`MAP_TILE_URL`), ubicación con `geolocator` y ruta en la app de mapas del teléfono con `url_launcher` (intent `geo:`,
-que abre Google Maps, Waze o el selector). Los prestadores son un **dato maestro**: la app guarda una copia del catálogo
+`lib/features/assistance/` (HU-M06) ya tiene sus tres capas: mapa de **Mapbox** con `mapbox_maps_flutter` (token
+público `MAPBOX_ACCESS_TOKEN`; reemplaza a `flutter_map` y OpenStreetMap, plan de pendientes M0), con un mapa falso en
+Flutter para `mock` y las pruebas (`presentation/widgets/mapa/`, los únicos archivos que saben cómo se dibuja),
+ubicación con `geolocator` y «Cómo llegar» con `url_launcher`: Google Maps directo, luego `geo:` y luego el navegador
+(M13). Los prestadores son un **dato maestro**: la app guarda una copia del catálogo
 (`SharedPreferences`, no es dato personal), la revisa con el backend cada 7 días por versión y calcula en el teléfono
 los 3 más cercanos (`domain/cercania.dart`); la ubicación no sale del teléfono para listar. Contrato y semilla para el
 backend: [`hu-m06-backend.md`](hu-m06-backend.md). El catálogo sale de `catalogoPrestadores` del BFF (contrato v0.36); con

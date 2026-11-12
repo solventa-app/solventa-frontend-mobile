@@ -57,10 +57,10 @@ dependencies:
   sentry_flutter: ^10.3.0
   sentry_dio: ^10.2.0
   logging: ^1.3.0
-  # HU-M06: mapa con teselas de OpenStreetMap (decisión D-M06), ubicación y
-  # ruta en la app de mapas del teléfono.
-  flutter_map: ^8.2.2
-  latlong2: ^0.9.1
+  # HU-M06: mapa de Mapbox con su librería oficial (reemplaza a flutter_map y
+  # OpenStreetMap, plan de pendientes M0). Token público por
+  # --dart-define=MAPBOX_ACCESS_TOKEN, nunca en el repositorio.
+  mapbox_maps_flutter: 3.34.2
   geolocator: ^14.0.2
   url_launcher: ^6.3.2
   biometric_signature: ^13.3.0

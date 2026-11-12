@@ -671,7 +671,7 @@
   "@m0601Buscando": {
     "description": "M06-01 cargando"
   },
-  "m0601SinPrestadores": "No hay prestadores disponibles cerca de ti en este momento.",
+  "m0601SinPrestadores": "Aún no tenemos prestadores en tu zona.",
   "@m0601SinPrestadores": {
     "description": "M06-01 lista vacía"
   },
@@ -715,11 +715,18 @@
   "@m0601TuUbicacion": {
     "description": "M06-01 lectura del pin del cliente"
   },
-  "m0601ComoLlegar": "Cómo llegar a {nombre}, {tiempo}",
-  "@m0601ComoLlegar": {
-    "description": "M06-01 lectura del pin de prestador; abre la app de mapas",
+  "m0601RutaNoDisponible": "No encontramos una app de mapas para abrir la ruta.",
+  "@m0601RutaNoDisponible": {
+    "description": "M06-01 sin app de mapas"
+  },
+  "m0601PinSemantica": "{nombre}, {tipo}, {tiempo}",
+  "@m0601PinSemantica": {
+    "description": "M06-01 lectura del pin del mapa; abre el detalle",
     "placeholders": {
       "nombre": {
+        "type": "String"
+      },
+      "tipo": {
         "type": "String"
       },
       "tiempo": {
@@ -727,13 +734,86 @@
       }
     }
   },
-  "m0601RutaNoDisponible": "No encontramos una app de mapas para abrir la ruta.",
-  "@m0601RutaNoDisponible": {
-    "description": "M06-01 sin app de mapas"
+  "m0601VerSatelite": "Ver satélite",
+  "@m0601VerSatelite": {
+    "description": "M06-01 botón de capas (M14) cuando está en calles"
   },
-  "m0601Atribucion": "© colaboradores de OpenStreetMap",
-  "@m0601Atribucion": {
-    "description": "M06-01 atribución del mapa"
+  "m0601VerCalles": "Ver calles",
+  "@m0601VerCalles": {
+    "description": "M06-01 botón de capas (M14) cuando está en satélite"
+  },
+  "m0601Recentrar": "Volver a centrar en mi ubicación",
+  "@m0601Recentrar": {
+    "description": "M06-01 botón «Volver a centrar» (M8)"
+  },
+  "m0601ExpandirLista": "Expandir lista",
+  "@m0601ExpandirLista": {
+    "description": "M06-01 acción de TalkBack del tirador de la hoja (M9)"
+  },
+  "m0601ContraerLista": "Contraer lista",
+  "@m0601ContraerLista": {
+    "description": "M06-01 acción de TalkBack del tirador de la hoja (M9)"
+  },
+  "m0601MasPrestadores": "Más prestadores en tu ciudad",
+  "@m0601MasPrestadores": {
+    "description": "M06-01 subtítulo de la hoja expandida (M9)"
+  },
+  "m0601Aproximado": "~{tiempo}",
+  "@m0601Aproximado": {
+    "description": "M06-01 tiempo aproximado de los que no son de los 3 (M9)",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DetalleTipo": "{tipo} · {especialidad}",
+  "@m0601DetalleTipo": {
+    "description": "Detalle del prestador (2.2): tipo y especialidad",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "especialidad": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DetalleLlegada": "{distancia} · llega en {tiempo}",
+  "@m0601DetalleLlegada": {
+    "description": "Detalle del prestador (2.2): distancia y llegada",
+    "placeholders": {
+      "distancia": {
+        "type": "String"
+      },
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601SolicitarAsistencia": "Solicitar asistencia",
+  "@m0601SolicitarAsistencia": {
+    "description": "Detalle del prestador (2.2): botón primario"
+  },
+  "m0601ComoLlegarBoton": "Cómo llegar",
+  "@m0601ComoLlegarBoton": {
+    "description": "Detalle del prestador (2.2): botón secundario (M13)"
+  },
+  "m0601DireccionCopiada": "Dirección copiada",
+  "@m0601DireccionCopiada": {
+    "description": "Aviso al copiar la dirección"
+  },
+  "m0601CopiarDireccion": "Mantén pulsado para copiar la dirección",
+  "@m0601CopiarDireccion": {
+    "description": "Pista de TalkBack de la dirección del prestador"
+  },
+  "m0601Copiar": "Copiar",
+  "@m0601Copiar": {
+    "description": "Aviso sin app de mapas (M13): copiar la dirección"
+  },
+  "m0601Cerrar": "Cerrar",
+  "@m0601Cerrar": {
+    "description": "Aviso sin app de mapas (M13)"
   },
   "homeReportarTile": "Reportar un siniestro",
   "@homeReportarTile": {

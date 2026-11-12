@@ -813,8 +813,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0601Buscando => 'Buscando prestadores cerca de ti…';
 
   @override
-  String get m0601SinPrestadores =>
-      'No hay prestadores disponibles cerca de ti en este momento.';
+  String get m0601SinPrestadores => 'Aún no tenemos prestadores en tu zona.';
 
   @override
   String get m0601SinPermiso =>
@@ -850,16 +849,64 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0601TuUbicacion => 'Tu ubicación';
 
   @override
-  String m0601ComoLlegar(String nombre, String tiempo) {
-    return 'Cómo llegar a $nombre, $tiempo';
-  }
-
-  @override
   String get m0601RutaNoDisponible =>
       'No encontramos una app de mapas para abrir la ruta.';
 
   @override
-  String get m0601Atribucion => '© colaboradores de OpenStreetMap';
+  String m0601PinSemantica(String nombre, String tipo, String tiempo) {
+    return '$nombre, $tipo, $tiempo';
+  }
+
+  @override
+  String get m0601VerSatelite => 'Ver satélite';
+
+  @override
+  String get m0601VerCalles => 'Ver calles';
+
+  @override
+  String get m0601Recentrar => 'Volver a centrar en mi ubicación';
+
+  @override
+  String get m0601ExpandirLista => 'Expandir lista';
+
+  @override
+  String get m0601ContraerLista => 'Contraer lista';
+
+  @override
+  String get m0601MasPrestadores => 'Más prestadores en tu ciudad';
+
+  @override
+  String m0601Aproximado(String tiempo) {
+    return '~$tiempo';
+  }
+
+  @override
+  String m0601DetalleTipo(String tipo, String especialidad) {
+    return '$tipo · $especialidad';
+  }
+
+  @override
+  String m0601DetalleLlegada(String distancia, String tiempo) {
+    return '$distancia · llega en $tiempo';
+  }
+
+  @override
+  String get m0601SolicitarAsistencia => 'Solicitar asistencia';
+
+  @override
+  String get m0601ComoLlegarBoton => 'Cómo llegar';
+
+  @override
+  String get m0601DireccionCopiada => 'Dirección copiada';
+
+  @override
+  String get m0601CopiarDireccion => 'Mantén pulsado para copiar la dirección';
+
+  @override
+  String get m0601Copiar => 'Copiar';
+
+  @override
+  String get m0601Cerrar => 'Cerrar';
 
   @override
   String get homeReportarTile => 'Reportar un siniestro';
