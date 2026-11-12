@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 import 'package:solventa_mobile/core/errors/resultado.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
@@ -37,6 +38,10 @@ void main() {
   const lugar = Coordenada(4.6767, -74.0483);
 
   setUp(() {
+    // El idioma de la notificación lee las preferencias; sin este doble, el
+    // fallo del plugin dentro de `runAsync` se reporta como error del test
+    // (intermitente bajo carga).
+    SharedPreferences.setMockInitialValues({});
     ahora = DateTime.utc(2026, 11, 12, 14, 20);
     bff = FakeAsistenciaRemoteDataSource(latencia: Duration.zero)
       ..reloj = () => ahora;
