@@ -14,9 +14,10 @@ import '../widgets/acceso_widgets.dart';
 ///
 /// Al entrar abre sola el diálogo del sistema. «Usar el bloqueo del teléfono»
 /// lo abre aceptando el PIN, patrón o contraseña del teléfono (D2: sin PIN
-/// propio de la app). Las fallas dejan siempre dos salidas visibles: el
-/// bloqueo del teléfono y el correo con contraseña. El atrás del sistema cierra
-/// la app: es la única ruta.
+/// propio de la app). Siempre hay dos salidas visibles, también después de cerrar
+/// el diálogo de la huella sin elegir nada: el bloqueo del teléfono y el correo
+/// con contraseña (sin conexión se conserva la sesión guardada: solo
+/// «Reintentar»). El atrás del sistema cierra la app: es la única ruta.
 class M0201DesbloqueoPage extends ConsumerStatefulWidget {
   const M0201DesbloqueoPage({super.key, this.autoIniciar = true});
 
@@ -272,12 +273,15 @@ class _Desbloqueo extends StatelessWidget {
                 label: l10n.m0201UsarCorreo,
                 onPressed: onUsarCorreo,
               ),
-            ] else if (avisoConPin) ...[
-              // Siempre dos salidas: el bloqueo del teléfono y el correo.
-              SolLinkButton(
-                label: l10n.m0201UsarBloqueo,
-                onPressed: ocupado ? null : onUsarPin,
-              ),
+            ] else if (avisoConPin || aviso == null) ...[
+              // Siempre dos salidas (M02-01a): el bloqueo del teléfono y el correo con contraseña. También sin aviso:
+              // quien cierra el diálogo de la huella sin elegir nada no se queda sin cómo entrar. Con el teléfono que
+              // solo tiene bloqueo, el ícono ya abre ese diálogo y el enlace sobraría.
+              if (aviso != null || tipo != TipoBiometria.ninguna)
+                SolLinkButton(
+                  label: l10n.m0201UsarBloqueo,
+                  onPressed: ocupado ? null : onUsarPin,
+                ),
               SolLinkButton(
                 label: l10n.m0201UsarCorreo,
                 onPressed: ocupado ? null : onUsarCorreo,

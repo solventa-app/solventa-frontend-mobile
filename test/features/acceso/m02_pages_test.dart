@@ -101,9 +101,10 @@ void main() {
 
       expect(find.text('Solventa'), findsOneWidget);
       expect(find.text('Desbloquea tu cuenta'), findsOneWidget);
-      // Un solo texto según lo configurado; el enlace del PIN solo sale con un aviso que lo menciona.
+      // Un solo texto según lo configurado y siempre las dos salidas: el bloqueo del teléfono y el correo.
       expect(find.text('Ingresa con tu huella'), findsOneWidget);
-      expect(find.text('Usar el bloqueo del teléfono'), findsNothing);
+      expect(find.text('Usar el bloqueo del teléfono'), findsOneWidget);
+      expect(find.text('Usar correo y contraseña'), findsOneWidget);
       expect(find.bySemanticsLabel('Ingresa con tu huella'), findsOne);
       expect(find.byType(SolLocaleChip), findsOneWidget);
       expect(biometria.autenticaciones, isEmpty);
@@ -217,6 +218,60 @@ void main() {
         await tester.pumpAndSettle();
         expect(c.read(accesoProvider).fase, FaseAcceso.normal);
         expect(onboarding.cierres, 1);
+      },
+    );
+
+    testWidgets(
+      'cerrar el diálogo de la huella sin elegir deja las dos salidas, y el correo lleva a «Inicia sesión»',
+      (tester) async {
+        biometria.resultados.add(const Cancelado());
+        final c = await montar(tester, const M0201DesbloqueoPage());
+
+        expect(c.read(accesoProvider).aviso, isNull);
+        expect(find.byType(SolStatusBanner), findsNothing);
+        expect(find.text('Usar el bloqueo del teléfono'), findsOneWidget);
+        expect(find.text('Usar correo y contraseña'), findsOneWidget);
+
+        await tester.tap(find.text('Usar correo y contraseña'));
+        await tester.pumpAndSettle();
+
+        expect(c.read(accesoProvider).fase, FaseAcceso.normal);
+        expect(onboarding.cierres, 1);
+      },
+    );
+
+    testWidgets(
+      'el enlace del bloqueo abre el diálogo con el PIN del teléfono',
+      (tester) async {
+        biometria.resultados.add(const Cancelado());
+        await montar(tester, const M0201DesbloqueoPage());
+
+        await tester.tap(find.text('Usar el bloqueo del teléfono'));
+        await tester.pumpAndSettle();
+
+        expect(biometria.autenticaciones, [false, true]);
+      },
+    );
+
+    testWidgets(
+      'con solo el bloqueo del teléfono no repite el enlace del bloqueo',
+      (tester) async {
+        biometria.tipoActual = TipoBiometria.ninguna;
+        await montar(tester, const M0201DesbloqueoPage(autoIniciar: false));
+
+        expect(find.text('Usar el bloqueo del teléfono'), findsNothing);
+        expect(find.text('Usar correo y contraseña'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'sin conexión conserva la sesión: solo Reintentar, sin salida por correo',
+      (tester) async {
+        remota.errorRed = const ErrorRed();
+        await montar(tester, const M0201DesbloqueoPage());
+
+        expect(find.text('Reintentar'), findsOneWidget);
+        expect(find.text('Usar correo y contraseña'), findsNothing);
       },
     );
 
