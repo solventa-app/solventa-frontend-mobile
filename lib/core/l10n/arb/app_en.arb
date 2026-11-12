@@ -712,6 +712,139 @@
   "m0606Mensaje": "Your request was cancelled. The assigned service no longer applies and there will be no charges for this request.",
   "m0606VolverInicio": "Back to home",
   "m0606SolicitarDeNuevo": "Request again",
+  "navMisAsistencias": "My requests",
+  "navMisAsistenciasEnCamino": "My requests, {cantidad} on the way",
+  "@navMisAsistenciasEnCamino": {
+    "description": "TalkBack del destino con badge (4.1)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasTitulo": "My requests",
+  "misAsistenciasVacio": "You haven't requested assistance yet",
+  "misAsistenciasSolicitar": "Request on-site assistance",
+  "misAsistenciasEnCamino": "On the way ({cantidad})",
+  "@misAsistenciasEnCamino": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasYaLlegaron": "Arrived ({cantidad})",
+  "@misAsistenciasYaLlegaron": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasError": "We couldn't load your requests.",
+  "misAsistenciasCargando": "Loading your requests…",
+  "asistenciaPedida": "{tipo} · requested {hora}",
+  "@asistenciaPedida": {
+    "description": "4.2 subtítulo de la tarjeta",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaEn": "Arrives in {minutos} min",
+  "@asistenciaLlegaEn": {
+    "description": "4.2 cuenta regresiva",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaMenosDeUno": "Arrives in less than 1 min",
+  "asistenciaHoraEstimada": "Estimated time {hora}",
+  "@asistenciaHoraEstimada": {
+    "description": "4.2 hora estimada",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlego": "Arrived · {hora}",
+  "@asistenciaLlego": {
+    "description": "4.2 insignia ya llegó",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoConfirmada": "We couldn't confirm",
+  "asistenciaReintentar": "Try again",
+  "asistenciaEnCaminoLlega": "On the way · arrives in {minutos} min",
+  "@asistenciaEnCaminoLlega": {
+    "description": "4.4 estado en el detalle",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifTitulo": "Your assistance has arrived",
+  "asistenciaNotifCuerpo": "{prestador} should be at your location now",
+  "@asistenciaNotifCuerpo": {
+    "description": "4.5 cuerpo de la notificación",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifNota": "We'll let you know when the provider arrives.",
+  "asistenciaLlegoSnack": "{prestador} has arrived",
+  "@asistenciaLlegoSnack": {
+    "description": "4.5 aviso con la app abierta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaVer": "View",
+  "asistenciaDetalleTitulo": "Your assistance",
+  "asistenciaTeAlejaste": "You moved away from where you requested assistance. The provider is going to {direccion}",
+  "@asistenciaTeAlejaste": {
+    "description": "4.4b aviso",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLugarPedido": "the place where you requested it",
+  "asistenciaCancelarYPedirOtra": "Cancel and request another",
+  "asistenciaLectura": "{prestador}, {tipo}, {estado}",
+  "@asistenciaLectura": {
+    "description": "4.2 lectura de TalkBack de la tarjeta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      },
+      "tipo": {
+        "type": "String"
+      },
+      "estado": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoEncontrada": "We couldn't find that request.",
   "m0402Titulo": "Payout",
   "m0402Mensaje": "Your payout is on its way!",
   "m0402Monto": "{monto} deposited",

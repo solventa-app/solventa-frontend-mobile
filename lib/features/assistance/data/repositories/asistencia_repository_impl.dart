@@ -80,6 +80,22 @@ final class AsistenciaRepositoryImpl implements AsistenciaRepository {
   }
 
   @override
+  Future<Resultado<List<Asistencia>>> misAsistencias() async {
+    final r = await guardarFallas(_remote.misAsistencias);
+    return switch (r) {
+      Exito(:final valor) => Exito([
+        for (final m in valor)
+          if (asistenciaDesdeMapa(m) case Exito(:final valor)) valor,
+      ]),
+      Fracaso(:final falla) => Fracaso(falla),
+    };
+  }
+
+  @override
+  Future<Resultado<Asistencia>> asistencia(String id) =>
+      _union(() => _remote.asistencia(id));
+
+  @override
   Future<Resultado<List<RutaPrestador>>> rutas(
     Coordenada origen,
     List<String> prestadorIds,

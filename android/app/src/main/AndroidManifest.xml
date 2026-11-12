@@ -11,6 +11,8 @@
     <!-- HU-M04 Fase 6 (KAN-259): aviso al liquidar una indemnización. Android 13+
          lo pide en tiempo de ejecución (`requestPermission` de FirebaseMessaging). -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- HU-M06 (4.5): reprogramar la notificación de llegada tras reiniciar el teléfono. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- El plugin de cámara los declara, pero el video se graba sin audio y las
          capturas van a la caché privada: se quitan del manifest final. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
@@ -54,6 +56,17 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- HU-M06 (4.5): notificación local programada para la llegada de la asistencia
+             (flutter_local_notifications). Sin alarmas exactas: inexactAllowWhileIdle. -->
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+        <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

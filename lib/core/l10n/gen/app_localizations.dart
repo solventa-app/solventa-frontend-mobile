@@ -2294,6 +2294,174 @@ abstract class AppLocalizations {
   /// **'Solicitar de nuevo'**
   String get m0606SolicitarDeNuevo;
 
+  /// Barra inferior: destino «Mis asistencias» (HU-M06 4.1)
+  ///
+  /// In es, this message translates to:
+  /// **'Mis asistencias'**
+  String get navMisAsistencias;
+
+  /// TalkBack del destino con badge (4.1)
+  ///
+  /// In es, this message translates to:
+  /// **'Mis asistencias, {cantidad} en camino'**
+  String navMisAsistenciasEnCamino(String cantidad);
+
+  /// 4.1 título de la pestaña
+  ///
+  /// In es, this message translates to:
+  /// **'Mis asistencias'**
+  String get misAsistenciasTitulo;
+
+  /// 4.1 estado vacío
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no has pedido asistencia'**
+  String get misAsistenciasVacio;
+
+  /// 4.1 estado vacío: va a la pestaña Asistencia
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitar asistencia en sitio'**
+  String get misAsistenciasSolicitar;
+
+  /// 4.1 acordeón (A7)
+  ///
+  /// In es, this message translates to:
+  /// **'En camino ({cantidad})'**
+  String misAsistenciasEnCamino(String cantidad);
+
+  /// 4.1 acordeón (A7)
+  ///
+  /// In es, this message translates to:
+  /// **'Ya llegaron ({cantidad})'**
+  String misAsistenciasYaLlegaron(String cantidad);
+
+  /// 4.1 error al cargar
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar tus asistencias.'**
+  String get misAsistenciasError;
+
+  /// 4.1 cargando la lista o el detalle
+  ///
+  /// In es, this message translates to:
+  /// **'Cargando tus asistencias…'**
+  String get misAsistenciasCargando;
+
+  /// 4.2 subtítulo de la tarjeta
+  ///
+  /// In es, this message translates to:
+  /// **'{tipo} · pedida {hora}'**
+  String asistenciaPedida(String tipo, String hora);
+
+  /// 4.2 cuenta regresiva
+  ///
+  /// In es, this message translates to:
+  /// **'Llega en {minutos} min'**
+  String asistenciaLlegaEn(String minutos);
+
+  /// 4.2 cuenta regresiva bajo 1 min
+  ///
+  /// In es, this message translates to:
+  /// **'Llega en menos de 1 min'**
+  String get asistenciaLlegaMenosDeUno;
+
+  /// 4.2 hora estimada
+  ///
+  /// In es, this message translates to:
+  /// **'Hora estimada {hora}'**
+  String asistenciaHoraEstimada(String hora);
+
+  /// 4.2 insignia ya llegó
+  ///
+  /// In es, this message translates to:
+  /// **'Llegó · {hora}'**
+  String asistenciaLlego(String hora);
+
+  /// 4.2 aviso de no confirmada
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos confirmar'**
+  String get asistenciaNoConfirmada;
+
+  /// 4.2 reintentar (reenvío de M06-03b)
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get asistenciaReintentar;
+
+  /// 4.4 estado en el detalle
+  ///
+  /// In es, this message translates to:
+  /// **'En camino · llega en {minutos} min'**
+  String asistenciaEnCaminoLlega(String minutos);
+
+  /// 4.5 título de la notificación
+  ///
+  /// In es, this message translates to:
+  /// **'Tu asistencia llegó'**
+  String get asistenciaNotifTitulo;
+
+  /// 4.5 cuerpo de la notificación
+  ///
+  /// In es, this message translates to:
+  /// **'{prestador} ya debería estar en tu ubicación'**
+  String asistenciaNotifCuerpo(String prestador);
+
+  /// 4.5 línea antes de pedir el permiso de notificaciones
+  ///
+  /// In es, this message translates to:
+  /// **'Te avisaremos cuando llegue el prestador.'**
+  String get asistenciaNotifNota;
+
+  /// 4.5 aviso con la app abierta
+  ///
+  /// In es, this message translates to:
+  /// **'{prestador} llegó'**
+  String asistenciaLlegoSnack(String prestador);
+
+  /// 4.5 acción del aviso
+  ///
+  /// In es, this message translates to:
+  /// **'Ver'**
+  String get asistenciaVer;
+
+  /// 4.4 título del detalle
+  ///
+  /// In es, this message translates to:
+  /// **'Tu asistencia'**
+  String get asistenciaDetalleTitulo;
+
+  /// 4.4b aviso
+  ///
+  /// In es, this message translates to:
+  /// **'Te alejaste del lugar donde pediste la asistencia. El prestador va a {direccion}'**
+  String asistenciaTeAlejaste(String direccion);
+
+  /// 4.4b sin dirección escrita
+  ///
+  /// In es, this message translates to:
+  /// **'el lugar donde la pediste'**
+  String get asistenciaLugarPedido;
+
+  /// 4.4b acción
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar y pedir otra'**
+  String get asistenciaCancelarYPedirOtra;
+
+  /// 4.2 lectura de TalkBack de la tarjeta
+  ///
+  /// In es, this message translates to:
+  /// **'{prestador}, {tipo}, {estado}'**
+  String asistenciaLectura(String prestador, String tipo, String estado);
+
+  /// 4.4 detalle: ajena o inexistente
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos esa asistencia.'**
+  String get asistenciaNoEncontrada;
+
   /// M04-02: título de la barra
   ///
   /// In es, this message translates to:

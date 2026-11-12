@@ -1,7 +1,8 @@
 import 'prestador.dart';
 
-/// Estado de una asistencia en sitio (contrato v0.40).
-enum EstadoAsistencia { confirmada, noConfirmada, cancelada }
+/// Estado de una asistencia en sitio (contrato v0.40; `llego` desde la v0.52:
+/// una confirmada cuya llegada ya pasó, derivado en el backend al leer).
+enum EstadoAsistencia { confirmada, noConfirmada, cancelada, llego }
 
 /// De dónde salió la ubicación del cliente (contrato v0.50, B4).
 enum OrigenUbicacion { gps, direccion }
@@ -67,7 +68,21 @@ final class DireccionServicioCaido extends DireccionUbicada {
   const DireccionServicioCaido();
 }
 
-/// Respuesta del backend a solicitar o cancelar.
+/// Adónde pidió el cliente la asistencia (v0.52, solo para él).
+final class UbicacionSolicitud {
+  const UbicacionSolicitud({
+    required this.origen,
+    this.coordenada,
+    this.direccion,
+  });
+
+  final OrigenUbicacion origen;
+  final Coordenada? coordenada;
+  final String? direccion;
+}
+
+/// Respuesta del backend a solicitar o cancelar, y cada asistencia de «Mis
+/// asistencias» (v0.52).
 final class Asistencia {
   const Asistencia({
     required this.id,
@@ -77,6 +92,10 @@ final class Asistencia {
     required this.solicitadaEn,
     this.minutosEstimados,
     this.canceladaEn,
+    this.confirmadaEn,
+    this.llegadaEstimada,
+    this.descripcion,
+    this.ubicacion,
   });
 
   final String id;
@@ -88,6 +107,28 @@ final class Asistencia {
   /// Solo en [EstadoAsistencia.confirmada].
   final int? minutosEstimados;
   final DateTime? canceladaEn;
+
+  /// v0.52 (B5): para la cuenta regresiva y la notificación de llegada.
+  final DateTime? confirmadaEn;
+  final DateTime? llegadaEstimada;
+
+  /// v0.52 (B6): lo que pidió y adónde; solo en «Mis asistencias» y su detalle.
+  final String? descripcion;
+  final UbicacionSolicitud? ubicacion;
+
+  Asistencia conEstado(EstadoAsistencia nuevo) => Asistencia(
+    id: id,
+    estado: nuevo,
+    prestador: prestador,
+    tipo: tipo,
+    solicitadaEn: solicitadaEn,
+    minutosEstimados: minutosEstimados,
+    canceladaEn: canceladaEn,
+    confirmadaEn: confirmadaEn,
+    llegadaEstimada: llegadaEstimada,
+    descripcion: descripcion,
+    ubicacion: ubicacion,
+  );
 }
 
 /// Códigos de `ErrorAsistencia` (llegan como `FallaNegocio.motivo`).

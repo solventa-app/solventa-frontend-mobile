@@ -9,9 +9,11 @@ import '../data/datasources/asistencia_remote_datasource.dart';
 import '../data/datasources/catalogo_local_datasource.dart';
 import '../data/datasources/permiso_pedido_store.dart';
 import '../data/datasources/ruta_externa_service.dart';
+import '../data/notificaciones_asistencia.dart';
 import '../data/repositories/asistencia_repository_impl.dart';
 import '../domain/repositories/asistencia_repository.dart';
 import 'estilo_mapa_notifier.dart';
+import 'mis_asistencias_notifier.dart';
 import 'prestadores_notifier.dart';
 import 'prestadores_state.dart';
 import 'solicitud_notifier.dart';
@@ -79,6 +81,25 @@ final prestadoresProvider =
     NotifierProvider.autoDispose<PrestadoresNotifier, PrestadoresState>(
       PrestadoresNotifier.new,
     );
+
+/// Notificación local de llegada (4.5). En pruebas, el fake.
+final notificacionesAsistenciaProvider = Provider<NotificacionesAsistencia>(
+  (ref) => _enPruebas
+      ? FakeNotificacionesAsistencia()
+      : LocalNotificacionesAsistencia(),
+);
+
+/// «Mis asistencias» (4.1). Vive mientras dure la sesión de la app: el badge
+/// de la barra lo usa aunque la pestaña no esté abierta.
+final misAsistenciasProvider =
+    NotifierProvider<MisAsistenciasNotifier, MisAsistenciasState>(
+      MisAsistenciasNotifier.new,
+    );
+
+/// Número del badge de «Mis asistencias»: las en camino (4.1).
+final enCaminoCantidadProvider = Provider<int>(
+  (ref) => ref.watch(misAsistenciasProvider.select((s) => s.enCamino.length)),
+);
 
 /// Recorrido desde «Solicitar» (M06-02 a M06-06). No se descarta al cambiar
 /// de pantalla: la asistencia confirmada sigue disponible para cancelarla.
