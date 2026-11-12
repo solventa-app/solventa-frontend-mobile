@@ -1103,15 +1103,85 @@ class Input$FirmarPorEnlaceInput {
   }
 }
 
+class Input$DispositivoPushInput {
+  factory Input$DispositivoPushInput({
+    required String instalacionId,
+    required Enum$PlataformaMovil plataforma,
+  }) => Input$DispositivoPushInput._({
+    r'instalacionId': instalacionId,
+    r'plataforma': plataforma,
+  });
+
+  Input$DispositivoPushInput._(this._$data);
+
+  factory Input$DispositivoPushInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$instalacionId = data['instalacionId'];
+    result$data['instalacionId'] = (l$instalacionId as String);
+    final l$plataforma = data['plataforma'];
+    result$data['plataforma'] = fromJson$Enum$PlataformaMovil(
+      (l$plataforma as String),
+    );
+    return Input$DispositivoPushInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get instalacionId => (_$data['instalacionId'] as String);
+
+  Enum$PlataformaMovil get plataforma =>
+      (_$data['plataforma'] as Enum$PlataformaMovil);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$instalacionId = instalacionId;
+    result$data['instalacionId'] = l$instalacionId;
+    final l$plataforma = plataforma;
+    result$data['plataforma'] = toJson$Enum$PlataformaMovil(l$plataforma);
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$DispositivoPushInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$instalacionId = instalacionId;
+    final lOther$instalacionId = other.instalacionId;
+    if (l$instalacionId != lOther$instalacionId) {
+      return false;
+    }
+    final l$plataforma = plataforma;
+    final lOther$plataforma = other.plataforma;
+    if (l$plataforma != lOther$plataforma) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$instalacionId = instalacionId;
+    final l$plataforma = plataforma;
+    return Object.hashAll([l$instalacionId, l$plataforma]);
+  }
+}
+
 class Input$CredencialesInput {
   factory Input$CredencialesInput({
     required String usuario,
     required String clave,
     Enum$RolUsuario? rol,
+    Input$DispositivoPushInput? dispositivo,
   }) => Input$CredencialesInput._({
     r'usuario': usuario,
     r'clave': clave,
     if (rol != null) r'rol': rol,
+    if (dispositivo != null) r'dispositivo': dispositivo,
   });
 
   Input$CredencialesInput._(this._$data);
@@ -1128,6 +1198,14 @@ class Input$CredencialesInput {
           ? null
           : fromJson$Enum$RolUsuario((l$rol as String));
     }
+    if (data.containsKey('dispositivo')) {
+      final l$dispositivo = data['dispositivo'];
+      result$data['dispositivo'] = l$dispositivo == null
+          ? null
+          : Input$DispositivoPushInput.fromJson(
+              (l$dispositivo as Map<String, dynamic>),
+            );
+    }
     return Input$CredencialesInput._(result$data);
   }
 
@@ -1139,6 +1217,9 @@ class Input$CredencialesInput {
 
   Enum$RolUsuario? get rol => (_$data['rol'] as Enum$RolUsuario?);
 
+  Input$DispositivoPushInput? get dispositivo =>
+      (_$data['dispositivo'] as Input$DispositivoPushInput?);
+
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$usuario = usuario;
@@ -1148,6 +1229,10 @@ class Input$CredencialesInput {
     if (_$data.containsKey('rol')) {
       final l$rol = rol;
       result$data['rol'] = l$rol == null ? null : toJson$Enum$RolUsuario(l$rol);
+    }
+    if (_$data.containsKey('dispositivo')) {
+      final l$dispositivo = dispositivo;
+      result$data['dispositivo'] = l$dispositivo?.toJson();
     }
     return result$data;
   }
@@ -1178,6 +1263,15 @@ class Input$CredencialesInput {
     if (l$rol != lOther$rol) {
       return false;
     }
+    final l$dispositivo = dispositivo;
+    final lOther$dispositivo = other.dispositivo;
+    if (_$data.containsKey('dispositivo') !=
+        other._$data.containsKey('dispositivo')) {
+      return false;
+    }
+    if (l$dispositivo != lOther$dispositivo) {
+      return false;
+    }
     return true;
   }
 
@@ -1186,10 +1280,12 @@ class Input$CredencialesInput {
     final l$usuario = usuario;
     final l$clave = clave;
     final l$rol = rol;
+    final l$dispositivo = dispositivo;
     return Object.hashAll([
       l$usuario,
       l$clave,
       _$data.containsKey('rol') ? l$rol : const {},
+      _$data.containsKey('dispositivo') ? l$dispositivo : const {},
     ]);
   }
 }
@@ -3587,6 +3683,39 @@ Enum$EstadoUsuario fromJson$Enum$EstadoUsuario(String value) {
   }
 }
 
+enum Enum$PlataformaMovil {
+  ANDROID,
+  IOS,
+  $unknown;
+
+  factory Enum$PlataformaMovil.fromJson(String value) =>
+      fromJson$Enum$PlataformaMovil(value);
+
+  String toJson() => toJson$Enum$PlataformaMovil(this);
+}
+
+String toJson$Enum$PlataformaMovil(Enum$PlataformaMovil e) {
+  switch (e) {
+    case Enum$PlataformaMovil.ANDROID:
+      return r'ANDROID';
+    case Enum$PlataformaMovil.IOS:
+      return r'IOS';
+    case Enum$PlataformaMovil.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$PlataformaMovil fromJson$Enum$PlataformaMovil(String value) {
+  switch (value) {
+    case r'ANDROID':
+      return Enum$PlataformaMovil.ANDROID;
+    case r'IOS':
+      return Enum$PlataformaMovil.IOS;
+    default:
+      return Enum$PlataformaMovil.$unknown;
+  }
+}
+
 enum Enum$EstadoArchivo {
   PENDIENTE,
   DISPONIBLE,
@@ -3973,6 +4102,77 @@ Enum$MotivoRechazo fromJson$Enum$MotivoRechazo(String value) {
       return Enum$MotivoRechazo.OTRO;
     default:
       return Enum$MotivoRechazo.$unknown;
+  }
+}
+
+enum Enum$TipoEventoParametrico {
+  VUELO_RETRASO,
+  VUELO_CANCELADO,
+  CLIMA,
+  $unknown;
+
+  factory Enum$TipoEventoParametrico.fromJson(String value) =>
+      fromJson$Enum$TipoEventoParametrico(value);
+
+  String toJson() => toJson$Enum$TipoEventoParametrico(this);
+}
+
+String toJson$Enum$TipoEventoParametrico(Enum$TipoEventoParametrico e) {
+  switch (e) {
+    case Enum$TipoEventoParametrico.VUELO_RETRASO:
+      return r'VUELO_RETRASO';
+    case Enum$TipoEventoParametrico.VUELO_CANCELADO:
+      return r'VUELO_CANCELADO';
+    case Enum$TipoEventoParametrico.CLIMA:
+      return r'CLIMA';
+    case Enum$TipoEventoParametrico.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoEventoParametrico fromJson$Enum$TipoEventoParametrico(String value) {
+  switch (value) {
+    case r'VUELO_RETRASO':
+      return Enum$TipoEventoParametrico.VUELO_RETRASO;
+    case r'VUELO_CANCELADO':
+      return Enum$TipoEventoParametrico.VUELO_CANCELADO;
+    case r'CLIMA':
+      return Enum$TipoEventoParametrico.CLIMA;
+    default:
+      return Enum$TipoEventoParametrico.$unknown;
+  }
+}
+
+enum Enum$EstadoIndemnizacion {
+  EN_PROCESO,
+  PAGADA,
+  $unknown;
+
+  factory Enum$EstadoIndemnizacion.fromJson(String value) =>
+      fromJson$Enum$EstadoIndemnizacion(value);
+
+  String toJson() => toJson$Enum$EstadoIndemnizacion(this);
+}
+
+String toJson$Enum$EstadoIndemnizacion(Enum$EstadoIndemnizacion e) {
+  switch (e) {
+    case Enum$EstadoIndemnizacion.EN_PROCESO:
+      return r'EN_PROCESO';
+    case Enum$EstadoIndemnizacion.PAGADA:
+      return r'PAGADA';
+    case Enum$EstadoIndemnizacion.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$EstadoIndemnizacion fromJson$Enum$EstadoIndemnizacion(String value) {
+  switch (value) {
+    case r'EN_PROCESO':
+      return Enum$EstadoIndemnizacion.EN_PROCESO;
+    case r'PAGADA':
+      return Enum$EstadoIndemnizacion.PAGADA;
+    default:
+      return Enum$EstadoIndemnizacion.$unknown;
   }
 }
 

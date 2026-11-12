@@ -576,6 +576,17 @@ class AppLocalizationsEs extends AppLocalizations {
       'Los datos de tu cuenta provienen de tu documento verificado y son de solo lectura. Tus datos personales se tratan conforme a la Ley 1581 de 2012 de Habeas Data.';
 
   @override
+  String get perfilNotificacionesPush => 'Notificaciones push';
+
+  @override
+  String get perfilNotificacionesPushTexto =>
+      'Avisa cuando se liquide una indemnización, entre otros.';
+
+  @override
+  String get perfilNotificacionesPushError =>
+      'No se pudo guardar tu preferencia. Intenta de nuevo.';
+
+  @override
   String get cerrarSesionTitulo => '¿Quieres cerrar sesión?';
 
   @override
@@ -961,6 +972,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeMisSiniestrosTile => 'Mis siniestros';
 
   @override
+  String get homeMiCoberturaTile => 'Mi cobertura';
+
+  @override
   String get m0505VerMisSiniestros => 'Ver mis siniestros';
 
   @override
@@ -1162,8 +1176,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String m0402Cuenta(String cuenta) {
-    return 'En tu cuenta $cuenta';
+  String m0402Cuenta(String metodo) {
+    return 'Pagado por $metodo';
   }
 
   @override
@@ -1200,7 +1214,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0403FechaPago => 'Fecha de pago';
 
   @override
-  String get m0403Cuenta => 'Cuenta destino';
+  String get m0403Cuenta => 'Método de pago';
 
   @override
   String get m0403Automatico => 'Pago procesado automáticamente';
@@ -1256,8 +1270,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String m0404Depositado(String cuenta) {
-    return 'Depositado en $cuenta';
+  String m0404Depositado(String metodo) {
+    return 'Pagado por $metodo';
   }
 
   @override
@@ -1337,8 +1351,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String m0402CuentaSemantica(String digitos) {
-    return 'En tu cuenta terminada en $digitos';
+  String m0402CuentaSemantica(String metodo) {
+    return 'Pagado por $metodo';
   }
 
   @override

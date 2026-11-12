@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../core/design_system/solventa_ui.dart';
 import '../core/l10n/l10n.dart';
 import '../core/network/network_providers.dart';
+import '../core/push/pending_destination.dart';
+import '../core/push/push_service.dart';
 import '../core/sesion/gestor_sesion.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/profile/presentation/sol_preferencias_sheet.dart';
@@ -27,6 +29,9 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
   late final GoRouter _router = crearRouter(
     fase: () => ref.read(accesoProvider).fase,
     refrescar: _cambioFase,
+    sesionAbierta: () => ref.read(gestorSesionProvider).abierta,
+    guardarPendiente: (ruta) =>
+        ref.read(pendingDestinationProvider.notifier).fijar(ruta),
   );
   late final AppLifecycleListener _ciclo;
   StreamSubscription<EventoSesion>? _eventos;
@@ -34,6 +39,7 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
   @override
   void initState() {
     super.initState();
+    enrutadorActivo = _router;
     ref.listenManual(
       accesoProvider.select((s) => s.fase),
       (_, _) => _cambioFase.avisar(),
@@ -48,10 +54,13 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
       onHide: () => ref.read(accesoProvider.notifier).alPasarASegundoPlano(),
       onShow: () => ref.read(accesoProvider.notifier).alVolverAPrimerPlano(),
     );
+    // HU-M04 Fase 6 (KAN-259): nunca lanza, aun sin `google-services.json`.
+    unawaited(ref.read(pushServiceProvider).init());
   }
 
   @override
   void dispose() {
+    if (identical(enrutadorActivo, _router)) enrutadorActivo = null;
     _ciclo.dispose();
     unawaited(_eventos?.cancel());
     _router.dispose();

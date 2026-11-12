@@ -53,4 +53,5 @@ PerfilUsuario perfilUsuarioDesdeGql(Fragment$UsuarioCampos g) => PerfilUsuario(
   creadoEn: g.creadoEn.toIso8601String(),
   idioma: g.idioma,
   moneda: g.moneda,
+  notificacionesPush: g.notificacionesPush,
 );

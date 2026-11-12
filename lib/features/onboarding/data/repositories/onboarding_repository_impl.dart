@@ -393,4 +393,15 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     // Revoca el refresh en el backend (si falla la red, igual borra local).
     await _sesion.cerrar();
   }
+
+  @override
+  Future<Resultado<bool>> registrarTokenPush({
+    required String instalacionId,
+    required String tokenFcm,
+  }) => _guardar(() => _remoto.registrarTokenPush(instalacionId, tokenFcm));
+
+  @override
+  Future<Resultado<bool>> actualizarPreferenciaPush({
+    required bool habilitado,
+  }) => _guardar(() => _remoto.actualizarPreferenciaPush(habilitado));
 }

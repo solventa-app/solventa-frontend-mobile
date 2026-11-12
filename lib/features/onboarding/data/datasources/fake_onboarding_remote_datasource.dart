@@ -319,4 +319,25 @@ final class FakeOnboardingRemoteDataSource
       ),
     ).actualizarPreferencias;
   }
+
+  /// Para pruebas: instalaciones registradas (`instalacionId` → `tokenFcm`).
+  final Map<String, String> tokensPush = {};
+
+  @override
+  Future<bool> registrarTokenPush(String instalacionId, String tokenFcm) async {
+    tokensPush[instalacionId] = tokenFcm;
+    return (await _responder('registrarTokenPush', {
+          'registrarTokenPush': true,
+        }))['registrarTokenPush']
+        as bool;
+  }
+
+  @override
+  Future<bool> actualizarPreferenciaPush(bool habilitado) async {
+    usuarioActual = {...usuarioActual, 'notificacionesPush': habilitado};
+    return (await _responder('actualizarPreferenciaPush', {
+          'actualizarPreferenciaPush': habilitado,
+        }))['actualizarPreferenciaPush']
+        as bool;
+  }
 }

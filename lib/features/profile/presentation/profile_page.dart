@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/design_system/solventa_ui.dart';
+import '../../../core/errors/resultado.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/network/network_providers.dart';
 import '../../onboarding/domain/entities/onboarding.dart';
@@ -30,6 +31,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   bool _cargando = false;
   bool _guardandoPreferencias = false;
   bool _preferenciasGuardadas = false;
+  bool _guardandoPush = false;
 
   @override
   void initState() {
@@ -42,6 +44,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     setState(() => _cargando = true);
     await ref.read(onboardingProvider.notifier).cargarPerfilYEstado();
     if (mounted) setState(() => _cargando = false);
+  }
+
+  /// HU-M04 Fase 6 (KAN-259): preferencia de push del propio cliente.
+  Future<void> _cambiarNotificacionesPush(bool habilitado) async {
+    setState(() => _guardandoPush = true);
+    final r = await ref
+        .read(onboardingRepositoryProvider)
+        .actualizarPreferenciaPush(habilitado: habilitado);
+    await ref.read(onboardingProvider.notifier).cargarPerfilYEstado();
+    if (!mounted) return;
+    setState(() => _guardandoPush = false);
+    if (r case Fracaso()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.perfilNotificacionesPushError)),
+      );
+    }
   }
 
   Future<void> _guardarPreferencias(String idioma, String moneda) async {
@@ -375,6 +393,41 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       locale.languageCode.toUpperCase(),
                       moneda,
                     ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: SolSpacing.lg),
+            // HU-M04 Fase 6 (KAN-259): preferencia de push del propio cliente.
+            SolCard.outlined(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.perfilNotificacionesPush,
+                          style: context.solText.titleSmall.copyWith(
+                            color: colors.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: SolSpacing.xxs),
+                        Text(
+                          l10n.perfilNotificacionesPushTexto,
+                          style: context.solText.note.copyWith(
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: SolSpacing.sm),
+                  Switch(
+                    value: perfil?.notificacionesPush ?? true,
+                    onChanged: _guardandoPush
+                        ? null
+                        : (v) => _cambiarNotificacionesPush(v),
                   ),
                 ],
               ),

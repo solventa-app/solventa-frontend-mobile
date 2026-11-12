@@ -1106,6 +1106,24 @@ abstract class AppLocalizations {
   /// **'Los datos de tu cuenta provienen de tu documento verificado y son de solo lectura. Tus datos personales se tratan conforme a la Ley 1581 de 2012 de Habeas Data.'**
   String get perfilNotaLegal;
 
+  /// Perfil: interruptor de preferencia de push (KAN-259)
+  ///
+  /// In es, this message translates to:
+  /// **'Notificaciones push'**
+  String get perfilNotificacionesPush;
+
+  /// Perfil: texto de ayuda del interruptor de push
+  ///
+  /// In es, this message translates to:
+  /// **'Avisa cuando se liquide una indemnización, entre otros.'**
+  String get perfilNotificacionesPushTexto;
+
+  /// Perfil: error al cambiar la preferencia de push
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo guardar tu preferencia. Intenta de nuevo.'**
+  String get perfilNotificacionesPushError;
+
   /// No description provided for @cerrarSesionTitulo.
   ///
   /// In es, this message translates to:
@@ -1772,6 +1790,12 @@ abstract class AppLocalizations {
   /// **'Mis siniestros'**
   String get homeMisSiniestrosTile;
 
+  /// Inicio: entrada a M04-04 (HU-M04)
+  ///
+  /// In es, this message translates to:
+  /// **'Mi cobertura'**
+  String get homeMiCoberturaTile;
+
   /// M05-05 enlace a M05-06
   ///
   /// In es, this message translates to:
@@ -2096,11 +2120,11 @@ abstract class AppLocalizations {
   /// **'{monto} depositados'**
   String m0402Monto(String monto);
 
-  /// M04-02: cuenta destino enmascarada
+  /// M04-02: método de transferencia
   ///
   /// In es, this message translates to:
-  /// **'En tu cuenta {cuenta}'**
-  String m0402Cuenta(String cuenta);
+  /// **'Pagado por {metodo}'**
+  String m0402Cuenta(String metodo);
 
   /// M04-02: botón al detalle
   ///
@@ -2159,7 +2183,7 @@ abstract class AppLocalizations {
   /// M04-03: fila
   ///
   /// In es, this message translates to:
-  /// **'Cuenta destino'**
+  /// **'Método de pago'**
   String get m0403Cuenta;
 
   /// M04-03: insignia de éxito
@@ -2240,11 +2264,11 @@ abstract class AppLocalizations {
   /// **'Suma de {pagos, plural, =1{el pago que has recibido} other{los {pagos} pagos que has recibido}} desde {mes}, en todas tus pólizas.'**
   String m0404TotalDetalle(int pagos, String mes);
 
-  /// M04-04: cuenta de depósito
+  /// M04-04: método de transferencia del último pago
   ///
   /// In es, this message translates to:
-  /// **'Depositado en {cuenta}'**
-  String m0404Depositado(String cuenta);
+  /// **'Pagado por {metodo}'**
+  String m0404Depositado(String metodo);
 
   /// M04-04: saldo de prima a favor (el signo va en el texto, no solo el color)
   ///
@@ -2348,11 +2372,11 @@ abstract class AppLocalizations {
   /// **'{ciudad}, {detalle}'**
   String m04DetalleLluvia(String ciudad, String detalle);
 
-  /// M04-02: lectura de TalkBack de la cuenta destino
+  /// M04-02: lectura de TalkBack del método de transferencia
   ///
   /// In es, this message translates to:
-  /// **'En tu cuenta terminada en {digitos}'**
-  String m0402CuentaSemantica(String digitos);
+  /// **'Pagado por {metodo}'**
+  String m0402CuentaSemantica(String metodo);
 
   /// M05-01 (KAN-290): una póliza de auto, con la marca y la placa enmascarada
   ///

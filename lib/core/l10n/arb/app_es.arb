@@ -417,6 +417,18 @@
   "perfilBiometriaActiva": "Activada",
   "perfilBiometriaInactiva": "Sin activar · Toca para activar",
   "perfilNotaLegal": "Los datos de tu cuenta provienen de tu documento verificado y son de solo lectura. Tus datos personales se tratan conforme a la Ley 1581 de 2012 de Habeas Data.",
+  "perfilNotificacionesPush": "Notificaciones push",
+  "@perfilNotificacionesPush": {
+    "description": "Perfil: interruptor de preferencia de push (KAN-259)"
+  },
+  "perfilNotificacionesPushTexto": "Avisa cuando se liquide una indemnización, entre otros.",
+  "@perfilNotificacionesPushTexto": {
+    "description": "Perfil: texto de ayuda del interruptor de push"
+  },
+  "perfilNotificacionesPushError": "No se pudo guardar tu preferencia. Intenta de nuevo.",
+  "@perfilNotificacionesPushError": {
+    "description": "Perfil: error al cambiar la preferencia de push"
+  },
   "cerrarSesionTitulo": "¿Quieres cerrar sesión?",
   "cerrarSesionMensaje": "Tendrás que ingresar de nuevo para usar Solventa.",
   "cerrarSesionConfirmar": "Sí, cerrar sesión",
@@ -894,6 +906,10 @@
   "@homeMisSiniestrosTile": {
     "description": "Inicio: entrada a M05-06"
   },
+  "homeMiCoberturaTile": "Mi cobertura",
+  "@homeMiCoberturaTile": {
+    "description": "Inicio: entrada a M04-04 (HU-M04)"
+  },
   "m0505VerMisSiniestros": "Ver mis siniestros",
   "@m0505VerMisSiniestros": {
     "description": "M05-05 enlace a M05-06"
@@ -1186,11 +1202,11 @@
       }
     }
   },
-  "m0402Cuenta": "En tu cuenta {cuenta}",
+  "m0402Cuenta": "Pagado por {metodo}",
   "@m0402Cuenta": {
-    "description": "M04-02: cuenta destino enmascarada",
+    "description": "M04-02: método de transferencia",
     "placeholders": {
-      "cuenta": {
+      "metodo": {
         "type": "String"
       }
     }
@@ -1252,7 +1268,7 @@
   "@m0403FechaPago": {
     "description": "M04-03: fila"
   },
-  "m0403Cuenta": "Cuenta destino",
+  "m0403Cuenta": "Método de pago",
   "@m0403Cuenta": {
     "description": "M04-03: fila"
   },
@@ -1337,11 +1353,11 @@
       }
     }
   },
-  "m0404Depositado": "Depositado en {cuenta}",
+  "m0404Depositado": "Pagado por {metodo}",
   "@m0404Depositado": {
-    "description": "M04-04: cuenta de depósito",
+    "description": "M04-04: método de transferencia del último pago",
     "placeholders": {
-      "cuenta": {
+      "metodo": {
         "type": "String"
       }
     }
@@ -1465,11 +1481,11 @@
       }
     }
   },
-  "m0402CuentaSemantica": "En tu cuenta terminada en {digitos}",
+  "m0402CuentaSemantica": "Pagado por {metodo}",
   "@m0402CuentaSemantica": {
-    "description": "M04-02: lectura de TalkBack de la cuenta destino",
+    "description": "M04-02: lectura de TalkBack del método de transferencia",
     "placeholders": {
-      "digitos": {
+      "metodo": {
         "type": "String"
       }
     }

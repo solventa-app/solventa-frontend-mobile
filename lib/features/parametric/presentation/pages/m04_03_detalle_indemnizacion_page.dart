@@ -121,31 +121,35 @@ class _Detalle extends StatelessWidget {
               _FilaDato(
                 etiqueta: l10n.m0403FechaPago,
                 valor: Text(SolFormat.dateTime(m.pagadoEn), style: valor),
+                ultima: m.metodoTransferencia == null,
               ),
-              const SolDivider(),
-              _FilaDato(
-                etiqueta: l10n.m0403Cuenta,
-                valor: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ExcludeSemantics(
-                      child: Icon(
-                        SolIcons.bank,
-                        size: 18,
-                        color: colors.onSurfaceVariant,
+              if (m.metodoTransferencia != null) ...[
+                const SolDivider(),
+                _FilaDato(
+                  etiqueta: l10n.m0403Cuenta,
+                  valor: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ExcludeSemantics(
+                        child: Icon(
+                          SolIcons.bank,
+                          size: 18,
+                          color: colors.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: SolSpacing.xs),
-                    Flexible(
-                      child: CuentaEnmascarada(
-                        cuenta: m.cuentaDestino,
-                        estilo: valor,
+                      const SizedBox(width: SolSpacing.xs),
+                      Flexible(
+                        child: MetodoPago(
+                          metodo: m.metodoTransferencia,
+                          estilo: valor,
+                          texto: (metodo) => metodo,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  ultima: true,
                 ),
-                ultima: true,
-              ),
+              ],
             ],
           ),
         ),

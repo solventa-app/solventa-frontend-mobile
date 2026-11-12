@@ -102,39 +102,35 @@ class ErrorConReintento extends StatelessWidget {
   }
 }
 
-/// Cuenta enmascarada con su lectura para TalkBack (M04-D1). Por defecto se
-/// lee «cuenta terminada en 4821».
-class CuentaEnmascarada extends StatelessWidget {
-  const CuentaEnmascarada({
+/// Método de transferencia del pago: nunca un número de cuenta real (regla
+/// #6 del backend). No se renderiza nada si el backend no lo informa.
+class MetodoPago extends StatelessWidget {
+  const MetodoPago({
     super.key,
-    required this.cuenta,
+    required this.metodo,
     required this.estilo,
-    this.texto,
+    required this.texto,
     this.semantica,
   });
 
-  final String cuenta;
+  final String? metodo;
   final TextStyle estilo;
 
-  /// Texto alrededor de la cuenta visible (p. ej. «En tu cuenta {cuenta}»).
-  final String Function(String cuentaVisible)? texto;
+  /// Texto alrededor del método (p. ej. «Pagado por {metodo}»).
+  final String Function(String metodo) texto;
 
-  /// Lectura completa a partir de los últimos 4 dígitos.
-  final String Function(String ultimos4)? semantica;
+  /// Lectura para TalkBack; por defecto, la misma que [texto].
+  final String Function(String metodo)? semantica;
 
   @override
   Widget build(BuildContext context) {
-    final visible = SolFormat.maskedAccountFull(cuenta);
-    final digitos = cuenta.replaceAll(RegExp(r'\D'), '');
-    final ultimos4 = digitos.length <= 4
-        ? digitos
-        : digitos.substring(digitos.length - 4);
-    final f = texto;
+    final m = metodo;
+    if (m == null) return const SizedBox.shrink();
     final s = semantica;
     return Semantics(
-      label: s == null ? SolFormat.maskedAccountSemantics(cuenta) : s(ultimos4),
+      label: s == null ? texto(m) : s(m),
       excludeSemantics: true,
-      child: Text(f == null ? visible : f(visible), style: estilo),
+      child: Text(texto(m), style: estilo),
     );
   }
 }

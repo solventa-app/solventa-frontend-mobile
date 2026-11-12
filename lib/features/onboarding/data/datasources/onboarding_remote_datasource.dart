@@ -95,6 +95,12 @@ abstract interface class OnboardingRemoteDataSource {
   /// Actualiza el idioma y moneda preferidos del usuario.
   Future<Mutation$ActualizarPreferencias$actualizarPreferencias>
   actualizarPreferencias(String idioma, String moneda);
+
+  /// HU-M04 Fase 6 (KAN-259): liga el token de FCM a esta instalación.
+  Future<bool> registrarTokenPush(String instalacionId, String tokenFcm);
+
+  /// Perfil, interruptor «Notificaciones push».
+  Future<bool> actualizarPreferenciaPush(bool habilitado);
 }
 
 /// Implementación real contra `POST /graphql/app`.
@@ -384,5 +390,29 @@ final class GqlOnboardingRemoteDataSource
     );
     return Mutation$ActualizarPreferencias.fromJson(data)
         .actualizarPreferencias;
+  }
+
+  @override
+  Future<bool> registrarTokenPush(String instalacionId, String tokenFcm) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationRegistrarTokenPush,
+      variables: Variables$Mutation$RegistrarTokenPush(
+        instalacionId: instalacionId,
+        tokenFcm: tokenFcm,
+      ).toJson(),
+    );
+    return Mutation$RegistrarTokenPush.fromJson(data).registrarTokenPush;
+  }
+
+  @override
+  Future<bool> actualizarPreferenciaPush(bool habilitado) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationActualizarPreferenciaPush,
+      variables: Variables$Mutation$ActualizarPreferenciaPush(
+        habilitado: habilitado,
+      ).toJson(),
+    );
+    return Mutation$ActualizarPreferenciaPush.fromJson(data)
+        .actualizarPreferenciaPush;
   }
 }

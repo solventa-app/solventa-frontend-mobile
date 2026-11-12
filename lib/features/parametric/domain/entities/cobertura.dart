@@ -15,7 +15,7 @@ final class Indemnizacion {
     required this.pagadoEn,
     required this.monto,
     required this.estado,
-    required this.cuentaDestino,
+    this.metodoTransferencia,
     this.polizaAnterior = false,
   });
 
@@ -35,9 +35,10 @@ final class Indemnizacion {
   final int monto;
   final EstadoPago estado;
 
-  /// Número completo de la cuenta o tarjeta. Nunca se muestra entero: la
-  /// presentación lo enmascara con `SolFormat.maskedAccountFull` (M04-D1).
-  final String cuentaDestino;
+  /// Cómo se paga: nunca un número de cuenta real (regla #6 del backend:
+  /// PAYMENTS solo guarda un método genérico de transferencia). `null` si el
+  /// backend no lo informa.
+  final String? metodoTransferencia;
 
   /// `true`: pago de una póliza ya vencida, no descuenta del cupo actual.
   final bool polizaAnterior;
@@ -65,7 +66,6 @@ final class ResumenCobertura {
     required this.vigente,
     required this.vigenteHasta,
     required this.tope,
-    required this.cuentaDestino,
     required this.movimientos,
     this.saldo,
   });
@@ -78,9 +78,6 @@ final class ResumenCobertura {
 
   /// Tope de cobertura de la póliza vigente, en pesos.
   final int tope;
-
-  /// Número completo; se enmascara al mostrarlo.
-  final String cuentaDestino;
 
   /// Del más reciente al más antiguo.
   final List<Indemnizacion> movimientos;

@@ -184,6 +184,9 @@
   "perfilBiometriaActiva": "On",
   "perfilBiometriaInactiva": "Off · Tap to turn on",
   "perfilNotaLegal": "Your account details come from your verified ID document and are read only. Your personal data is processed under Colombian Law 1581 of 2012 (Habeas Data).",
+  "perfilNotificacionesPush": "Push notifications",
+  "perfilNotificacionesPushTexto": "Get notified when a payout is settled, among other things.",
+  "perfilNotificacionesPushError": "We couldn't save your preference. Try again.",
   "cerrarSesionTitulo": "Do you want to sign out?",
   "cerrarSesionMensaje": "You will need to sign in again to use Solventa.",
   "cerrarSesionConfirmar": "Yes, sign out",
@@ -530,6 +533,10 @@
   "@homeMisSiniestrosTile": {
     "description": "Inicio: entrada a M05-06"
   },
+  "homeMiCoberturaTile": "My coverage",
+  "@homeMiCoberturaTile": {
+    "description": "Inicio: entrada a M04-04 (HU-M04)"
+  },
   "m0505VerMisSiniestros": "See my claims",
   "@m0505VerMisSiniestros": {
     "description": "M05-05 enlace a M05-06"
@@ -636,7 +643,7 @@
   "m0402Titulo": "Payout",
   "m0402Mensaje": "Your payout is on its way!",
   "m0402Monto": "{monto} deposited",
-  "m0402Cuenta": "To your account {cuenta}",
+  "m0402Cuenta": "Paid via {metodo}",
   "m0402VerDetalle": "See details",
   "m0402Cargando": "Loading your payout…",
   "m0403Titulo": "Payout details",
@@ -646,7 +653,7 @@
   "m0403Indemnizacion": "Payout",
   "m0403FechaEvento": "Event date",
   "m0403FechaPago": "Payment date",
-  "m0403Cuenta": "Destination account",
+  "m0403Cuenta": "Payment method",
   "m0403Automatico": "Payment processed automatically",
   "m0403Cerrar": "Close",
   "m0404Titulo": "My coverage",
@@ -660,7 +667,7 @@
   "m0404Disponible": "Available",
   "m0404TotalIndemnizado": "Total paid out",
   "m0404TotalDetalle": "Sum of {pagos, plural, =1{the payment you've received} other{the {pagos} payments you've received}} since {mes}, across all your policies.",
-  "m0404Depositado": "Deposited to {cuenta}",
+  "m0404Depositado": "Paid via {metodo}",
   "m0404SaldoFavor": "+ {monto} in your favor",
   "m0404SaldoFavorDetalle": "Premium adjustment for {mes}. It will be deducted from your next charge.",
   "m0404SaldoContra": "− {monto} pending",
@@ -678,7 +685,7 @@
   "m04EventoCancelacionVuelo": "Flight {ref} cancelled",
   "m04EventoLluvia": "Rainfall over the threshold",
   "m04DetalleLluvia": "{ciudad}, {detalle}",
-  "m0402CuentaSemantica": "To your account ending in {digitos}",
+  "m0402CuentaSemantica": "Paid via {metodo}",
   "m0501PolizaAuto": "Car {vehiculo}",
   "m0501QuePaso": "What happened to the vehicle?",
   "m0501ElegirTipo": "Choose what happened to the vehicle to continue.",

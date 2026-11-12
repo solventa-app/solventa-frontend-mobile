@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,8 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../core/design_system/solventa_ui.dart';
 import '../core/l10n/l10n.dart';
 import '../core/network/network_providers.dart';
+import '../core/push/pending_destination.dart';
+import '../core/push/push_service.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/acceso/presentation/acceso_routes.dart';
 import '../features/acceso/presentation/pages/m02_01_desbloqueo_page.dart';
@@ -41,6 +45,10 @@ import '../features/onboarding/presentation/pages/m01_06_verificando_page.dart';
 import '../features/onboarding/presentation/pages/m01_07_resultado_page.dart';
 import '../features/onboarding/presentation/pages/m01_08_biometria_page.dart';
 import '../features/onboarding/presentation/pages/m02_04_recuperar_clave_page.dart';
+import '../features/parametric/presentation/pages/m04_02_celebracion_page.dart';
+import '../features/parametric/presentation/pages/m04_03_detalle_indemnizacion_page.dart';
+import '../features/parametric/presentation/pages/m04_04_cobertura_page.dart';
+import '../features/parametric/presentation/parametric_routes.dart';
 import '../features/profile/presentation/profile_page.dart';
 
 const bool _openGallery = bool.fromEnvironment('SOL_GALLERY');
@@ -49,6 +57,18 @@ const bool _openGallery = bool.fromEnvironment('SOL_GALLERY');
 /// para no tomar capturas en pantallas de documento o cámara (`M01-03`..`M01-05`)
 /// ni en las de acceso a la cuenta (`M02-01`, `M02-03`).
 String? rutaActualObservada;
+
+/// El `GoRouter` de `SolventaApp` mientras vive, para navegar desde fuera del
+/// árbol de widgets (HU-M04 Fase 6, KAN-259: el push abre una ruta sin pasar
+/// por un `BuildContext`). `null` sin app montada (p. ej. en pruebas).
+GoRouter? enrutadorActivo;
+
+/// `true` si [ubicacion] es una de las rutas de HU-M04 que el push puede
+/// abrir directamente ([ParametricRoutes.celebracion] y `.detalle`).
+bool _esRutaM04(String ubicacion) =>
+    ubicacion.startsWith('${ParametricRoutes.celebracion}/') ||
+    ubicacion.startsWith('${ParametricRoutes.detalle}/') ||
+    ubicacion == ParametricRoutes.cobertura;
 
 const Set<String> _rutasSinCaptura = {
   'm01-03',
@@ -123,157 +143,195 @@ void _volverAPestana(BuildContext context, int indice) {
 /// Con [fase] (HU-M02) el router redirige según la fase de acceso:
 /// arrancando solo `/`, con sesión guardada solo M02-01, recién desbloqueada
 /// solo M02-03 ([redirigirAcceso]). [refrescar] avisa cuando cambia.
-GoRouter crearRouter({FaseAcceso Function()? fase, Listenable? refrescar}) =>
-    GoRouter(
-      initialLocation: kDebugMode && _openGallery
-          ? SolGalleryPage.routeName
-          : '/',
-      observers: [_RutaActualObserver(), SentryNavigatorObserver()],
-      refreshListenable: refrescar,
-      redirect: fase == null
-          ? null
-          : (_, state) {
-              final ubicacion = state.matchedLocation;
-              if (ubicacion == SolGalleryPage.routeName) return null;
-              return redirigirAcceso(fase(), ubicacion);
-            },
-      routes: [
-        GoRoute(path: '/', name: 'g-03', builder: (_, _) => const _RootShell()),
-        GoRoute(
-          path: OnboardingRoutes.bienvenida,
-          name: 'm01-01',
-          builder: (_, _) => const M0101BienvenidaPage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.autorizacion,
-          name: 'm01-02',
-          builder: (_, _) => const M0102AutorizacionPage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.frente,
-          name: 'm01-03',
-          builder: (_, _) => const M0103DocumentoFrentePage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.reverso,
-          name: 'm01-04',
-          builder: (_, _) => const M0104DocumentoReversoPage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.pruebaVida,
-          name: 'm01-05',
-          builder: (_, _) => const M0105PruebaVidaPage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.cuenta,
-          name: 'm01-05b',
-          builder: (_, _) => const M0105bCuentaPage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.codigoCorreo,
-          name: 'm01-05c',
-          builder: (_, _) => const M0105cCodigoPage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.recuperarClave,
-          name: 'm02-04',
-          builder: (_, _) => const M0204RecuperarClavePage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.verificando,
-          name: 'm01-06',
-          builder: (_, _) => const M0106VerificandoPage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.resultado,
-          name: 'm01-07',
-          builder: (_, _) => const M0107ResultadoPage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.biometria,
-          name: 'm01-08',
-          builder: (_, _) => const M0108BiometriaPage(),
-        ),
-        GoRoute(
-          path: AccesoRoutes.desbloqueo,
-          name: 'm02-01',
-          builder: (_, _) => const M0201DesbloqueoPage(),
-        ),
-        GoRoute(
-          path: AccesoRoutes.concedido,
-          name: 'm02-03',
-          builder: (_, _) => const M0203AccesoConcedidoPage(),
-        ),
-        GoRoute(
-          path: OnboardingRoutes.perfil,
-          name: 'g-05',
-          builder: (_, _) => const ProfilePage(),
-        ),
-        GoRoute(
-          path: ReporteRoutes.poliza,
-          name: 'm05-01',
-          builder: (_, _) => const M0501PolizaPage(),
-        ),
-        GoRoute(
-          path: ReporteRoutes.fotos,
-          name: 'm05-02',
-          builder: (_, _) => const M0502FotosPage(),
-        ),
-        GoRoute(
-          path: ReporteRoutes.relato,
-          name: 'm05-03',
-          builder: (_, _) => const M0503RelatoPage(),
-        ),
-        GoRoute(
-          path: ReporteRoutes.enviando,
-          name: 'm05-04',
-          builder: (_, _) => const M0504EnviandoPage(),
-        ),
-        GoRoute(
-          path: ReporteRoutes.resultado,
-          name: 'm05-05',
-          builder: (_, _) => const M0505ResultadoPage(),
-        ),
-        GoRoute(
-          path: ReporteRoutes.misSiniestros,
-          name: 'm05-06',
-          builder: (_, _) => const M0506MisSiniestrosPage(),
-        ),
-        GoRoute(
-          path: AsistenciaRoutes.solicitud,
-          name: 'm06-02',
-          builder: (_, _) => const M0602SolicitudPage(),
-        ),
-        GoRoute(
-          path: AsistenciaRoutes.enviando,
-          name: 'm06-03',
-          builder: (_, _) => const M0603EnviandoPage(),
-        ),
-        GoRoute(
-          path: AsistenciaRoutes.resultado,
-          name: 'm06-04',
-          builder: (context, _) => M0604ResultadoPage(
-            onIrAlMapa: () =>
-                _volverAPestana(context, SolAppShell.assistanceIndex),
-            onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
-          ),
-        ),
-        GoRoute(
-          path: AsistenciaRoutes.cancelada,
-          name: 'm06-06',
-          builder: (context, _) => M0606CanceladaPage(
-            onIrAlMapa: () =>
-                _volverAPestana(context, SolAppShell.assistanceIndex),
-            onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
-          ),
-        ),
-        if (kDebugMode)
-          GoRoute(
-            path: SolGalleryPage.routeName,
-            builder: (_, _) => const SolGalleryPage(),
-          ),
-      ],
-    );
+///
+/// [sesionAbierta] (HU-M04 Fase 6, KAN-259) deja pasar las rutas de M04 solo
+/// con sesión abierta; sin ella, [guardarPendiente] guarda a dónde se quería
+/// ir y el router vuelve a `/` («el push como puerta de entrada»): el login
+/// normal sigue su curso y `_RootShell` reanuda la navegación con
+/// [pendingDestinationProvider] en cuanto la sesión abre.
+GoRouter crearRouter({
+  FaseAcceso Function()? fase,
+  Listenable? refrescar,
+  bool Function()? sesionAbierta,
+  void Function(String ruta)? guardarPendiente,
+}) => GoRouter(
+  initialLocation: kDebugMode && _openGallery ? SolGalleryPage.routeName : '/',
+  observers: [_RutaActualObserver(), SentryNavigatorObserver()],
+  refreshListenable: refrescar,
+  redirect: (_, state) {
+    final ubicacion = state.matchedLocation;
+    if (ubicacion == SolGalleryPage.routeName) return null;
+    if (sesionAbierta != null && _esRutaM04(ubicacion) && !sesionAbierta()) {
+      guardarPendiente?.call(ubicacion);
+      return '/';
+    }
+    return fase == null ? null : redirigirAcceso(fase(), ubicacion);
+  },
+  routes: [
+    GoRoute(path: '/', name: 'g-03', builder: (_, _) => const _RootShell()),
+    GoRoute(
+      path: OnboardingRoutes.bienvenida,
+      name: 'm01-01',
+      builder: (_, _) => const M0101BienvenidaPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.autorizacion,
+      name: 'm01-02',
+      builder: (_, _) => const M0102AutorizacionPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.frente,
+      name: 'm01-03',
+      builder: (_, _) => const M0103DocumentoFrentePage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.reverso,
+      name: 'm01-04',
+      builder: (_, _) => const M0104DocumentoReversoPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.pruebaVida,
+      name: 'm01-05',
+      builder: (_, _) => const M0105PruebaVidaPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.cuenta,
+      name: 'm01-05b',
+      builder: (_, _) => const M0105bCuentaPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.codigoCorreo,
+      name: 'm01-05c',
+      builder: (_, _) => const M0105cCodigoPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.recuperarClave,
+      name: 'm02-04',
+      builder: (_, _) => const M0204RecuperarClavePage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.verificando,
+      name: 'm01-06',
+      builder: (_, _) => const M0106VerificandoPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.resultado,
+      name: 'm01-07',
+      builder: (_, _) => const M0107ResultadoPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.biometria,
+      name: 'm01-08',
+      builder: (_, _) => const M0108BiometriaPage(),
+    ),
+    GoRoute(
+      path: AccesoRoutes.desbloqueo,
+      name: 'm02-01',
+      builder: (_, _) => const M0201DesbloqueoPage(),
+    ),
+    GoRoute(
+      path: AccesoRoutes.concedido,
+      name: 'm02-03',
+      builder: (_, _) => const M0203AccesoConcedidoPage(),
+    ),
+    GoRoute(
+      path: OnboardingRoutes.perfil,
+      name: 'g-05',
+      builder: (_, _) => const ProfilePage(),
+    ),
+    GoRoute(
+      path: '${ParametricRoutes.celebracion}/:id',
+      name: 'm04-02',
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return M0402CelebracionPage(
+          id: id,
+          // Llega también por push con la app recién abierta, sin pila
+          // previa: `/` vuelve al inicio en vez de intentar un pop vacío.
+          onBack: () => context.go('/'),
+          onVerDetalle: () => context.push(ParametricRoutes.detalleCon(id)),
+        );
+      },
+    ),
+    GoRoute(
+      path: '${ParametricRoutes.detalle}/:id',
+      name: 'm04-03',
+      builder: (context, state) => M0403DetalleIndemnizacionPage(
+        id: state.pathParameters['id']!,
+        // Puede ser el destino pendiente de un push (sin pila previa).
+        onCerrar: () => context.canPop() ? context.pop() : context.go('/'),
+      ),
+    ),
+    GoRoute(
+      path: ParametricRoutes.cobertura,
+      name: 'm04-04',
+      builder: (context, state) => M0404CoberturaPage(
+        onTapMovimiento: (id) => context.push(ParametricRoutes.detalleCon(id)),
+      ),
+    ),
+    GoRoute(
+      path: ReporteRoutes.poliza,
+      name: 'm05-01',
+      builder: (_, _) => const M0501PolizaPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.fotos,
+      name: 'm05-02',
+      builder: (_, _) => const M0502FotosPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.relato,
+      name: 'm05-03',
+      builder: (_, _) => const M0503RelatoPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.enviando,
+      name: 'm05-04',
+      builder: (_, _) => const M0504EnviandoPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.resultado,
+      name: 'm05-05',
+      builder: (_, _) => const M0505ResultadoPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.misSiniestros,
+      name: 'm05-06',
+      builder: (_, _) => const M0506MisSiniestrosPage(),
+    ),
+    GoRoute(
+      path: AsistenciaRoutes.solicitud,
+      name: 'm06-02',
+      builder: (_, _) => const M0602SolicitudPage(),
+    ),
+    GoRoute(
+      path: AsistenciaRoutes.enviando,
+      name: 'm06-03',
+      builder: (_, _) => const M0603EnviandoPage(),
+    ),
+    GoRoute(
+      path: AsistenciaRoutes.resultado,
+      name: 'm06-04',
+      builder: (context, _) => M0604ResultadoPage(
+        onIrAlMapa: () => _volverAPestana(context, SolAppShell.assistanceIndex),
+        onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
+      ),
+    ),
+    GoRoute(
+      path: AsistenciaRoutes.cancelada,
+      name: 'm06-06',
+      builder: (context, _) => M0606CanceladaPage(
+        onIrAlMapa: () => _volverAPestana(context, SolAppShell.assistanceIndex),
+        onIrAlInicio: () => _volverAPestana(context, SolAppShell.homeIndex),
+      ),
+    ),
+    if (kDebugMode)
+      GoRoute(
+        path: SolGalleryPage.routeName,
+        builder: (_, _) => const SolGalleryPage(),
+      ),
+  ],
+);
 
 class _RootShell extends ConsumerWidget {
   const _RootShell();
@@ -281,6 +339,25 @@ class _RootShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final estado = ref.watch(onboardingProvider);
+
+    // HU-M04 Fase 6 (KAN-259): la sesión recién se abrió (login, no solo el
+    // desbloqueo biométrico): registra el push y, si el push llevó aquí sin
+    // sesión, continúa hacia esa ruta pendiente.
+    ref.listen(onboardingProvider.select((s) => s.cuentaCreada), (
+      antes,
+      ahora,
+    ) {
+      if (ahora && antes != true) {
+        unawaited(ref.read(pushServiceProvider).registrarTokenActual());
+        final pendiente = ref.read(pendingDestinationProvider);
+        if (pendiente != null) {
+          ref.read(pendingDestinationProvider.notifier).limpiar();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) context.go(pendiente);
+          });
+        }
+      }
+    });
 
     // HU-M02 (F6): mientras se mira si hay sesión guardada, solo el fondo;
     // así no se ve G-03 un instante antes de M02-01.

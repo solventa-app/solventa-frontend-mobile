@@ -66,24 +66,38 @@ Flutter 3.47.8 / Dart ^3.13 (fijado; `tool/verificar-versiones.sh` lo controla c
   §Estado. Reporte HTML de Emuladores con capturas (#56: `integration_test/soporte/capturas.dart`,
   `tool/reporte-emuladores.py`).
 
-### En curso: HU-M04 (KAN-38), siniestro paramétrico — avance con datos mock
+### En curso: HU-M04 (KAN-38), siniestro paramétrico — contrato real y push (Fase 6, KAN-259)
 
-Rama `feat/KAN-260-cobertura-mock` (KAN-260 y KAN-280). Plan, diseños, decisiones (M04-D1 a D5) y pendientes en
-[`docs/hu-m04/README.md`](docs/hu-m04/README.md).
+Rama `feat/KAN-259-movil-indemnizacion-parametrica`, sobre lo ya hecho en `feat/KAN-260-cobertura-mock` (KAN-260 y
+KAN-280). Plan, diseños, decisiones (M04-D1 a D5) y pendientes en [`docs/hu-m04/README.md`](docs/hu-m04/README.md).
 
-- Hecho: `lib/features/parametric/` con M04-02 (celebración), M04-03 (detalle) y M04-04 (Mi cobertura: sin saldo, a
-  favor y en contra), datos mock detrás de `FakeCoberturaRemoteDataSource`, textos ES/EN, íconos y formatos nuevos
-  (`SolFormat.monthYear`, `monthName`, `maskedAccountFull` para cuentas de 16 dígitos), pruebas unitarias y de widget,
-  30 goldens e `integration_test/cobertura_test.dart` con capturas.
-- Verificado en la imagen del devcontainer: análisis, pruebas de `test/features/parametric` y `test/core/design_system`
-  y goldens. No corrido aquí: `integration_test` en emulador (workflow Emuladores en la rama).
-- Sin navegación, sin push M04-01 (KAN-138, KAN-259) y sin backend: no hay contrato de cobertura paramétrica.
-- Jira: se creó KAN-280 (M04-04 · Mi cobertura) bajo KAN-38 el 2026-11-08.
+- Hecho (datos mock, base): `lib/features/parametric/` con M04-02 (celebración), M04-03 (detalle) y M04-04 (Mi
+  cobertura: sin saldo, a favor y en contra), textos ES/EN, íconos y formatos (`SolFormat.monthYear`, `monthName`,
+  `maskedAccountFull`), pruebas, 30 goldens e `integration_test/cobertura_test.dart` con capturas.
+- Hecho (Fase 6, KAN-259, sobre el contrato v0.48 del backend): `GqlCoberturaRemoteDataSource` real
+  (`indemnizacion`/`miCoberturaParametrica`) con su mapper y query GraphQL; `cuentaDestino` pasó a
+  `metodoTransferencia` (nunca un número de cuenta real, regla #6 del backend) en `Indemnizacion` y desapareció de
+  `ResumenCobertura` (sin dato equivalente del backend); rutas `/m04-02/:id`, `/m04-03/:id` y `/m04-04` en
+  `router.dart`, con un guardia nuevo que, sin sesión abierta, guarda el destino (`lib/core/push/
+  pending_destination.dart`) y lo reanuda tras el login («el push como puerta de entrada»); `lib/core/push/
+  push_service.dart` (`firebase_messaging` 16.x, `getToken`/`onTokenRefresh`) e `instalacion_id.dart`;
+  `registrarTokenPush`/`actualizarPreferenciaPush` en AUTH vía el onboarding repository, con su interruptor en «Mi
+  perfil»; entrada «Mi cobertura» nueva en el Home.
+- **Sin `google-services.json` real** (regla del repo: nunca un secreto en el repo): `Firebase.initializeApp()`
+  queda en `try/catch` y el push no se puede probar de punta a punta hasta que el usuario agregue ese archivo fuera
+  del control de versiones; tampoco se aplicó el plugin `com.google.gms.google-services` en Gradle por la misma
+  razón. El flujo de login → push-tap → M04-02 no tiene una prueba de integración de extremo a extremo todavía.
+- Verificado en este entorno (Flutter 3.47.8 standalone, no el devcontainer — ver nota abajo): `flutter analyze`,
+  `flutter test` (818 pruebas) y `tool/contrato.sh verificar`, todos en verde. Los 8 goldens que cambiaron por el
+  nuevo texto de método de pago se regeneraron aquí mismo; conviene confirmarlos en la imagen del devcontainer antes
+  de fusionar, por la fuente `Inter` (`docs/entorno-local.md`).
+- Jira: KAN-280 (M04-04 · Mi cobertura) bajo KAN-38 (2026-11-08).
 
 ### Pendiente
 
-- HU-M04: navegación, push M04-01 con FCM (`firebase_messaging`), contrato y backend, moneda seleccionada y los datos
-  de M04-03 que pide KAN-146 (fuente, umbral, desglose, referencia). Lista completa en `docs/hu-m04/README.md`.
+- HU-M04: confirmar los goldens regenerados en el devcontainer; `google-services.json` real (paso del usuario);
+  prueba de integración del flujo push→login→detalle; moneda seleccionada y los datos de M04-03 que pide KAN-146
+  (fuente, umbral, desglose, referencia). Lista completa en `docs/hu-m04/README.md`.
 - Firebase App Distribution y Test Lab: listos, falta la cuenta. Google Play queda para el futuro.
 - Goldens horizontales de 640 × 360 (`docs/ci-cd.md`).
 

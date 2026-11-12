@@ -574,6 +574,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your account details come from your verified ID document and are read only. Your personal data is processed under Colombian Law 1581 of 2012 (Habeas Data).';
 
   @override
+  String get perfilNotificacionesPush => 'Push notifications';
+
+  @override
+  String get perfilNotificacionesPushTexto =>
+      'Get notified when a payout is settled, among other things.';
+
+  @override
+  String get perfilNotificacionesPushError =>
+      'We couldn\'t save your preference. Try again.';
+
+  @override
   String get cerrarSesionTitulo => 'Do you want to sign out?';
 
   @override
@@ -957,6 +968,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeMisSiniestrosTile => 'My claims';
 
   @override
+  String get homeMiCoberturaTile => 'My coverage';
+
+  @override
   String get m0505VerMisSiniestros => 'See my claims';
 
   @override
@@ -1157,8 +1171,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String m0402Cuenta(String cuenta) {
-    return 'To your account $cuenta';
+  String m0402Cuenta(String metodo) {
+    return 'Paid via $metodo';
   }
 
   @override
@@ -1195,7 +1209,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0403FechaPago => 'Payment date';
 
   @override
-  String get m0403Cuenta => 'Destination account';
+  String get m0403Cuenta => 'Payment method';
 
   @override
   String get m0403Automatico => 'Payment processed automatically';
@@ -1251,8 +1265,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String m0404Depositado(String cuenta) {
-    return 'Deposited to $cuenta';
+  String m0404Depositado(String metodo) {
+    return 'Paid via $metodo';
   }
 
   @override
@@ -1332,8 +1346,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String m0402CuentaSemantica(String digitos) {
-    return 'To your account ending in $digitos';
+  String m0402CuentaSemantica(String metodo) {
+    return 'Paid via $metodo';
   }
 
   @override

@@ -1,15 +1,45 @@
+import '../../../../core/network/graphql_client.dart';
 import '../../../../core/network/network_exceptions.dart';
 import '../../domain/entities/cobertura.dart';
 import '../fixtures/cobertura_fixtures.dart';
+import '../graphql/parametric.graphql.dart';
+import '../mappers/cobertura_mapper.dart';
 
-/// Origen de la cobertura paramétrica (HU-M04).
-///
-/// TODO(KAN-259/BFF): agregar `GqlCoberturaRemoteDataSource` cuando exista la
-/// consulta en el contrato. Hoy no hay tipos generados, así que el fake
-/// devuelve directamente las entidades (M04-D3).
+/// Origen de la cobertura paramétrica (HU-M04, contrato v0.48).
 abstract interface class CoberturaRemoteDataSource {
   Future<ResumenCobertura> resumen();
   Future<Indemnizacion> indemnizacion(String id);
+}
+
+/// El BFF real: `indemnizacion(id)` y `miCoberturaParametrica` (ambas
+/// resuelven del CLIENTE del token, nunca de otro). `null` del backend se
+/// trata como «desconocida»: el mismo caso que ya cubría el fake.
+final class GqlCoberturaRemoteDataSource implements CoberturaRemoteDataSource {
+  const GqlCoberturaRemoteDataSource(this._cliente);
+
+  final GraphqlClient _cliente;
+
+  @override
+  Future<ResumenCobertura> resumen() async {
+    final data = await _cliente.ejecutar(
+      documentNodeQueryMiCoberturaParametrica,
+    );
+    final g = Query$MiCoberturaParametrica.fromJson(data)
+        .miCoberturaParametrica;
+    if (g == null) throw StateError('Sin cobertura paramétrica vigente');
+    return resumenCoberturaDesdeGql(g);
+  }
+
+  @override
+  Future<Indemnizacion> indemnizacion(String id) async {
+    final data = await _cliente.ejecutar(
+      documentNodeQueryIndemnizacion,
+      variables: Variables$Query$Indemnizacion(id: id).toJson(),
+    );
+    final g = Query$Indemnizacion.fromJson(data).indemnizacion;
+    if (g == null) throw StateError('Indemnización desconocida');
+    return indemnizacionDesdeGql(g);
+  }
 }
 
 /// Datos de los mockups. Con [fallar] lanza [ErrorRed] (estado de error).

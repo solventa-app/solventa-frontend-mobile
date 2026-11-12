@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/resultado.dart';
+import '../../../core/network/network_providers.dart';
 import '../data/datasources/cobertura_remote_datasource.dart';
 import '../data/fixtures/cobertura_fixtures.dart';
 import '../data/repositories/cobertura_repository_impl.dart';
@@ -10,6 +11,7 @@ import '../domain/repositories/cobertura_repository.dart';
 export '../data/fixtures/cobertura_fixtures.dart' show EscenarioCobertura;
 
 /// Escenario de los datos mock de M04-04 (sin saldo, a favor o en contra).
+/// Solo tiene efecto con `API_ENV=mock` (ver [coberturaRemoteDataSourceProvider]).
 class EscenarioNotifier extends Notifier<EscenarioCobertura> {
   @override
   EscenarioCobertura build() => EscenarioCobertura.aFavor;
@@ -22,12 +24,14 @@ final escenarioCoberturaProvider =
       EscenarioNotifier.new,
     );
 
-/// Siempre el fake, también en `dev` y `prod`: no hay contrato de cobertura
-/// paramétrica todavía (M04-D3, `docs/hu-m04/README.md`).
+/// Con `API_ENV=mock` el fake con los mockups; si no, `indemnizacion`/
+/// `miCoberturaParametrica` del BFF (contrato v0.48, KAN-259).
 final coberturaRemoteDataSourceProvider = Provider<CoberturaRemoteDataSource>(
-  (ref) => FakeCoberturaRemoteDataSource(
-    escenario: ref.watch(escenarioCoberturaProvider),
-  ),
+  (ref) => ref.watch(usarFakesProvider)
+      ? FakeCoberturaRemoteDataSource(
+          escenario: ref.watch(escenarioCoberturaProvider),
+        )
+      : GqlCoberturaRemoteDataSource(ref.watch(graphqlClientProvider)),
 );
 
 final coberturaRepositoryProvider = Provider<CoberturaRepository>(

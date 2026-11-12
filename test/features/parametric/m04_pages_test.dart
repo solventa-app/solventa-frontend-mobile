@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/features/parametric/data/datasources/cobertura_remote_datasource.dart';
+import 'package:solventa_mobile/features/parametric/data/fixtures/cobertura_fixtures.dart';
 import 'package:solventa_mobile/features/parametric/presentation/pages/m04_02_celebracion_page.dart';
 import 'package:solventa_mobile/features/parametric/presentation/pages/m04_03_detalle_indemnizacion_page.dart';
 import 'package:solventa_mobile/features/parametric/presentation/pages/m04_04_cobertura_page.dart';
@@ -15,7 +16,7 @@ void main() {
   late FakeCoberturaRemoteDataSource fake;
 
   String pesos(int monto) => SolFormat.currency(monto);
-  const cuentaVisible = '•••• •••• •••• 4821';
+  const metodo = CoberturaFixtures.metodo;
 
   Future<void> montar(
     WidgetTester tester,
@@ -80,13 +81,12 @@ void main() {
       expect(find.textContaining('pendiente'), findsNothing);
     });
 
-    testWidgets('la cuenta de depósito muestra solo los últimos 4', (
+    testWidgets('muestra el método de transferencia del último pago', (
       tester,
     ) async {
       await montar(tester, const M0404CoberturaPage());
 
-      expect(find.textContaining(cuentaVisible), findsOneWidget);
-      expect(find.textContaining('4532015112834821'), findsNothing);
+      expect(find.textContaining(metodo), findsOneWidget);
     });
 
     testWidgets('saldo a favor: signo, texto e ícono además del color', (
@@ -168,7 +168,7 @@ void main() {
   });
 
   group('M04-03 · Detalle de la indemnización', () {
-    testWidgets('evento, monto, fechas y cuenta enmascarada', (tester) async {
+    testWidgets('evento, monto, fechas y método de pago', (tester) async {
       await montar(
         tester,
         const M0403DetalleIndemnizacionPage(id: 'IND-2026-0912'),
@@ -185,23 +185,8 @@ void main() {
         find.text(SolFormat.dateTime(DateTime(2026, 9, 12, 11, 2))),
         findsOneWidget,
       );
-      expect(find.text(cuentaVisible), findsOneWidget);
-      expect(find.textContaining('cuenta terminada en 4821'), findsNothing);
+      expect(find.text(metodo), findsOneWidget);
       expect(find.text('Pago procesado automáticamente'), findsOneWidget);
-    });
-
-    testWidgets('la cuenta se lee como «cuenta terminada en 4821»', (
-      tester,
-    ) async {
-      await montar(
-        tester,
-        const M0403DetalleIndemnizacionPage(id: 'IND-2026-0912'),
-      );
-
-      expect(
-        find.bySemanticsLabel(RegExp('cuenta terminada en 4821')),
-        findsOneWidget,
-      );
     });
 
     testWidgets('«Cerrar» llama onCerrar', (tester) async {
@@ -235,16 +220,12 @@ void main() {
   });
 
   group('M04-02 · Celebración', () {
-    testWidgets('monto depositado y cuenta enmascarada', (tester) async {
+    testWidgets('monto depositado y método de pago', (tester) async {
       await montar(tester, const M0402CelebracionPage(id: 'IND-2026-0912'));
 
       expect(find.text('¡Tu indemnización ya está en camino!'), findsOne);
       expect(find.text('${pesos(450000)} depositados'), findsOneWidget);
-      expect(find.text('En tu cuenta $cuentaVisible'), findsOneWidget);
-      expect(
-        find.bySemanticsLabel('En tu cuenta terminada en 4821'),
-        findsOneWidget,
-      );
+      expect(find.text('Pagado por $metodo'), findsOneWidget);
     });
 
     testWidgets('el ícono de celebración no entra al foco', (tester) async {
