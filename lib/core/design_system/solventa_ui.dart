@@ -14,6 +14,7 @@ export 'components/feedback/sol_demo_trigger.dart';
 export 'components/feedback/sol_inline_note.dart';
 export 'components/feedback/sol_loading_state.dart';
 export 'components/feedback/sol_result_view.dart';
+export 'components/feedback/sol_skeleton.dart';
 export 'components/feedback/sol_status.dart';
 export 'components/inputs/sol_consent_checkbox.dart';
 export 'components/inputs/sol_text_field.dart';

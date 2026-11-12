@@ -94,7 +94,10 @@ class M0501PolizaPage extends ConsumerWidget {
           ),
         ],
       ),
-      _ => SolLoadingState(message: l10n.m0501Cargando),
+      _ => SolSkeletonGroup(
+        message: l10n.m0501Cargando,
+        child: const _EsqueletoPolizas(),
+      ),
     };
 
     return SolFlowScaffold(
@@ -272,6 +275,42 @@ class _FilaPoliza extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Mientras llegan las pólizas: tres tarjetas con la forma de [_FilaPoliza] (número y vigencia a la izquierda, la marca
+/// de elegida a la derecha), para que el formulario de abajo no se desplace cuando aparecen.
+class _EsqueletoPolizas extends StatelessWidget {
+  const _EsqueletoPolizas();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (var i = 0; i < 3; i++) ...[
+          const SolCard.outlined(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SolSkeleton(widthFactor: 0.5, height: 20),
+                      SizedBox(height: SolSpacing.xs),
+                      SolSkeleton(widthFactor: 0.8, height: 14),
+                    ],
+                  ),
+                ),
+                SizedBox(width: SolSpacing.md),
+                SolSkeleton.circle(size: 24),
+              ],
+            ),
+          ),
+          const SizedBox(height: SolSpacing.sm),
+        ],
+      ],
     );
   }
 }

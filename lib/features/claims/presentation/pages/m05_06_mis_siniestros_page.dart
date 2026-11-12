@@ -42,7 +42,10 @@ class M0506MisSiniestrosPage extends ConsumerWidget {
           ),
         ],
       ),
-      _ => SolLoadingState(message: l10n.m0506Cargando),
+      _ => SolSkeletonGroup(
+        message: l10n.m0506Cargando,
+        child: const _EsqueletoSiniestros(),
+      ),
     };
 
     return SolFlowScaffold(
@@ -125,6 +128,45 @@ class _FilaSiniestro extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Mientras llegan los reportes: tres tarjetas con la forma de [_FilaSiniestro] (radicado e insignia arriba, dos líneas
+/// de texto abajo), para que la lista no salte cuando aparece.
+class _EsqueletoSiniestros extends StatelessWidget {
+  const _EsqueletoSiniestros();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (var i = 0; i < 3; i++) ...[
+          const SolCard.outlined(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(child: SolSkeleton(widthFactor: 0.45, height: 20)),
+                    SolSkeleton(
+                      width: 88,
+                      height: 24,
+                      radius: SolRadius.fullAll,
+                    ),
+                  ],
+                ),
+                SizedBox(height: SolSpacing.sm),
+                SolSkeleton(widthFactor: 0.8, height: 14),
+                SizedBox(height: SolSpacing.xs),
+                SolSkeleton(widthFactor: 0.6, height: 14),
+              ],
+            ),
+          ),
+          const SizedBox(height: SolSpacing.sm),
+        ],
+      ],
     );
   }
 }
