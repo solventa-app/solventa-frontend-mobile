@@ -1607,7 +1607,7 @@ abstract class AppLocalizations {
   /// M05-01 sin pólizas
   ///
   /// In es, this message translates to:
-  /// **'No tienes pólizas emitidas sobre las que reportar.'**
+  /// **'No tienes pólizas de auto emitidas sobre las que reportar.'**
   String get m0501SinPolizas;
 
   /// M05-01 campo fecha

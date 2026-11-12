@@ -2,10 +2,11 @@ import '../../../../core/contrato/schema.graphql.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../graphql/reporte_siniestro.graphql.dart';
 
-/// Pólizas emitidas de `propuestas`; las propuestas sin póliza se descartan.
+/// Pólizas de **auto** emitidas de `propuestas`. Reportar un siniestro es de la póliza del vehículo: la de vida del
+/// crédito hipotecario no se ofrece. Las propuestas sin póliza se descartan.
 List<PolizaReportable> polizasDesdeGql(Query$PolizasParaReporte q) => [
   for (final p in q.propuestas.propuestas)
-    if (p.poliza case final poliza?)
+    if (p.poliza case final poliza? when poliza.producto == Enum$Producto.AUTO)
       PolizaReportable(
         id: poliza.id,
         numero: poliza.numero,

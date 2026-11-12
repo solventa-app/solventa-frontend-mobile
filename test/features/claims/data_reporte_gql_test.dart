@@ -92,14 +92,19 @@ void main() {
     );
   });
 
-  test('las pólizas de auto llegan marcadas con su vehículo', () async {
-    bff.responder(ReporteSiniestroFixtures.polizas);
+  test(
+    'solo llegan las pólizas de auto, con su vehículo; la de vida no',
+    () async {
+      // El fixture trae la póliza de vida del crédito hipotecario y la de auto.
+      bff.responder(ReporteSiniestroFixtures.polizas);
 
-    final polizas = polizasDesdeGql(await remoto.polizas());
+      final polizas = polizasDesdeGql(await remoto.polizas());
 
-    expect(polizas.map((p) => p.esAuto), [false, true]);
-    expect(polizas.last.vehiculo, 'MAZDA ABC•••');
-  });
+      expect(polizas.map((p) => p.numero), ['SOL-2026-000456']);
+      expect(polizas.single.esAuto, isTrue);
+      expect(polizas.single.vehiculo, 'MAZDA ABC•••');
+    },
+  );
 
   test('el reporte de auto manda el tipo de siniestro (KAN-290)', () {
     final reporte = ReporteSiniestro(

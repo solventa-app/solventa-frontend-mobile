@@ -885,7 +885,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0501SinPolizas =>
-      'No tienes pólizas emitidas sobre las que reportar.';
+      'No tienes pólizas de auto emitidas sobre las que reportar.';
 
   @override
   String get m0501Fecha => '¿Cuándo pasó?';
