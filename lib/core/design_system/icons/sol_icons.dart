@@ -27,6 +27,9 @@ abstract final class SolIcons {
   // Prestadores.
   static const IconData medical = Symbols.medical_services;
   static const IconData mechanic = Symbols.build;
+  static const IconData towTruck = Symbols.auto_towing; // HU-M06 v0.49
+  static const IconData myLocation = Symbols.my_location; // HU-M06 M8
+  static const IconData layers = Symbols.layers; // HU-M06 M14
   static const IconData verifiedProvider = Symbols.verified;
   static const IconData location = Symbols.location_on;
   static const IconData schedule = Symbols.schedule;

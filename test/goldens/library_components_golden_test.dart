@@ -121,14 +121,16 @@ void main() {
     );
   });
 
+  // HU-M06 (M3): el ícono dice el tipo y el color dice si es aliado.
   group('Fila de prestador (2018:103)', () {
     solGoldenMatrix(
       'provider_row',
       () => GoldenSheet(
         cases: {
-          'Médico': SolProviderRow(
+          'Médico aliado': SolProviderRow(
             name: 'Clínica Norte',
             type: SolProviderType.medico,
+            isPartner: true,
             distance: SolFormat.distanceKm(1.2),
             eta: SolFormat.minutes(6),
             onRequest: noop,
@@ -138,6 +140,14 @@ void main() {
             type: SolProviderType.mecanico,
             distance: SolFormat.distanceKm(2),
             eta: SolFormat.minutes(9),
+            onRequest: noop,
+          ),
+          'Grúa aliada': SolProviderRow(
+            name: 'Grúas Express',
+            type: SolProviderType.grua,
+            isPartner: true,
+            distance: SolFormat.distanceKm(2.8),
+            eta: SolFormat.minutes(12),
             onRequest: noop,
           ),
         },

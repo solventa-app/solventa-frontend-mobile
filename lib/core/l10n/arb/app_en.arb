@@ -271,6 +271,14 @@
   "@m0601TipoMecanico": {
     "description": "M06-01 especialidad mecánica"
   },
+  "m0601TipoGrua": "Tow truck",
+  "@m0601TipoGrua": {
+    "description": "M06-01 tipo grúa (v0.49)"
+  },
+  "m0601Aliado": "Solventa partner",
+  "@m0601Aliado": {
+    "description": "M06-01 insignia del prestador aliado (v0.49)"
+  },
   "m0601Buscando": "Looking for providers near you…",
   "@m0601Buscando": {
     "description": "M06-01 cargando"
@@ -611,6 +619,7 @@
   "m0602Tipo": "Type of assistance",
   "m0602TipoMedica": "Medical",
   "m0602TipoMecanica": "Mechanical",
+  "m0602TipoGrua": "Tow truck",
   "m0602TipoElegir": "Choose an option",
   "m0602TipoRequerido": "Choose the type of assistance.",
   "m0602TipoNoAtendido": "{nombre} doesn't handle this type of assistance. Choose another provider on the map.",

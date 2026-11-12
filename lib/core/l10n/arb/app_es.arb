@@ -659,6 +659,14 @@
   "@m0601TipoMecanico": {
     "description": "M06-01 especialidad mecánica"
   },
+  "m0601TipoGrua": "Grúa",
+  "@m0601TipoGrua": {
+    "description": "M06-01 tipo grúa (v0.49)"
+  },
+  "m0601Aliado": "Aliado Solventa",
+  "@m0601Aliado": {
+    "description": "M06-01 insignia del prestador aliado (v0.49)"
+  },
   "m0601Buscando": "Buscando prestadores cerca de ti…",
   "@m0601Buscando": {
     "description": "M06-01 cargando"
@@ -1025,6 +1033,10 @@
   "m0602TipoMecanica": "Mecánica",
   "@m0602TipoMecanica": {
     "description": "M06-02 opción del selector"
+  },
+  "m0602TipoGrua": "Grúa",
+  "@m0602TipoGrua": {
+    "description": "M06-02 opción del selector (v0.49)"
   },
   "m0602TipoElegir": "Elige una opción",
   "@m0602TipoElegir": {

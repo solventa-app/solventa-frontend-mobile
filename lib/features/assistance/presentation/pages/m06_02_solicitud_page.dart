@@ -46,6 +46,7 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
   String _nombreTipo(TipoPrestador t) => switch (t) {
     TipoPrestador.medico => context.l10n.m0602TipoMedica,
     TipoPrestador.mecanico => context.l10n.m0602TipoMecanica,
+    TipoPrestador.grua => context.l10n.m0602TipoGrua,
   };
 
   Future<void> _elegirTipo() async {
@@ -204,12 +205,11 @@ class _TarjetaPrestador extends StatelessWidget {
         child: Row(
           children: [
             ExcludeSemantics(
-              child: Icon(
-                prestador.tipo == TipoPrestador.medico
-                    ? SolIcons.medical
-                    : SolIcons.mechanic,
-                color: colors.primary,
-              ),
+              child: Icon(switch (prestador.tipo) {
+                TipoPrestador.medico => SolIcons.medical,
+                TipoPrestador.mecanico => SolIcons.mechanic,
+                TipoPrestador.grua => SolIcons.towTruck,
+              }, color: colors.primary),
             ),
             const SizedBox(width: SolSpacing.md),
             Expanded(

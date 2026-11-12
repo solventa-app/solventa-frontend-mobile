@@ -29,7 +29,9 @@ final class AsistenciaRepositoryImpl implements AsistenciaRepository {
   Future<Resultado<CatalogoPrestadores>> catalogoPrestadores() async {
     final copia = await _local.leer();
     final ahora = _reloj();
-    if (copia != null && ahora.difference(copia.revisadoEn) < vigencia) {
+    if (copia != null &&
+        ahora.difference(copia.revisadoEn) < vigencia &&
+        !copiaSinDetalle(copia.catalogo)) {
       return guardarFallas(() async => catalogoDesdeMapa(copia.catalogo));
     }
 

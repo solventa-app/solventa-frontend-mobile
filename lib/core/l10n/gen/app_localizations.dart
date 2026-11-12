@@ -1466,6 +1466,18 @@ abstract class AppLocalizations {
   /// **'Mecánico'**
   String get m0601TipoMecanico;
 
+  /// M06-01 tipo grúa (v0.49)
+  ///
+  /// In es, this message translates to:
+  /// **'Grúa'**
+  String get m0601TipoGrua;
+
+  /// M06-01 insignia del prestador aliado (v0.49)
+  ///
+  /// In es, this message translates to:
+  /// **'Aliado Solventa'**
+  String get m0601Aliado;
+
   /// M06-01 cargando
   ///
   /// In es, this message translates to:
@@ -1927,6 +1939,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Mecánica'**
   String get m0602TipoMecanica;
+
+  /// M06-02 opción del selector (v0.49)
+  ///
+  /// In es, this message translates to:
+  /// **'Grúa'**
+  String get m0602TipoGrua;
 
   /// M06-02 selector sin valor
   ///

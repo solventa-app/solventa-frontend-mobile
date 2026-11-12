@@ -802,6 +802,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0601TipoMecanico => 'Mechanic';
 
   @override
+  String get m0601TipoGrua => 'Tow truck';
+
+  @override
+  String get m0601Aliado => 'Solventa partner';
+
+  @override
   String get m0601Buscando => 'Looking for providers near you…';
 
   @override
@@ -1069,6 +1075,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0602TipoMecanica => 'Mechanical';
+
+  @override
+  String get m0602TipoGrua => 'Tow truck';
 
   @override
   String get m0602TipoElegir => 'Choose an option';

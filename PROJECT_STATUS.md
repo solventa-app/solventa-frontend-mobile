@@ -93,6 +93,14 @@ KAN-280). Plan, diseños, decisiones (M04-D1 a D5) y pendientes en [`docs/hu-m04
   de fusionar, por la fuente `Inter` (`docs/entorno-local.md`).
 - Jira: KAN-280 (M04-04 · Mi cobertura) bajo KAN-38 (2026-11-08).
 
+### En curso: pendientes de HU-M06 (KAN-36), por fases
+
+Plan, bocetos, decisiones y ajustes (A1 a A12) en [`docs/hu-m06/plan-pendientes.md`](docs/hu-m06/plan-pendientes.md).
+Fase 1 (2026-11-12): grúa, detalle del prestador y color por aliado (M3) con el contrato v0.49 (backend #590). La
+copia local del catálogo anterior a la v0.49 se vuelve a pedir aunque no hayan pasado 7 días. Las versiones v0.46 a
+v0.48 las reserva el backend #589 (KAN-259), por eso M06 empieza en v0.49. Siguen Mapbox (fase 2), dirección ubicada
+(3), rutas (4) y «Mis asistencias» con la notificación (5). Emuladores, Mapbox real y teléfono real quedan pendientes.
+
 ### Pendiente
 
 - HU-M04: confirmar los goldens regenerados en el devcontainer; `google-services.json` real (paso del usuario);

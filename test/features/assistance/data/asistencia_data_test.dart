@@ -30,7 +30,7 @@ void main() {
       final c = catalogoDesdeMapa({
         'version': 'v1',
         'prestadores': [
-          _mapa('a', tipo: 'GRUA'),
+          _mapa('a', tipo: 'BOMBEROS'),
           _mapa('b', activo: false),
           _mapa('c', tipo: 'MECANICO'),
           _mapa('d'),
@@ -38,6 +38,45 @@ void main() {
       });
       expect(c.version, 'v1');
       expect(c.prestadores.map((p) => p.id), ['c', 'd']);
+    });
+
+    test('v0.49: grúa y el detalle del prestador', () {
+      final p = prestadorDesdeMapa({
+        ..._mapa('g', tipo: 'GRUA'),
+        'aliado': true,
+        'especialidad': 'Grúa liviana',
+        'direccion': 'Cl. 100 # 19-61',
+        'horario': 'Abierto 24 h',
+        'fotoUrl': 'https://example.test/g.webp',
+      })!;
+      expect(p.tipo, TipoPrestador.grua);
+      expect(p.aliado, isTrue);
+      expect(p.especialidad, 'Grúa liviana');
+      expect(p.direccion, 'Cl. 100 # 19-61');
+      expect(p.horario, 'Abierto 24 h');
+      expect(p.fotoUrl, 'https://example.test/g.webp');
+    });
+
+    test('una copia anterior a la v0.49 parsea con valores por defecto', () {
+      final p = prestadorDesdeMapa(_mapa('a'))!;
+      expect(p.aliado, isFalse);
+      expect(p.especialidad, isEmpty);
+      expect(p.horario, isNull);
+      expect(p.fotoUrl, isNull);
+      expect(
+        copiaSinDetalle({
+          'prestadores': [_mapa('a')],
+        }),
+        isTrue,
+      );
+      expect(
+        copiaSinDetalle({
+          'prestadores': [
+            {..._mapa('a'), 'aliado': false},
+          ],
+        }),
+        isFalse,
+      );
     });
 
     test('acepta enteros donde el contrato manda números', () {
@@ -84,6 +123,23 @@ void main() {
         expect(bff.consultas, 2);
         expect(c.prestadores, isNotEmpty);
         expect(local.copia!.revisadoEn, ahora);
+      },
+    );
+
+    test(
+      'una copia vigente anterior a la v0.49 se vuelve a pedir aunque no venza',
+      () async {
+        local.copia = CopiaCatalogo(
+          catalogo: {
+            'version': '2026-11-04.1',
+            'prestadores': [_mapa('viejo')],
+          },
+          revisadoEn: ahora,
+        );
+        final c = _valor(await repo().catalogoPrestadores());
+        expect(bff.consultas, 1);
+        expect(c.version, AsistenciaFixtures.version);
+        expect(c.prestadores.where((p) => p.aliado), isNotEmpty);
       },
     );
 

@@ -266,6 +266,41 @@ const documentNodeMutationSolicitarAsistencia = DocumentNode(
                               selectionSet: null,
                             ),
                             FieldNode(
+                              name: NameNode(value: 'aliado'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'especialidad'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'direccion'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'horario'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'fotoUrl'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
                               name: NameNode(value: '__typename'),
                               alias: null,
                               arguments: [],
@@ -648,6 +683,11 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador {
     required this.latitud,
     required this.longitud,
     required this.activo,
+    required this.aliado,
+    required this.especialidad,
+    required this.direccion,
+    this.horario,
+    this.fotoUrl,
     this.$__typename = 'Prestador',
   });
 
@@ -661,6 +701,11 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador {
     final l$latitud = json['latitud'];
     final l$longitud = json['longitud'];
     final l$activo = json['activo'];
+    final l$aliado = json['aliado'];
+    final l$especialidad = json['especialidad'];
+    final l$direccion = json['direccion'];
+    final l$horario = json['horario'];
+    final l$fotoUrl = json['fotoUrl'];
     final l$$__typename = json['__typename'];
     return Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador(
       id: (l$id as String),
@@ -670,6 +715,11 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador {
       latitud: (l$latitud as num).toDouble(),
       longitud: (l$longitud as num).toDouble(),
       activo: (l$activo as bool),
+      aliado: (l$aliado as bool),
+      especialidad: (l$especialidad as String),
+      direccion: (l$direccion as String),
+      horario: (l$horario as String?),
+      fotoUrl: (l$fotoUrl as String?),
       $__typename: (l$$__typename as String),
     );
   }
@@ -687,6 +737,16 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador {
   final double longitud;
 
   final bool activo;
+
+  final bool aliado;
+
+  final String especialidad;
+
+  final String direccion;
+
+  final String? horario;
+
+  final String? fotoUrl;
 
   final String $__typename;
 
@@ -706,6 +766,16 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador {
     _resultData['longitud'] = l$longitud;
     final l$activo = activo;
     _resultData['activo'] = l$activo;
+    final l$aliado = aliado;
+    _resultData['aliado'] = l$aliado;
+    final l$especialidad = especialidad;
+    _resultData['especialidad'] = l$especialidad;
+    final l$direccion = direccion;
+    _resultData['direccion'] = l$direccion;
+    final l$horario = horario;
+    _resultData['horario'] = l$horario;
+    final l$fotoUrl = fotoUrl;
+    _resultData['fotoUrl'] = l$fotoUrl;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -720,6 +790,11 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador {
     final l$latitud = latitud;
     final l$longitud = longitud;
     final l$activo = activo;
+    final l$aliado = aliado;
+    final l$especialidad = especialidad;
+    final l$direccion = direccion;
+    final l$horario = horario;
+    final l$fotoUrl = fotoUrl;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -729,6 +804,11 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador {
       l$latitud,
       l$longitud,
       l$activo,
+      l$aliado,
+      l$especialidad,
+      l$direccion,
+      l$horario,
+      l$fotoUrl,
       l$$__typename,
     ]);
   }
@@ -776,6 +856,31 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador {
     final l$activo = activo;
     final lOther$activo = other.activo;
     if (l$activo != lOther$activo) {
+      return false;
+    }
+    final l$aliado = aliado;
+    final lOther$aliado = other.aliado;
+    if (l$aliado != lOther$aliado) {
+      return false;
+    }
+    final l$especialidad = especialidad;
+    final lOther$especialidad = other.especialidad;
+    if (l$especialidad != lOther$especialidad) {
+      return false;
+    }
+    final l$direccion = direccion;
+    final lOther$direccion = other.direccion;
+    if (l$direccion != lOther$direccion) {
+      return false;
+    }
+    final l$horario = horario;
+    final lOther$horario = other.horario;
+    if (l$horario != lOther$horario) {
+      return false;
+    }
+    final l$fotoUrl = fotoUrl;
+    final lOther$fotoUrl = other.fotoUrl;
+    if (l$fotoUrl != lOther$fotoUrl) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -1127,6 +1232,41 @@ const documentNodeMutationSolicitarAsistenciaConDireccion = DocumentNode(
                             ),
                             FieldNode(
                               name: NameNode(value: 'activo'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'aliado'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'especialidad'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'direccion'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'horario'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'fotoUrl'),
                               alias: null,
                               arguments: [],
                               directives: [],
@@ -1522,6 +1662,11 @@ class Mutation$SolicitarAsistenciaConDireccion$solicitarAsistenciaConDireccion$$
     required this.latitud,
     required this.longitud,
     required this.activo,
+    required this.aliado,
+    required this.especialidad,
+    required this.direccion,
+    this.horario,
+    this.fotoUrl,
     this.$__typename = 'Prestador',
   });
 
@@ -1535,6 +1680,11 @@ class Mutation$SolicitarAsistenciaConDireccion$solicitarAsistenciaConDireccion$$
     final l$latitud = json['latitud'];
     final l$longitud = json['longitud'];
     final l$activo = json['activo'];
+    final l$aliado = json['aliado'];
+    final l$especialidad = json['especialidad'];
+    final l$direccion = json['direccion'];
+    final l$horario = json['horario'];
+    final l$fotoUrl = json['fotoUrl'];
     final l$$__typename = json['__typename'];
     return Mutation$SolicitarAsistenciaConDireccion$solicitarAsistenciaConDireccion$$Asistencia$prestador(
       id: (l$id as String),
@@ -1544,6 +1694,11 @@ class Mutation$SolicitarAsistenciaConDireccion$solicitarAsistenciaConDireccion$$
       latitud: (l$latitud as num).toDouble(),
       longitud: (l$longitud as num).toDouble(),
       activo: (l$activo as bool),
+      aliado: (l$aliado as bool),
+      especialidad: (l$especialidad as String),
+      direccion: (l$direccion as String),
+      horario: (l$horario as String?),
+      fotoUrl: (l$fotoUrl as String?),
       $__typename: (l$$__typename as String),
     );
   }
@@ -1561,6 +1716,16 @@ class Mutation$SolicitarAsistenciaConDireccion$solicitarAsistenciaConDireccion$$
   final double longitud;
 
   final bool activo;
+
+  final bool aliado;
+
+  final String especialidad;
+
+  final String direccion;
+
+  final String? horario;
+
+  final String? fotoUrl;
 
   final String $__typename;
 
@@ -1580,6 +1745,16 @@ class Mutation$SolicitarAsistenciaConDireccion$solicitarAsistenciaConDireccion$$
     _resultData['longitud'] = l$longitud;
     final l$activo = activo;
     _resultData['activo'] = l$activo;
+    final l$aliado = aliado;
+    _resultData['aliado'] = l$aliado;
+    final l$especialidad = especialidad;
+    _resultData['especialidad'] = l$especialidad;
+    final l$direccion = direccion;
+    _resultData['direccion'] = l$direccion;
+    final l$horario = horario;
+    _resultData['horario'] = l$horario;
+    final l$fotoUrl = fotoUrl;
+    _resultData['fotoUrl'] = l$fotoUrl;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -1594,6 +1769,11 @@ class Mutation$SolicitarAsistenciaConDireccion$solicitarAsistenciaConDireccion$$
     final l$latitud = latitud;
     final l$longitud = longitud;
     final l$activo = activo;
+    final l$aliado = aliado;
+    final l$especialidad = especialidad;
+    final l$direccion = direccion;
+    final l$horario = horario;
+    final l$fotoUrl = fotoUrl;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -1603,6 +1783,11 @@ class Mutation$SolicitarAsistenciaConDireccion$solicitarAsistenciaConDireccion$$
       l$latitud,
       l$longitud,
       l$activo,
+      l$aliado,
+      l$especialidad,
+      l$direccion,
+      l$horario,
+      l$fotoUrl,
       l$$__typename,
     ]);
   }
@@ -1650,6 +1835,31 @@ class Mutation$SolicitarAsistenciaConDireccion$solicitarAsistenciaConDireccion$$
     final l$activo = activo;
     final lOther$activo = other.activo;
     if (l$activo != lOther$activo) {
+      return false;
+    }
+    final l$aliado = aliado;
+    final lOther$aliado = other.aliado;
+    if (l$aliado != lOther$aliado) {
+      return false;
+    }
+    final l$especialidad = especialidad;
+    final lOther$especialidad = other.especialidad;
+    if (l$especialidad != lOther$especialidad) {
+      return false;
+    }
+    final l$direccion = direccion;
+    final lOther$direccion = other.direccion;
+    if (l$direccion != lOther$direccion) {
+      return false;
+    }
+    final l$horario = horario;
+    final lOther$horario = other.horario;
+    if (l$horario != lOther$horario) {
+      return false;
+    }
+    final l$fotoUrl = fotoUrl;
+    final lOther$fotoUrl = other.fotoUrl;
+    if (l$fotoUrl != lOther$fotoUrl) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -1986,6 +2196,41 @@ const documentNodeMutationCancelarAsistencia = DocumentNode(
                             ),
                             FieldNode(
                               name: NameNode(value: 'activo'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'aliado'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'especialidad'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'direccion'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'horario'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'fotoUrl'),
                               alias: null,
                               arguments: [],
                               directives: [],
@@ -2372,6 +2617,11 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador {
     required this.latitud,
     required this.longitud,
     required this.activo,
+    required this.aliado,
+    required this.especialidad,
+    required this.direccion,
+    this.horario,
+    this.fotoUrl,
     this.$__typename = 'Prestador',
   });
 
@@ -2385,6 +2635,11 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador {
     final l$latitud = json['latitud'];
     final l$longitud = json['longitud'];
     final l$activo = json['activo'];
+    final l$aliado = json['aliado'];
+    final l$especialidad = json['especialidad'];
+    final l$direccion = json['direccion'];
+    final l$horario = json['horario'];
+    final l$fotoUrl = json['fotoUrl'];
     final l$$__typename = json['__typename'];
     return Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador(
       id: (l$id as String),
@@ -2394,6 +2649,11 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador {
       latitud: (l$latitud as num).toDouble(),
       longitud: (l$longitud as num).toDouble(),
       activo: (l$activo as bool),
+      aliado: (l$aliado as bool),
+      especialidad: (l$especialidad as String),
+      direccion: (l$direccion as String),
+      horario: (l$horario as String?),
+      fotoUrl: (l$fotoUrl as String?),
       $__typename: (l$$__typename as String),
     );
   }
@@ -2411,6 +2671,16 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador {
   final double longitud;
 
   final bool activo;
+
+  final bool aliado;
+
+  final String especialidad;
+
+  final String direccion;
+
+  final String? horario;
+
+  final String? fotoUrl;
 
   final String $__typename;
 
@@ -2430,6 +2700,16 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador {
     _resultData['longitud'] = l$longitud;
     final l$activo = activo;
     _resultData['activo'] = l$activo;
+    final l$aliado = aliado;
+    _resultData['aliado'] = l$aliado;
+    final l$especialidad = especialidad;
+    _resultData['especialidad'] = l$especialidad;
+    final l$direccion = direccion;
+    _resultData['direccion'] = l$direccion;
+    final l$horario = horario;
+    _resultData['horario'] = l$horario;
+    final l$fotoUrl = fotoUrl;
+    _resultData['fotoUrl'] = l$fotoUrl;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -2444,6 +2724,11 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador {
     final l$latitud = latitud;
     final l$longitud = longitud;
     final l$activo = activo;
+    final l$aliado = aliado;
+    final l$especialidad = especialidad;
+    final l$direccion = direccion;
+    final l$horario = horario;
+    final l$fotoUrl = fotoUrl;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -2453,6 +2738,11 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador {
       l$latitud,
       l$longitud,
       l$activo,
+      l$aliado,
+      l$especialidad,
+      l$direccion,
+      l$horario,
+      l$fotoUrl,
       l$$__typename,
     ]);
   }
@@ -2500,6 +2790,31 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador {
     final l$activo = activo;
     final lOther$activo = other.activo;
     if (l$activo != lOther$activo) {
+      return false;
+    }
+    final l$aliado = aliado;
+    final lOther$aliado = other.aliado;
+    if (l$aliado != lOther$aliado) {
+      return false;
+    }
+    final l$especialidad = especialidad;
+    final lOther$especialidad = other.especialidad;
+    if (l$especialidad != lOther$especialidad) {
+      return false;
+    }
+    final l$direccion = direccion;
+    final lOther$direccion = other.direccion;
+    if (l$direccion != lOther$direccion) {
+      return false;
+    }
+    final l$horario = horario;
+    final lOther$horario = other.horario;
+    if (l$horario != lOther$horario) {
+      return false;
+    }
+    final l$fotoUrl = fotoUrl;
+    final lOther$fotoUrl = other.fotoUrl;
+    if (l$fotoUrl != lOther$fotoUrl) {
       return false;
     }
     final l$$__typename = $__typename;
