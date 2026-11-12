@@ -95,7 +95,7 @@ void main() {
       await desbloquear(c);
 
       expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
-      expect(biometria.autenticaciones, [false]);
+      expect(biometria.autenticaciones, [true]);
       expect(gestor.abierta, isTrue);
       expect(onboarding.reanudadas, 1);
       // Rotación: quedó guardado el refresh nuevo.
@@ -141,7 +141,7 @@ void main() {
       await desbloquear(c);
 
       expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
-      expect(biometria.autenticaciones, [false, false]);
+      expect(biometria.autenticaciones, [true, true]);
     });
 
     test('cancelar el diálogo: queda en M02-01 sin error', () async {
@@ -163,30 +163,34 @@ void main() {
       expect(c.read(accesoProvider).aviso, AvisoAcceso.bloqueoTemporal);
     });
 
-    test('bloqueo permanente: pasa directo al PIN del teléfono', () async {
+    test(
+      'el diálogo de la huella ofrece también el PIN del teléfono (D2)',
+      () async {
+        final c = await bloqueada();
+        await desbloquear(c);
+
+        // El botón «Usar PIN, patrón o contraseña» del diálogo (mockup M02-01), desde el primer intento.
+        expect(biometria.autenticaciones, [true]);
+        expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
+      },
+    );
+
+    test('bloqueo permanente: aviso, sin reabrir el diálogo', () async {
       biometria.resultados.add(const BloqueoPermanente());
       final c = await bloqueada();
       await desbloquear(c);
 
-      expect(biometria.autenticaciones, [false, true]);
-      expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
-    });
-
-    test('bloqueo permanente aun con PIN: aviso', () async {
-      biometria.resultados.add(const BloqueoPermanente());
-      final c = await bloqueada();
-      await desbloquear(c, conPin: true);
-
       expect(c.read(accesoProvider).aviso, AvisoAcceso.bloqueoPermanente);
+      expect(biometria.autenticaciones, [true]);
     });
 
-    test('sin biometría registrada: pide el PIN del teléfono (D1)', () async {
+    test('sin biometría registrada: aviso, sin reabrir el diálogo', () async {
       biometria.resultados.add(const SinBiometriaRegistrada());
       final c = await bloqueada();
       await desbloquear(c);
 
-      expect(biometria.autenticaciones, [false, true]);
-      expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
+      expect(c.read(accesoProvider).aviso, AvisoAcceso.noDisponible);
+      expect(biometria.autenticaciones, [true]);
     });
 
     test('sin bloqueo de pantalla: aviso y no abre el diálogo', () async {
@@ -222,7 +226,7 @@ void main() {
         final c = await bloqueada();
         await desbloquear(c);
 
-        expect(biometria.autenticaciones, [false, true]);
+        expect(biometria.autenticaciones, [true, true]);
         expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
       },
     );
@@ -263,7 +267,7 @@ void main() {
       await c.read(accesoProvider.notifier).reintentar(motivo: motivo);
 
       expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
-      expect(biometria.autenticaciones, [false]);
+      expect(biometria.autenticaciones, [true]);
     });
 
     test('SESION_VENCIDA al renovar: login con aviso y todo borrado', () async {
@@ -289,7 +293,7 @@ void main() {
       final c = await bloqueada();
       await Future.wait([desbloquear(c), desbloquear(c)]);
 
-      expect(biometria.autenticaciones, [false]);
+      expect(biometria.autenticaciones, [true]);
     });
 
     test('M02-03 termina y vuelve a las rutas normales', () async {

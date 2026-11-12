@@ -90,7 +90,7 @@ void main() {
     ) async {
       final c = await montar(tester, const M0201DesbloqueoPage());
 
-      expect(biometria.autenticaciones, [false]);
+      expect(biometria.autenticaciones, [true]);
       expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
     });
 
@@ -117,7 +117,7 @@ void main() {
       await tester.tap(find.bySemanticsLabel('Ingresa con tu huella'));
       await tester.pumpAndSettle();
 
-      expect(biometria.autenticaciones, [false]);
+      expect(biometria.autenticaciones, [true]);
       expect(find.byType(SolStatusBanner), findsNothing);
     });
 
@@ -134,7 +134,7 @@ void main() {
 
         await tester.tap(find.text('Ingresa con tu rostro'));
         await tester.pumpAndSettle();
-        expect(biometria.autenticaciones, [false]);
+        expect(biometria.autenticaciones, [true]);
       },
     );
 
@@ -184,7 +184,7 @@ void main() {
 
       await tester.tap(find.text('Ingresa con la seguridad de tu teléfono'));
       await tester.pumpAndSettle();
-      expect(biometria.autenticaciones, [false]);
+      expect(biometria.autenticaciones, [true]);
     });
 
     testWidgets(
@@ -249,7 +249,7 @@ void main() {
         await tester.tap(find.text('Usar el bloqueo del teléfono'));
         await tester.pumpAndSettle();
 
-        expect(biometria.autenticaciones, [false, true]);
+        expect(biometria.autenticaciones, [true, true]);
       },
     );
 
@@ -295,7 +295,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
-      expect(biometria.autenticaciones, [false]);
+      expect(biometria.autenticaciones, [true]);
     });
 
     testWidgets('sin bloqueo de pantalla: Ajustes y correo, sensor inactivo', (
@@ -358,7 +358,7 @@ void main() {
       await tester.tap(find.text('Reintentar'));
       await tester.pumpAndSettle();
 
-      expect(biometria.autenticaciones, [false, false]);
+      expect(biometria.autenticaciones, [true, true]);
       expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
     });
 
@@ -369,7 +369,7 @@ void main() {
       await tester.tap(find.text('Usar el bloqueo del teléfono'));
       await tester.pumpAndSettle();
 
-      expect(biometria.autenticaciones, [false, true]);
+      expect(biometria.autenticaciones, [true, true]);
     });
 
     testWidgets('M02-01a también deja la salida por correo y contraseña', (

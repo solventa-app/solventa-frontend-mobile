@@ -141,9 +141,11 @@ class AccesoNotifier extends Notifier<AccesoState> {
     }
   }
 
-  /// M02-01: abre el diálogo del sistema. Con [conPin] (o si el teléfono
-  /// solo tiene PIN) el diálogo acepta el PIN, patrón o contraseña del
-  /// teléfono; si no, solo biometría.
+  /// M02-01: abre el diálogo del sistema, que siempre acepta también el PIN,
+  /// patrón o contraseña del teléfono (botón «Usar PIN…» del mockup). [conPin]
+  /// marca que la persona lo pidió a propósito (o que el teléfono solo tiene
+  /// PIN): entonces no se reintenta si la llave pide una autenticación más
+  /// fuerte.
   Future<void> desbloquear({
     required String motivo,
     TextosDialogo dialogo = _sinTextosDialogo,
@@ -169,10 +171,13 @@ class AccesoNotifier extends Notifier<AccesoState> {
       case EstadoBiometria.soloCredencial:
         break;
     }
+    // Pidió el PIN a propósito (o el teléfono solo tiene PIN): no hay una biometría «débil» que reintentar.
     final pin = conPin || estado == EstadoBiometria.soloCredencial;
+    // El diálogo siempre ofrece también el PIN, patrón o contraseña del teléfono (D2): es el botón «Usar PIN…» del
+    // diálogo de M02-01 del mockup. Con la biometría bloqueada, Android pasa solo al PIN; ya no hace falta reabrirlo.
     final resultado = await servicio.autenticar(
       motivo: motivo,
-      permitirCredencialDispositivo: pin,
+      permitirCredencialDispositivo: true,
       titulo: dialogo.titulo,
       subtitulo: dialogo.subtitulo,
       cancelar: dialogo.cancelar,
@@ -187,29 +192,15 @@ class AccesoNotifier extends Notifier<AccesoState> {
         _terminar();
       case BloqueoTemporal():
         _terminar(aviso: AvisoAcceso.bloqueoTemporal);
-      // Sin biometría usable: el PIN del teléfono también desbloquea (D1).
       case BloqueoPermanente():
-        if (pin) {
-          _terminar(aviso: AvisoAcceso.bloqueoPermanente);
-        } else {
-          await _reintentarConPin(motivo, dialogo);
-        }
+        _terminar(aviso: AvisoAcceso.bloqueoPermanente);
       case SinBiometriaRegistrada():
-        if (pin) {
-          _terminar(aviso: AvisoAcceso.noDisponible);
-        } else {
-          await _reintentarConPin(motivo, dialogo);
-        }
+        _terminar(aviso: AvisoAcceso.noDisponible);
       case SinBloqueoPantalla():
         _terminar(aviso: AvisoAcceso.sinBloqueoPantalla);
       case NoDisponible():
         _terminar(aviso: AvisoAcceso.noDisponible);
     }
-  }
-
-  Future<void> _reintentarConPin(String motivo, TextosDialogo dialogo) async {
-    state = state.copyWith(autenticando: false);
-    await desbloquear(motivo: motivo, dialogo: dialogo, conPin: true);
   }
 
   /// Con el diálogo aceptado, descifra el refresh dentro de la ventana de
