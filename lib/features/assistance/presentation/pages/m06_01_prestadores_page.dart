@@ -65,11 +65,13 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
   String _tipo(TipoPrestador t) => switch (t) {
     TipoPrestador.medico => context.l10n.m0601TipoMedico,
     TipoPrestador.mecanico => context.l10n.m0601TipoMecanico,
+    TipoPrestador.grua => context.l10n.m0601TipoGrua,
   };
 
   SolProviderType _tipoFila(TipoPrestador t) => switch (t) {
     TipoPrestador.medico => SolProviderType.medico,
     TipoPrestador.mecanico => SolProviderType.mecanico,
+    TipoPrestador.grua => SolProviderType.grua,
   };
 
   Future<void> _abrirRuta(PrestadorCercano c) async {
@@ -136,6 +138,8 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                   name: p.nombre,
                   type: _tipoFila(p.tipo),
                   typeLabel: _tipo(p.tipo),
+                  isPartner: p.aliado,
+                  partnerLabel: l10n.m0601Aliado,
                   distance: p.ciudad,
                   requestLabel: l10n.m0601Solicitar,
                   onRequest: () => widget.onSolicitarConDireccion(p),
@@ -187,6 +191,8 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                     name: c.prestador.nombre,
                     type: _tipoFila(c.prestador.tipo),
                     typeLabel: _tipo(c.prestador.tipo),
+                    isPartner: c.prestador.aliado,
+                    partnerLabel: l10n.m0601Aliado,
                     distance: SolFormat.distanceKm(c.distanciaKm),
                     eta: SolFormat.minutes(c.minutosEstimados),
                     requestLabel: l10n.m0601Solicitar,

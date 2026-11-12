@@ -18,6 +18,11 @@ mutation SolicitarAsistencia($entrada: SolicitudAsistenciaInput!) {
         latitud
         longitud
         activo
+        aliado
+        especialidad
+        direccion
+        horario
+        fotoUrl
       }
     }
     ... on ErrorAsistencia {
@@ -46,6 +51,11 @@ mutation SolicitarAsistenciaConDireccion($entrada: SolicitudAsistenciaDireccionI
         latitud
         longitud
         activo
+        aliado
+        especialidad
+        direccion
+        horario
+        fotoUrl
       }
     }
     ... on ErrorAsistencia {
@@ -73,6 +83,11 @@ mutation CancelarAsistencia($id: ID!) {
         latitud
         longitud
         activo
+        aliado
+        especialidad
+        direccion
+        horario
+        fotoUrl
       }
     }
     ... on ErrorAsistencia {

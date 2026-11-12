@@ -324,6 +324,54 @@ void main() {
       await expectA11yGuidelines(tester);
     });
 
+    testWidgets(
+      'aliado: verified, insignia en TalkBack y color primario (M3)',
+      (tester) async {
+        await pumpSol(
+          tester,
+          Column(
+            children: [
+              SolProviderRow(
+                name: 'Grúas Express',
+                type: SolProviderType.grua,
+                distance: '2.8 km',
+                isPartner: true,
+                partnerLabel: 'Aliado Solventa',
+                onRequest: () {},
+              ),
+              SolProviderRow(
+                name: 'Grúas 24/7',
+                type: SolProviderType.grua,
+                distance: '4.6 km',
+                onRequest: () {},
+              ),
+            ],
+          ),
+        );
+        expect(find.byIcon(SolIcons.towTruck), findsNWidgets(2));
+        expect(find.byIcon(SolIcons.verifiedProvider), findsOneWidget);
+        expect(
+          find.bySemanticsLabel(RegExp('Aliado Solventa')),
+          findsOneWidget,
+        );
+        final fondos = tester
+            .widgetList<Container>(
+              find.ancestor(
+                of: find.byIcon(SolIcons.towTruck),
+                matching: find.byType(Container),
+              ),
+            )
+            .map((c) => (c.decoration as BoxDecoration?)?.color)
+            .whereType<Color>()
+            .toList();
+        final scheme = Theme.of(
+          tester.element(find.byType(SolProviderRow).first),
+        ).colorScheme;
+        expect(fondos, [scheme.primaryContainer, scheme.surfaceContainer]);
+        await expectA11yGuidelines(tester);
+      },
+    );
+
     testWidgets('al 200 % el botón baja de línea sin desbordar', (
       tester,
     ) async {

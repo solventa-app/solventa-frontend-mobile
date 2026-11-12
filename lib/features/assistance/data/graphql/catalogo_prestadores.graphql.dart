@@ -229,6 +229,41 @@ const documentNodeQueryCatalogoPrestadores = DocumentNode(
                         selectionSet: null,
                       ),
                       FieldNode(
+                        name: NameNode(value: 'aliado'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'especialidad'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'direccion'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'horario'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'fotoUrl'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
                         name: NameNode(value: '__typename'),
                         alias: null,
                         arguments: [],
@@ -376,6 +411,11 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     required this.latitud,
     required this.longitud,
     required this.activo,
+    required this.aliado,
+    required this.especialidad,
+    required this.direccion,
+    this.horario,
+    this.fotoUrl,
     this.$__typename = 'Prestador',
   });
 
@@ -389,6 +429,11 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     final l$latitud = json['latitud'];
     final l$longitud = json['longitud'];
     final l$activo = json['activo'];
+    final l$aliado = json['aliado'];
+    final l$especialidad = json['especialidad'];
+    final l$direccion = json['direccion'];
+    final l$horario = json['horario'];
+    final l$fotoUrl = json['fotoUrl'];
     final l$$__typename = json['__typename'];
     return Query$CatalogoPrestadores$catalogoPrestadores$prestadores(
       id: (l$id as String),
@@ -398,6 +443,11 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
       latitud: (l$latitud as num).toDouble(),
       longitud: (l$longitud as num).toDouble(),
       activo: (l$activo as bool),
+      aliado: (l$aliado as bool),
+      especialidad: (l$especialidad as String),
+      direccion: (l$direccion as String),
+      horario: (l$horario as String?),
+      fotoUrl: (l$fotoUrl as String?),
       $__typename: (l$$__typename as String),
     );
   }
@@ -415,6 +465,16 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
   final double longitud;
 
   final bool activo;
+
+  final bool aliado;
+
+  final String especialidad;
+
+  final String direccion;
+
+  final String? horario;
+
+  final String? fotoUrl;
 
   final String $__typename;
 
@@ -434,6 +494,16 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     _resultData['longitud'] = l$longitud;
     final l$activo = activo;
     _resultData['activo'] = l$activo;
+    final l$aliado = aliado;
+    _resultData['aliado'] = l$aliado;
+    final l$especialidad = especialidad;
+    _resultData['especialidad'] = l$especialidad;
+    final l$direccion = direccion;
+    _resultData['direccion'] = l$direccion;
+    final l$horario = horario;
+    _resultData['horario'] = l$horario;
+    final l$fotoUrl = fotoUrl;
+    _resultData['fotoUrl'] = l$fotoUrl;
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -448,6 +518,11 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     final l$latitud = latitud;
     final l$longitud = longitud;
     final l$activo = activo;
+    final l$aliado = aliado;
+    final l$especialidad = especialidad;
+    final l$direccion = direccion;
+    final l$horario = horario;
+    final l$fotoUrl = fotoUrl;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -457,6 +532,11 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
       l$latitud,
       l$longitud,
       l$activo,
+      l$aliado,
+      l$especialidad,
+      l$direccion,
+      l$horario,
+      l$fotoUrl,
       l$$__typename,
     ]);
   }
@@ -503,6 +583,31 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     final l$activo = activo;
     final lOther$activo = other.activo;
     if (l$activo != lOther$activo) {
+      return false;
+    }
+    final l$aliado = aliado;
+    final lOther$aliado = other.aliado;
+    if (l$aliado != lOther$aliado) {
+      return false;
+    }
+    final l$especialidad = especialidad;
+    final lOther$especialidad = other.especialidad;
+    if (l$especialidad != lOther$especialidad) {
+      return false;
+    }
+    final l$direccion = direccion;
+    final lOther$direccion = other.direccion;
+    if (l$direccion != lOther$direccion) {
+      return false;
+    }
+    final l$horario = horario;
+    final lOther$horario = other.horario;
+    if (l$horario != lOther$horario) {
+      return false;
+    }
+    final l$fotoUrl = fotoUrl;
+    final lOther$fotoUrl = other.fotoUrl;
+    if (l$fotoUrl != lOther$fotoUrl) {
       return false;
     }
     final l$$__typename = $__typename;

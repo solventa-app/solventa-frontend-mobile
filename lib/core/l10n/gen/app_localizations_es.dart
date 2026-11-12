@@ -804,6 +804,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0601TipoMecanico => 'Mecánico';
 
   @override
+  String get m0601TipoGrua => 'Grúa';
+
+  @override
+  String get m0601Aliado => 'Aliado Solventa';
+
+  @override
   String get m0601Buscando => 'Buscando prestadores cerca de ti…';
 
   @override
@@ -1074,6 +1080,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0602TipoMecanica => 'Mecánica';
+
+  @override
+  String get m0602TipoGrua => 'Grúa';
 
   @override
   String get m0602TipoElegir => 'Elige una opción';

@@ -6,6 +6,7 @@ import '../../domain/entities/prestador.dart';
 TipoPrestador _tipo(Object? valor) => switch (valor) {
   'MEDICO' => TipoPrestador.medico,
   'MECANICO' => TipoPrestador.mecanico,
+  'GRUA' => TipoPrestador.grua,
   _ => throw FormatException('tipo de prestador desconocido: $valor'),
 };
 
@@ -35,6 +36,11 @@ Resultado<Asistencia> asistenciaDesdeMapa(Map<String, Object?> m) {
           (p['latitud']! as num).toDouble(),
           (p['longitud']! as num).toDouble(),
         ),
+        aliado: p['aliado'] == true,
+        especialidad: (p['especialidad'] as String?) ?? '',
+        direccion: (p['direccion'] as String?) ?? '',
+        horario: p['horario'] as String?,
+        fotoUrl: p['fotoUrl'] as String?,
       ),
       minutosEstimados: (m['minutosEstimados'] as num?)?.toInt(),
       solicitadaEn: DateTime.parse(m['solicitadaEn']! as String),
@@ -56,6 +62,7 @@ Map<String, Object?> entradaSolicitud(SolicitudAsistencia s) {
     'tipoAsistencia': switch (s.tipo) {
       TipoPrestador.medico => 'MEDICO',
       TipoPrestador.mecanico => 'MECANICO',
+      TipoPrestador.grua => 'GRUA',
     },
     'descripcion': opcional(s.descripcion),
     'direccion': opcional(s.direccion),
@@ -74,6 +81,7 @@ Map<String, Object?> entradaSolicitudConDireccion(SolicitudAsistencia s) {
     'tipoAsistencia': switch (s.tipo) {
       TipoPrestador.medico => 'MEDICO',
       TipoPrestador.mecanico => 'MECANICO',
+      TipoPrestador.grua => 'GRUA',
     },
     'direccion': s.direccion.trim(),
     'descripcion': descripcion.isEmpty ? null : descripcion,

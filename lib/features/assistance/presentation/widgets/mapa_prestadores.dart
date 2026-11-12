@@ -192,10 +192,16 @@ class _PinPrestador extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final sol = context.solColors;
-    final (Color fg, IconData icon) = switch (prestador.prestador.tipo) {
-      TipoPrestador.medico => (sol.success, SolIcons.medical),
-      TipoPrestador.mecanico => (colors.primary, SolIcons.mechanic),
+    // M3: el ícono dice el tipo y el color dice si es aliado.
+    final icon = switch (prestador.prestador.tipo) {
+      TipoPrestador.medico => SolIcons.medical,
+      TipoPrestador.mecanico => SolIcons.mechanic,
+      TipoPrestador.grua => SolIcons.towTruck,
     };
+    final (Color bg, Color fg) = solProviderColors(
+      context,
+      prestador.prestador.aliado,
+    );
     return Semantics(
       button: true,
       label: etiqueta,
@@ -211,8 +217,9 @@ class _PinPrestador extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: colors.surface,
+                color: bg,
                 shape: BoxShape.circle,
+                border: Border.all(color: colors.surface, width: 2),
                 boxShadow: [BoxShadow(color: sol.softShadow, blurRadius: 4)],
               ),
               child: Icon(icon, size: 18, fill: 1, color: fg),

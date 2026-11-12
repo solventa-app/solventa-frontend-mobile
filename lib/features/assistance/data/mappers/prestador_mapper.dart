@@ -7,6 +7,7 @@ Prestador? prestadorDesdeMapa(Map<String, Object?> m) {
   final tipo = switch (m['tipo']) {
     'MEDICO' => TipoPrestador.medico,
     'MECANICO' => TipoPrestador.mecanico,
+    'GRUA' => TipoPrestador.grua,
     _ => null,
   };
   if (tipo == null) return null;
@@ -19,7 +20,22 @@ Prestador? prestadorDesdeMapa(Map<String, Object?> m) {
       (m['latitud']! as num).toDouble(),
       (m['longitud']! as num).toDouble(),
     ),
+    // v0.49: una copia guardada antes de esa versión no los trae.
+    aliado: m['aliado'] == true,
+    especialidad: (m['especialidad'] as String?) ?? '',
+    direccion: (m['direccion'] as String?) ?? '',
+    horario: m['horario'] as String?,
+    fotoUrl: m['fotoUrl'] as String?,
   );
+}
+
+/// La copia local es anterior al contrato v0.49 (sin `aliado`): se vuelve a
+/// pedir el catálogo aunque no hayan pasado los 7 días.
+bool copiaSinDetalle(Map<String, Object?> catalogo) {
+  final lista = catalogo['prestadores'];
+  if (lista is! List<Object?> || lista.isEmpty) return false;
+  final primero = lista.first;
+  return primero is Map<String, Object?> && !primero.containsKey('aliado');
 }
 
 /// `data.catalogoPrestadores` → [CatalogoPrestadores].

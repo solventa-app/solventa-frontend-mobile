@@ -40,7 +40,7 @@ void main() {
       const Coordenada(6.2442, -75.5812),
       catalogo,
     );
-    expect(r, hasLength(2));
+    expect(r, hasLength(3)); // v0.49: clínica, taller y grúa
     expect(r.every((c) => c.prestador.ciudad == 'Medellín'), isTrue);
   });
 

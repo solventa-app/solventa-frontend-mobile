@@ -4308,6 +4308,7 @@ Enum$EstadoCircuito fromJson$Enum$EstadoCircuito(String value) {
 enum Enum$TipoPrestador {
   MEDICO,
   MECANICO,
+  GRUA,
   $unknown;
 
   factory Enum$TipoPrestador.fromJson(String value) =>
@@ -4322,6 +4323,8 @@ String toJson$Enum$TipoPrestador(Enum$TipoPrestador e) {
       return r'MEDICO';
     case Enum$TipoPrestador.MECANICO:
       return r'MECANICO';
+    case Enum$TipoPrestador.GRUA:
+      return r'GRUA';
     case Enum$TipoPrestador.$unknown:
       return r'$unknown';
   }
@@ -4333,6 +4336,8 @@ Enum$TipoPrestador fromJson$Enum$TipoPrestador(String value) {
       return Enum$TipoPrestador.MEDICO;
     case r'MECANICO':
       return Enum$TipoPrestador.MECANICO;
+    case r'GRUA':
+      return Enum$TipoPrestador.GRUA;
     default:
       return Enum$TipoPrestador.$unknown;
   }

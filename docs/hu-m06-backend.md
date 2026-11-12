@@ -11,6 +11,12 @@
 > (`ASISTENCIA_SIMULACION=primero_falla`: el primer intento queda NO_CONFIRMADA y el reintento se confirma). La app lo
 > consume en M06-02 a M06-06 (`lib/features/assistance/presentation/pages/`).
 
+> **Estado (2026-11-12):** contrato **v0.49** (backend #590): `TipoPrestador.GRUA` y `Prestador` con `aliado`,
+> `especialidad`, `direccion`, `horario` y `fotoUrl`; el desenlace de la asistencia lo decide `stubs/prestadores` detrás
+> del ACL. Lo que sigue (Mapbox, rutas por el backend, dirección ubicada, «Mis asistencias») está en
+> [`hu-m06/plan-pendientes.md`](hu-m06/plan-pendientes.md); allí la sección 1 de este documento cambia: con las rutas
+> por el backend la ubicación sí sale del teléfono al abrir el mapa (ajuste A6).
+
 Para el equipo y los agentes de `solventa-backend`. Historia **KAN-36** (HU-M06, Journey 3); tarea de backend **KAN-263**
 (`S3-M06-1`). Escrito desde la app móvil el 2026-11-04, con la app ya construida contra un fake con estos mismos datos
 (rama `feat/KAN-36-asistencia-en-sitio` de `solventa-frontend-mobile`).

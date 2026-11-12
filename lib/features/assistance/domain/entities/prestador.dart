@@ -2,8 +2,8 @@ import '../../../../core/ubicacion/coordenada.dart';
 
 export '../../../../core/ubicacion/coordenada.dart';
 
-/// Especialidad del prestador (M06-01).
-enum TipoPrestador { medico, mecanico }
+/// Tipo de prestador (M06-01). `grua` desde el contrato v0.49.
+enum TipoPrestador { medico, mecanico, grua }
 
 /// Prestador del catálogo maestro (dato de referencia, cambia poco).
 final class Prestador {
@@ -13,6 +13,11 @@ final class Prestador {
     required this.tipo,
     required this.ubicacion,
     required this.ciudad,
+    this.aliado = false,
+    this.especialidad = '',
+    this.direccion = '',
+    this.horario,
+    this.fotoUrl,
   });
 
   final String id;
@@ -20,6 +25,21 @@ final class Prestador {
   final TipoPrestador tipo;
   final Coordenada ubicacion;
   final String ciudad;
+
+  /// Aliado Solventa (v0.49): el color del pin y de la fila lo dice (M3).
+  final bool aliado;
+
+  /// «Urgencias», «Grúa liviana». Vacía si el catálogo aún no la trae.
+  final String especialidad;
+
+  /// Dirección de la sede. Vacía si el catálogo aún no la trae.
+  final String direccion;
+
+  /// «Abierto 24 h»; `null` si no se publica.
+  final String? horario;
+
+  /// Foto de la sede; `null` = placeholder del tipo.
+  final String? fotoUrl;
 
   @override
   bool operator ==(Object other) => other is Prestador && other.id == id;
