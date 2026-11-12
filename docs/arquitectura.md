@@ -49,7 +49,7 @@ lib/
     config/                   hoy  · AppConfig: FLAVOR, API_ENV, API_BASE_URL, SENTRY_DSN
     network/                  hoy  · GraphqlClient sobre dio (con renovación silenciosa de la sesión) y providers de red
     sesion/                   hoy  · GestorSesion, refresh cifrado con el llavero RSA del Keystore (HU-M02)
-    biometria/                hoy  · BiometriaService (local_auth) con los estados de HU-M02 y «Ir a ajustes» nativo
+    biometria/                hoy  · BiometriaService (local_auth) con los estados de HU-M02, el método del teléfono (consulta nativa) y «Ir a ajustes» nativo
     errors/                   hoy  · Falla (sealed), Resultado<T> y guardarFallas
     storage/                  plan · SQLite con prefijo por ambiente (cuando una HU lo pida)
     log/                      hoy  · SolLog + limpiar.dart + Sentry (docs/observabilidad.md)
@@ -327,7 +327,7 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
 **Decisiones de HU-M02 (2026-11-06).**
 
 - **Sin PIN propio de Solventa (D5).** El ingreso alterno usa el PIN o patrón **del teléfono** por el diálogo del sistema;
-  la app no guarda ningún PIN. M02-02 y M02-02b de Figma no se construyen (D2): «Usar PIN del teléfono» abre el diálogo.
+  la app no guarda ningún PIN. M02-02 y M02-02b de Figma no se construyen (D2): «Usar el bloqueo del teléfono» abre el diálogo.
 - **El PIN del teléfono también desbloquea (D1).** Desviación deliberada de HA-SEG-005 («exclusivamente con el sensor
   biométrico»): un teléfono con PIN y sin huella puede entrar.
 - **Llave atada a la autenticación con ventana de 10 s (D3).** RSA-2048 en el Keystore
@@ -350,6 +350,16 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
   `GestorSesion.desbloquear` devuelve `DesbloqueoLlaveInvalidada` y «Inicia sesión» muestra `fallaSeguridadTelefono`
   («Cambió la huella, el rostro o el bloqueo de tu teléfono…»), no «Tu sesión venció». Probado en el emulador con
   biometría real (`docs/evidencias/`).
+- **Un ícono y un texto por método (D7, 2026-11-11).** M02-01, M01-08 y el botón de huella de «Inicia sesión» hablan de
+  «huella», «rostro», «el bloqueo del teléfono» o «la seguridad de tu teléfono» (ícono de huella, rostro, candado o escudo)
+  y solo dicen un método cuando se sabe con certeza. En Android `local_auth` solo informa biometría débil o fuerte, nunca
+  cuál, así que el método sale de `BiometriaNativa.kt` (canal `com.solventa/biometria`, solo lectura, sin permisos nuevos):
+  huella registrada confirmada por el sistema, sensor de rostro o iris declarado y nivel de API. La regla vive en Dart
+  (`tipoSegunSistema`): con huella y sin sensor de rostro, **huella**; con huella y sensor de rostro no se sabe cuál usará la
+  persona, **escudo**; sin huellas y desde Android 10 la biometría que hay es de **rostro**, por descarte; en Android 8 y 9, o si
+  la consulta falla, **escudo**; sin biometría registrada, **candado**. Las fallas de M02-01 dejan siempre dos salidas
+  (el bloqueo del teléfono y el correo con contraseña) y el diálogo del sistema lleva título y subtítulo en el idioma de la
+  app (`AndroidAuthMessages`); el botón que ofrece el PIN lo escribe Android en el idioma del teléfono.
 - **Deuda conocida.** (1) ~~Una huella nueva no invalida la sesión (D4)~~: resuelta con la llave testigo (ver arriba); sin biometría
   fuerte registrada al guardar la sesión no hay testigo, y en Android 10 o menor tampoco.
   (2) La ventana de 10 s permite usar la llave a código que ya corre dentro de la app. (3) El código Kotlin no tiene

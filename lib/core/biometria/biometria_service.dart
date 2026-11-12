@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
 
 /// Qué ofrece el teléfono, sin pedir nada al usuario (`estado()`).
 enum EstadoBiometria {
@@ -18,16 +19,61 @@ enum EstadoBiometria {
 }
 
 /// Qué método biométrico tiene configurado el teléfono, para mostrar el ícono y el texto que corresponden en M02-01
-/// («Ingresa con tu huella», «con tu rostro»).
+/// («Ingresa con tu huella», «con tu rostro»). Se muestra solo cuando se sabe con certeza; si no, el escudo.
 enum TipoBiometria {
+  /// El sistema confirma que hay una huella registrada y no puede haber rostro.
   huella,
+
+  /// Hay biometría registrada y no hay huellas (por descarte, desde Android 10).
   rostro,
 
-  /// Hay biometría pero el sistema no dice cuál (clase fuerte o débil): se habla de «huella o rostro».
+  /// No se sabe el método: huella y rostro posibles a la vez, Android 8 o 9 con biometría sin huellas, o la consulta
+  /// falló. Se habla de «la seguridad de tu teléfono» y se muestra el escudo.
   generica,
 
-  /// Sin biometría registrada: se entra con el bloqueo de pantalla del teléfono.
+  /// Sin biometría registrada: se entra con el bloqueo de pantalla del teléfono (PIN, patrón o contraseña).
   ninguna,
+}
+
+extension TipoBiometriaTextos on TipoBiometria {
+  /// Opción del `select` de los catálogos de idiomas (M01-08 y el botón de huella del login).
+  String get clave => switch (this) {
+    TipoBiometria.huella => 'huella',
+    TipoBiometria.rostro => 'rostro',
+    TipoBiometria.ninguna => 'bloqueo',
+    TipoBiometria.generica => 'seguridad',
+  };
+}
+
+/// Lo que el sistema dice del teléfono y `local_auth` no (ver `BiometriaNativa.kt`).
+final class InfoBiometriaNativa {
+  const InfoBiometriaNativa({
+    required this.huellaRegistrada,
+    required this.hardwareRostro,
+    required this.sdk,
+  });
+
+  /// El sistema confirma al menos una huella registrada.
+  final bool huellaRegistrada;
+
+  /// El teléfono declara sensor de rostro o de iris: aunque haya huella, un rostro podría estar registrado.
+  final bool hardwareRostro;
+
+  /// Nivel de API de Android.
+  final int sdk;
+}
+
+/// Qué método es, a partir de lo que el sistema confirma. Solo se llama con biometría registrada.
+///
+/// - Con huella y sin sensor de rostro, huella: el sistema la confirma y no hay otra opción.
+/// - Con huella y sensor de rostro, no se sabe cuál usará la persona: escudo.
+/// - Sin huellas, desde Android 10 (API 29) la biometría que hay es de rostro, por descarte. En Android 8 y 9 no se
+///   puede descartar: escudo.
+TipoBiometria tipoSegunSistema(InfoBiometriaNativa info) {
+  if (info.huellaRegistrada) {
+    return info.hardwareRostro ? TipoBiometria.generica : TipoBiometria.huella;
+  }
+  return info.sdk >= 29 ? TipoBiometria.rostro : TipoBiometria.generica;
 }
 
 /// Resultado de pedir la huella, el rostro o el PIN del teléfono (HU-M02 §3.6).
@@ -87,9 +133,16 @@ abstract interface class BiometriaService {
   /// Abre el diálogo del sistema. Con [permitirCredencialDispositivo] el
   /// diálogo ofrece también el PIN, patrón o contraseña del teléfono (D2).
   /// [motivo] es el texto del catálogo de idiomas que muestra el diálogo.
+  /// [titulo], [subtitulo] y [cancelar] (el botón de abajo cuando solo hay
+  /// biometría) también salen del catálogo, para que el diálogo hable el
+  /// idioma de la app y no el de Android por defecto. El botón que ofrece el
+  /// PIN lo escribe Android en el idioma del teléfono.
   Future<ResultadoBiometria> autenticar({
     required String motivo,
     required bool permitirCredencialDispositivo,
+    String? titulo,
+    String? subtitulo,
+    String? cancelar,
   });
 
   /// Abre los ajustes del teléfono para registrar huella o bloqueo.
@@ -142,15 +195,45 @@ final class AjustesSeguridadNativo implements AjustesSeguridad {
   }
 }
 
+/// Consulta nativa de lo que `local_auth` no dice: huella confirmada, sensor de
+/// rostro y nivel de API, por el canal `com.solventa/biometria`
+/// (`BiometriaNativa.kt`).
+abstract interface class BiometriaNativa {
+  Future<InfoBiometriaNativa> consultar();
+}
+
+final class BiometriaNativaCanal implements BiometriaNativa {
+  const BiometriaNativaCanal([this._canal = const MethodChannel(nombreCanal)]);
+
+  static const nombreCanal = 'com.solventa/biometria';
+  final MethodChannel _canal;
+
+  /// Lanza si el canal no responde o el sistema se niega: quien llama habla de «la seguridad de tu teléfono».
+  @override
+  Future<InfoBiometriaNativa> consultar() async {
+    final datos = await _canal.invokeMapMethod<String, Object?>('consultar');
+    if (datos == null) {
+      throw PlatformException(code: 'BIOMETRIA_NO_DISPONIBLE');
+    }
+    return InfoBiometriaNativa(
+      huellaRegistrada: datos['huellaRegistrada'] == true,
+      hardwareRostro: datos['hardwareRostro'] == true,
+      sdk: datos['sdk'] is int ? datos['sdk']! as int : 0,
+    );
+  }
+}
+
 /// Implementación real con `local_auth`.
 final class LocalAuthBiometriaService implements BiometriaService {
   LocalAuthBiometriaService({
     LocalAuthentication? auth,
     this._ajustes = const AjustesSeguridadNativo(),
+    this._nativa = const BiometriaNativaCanal(),
   }) : _auth = auth ?? LocalAuthentication();
 
   final LocalAuthentication _auth;
   final AjustesSeguridad _ajustes;
+  final BiometriaNativa _nativa;
 
   @override
   Future<EstadoBiometria> estado() async {
@@ -168,17 +251,24 @@ final class LocalAuthBiometriaService implements BiometriaService {
     }
   }
 
+  /// En Android `local_auth` solo informa biometría débil o fuerte, nunca cuál:
+  /// el método sale de la consulta nativa (`tipoSegunSistema`). Si algún día el
+  /// plugin dice `fingerprint` o `face`, se respeta (los dos a la vez: no se
+  /// sabe cuál). Si la consulta falla no se adivina: «la seguridad de tu
+  /// teléfono».
   @override
   Future<TipoBiometria> tipo() async {
     try {
       final inscritas = await _auth.getAvailableBiometrics();
-      if (inscritas.contains(BiometricType.face)) return TipoBiometria.rostro;
-      if (inscritas.contains(BiometricType.fingerprint)) {
-        return TipoBiometria.huella;
-      }
-      return inscritas.isEmpty ? TipoBiometria.ninguna : TipoBiometria.generica;
+      if (inscritas.isEmpty) return TipoBiometria.ninguna;
+      final huella = inscritas.contains(BiometricType.fingerprint);
+      final rostro = inscritas.contains(BiometricType.face);
+      if (huella && rostro) return TipoBiometria.generica;
+      if (huella) return TipoBiometria.huella;
+      if (rostro) return TipoBiometria.rostro;
+      return tipoSegunSistema(await _nativa.consultar());
     } on Object {
-      return TipoBiometria.ninguna;
+      return TipoBiometria.generica;
     }
   }
 
@@ -186,10 +276,21 @@ final class LocalAuthBiometriaService implements BiometriaService {
   Future<ResultadoBiometria> autenticar({
     required String motivo,
     required bool permitirCredencialDispositivo,
+    String? titulo,
+    String? subtitulo,
+    String? cancelar,
   }) async {
     try {
       final ok = await _auth.authenticate(
         localizedReason: motivo,
+        authMessages: [
+          if (titulo != null || subtitulo != null || cancelar != null)
+            AndroidAuthMessages(
+              signInTitle: titulo,
+              signInHint: subtitulo,
+              cancelButton: cancelar,
+            ),
+        ],
         biometricOnly: !permitirCredencialDispositivo,
         persistAcrossBackgrounding: true,
       );
@@ -232,12 +333,23 @@ final class FakeBiometriaService implements BiometriaService {
   @override
   Future<TipoBiometria> tipo() async => tipoActual;
 
+  /// Lo último que se mostró en el diálogo (para probar que sale del catálogo).
+  String? ultimoTitulo;
+  String? ultimoSubtitulo;
+  String? ultimoCancelar;
+
   @override
   Future<ResultadoBiometria> autenticar({
     required String motivo,
     required bool permitirCredencialDispositivo,
+    String? titulo,
+    String? subtitulo,
+    String? cancelar,
   }) async {
     autenticaciones.add(permitirCredencialDispositivo);
+    ultimoTitulo = titulo;
+    ultimoSubtitulo = subtitulo;
+    ultimoCancelar = cancelar;
     return resultados.isEmpty ? const Autenticado() : resultados.removeAt(0);
   }
 

@@ -113,12 +113,14 @@ void main() {
     expect(find.byType(SolAppShell), findsOneWidget);
   });
 
-  testWidgets('M02-01a → Usar PIN del teléfono → Home (D2)', (tester) async {
+  testWidgets('M02-01a → Usar el bloqueo del teléfono → Home (D2)', (
+    tester,
+  ) async {
     await guardarSesionAnterior();
     biometria.resultados.add(const NoReconocido());
     await abrirApp(tester);
 
-    await tester.tap(find.text('Usar PIN del teléfono'));
+    await tester.tap(find.text('Usar el bloqueo del teléfono'));
     await tester.pumpAndSettle();
 
     expect(biometria.autenticaciones, [false, true]);

@@ -111,13 +111,16 @@ void main() {
       expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
     });
 
-    test('«Usar PIN del teléfono» (D2) abre el diálogo con PIN', () async {
-      final c = await bloqueada();
-      await desbloquear(c, conPin: true);
+    test(
+      '«Usar el bloqueo del teléfono» (D2) abre el diálogo con PIN',
+      () async {
+        final c = await bloqueada();
+        await desbloquear(c, conPin: true);
 
-      expect(biometria.autenticaciones, [true]);
-      expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
-    });
+        expect(biometria.autenticaciones, [true]);
+        expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
+      },
+    );
 
     test('no reconocida: M02-01a, sin tocar la sesión', () async {
       biometria.resultados.add(const NoReconocido());
@@ -273,7 +276,7 @@ void main() {
       expect(await store.hayRefresh(), isFalse);
     });
 
-    test('«Ingresar con correo y clave» borra la sesión guardada', () async {
+    test('«Usar correo y contraseña» borra la sesión guardada', () async {
       final c = await bloqueada();
       await c.read(accesoProvider.notifier).usarCorreo();
 

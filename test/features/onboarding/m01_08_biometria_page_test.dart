@@ -89,11 +89,62 @@ void main() {
   testWidgets('con huella: autentica y va al inicio', (tester) async {
     await montar(tester);
 
-    await tester.tap(find.text('Ya lo activé, continuar'));
+    await tester.tap(find.text('Activar huella'));
     await tester.pumpAndSettle();
 
     expect(find.text('HOME'), findsOneWidget);
     expect(biometria.autenticaciones, [true]);
+  });
+
+  final porMetodo = <(TipoBiometria, String, String, String, IconData)>[
+    (
+      TipoBiometria.huella,
+      'Activa tu huella',
+      'Te pediremos tu huella una sola vez.',
+      'Activar huella',
+      SolIcons.fingerprint,
+    ),
+    (
+      TipoBiometria.rostro,
+      'Activa tu rostro',
+      'Te pediremos tu rostro una sola vez.',
+      'Activar rostro',
+      SolIcons.face,
+    ),
+    (
+      TipoBiometria.generica,
+      'Activa la seguridad de tu teléfono',
+      'Te pediremos la seguridad de tu teléfono una sola vez.',
+      'Activar seguridad',
+      SolIcons.shield,
+    ),
+  ];
+  for (final (tipo, titulo, texto, boton, icono) in porMetodo) {
+    testWidgets('título, texto, ícono y botón hablan del método: $tipo', (
+      tester,
+    ) async {
+      biometria.tipoActual = tipo;
+      await montar(tester);
+
+      expect(find.text(titulo), findsOneWidget);
+      expect(find.textContaining(texto), findsOneWidget);
+      expect(find.text(boton), findsOneWidget);
+      expect(find.byIcon(icono), findsWidgets);
+    });
+  }
+
+  testWidgets('solo con el bloqueo del teléfono: candado y «Ya lo activé»', (
+    tester,
+  ) async {
+    biometria
+      ..tipoActual = TipoBiometria.ninguna
+      ..estadoActual = EstadoBiometria.soloCredencial;
+    await montar(tester);
+
+    expect(find.text('Activa el bloqueo del teléfono'), findsOneWidget);
+    expect(find.byIcon(SolIcons.lock), findsWidgets);
+    expect(find.text('Ya lo activé, continuar'), findsOneWidget);
+    expect(find.text('Activar bloqueo'), findsNothing);
   });
 
   testWidgets('«Ahora no» va al inicio sin pedir la huella', (tester) async {
@@ -160,7 +211,7 @@ void main() {
     biometria.resultados.add(const NoReconocido());
     await montar(tester);
 
-    await tester.tap(find.text('Ya lo activé, continuar'));
+    await tester.tap(find.text('Activar huella'));
     await tester.pumpAndSettle();
 
     expect(find.text('No te reconocimos. Intenta de nuevo.'), findsOneWidget);
@@ -171,7 +222,7 @@ void main() {
     biometria.resultados.add(const Cancelado());
     await montar(tester);
 
-    await tester.tap(find.text('Ya lo activé, continuar'));
+    await tester.tap(find.text('Activar huella'));
     await tester.pumpAndSettle();
 
     expect(find.byType(SolStatusBanner), findsNothing);
@@ -218,7 +269,7 @@ void main() {
     llavero.conBloqueoPantalla = true; // la persona activó el bloqueo
     await montar(tester);
 
-    await tester.tap(find.text('Ya lo activé, continuar'));
+    await tester.tap(find.text('Activar huella'));
     await tester.pumpAndSettle();
 
     expect(gestor.refreshPersistido, isTrue);

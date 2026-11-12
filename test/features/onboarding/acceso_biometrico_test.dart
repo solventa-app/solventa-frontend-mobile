@@ -135,7 +135,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Ingresar con huella o rostro'), findsNothing);
+    expect(find.text('Ingresar con huella'), findsNothing);
 
     await almacen.guardar('dispositivo-demo');
     llave.existe = true;
@@ -145,6 +145,6 @@ void main() {
     );
     c.invalidate(accesoBiometricoDisponibleProvider);
     await tester.pumpAndSettle();
-    expect(find.text('Ingresar con huella o rostro'), findsOneWidget);
+    expect(find.text('Ingresar con huella'), findsOneWidget);
   });
 }

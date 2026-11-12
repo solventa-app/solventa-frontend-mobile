@@ -144,13 +144,23 @@
   "@m0108Titulo": {
     "description": "M01-08 barra superior"
   },
-  "m0108Encabezado": "Activa tu huella o rostro",
+  "m0108Encabezado": "{tipo, select, huella{Activa tu huella} rostro{Activa tu rostro} bloqueo{Activa el bloqueo del teléfono} other{Activa la seguridad de tu teléfono}}",
   "@m0108Encabezado": {
-    "description": "M01-08 título"
+    "description": "M01-08 título según el método del teléfono",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      }
+    }
   },
-  "m0108Explicacion": "Solventa protege tu cuenta con la seguridad de tu propio teléfono: con huella dactilar o reconocimiento facial entras más rápido y seguro. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.",
+  "m0108Explicacion": "{tipo, select, huella{Entra más rápido sin escribir tu contraseña. Te pediremos tu huella una sola vez.} rostro{Entra más rápido sin escribir tu contraseña. Te pediremos tu rostro una sola vez.} bloqueo{Entra más rápido sin escribir tu contraseña. Te pediremos el bloqueo de tu teléfono una sola vez.} other{Entra más rápido sin escribir tu contraseña. Te pediremos la seguridad de tu teléfono una sola vez.}}",
   "@m0108Explicacion": {
-    "description": "M01-08 explicación"
+    "description": "M01-08 explicación según el método del teléfono",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      }
+    }
   },
   "m0108Sello": "Validación biométrica encriptada localmente",
   "@m0108Sello": {
@@ -163,6 +173,15 @@
   "m0108Continuar": "Ya lo activé, continuar",
   "@m0108Continuar": {
     "description": "M01-08 botón principal"
+  },
+  "m0108Activar": "{tipo, select, huella{Activar huella} rostro{Activar rostro} bloqueo{Activar bloqueo} other{Activar seguridad}}",
+  "@m0108Activar": {
+    "description": "M01-08 botón principal cuando el teléfono ya tiene biometría registrada",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      }
+    }
   },
   "m0108AhoraNo": "Ahora no, ir al inicio",
   "m0108AvisoLuego": "Puedes activar tu huella o rostro cuando quieras en Mi perfil.",
@@ -506,20 +525,32 @@
   "@m0201IngresaRostro": {
     "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
   },
-  "m0201IngresaBiometria": "Ingresa con huella o rostro",
-  "@m0201IngresaBiometria": {
-    "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
+  "m0201IngresaSeguridad": "Ingresa con la seguridad de tu teléfono",
+  "@m0201IngresaSeguridad": {
+    "description": "M02-01: método biométrico desconocido (huella y rostro posibles a la vez, Android 8 o 9, o la consulta falló); ícono del escudo"
   },
   "m0201IngresaBloqueo": "Ingresa con el bloqueo de tu teléfono",
   "@m0201IngresaBloqueo": {
     "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
   },
   "m0201Motivo": "Desbloquea tu cuenta de Solventa",
+  "m0201DialogoTitulo": "Desbloquea Solventa",
+  "@m0201DialogoTitulo": {
+    "description": "Título del diálogo del sistema al desbloquear (Android lo muestra tal cual)"
+  },
+  "m0201DialogoSubtitulo": "Confirma que eres tú",
+  "@m0201DialogoSubtitulo": {
+    "description": "Subtítulo del diálogo del sistema al desbloquear"
+  },
+  "m0201DialogoCancelar": "Cancelar",
+  "@m0201DialogoCancelar": {
+    "description": "Botón de abajo del diálogo del sistema cuando solo acepta biometría"
+  },
   "@m0201Motivo": {
     "description": "M02-01: texto del diálogo biométrico del sistema"
   },
-  "m0201UsarPin": "Usar PIN del teléfono",
-  "@m0201UsarPin": {
+  "m0201UsarBloqueo": "Usar el bloqueo del teléfono",
+  "@m0201UsarBloqueo": {
     "description": "M02-01 y M02-01a: abre el diálogo del sistema con el PIN, patrón o contraseña del teléfono (D2)"
   },
   "m0201SimularNoReconoce": "Simular que no reconoce la biometría",
@@ -534,7 +565,7 @@
   "@m0201SinRed": {
     "description": "M02-01: sin red al renovar la sesión"
   },
-  "m0201BloqueoTemporal": "Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.",
+  "m0201BloqueoTemporal": "Hiciste demasiados intentos. Espera unos segundos o usa el bloqueo de tu teléfono.",
   "@m0201BloqueoTemporal": {
     "description": "M02-01: sensor bloqueado temporalmente"
   },
@@ -542,7 +573,7 @@
   "@m0201BloqueoPermanente": {
     "description": "M02-01: biometría bloqueada hasta usar la credencial del teléfono"
   },
-  "m0201FaltaAutenticacion": "Tu teléfono no confirmó tu identidad con la seguridad necesaria. Usa el PIN del teléfono.",
+  "m0201FaltaAutenticacion": "Tu teléfono no pudo abrir tu huella o rostro. Usa el bloqueo de tu teléfono.",
   "@m0201FaltaAutenticacion": {
     "description": "M02-01: la llave del Keystore pidió una autenticación más fuerte"
   },
@@ -558,7 +589,7 @@
   "@m0201IrAjustes": {
     "description": "M02-01: abre los ajustes de seguridad del teléfono"
   },
-  "m0201UsarCorreo": "Ingresar con correo y clave",
+  "m0201UsarCorreo": "Usar correo y contraseña",
   "@m0201UsarCorreo": {
     "description": "M02-01: salida cuando el teléfono no puede autenticar"
   },
@@ -566,7 +597,7 @@
   "@m0201aTitulo": {
     "description": "M02-01a: título"
   },
-  "m0201aMensaje": "No pudimos verificar tu huella o rostro. Intenta de nuevo o ingresa con el PIN de tu teléfono.",
+  "m0201aMensaje": "No pudimos verificar tu huella o rostro. Intenta de nuevo o usa el bloqueo de tu teléfono.",
   "@m0201aMensaje": {
     "description": "M02-01a: explicación"
   },
@@ -1497,8 +1528,16 @@
   "m0204EnviadoTitulo": "Revisa tu correo",
   "m0204EnviadoTexto": "Si hay una cuenta con ese correo, te enviamos un enlace. Ábrelo para elegir tu contraseña nueva; vence en 30 minutos y sirve una sola vez.",
   "m0204Volver": "Volver a iniciar sesión",
-  "cuentaIngresarConHuella": "Ingresar con huella o rostro",
+  "cuentaIngresarConHuella": "{tipo, select, huella{Ingresar con huella} rostro{Ingresar con rostro} bloqueo{Ingresar con el bloqueo del teléfono} other{Ingresar con la seguridad del teléfono}}",
   "accesoBiometricoMotivo": "Confirma que eres tú para entrar a Solventa",
   "accesoBiometricoActivarMotivo": "Confirma tu huella o rostro para entrar sin escribir la contraseña",
-  "fallaDispositivoNoValido": "No pudimos verificar este teléfono. Ingresa con tu correo y contraseña."
+  "fallaDispositivoNoValido": "No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.",
+  "@cuentaIngresarConHuella": {
+    "description": "Botón de «Inicia sesión» para entrar con la llave del teléfono, según su método",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      }
+    }
+  }
 }

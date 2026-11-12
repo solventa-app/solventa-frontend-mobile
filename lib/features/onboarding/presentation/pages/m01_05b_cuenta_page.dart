@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/biometria/biometria_providers.dart';
+import '../../../../core/biometria/biometria_service.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/l10n/l10n.dart';
@@ -232,7 +234,10 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
             (ref.watch(accesoBiometricoDisponibleProvider).value ?? false)) ...[
           const SizedBox(height: SolSpacing.sm),
           SolButton.tonal(
-            label: l10n.cuentaIngresarConHuella,
+            label: l10n.cuentaIngresarConHuella(
+              (ref.watch(tipoBiometriaProvider).value ?? TipoBiometria.huella)
+                  .clave,
+            ),
             onPressed: estado.ocupado ? null : () => _entrarConHuella(l10n),
           ),
         ],

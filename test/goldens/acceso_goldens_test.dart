@@ -1,6 +1,8 @@
 import 'package:alchemist/alchemist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:solventa_mobile/core/biometria/biometria_providers.dart';
+import 'package:solventa_mobile/core/biometria/biometria_service.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/features/acceso/presentation/acceso_notifier.dart';
 import 'package:solventa_mobile/features/acceso/presentation/pages/m02_01_desbloqueo_page.dart';
@@ -41,9 +43,15 @@ class _OnboardingFijo extends OnboardingNotifier {
 void main() {
   const alto = 844.0;
 
-  Widget app(Widget page, Locale locale, AccesoState estado) {
+  Widget app(
+    Widget page,
+    Locale locale,
+    AccesoState estado, {
+    TipoBiometria tipo = TipoBiometria.huella,
+  }) {
     return ProviderScope(
       overrides: [
+        tipoBiometriaProvider.overrideWith((ref) async => tipo),
         accesoProvider.overrideWith(() => _AccesoFijo(estado)),
         onboardingProvider.overrideWith(_OnboardingFijo.new),
       ],
@@ -58,7 +66,12 @@ void main() {
     );
   }
 
-  void pantalla(String id, Widget page, AccesoState estado) {
+  void pantalla(
+    String id,
+    Widget page,
+    AccesoState estado, {
+    TipoBiometria tipo = TipoBiometria.huella,
+  }) {
     final casos = <(double, double, Locale)>[
       (360, 1, AppLocales.es),
       (390, 1, AppLocales.es),
@@ -74,7 +87,7 @@ void main() {
         fileName: '${id}_${ancho.toInt()}_x${escala.toInt()}_$idioma',
         textScaleFactor: escala,
         constraints: BoxConstraints.tight(Size(ancho, alto)),
-        builder: () => app(page, locale, estado),
+        builder: () => app(page, locale, estado, tipo: tipo),
       );
     }
   }
@@ -83,6 +96,25 @@ void main() {
   const bloqueada = AccesoState(fase: FaseAcceso.bloqueada);
 
   pantalla('m02_01_desbloqueo', desbloqueo, bloqueada);
+  // Un ícono y un texto por método: el rostro, el candado (solo bloqueo del teléfono) y el escudo (no se sabe cuál).
+  pantalla(
+    'm02_01_desbloqueo_rostro',
+    desbloqueo,
+    bloqueada,
+    tipo: TipoBiometria.rostro,
+  );
+  pantalla(
+    'm02_01_desbloqueo_bloqueo',
+    desbloqueo,
+    bloqueada,
+    tipo: TipoBiometria.ninguna,
+  );
+  pantalla(
+    'm02_01_desbloqueo_escudo',
+    desbloqueo,
+    bloqueada,
+    tipo: TipoBiometria.generica,
+  );
   pantalla(
     'm02_01a_no_reconocida',
     desbloqueo,
