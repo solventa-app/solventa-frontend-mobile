@@ -104,7 +104,7 @@ Las cinco fases quedaron en PR el 2026-11-12, cada una apilada sobre la anterior
 | 2 · Mapbox, pines, detalle, hoja arrastrable | #84 | — | — |
 | 3 · Ubicación al entrar y dirección escrita ubicada | #85 | #591 | v0.50 |
 | 4 · Rutas tipo semáforo y auditoría | #86 | #614 | v0.51 |
-| 5 · «Mis asistencias», detalle, «Te alejaste» y notificación local | PR de `feat/KAN-36-movil-mis-asistencias` | #615 | v0.52 |
+| 5 · «Mis asistencias», detalle, «Te alejaste» y notificación local | #89 | #615 | v0.52 |
 
 Las versiones v0.46 a v0.48 las reserva el backend #589 (KAN-259). Pasos manuales: secreto `MAPBOX_PUBLIC_TOKEN` en
 GitHub y `mapbox-token` en GCP (plan, Anexo B). Pendiente fuera de esta máquina: Emuladores, Mapbox real, teléfono
