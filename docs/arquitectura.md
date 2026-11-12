@@ -357,9 +357,14 @@ SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves
   huella registrada confirmada por el sistema, sensor de rostro o iris declarado y nivel de API. La regla vive en Dart
   (`tipoSegunSistema`): con huella y sin sensor de rostro, **huella**; con huella y sensor de rostro no se sabe cuál usará la
   persona, **escudo**; sin huellas y desde Android 10 la biometría que hay es de **rostro**, por descarte; en Android 8 y 9, o si
-  la consulta falla, **escudo**; sin biometría registrada, **candado**. Las fallas de M02-01 dejan siempre dos salidas
-  (el bloqueo del teléfono y el correo con contraseña) y el diálogo del sistema lleva título y subtítulo en el idioma de la
-  app (`AndroidAuthMessages`); el botón que ofrece el PIN lo escribe Android en el idioma del teléfono.
+  la consulta falla, **escudo**; sin biometría registrada, **candado**. M02-01 deja siempre dos salidas visibles (M02-01a):
+  el bloqueo del teléfono y el correo con contraseña, también cuando se cierra el diálogo de la huella sin elegir nada y no hay
+  ningún aviso (antes quien no quería usar la huella no tenía cómo llegar a «Inicia sesión»). Solo sin conexión se omite el
+  correo, porque salir borraría la sesión guardada y el diálogo del sistema lleva título y subtítulo en el idioma de la
+  app (`AndroidAuthMessages`); el botón que ofrece el PIN lo escribe Android en el idioma del teléfono. Ese diálogo
+  ofrece el PIN, patrón o contraseña del teléfono desde el primer intento (`permitirCredencialDispositivo: true`,
+  M02-01 del mockup de la huella): ya no hay un primer diálogo «solo biometría» con un «Cancelar» como única salida, y
+  con la biometría bloqueada Android pasa solo al PIN, sin reabrir el diálogo desde la app.
 - **Deuda conocida.** (1) ~~Una huella nueva no invalida la sesión (D4)~~: resuelta con la llave testigo (ver arriba); sin biometría
   fuerte registrada al guardar la sesión no hay testigo, y en Android 10 o menor tampoco.
   (2) La ventana de 10 s permite usar la llave a código que ya corre dentro de la app. (3) El código Kotlin no tiene

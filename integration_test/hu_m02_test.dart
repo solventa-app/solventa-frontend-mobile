@@ -92,7 +92,7 @@ void main() {
     await abrirApp(tester);
 
     // El diálogo se abrió solo al entrar a M02-01 y reconoció la huella.
-    expect(biometria.autenticaciones, [false]);
+    expect(biometria.autenticaciones, [true]);
     await esperarHome(tester);
     expect(find.byType(SolAppShell), findsOneWidget);
     expect(remota.renovaciones, 1);
@@ -123,7 +123,7 @@ void main() {
     await tester.tap(find.text('Usar el bloqueo del teléfono'));
     await tester.pumpAndSettle();
 
-    expect(biometria.autenticaciones, [false, true]);
+    expect(biometria.autenticaciones, [true, true]);
     await esperarHome(tester);
     expect(find.byType(SolAppShell), findsOneWidget);
   });
@@ -176,7 +176,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // M02-01 abrió el diálogo y, con la huella, volvió al Home.
-    expect(biometria.autenticaciones, [false]);
+    expect(biometria.autenticaciones, [true]);
     await esperarHome(tester);
     expect(find.byType(SolAppShell), findsOneWidget);
   });
