@@ -708,5 +708,17 @@
   "cuentaIngresarConHuella": "{tipo, select, huella{Sign in with fingerprint} rostro{Sign in with face} bloqueo{Sign in with your phone lock} other{Sign in with your phone's security}}",
   "accesoBiometricoMotivo": "Confirm it's you to sign in to Solventa",
   "accesoBiometricoActivarMotivo": "Confirm your fingerprint or face to sign in without typing your password",
-  "fallaDispositivoNoValido": "We could not verify this phone. Sign in with your email and password."
+  "fallaDispositivoNoValido": "We could not verify this phone. Sign in with your email and password.",
+  "homeCargandoCuenta": "Loading your account…",
+  "@homeCargandoCuenta": {
+    "description": "Inicio: cargando perfil y verificación (TalkBack)"
+  },
+  "homeCuentaSinCargar": "We couldn't load your account information. Check your connection and try again.",
+  "@homeCuentaSinCargar": {
+    "description": "Inicio: no cargó el perfil ni la verificación"
+  },
+  "homeReintentarCuenta": "Try again",
+  "@homeReintentarCuenta": {
+    "description": "Inicio: reintentar la carga de la cuenta"
+  }
 }

@@ -72,6 +72,14 @@ enum EstadoCamara {
 /// Solo para pruebas y goldens: fija el estado del visor sin abrir la cámara.
 final estadoCamaraForzadoProvider = Provider<EstadoCamara?>((ref) => null);
 
+/// Esperas entre intentos al cargar el perfil y el estado de la cuenta (al
+/// abrir la app o al desbloquear con la huella). Una falla de red o del
+/// servicio se reintenta; si no carga, el inicio ofrece «Reintentar» en vez de
+/// mostrar la cuenta como sin verificar.
+final esperasCargaPerfilProvider = Provider<List<Duration>>(
+  (ref) => const [Duration.zero, Duration(seconds: 1), Duration(seconds: 3)],
+);
+
 /// Cuándo consulta M01-06 el resultado: a los 3, 8 y 20 s (Didit tarda de 2 a
 /// 5 s). Después para y ofrece «Actualizar»: no sondea sin fin.
 final esperasVerificacionProvider = Provider<List<Duration>>(

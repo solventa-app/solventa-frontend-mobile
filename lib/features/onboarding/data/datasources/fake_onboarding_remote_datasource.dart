@@ -1,4 +1,5 @@
 import '../../../../core/contrato/schema.graphql.dart';
+import '../../../../core/network/network_exceptions.dart';
 import '../fixtures/onboarding_fixtures.dart';
 import '../graphql/onboarding.graphql.dart';
 import 'onboarding_remote_datasource.dart';
@@ -53,12 +54,21 @@ final class FakeOnboardingRemoteDataSource
 
   final operaciones = <String>[];
 
+  /// Para pruebas: cuántas veces seguidas falla por red cada operación
+  /// (p. ej. `{'yo': 1}`), como un corte justo al desbloquear con la huella.
+  final Map<String, int> fallasDeRed = {};
+
   Future<Map<String, dynamic>> _responder(
     String operacion,
     Map<String, dynamic> json,
   ) async {
     operaciones.add(operacion);
     await Future<void>.delayed(latencia);
+    final pendientes = fallasDeRed[operacion] ?? 0;
+    if (pendientes > 0) {
+      fallasDeRed[operacion] = pendientes - 1;
+      throw const ErrorRed();
+    }
     return json;
   }
 

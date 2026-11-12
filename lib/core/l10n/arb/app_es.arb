@@ -1555,5 +1555,17 @@
         "type": "String"
       }
     }
+  },
+  "homeCargandoCuenta": "Cargando tu cuenta…",
+  "@homeCargandoCuenta": {
+    "description": "Inicio: cargando perfil y verificación (TalkBack)"
+  },
+  "homeCuentaSinCargar": "No pudimos cargar la información de tu cuenta. Revisa tu conexión e inténtalo de nuevo.",
+  "@homeCuentaSinCargar": {
+    "description": "Inicio: no cargó el perfil ni la verificación"
+  },
+  "homeReintentarCuenta": "Reintentar",
+  "@homeReintentarCuenta": {
+    "description": "Inicio: reintentar la carga de la cuenta"
   }
 }

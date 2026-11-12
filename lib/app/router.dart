@@ -405,6 +405,9 @@ class _RootShell extends ConsumerWidget {
       home: HomePage(
         userName: nombre,
         verificacion: estado.verificacion,
+        cargandoCuenta: estado.cargandoPerfil,
+        cuentaSinCargar: estado.perfilSinCargar,
+        onReintentarCuenta: () => unawaited(notifier.cargarPerfilYEstado()),
         onCompleteRegistration: () async {
           if (estado.verificacion == EstadoVerificacion.rechazada &&
               estado.intentosRestantes > 0) {

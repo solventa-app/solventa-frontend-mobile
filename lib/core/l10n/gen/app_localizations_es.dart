@@ -1462,4 +1462,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get fallaDispositivoNoValido =>
       'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.';
+
+  @override
+  String get homeCargandoCuenta => 'Cargando tu cuenta…';
+
+  @override
+  String get homeCuentaSinCargar =>
+      'No pudimos cargar la información de tu cuenta. Revisa tu conexión e inténtalo de nuevo.';
+
+  @override
+  String get homeReintentarCuenta => 'Reintentar';
 }

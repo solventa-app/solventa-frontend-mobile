@@ -1458,4 +1458,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fallaDispositivoNoValido =>
       'We could not verify this phone. Sign in with your email and password.';
+
+  @override
+  String get homeCargandoCuenta => 'Loading your account…';
+
+  @override
+  String get homeCuentaSinCargar =>
+      'We couldn\'t load your account information. Check your connection and try again.';
+
+  @override
+  String get homeReintentarCuenta => 'Try again';
 }
