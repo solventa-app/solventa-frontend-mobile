@@ -49,6 +49,11 @@ jobs:
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: tool/firma.sh prod
 
+      - name: Restaurar google-services.json
+        env:
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
+        run: tool/google-services.sh
+
       - name: Build de prod
         uses: ./.github/actions/devcontainer
         with:
