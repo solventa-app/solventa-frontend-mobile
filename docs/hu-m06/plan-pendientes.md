@@ -35,15 +35,20 @@ Revisión del 2026-11-12 contra `develop` (mobile `8dac02f`, backend `fb3b4c6`).
 | A15 | Los placeholders de la foto (2.2, S2, 4.4) **se dibujan** (`SolPhotoBanner`: degradado y el ícono del tipo) en vez de `assets/prestadores/*.webp` de banco | No hay fotos con licencia en el repo; cuando existan, basta con `fotoUrl` o con agregar los assets |
 | A16 | Sin token de Mapbox: con `API_ENV=mock` (Emuladores, Test Lab y la demo) se usa un **mapa falso** dibujado en Flutter; fuera de mock, la lista sin mapa (como CA-M06-04). Las pruebas y los goldens usan siempre el mapa falso | La vista nativa no se pinta en `flutter test` |
 | A17 | «Más prestadores en tu ciudad» son todos los del radio de 50 km (M16), no se filtra por el nombre de la ciudad | El radio ya separa las ciudades del catálogo |
+| A19 | La dirección se guarda en la asistencia tal como la devolvió Google en el idioma de la app; la versión en español para soporte y auditoría (2.0) se agrega con `auditoria_rutas` (fase 4) | Evita una segunda llamada a Google en cada solicitud |
+| A20 | `origenUbicacion` es `OrigenUbicacion! = GPS` (no nulo con valor por defecto): una app anterior a la v0.50 sigue funcionando sin mandarlo | Strawberry lo expone así y el contrato debe ser idéntico |
+| A21 | La pantalla de explicación (paso 1 del boceto) sale solo si la app nunca pidió el permiso: Android no distingue «nunca pedido» de «negado una vez», así que la app lo recuerda en `SharedPreferences` | Limitación de la API de permisos |
+| A22 | En Mapbox el pin del cliente no lleva la etiqueta «Dirección escrita» (la anotación es una imagen sin texto); la dice el aviso «Usando: …» de arriba. En el mapa falso sí la lleva | Evita dibujar un pin con texto por idioma |
+| A23 | S4 (dirección legible con GPS) queda fuera: con GPS, M06-02 muestra «Ubicación detectada automáticamente» con las coordenadas | Era opcional en el plan |
 | A18 | Los pines de Mapbox no son accesibles con TalkBack (son anotaciones nativas): la lista de la hoja tiene los mismos prestadores y acciones. En el mapa falso sí tienen etiqueta | Limitación del SDK |
 
 ### Avance por fase
 
 | Fase | Backend | Mobile |
 |---|---|---|
-| 1 · Catálogo con detalle, grúa y prestadores detrás del ACL (B1, B2, B3, B7) | PR #590 (v0.49, CLAIMS `0007`) | `feat/KAN-36-movil-prestadores-aliados-gruas` |
-| 2 · Mapbox, pines, detalle, hoja arrastrable (M0–M14) | — | `feat/KAN-36-movil-mapbox` (apilada sobre la fase 1) |
-| 3 · Dirección ubicada (B4, B9, 2.0, S1) | pendiente | pendiente |
+| 1 · Catálogo con detalle, grúa y prestadores detrás del ACL (B1, B2, B3, B7) | PR #590 (v0.49, CLAIMS `0007`) | PR #83 |
+| 2 · Mapbox, pines, detalle, hoja arrastrable (M0–M14) | — | PR #84 (apilado sobre #83) |
+| 3 · Dirección ubicada (B4, B9, 2.0, S1) | PR #591 (v0.50, apilada sobre #590) | `feat/KAN-36-movil-direccion-ubicada` (apilada sobre la fase 2) |
 | 4 · Rutas y auditoría (B8, M15) | pendiente | pendiente |
 | 5 · «Mis asistencias» y notificación (B5, B6, 4.x) | pendiente | pendiente |
 

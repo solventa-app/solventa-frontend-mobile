@@ -15,4 +15,14 @@ abstract interface class AsistenciaRepository {
 
   /// Cancela (M06-05). Cancelar dos veces devuelve la misma cancelada.
   Future<Resultado<Asistencia>> cancelar(String id);
+
+  /// Sugerencias mientras el cliente escribe su dirección (2.0, Colombia).
+  /// Si el backend no responde, lista vacía: se puede seguir con el texto.
+  Future<Resultado<List<SugerenciaDireccion>>> sugerirDirecciones(String texto);
+
+  /// Coordenadas de la dirección elegida ([placeId]) o escrita ([texto]).
+  Future<Resultado<DireccionUbicada>> ubicarDireccion({
+    String? placeId,
+    String? texto,
+  });
 }

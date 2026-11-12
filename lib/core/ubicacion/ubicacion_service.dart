@@ -26,7 +26,26 @@ final class UbicacionNoDisponible extends ResultadoUbicacion {
   const UbicacionNoDisponible();
 }
 
+/// Qué pasa con la ubicación **sin pedir nada todavía** (HU-M06, 2.0): se
+/// revisa al entrar a Asistencia, primero el GPS y luego el permiso.
+enum EstadoUbicacion {
+  /// El GPS del teléfono está apagado.
+  gpsApagado,
+
+  /// El permiso no está concedido; puede pedirse (nunca o una vez negado).
+  sinPermiso,
+
+  /// Negado para siempre: solo queda abrir Ajustes.
+  negadoSiempre,
+
+  /// Hay permiso: se puede tomar la posición.
+  concedido,
+}
+
 abstract interface class UbicacionService {
+  /// Revisa el GPS y el permiso sin mostrar el diálogo del sistema.
+  Future<EstadoUbicacion> estado();
+
   /// Pide el permiso si hace falta y devuelve la posición actual.
   Future<ResultadoUbicacion> ubicacionActual();
 
@@ -37,6 +56,24 @@ abstract interface class UbicacionService {
 
 final class GeolocatorUbicacionService implements UbicacionService {
   const GeolocatorUbicacionService();
+
+  @override
+  Future<EstadoUbicacion> estado() async {
+    try {
+      if (!await Geolocator.isLocationServiceEnabled()) {
+        return EstadoUbicacion.gpsApagado;
+      }
+      return switch (await Geolocator.checkPermission()) {
+        LocationPermission.whileInUse ||
+        LocationPermission.always => EstadoUbicacion.concedido,
+        LocationPermission.deniedForever => EstadoUbicacion.negadoSiempre,
+        LocationPermission.denied ||
+        LocationPermission.unableToDetermine => EstadoUbicacion.sinPermiso,
+      };
+    } on Exception {
+      return EstadoUbicacion.sinPermiso;
+    }
+  }
 
   @override
   Future<ResultadoUbicacion> ubicacionActual() async {
@@ -102,6 +139,22 @@ final class FakeUbicacionService implements UbicacionService {
   });
 
   ResultadoUbicacion resultado;
+
+  /// Para pruebas: el estado antes de pedir el permiso. Por defecto se deduce
+  /// de [resultado] (con posición = concedido).
+  EstadoUbicacion? estadoInicial;
+
+  @override
+  Future<EstadoUbicacion> estado() async =>
+      estadoInicial ??
+      switch (resultado) {
+        UbicacionObtenida() => EstadoUbicacion.concedido,
+        UbicacionSinPermiso(:final permanente) =>
+          permanente
+              ? EstadoUbicacion.negadoSiempre
+              : EstadoUbicacion.sinPermiso,
+        UbicacionNoDisponible() => EstadoUbicacion.gpsApagado,
+      };
 
   @override
   Future<ResultadoUbicacion> ubicacionActual() async => resultado;

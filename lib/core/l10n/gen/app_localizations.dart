@@ -1490,54 +1490,6 @@ abstract class AppLocalizations {
   /// **'Aún no tenemos prestadores en tu zona.'**
   String get m0601SinPrestadores;
 
-  /// M06-01 sin permiso de ubicación
-  ///
-  /// In es, this message translates to:
-  /// **'Necesitamos tu ubicación para mostrarte los prestadores más cercanos.'**
-  String get m0601SinPermiso;
-
-  /// M06-01 GPS apagado
-  ///
-  /// In es, this message translates to:
-  /// **'Tu ubicación está desactivada. Actívala para ver los prestadores cercanos.'**
-  String get m0601GpsApagado;
-
-  /// M06-01 reintentar permiso
-  ///
-  /// In es, this message translates to:
-  /// **'Permitir ubicación'**
-  String get m0601PermitirUbicacion;
-
-  /// M06-01 abrir ajustes
-  ///
-  /// In es, this message translates to:
-  /// **'Abrir ajustes'**
-  String get m0601AbrirAjustes;
-
-  /// M06-01 sin ubicación: pedir asistencia con la dirección a mano (CA-M06-02)
-  ///
-  /// In es, this message translates to:
-  /// **'Escribir mi dirección'**
-  String get m0601EscribirDireccion;
-
-  /// M06-01 sin ubicación: título de la lista
-  ///
-  /// In es, this message translates to:
-  /// **'Elige un prestador'**
-  String get m0601TituloSinOrden;
-
-  /// M06-01 sin ubicación: nota sobre la lista
-  ///
-  /// In es, this message translates to:
-  /// **'Sin tu ubicación no podemos ordenarlos por cercanía. En el siguiente paso escribes tu dirección.'**
-  String get m0601NotaSinOrden;
-
-  /// M06-01 sin ubicación: volver a intentar con el GPS
-  ///
-  /// In es, this message translates to:
-  /// **'Usar mi ubicación'**
-  String get m0601UsarUbicacion;
-
   /// M06-01 reintentar
   ///
   /// In es, this message translates to:
@@ -1651,6 +1603,120 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cerrar'**
   String get m0601Cerrar;
+
+  /// 2.0 explicación antes del diálogo del sistema
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitamos tu ubicación'**
+  String get ubicacionExplicaTitulo;
+
+  /// 2.0 explicación
+  ///
+  /// In es, this message translates to:
+  /// **'Para mostrarte los prestadores más cercanos y cuánto tardan en llegar.'**
+  String get ubicacionExplicaTexto;
+
+  /// 2.0 botón principal
+  ///
+  /// In es, this message translates to:
+  /// **'Permitir ubicación'**
+  String get ubicacionPermitir;
+
+  /// 2.0 permiso negado
+  ///
+  /// In es, this message translates to:
+  /// **'No tenemos tu ubicación'**
+  String get ubicacionNegadaTitulo;
+
+  /// 2.0 permiso negado
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes darnos el permiso o escribir dónde estás. Con la dirección te mostramos los mismos prestadores.'**
+  String get ubicacionNegadaTexto;
+
+  /// 2.0 permiso negado para siempre
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir Ajustes'**
+  String get ubicacionAbrirAjustes;
+
+  /// 2.0 GPS apagado
+  ///
+  /// In es, this message translates to:
+  /// **'Tu GPS está apagado'**
+  String get gpsApagadoTitulo;
+
+  /// 2.0 GPS apagado
+  ///
+  /// In es, this message translates to:
+  /// **'Enciende la ubicación del teléfono para encontrar los prestadores cerca de ti.'**
+  String get gpsApagadoTexto;
+
+  /// 2.0 GPS apagado: abre los ajustes de ubicación
+  ///
+  /// In es, this message translates to:
+  /// **'Activar ubicación'**
+  String get gpsActivar;
+
+  /// 2.0 botón secundario
+  ///
+  /// In es, this message translates to:
+  /// **'Escribir mi dirección'**
+  String get direccionEscribir;
+
+  /// 2.0 hoja para escribir la dirección
+  ///
+  /// In es, this message translates to:
+  /// **'¿Dónde estás?'**
+  String get direccionTitulo;
+
+  /// 2.0 campo de la dirección
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección, ciudad o punto de referencia'**
+  String get direccionCampo;
+
+  /// 2.0 enviar el texto escrito sin elegir sugerencia
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar esta dirección'**
+  String get direccionBuscar;
+
+  /// 2.0 ubicarDireccion: DIRECCION_NO_ENCONTRADA
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos ubicar esa dirección. Prueba con otra o con un punto de referencia'**
+  String get direccionNoEncontrada;
+
+  /// 2.0 ubicarDireccion: SERVICIO_NO_DISPONIBLE o sin red
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos buscar direcciones ahora. Intenta de nuevo'**
+  String get direccionServicioCaido;
+
+  /// 2.0 aviso sobre el mapa con la dirección escrita
+  ///
+  /// In es, this message translates to:
+  /// **'Usando: {direccion}'**
+  String direccionUsando(String direccion);
+
+  /// 2.0 aviso: volver a escribir la dirección
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar'**
+  String get direccionCambiar;
+
+  /// 2.0 aviso: el permiso se dio al volver de Ajustes
+  ///
+  /// In es, this message translates to:
+  /// **'Usar mi ubicación actual'**
+  String get direccionUsarActual;
+
+  /// 2.0 etiqueta del pin del cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección escrita'**
+  String get direccionPinEtiqueta;
 
   /// Inicio: entrada a HU-M05
   ///
@@ -2036,6 +2102,24 @@ abstract class AppLocalizations {
   /// **'Elige una opción'**
   String get m0602TipoElegir;
 
+  /// M06-02 banner (S2)
+  ///
+  /// In es, this message translates to:
+  /// **'Atención inmediata'**
+  String get m0602AtencionInmediata;
+
+  /// M06-02 banner (S2)
+  ///
+  /// In es, this message translates to:
+  /// **'Estamos coordinando tu solicitud en tiempo real'**
+  String get m0602AtencionInmediataTexto;
+
+  /// M06-02 con la dirección escrita (S1)
+  ///
+  /// In es, this message translates to:
+  /// **'{direccion} (la dirección que escribiste)'**
+  String m0602UbicacionEscrita(String direccion);
+
   /// M06-02 error del selector vacío
   ///
   /// In es, this message translates to:
@@ -2066,29 +2150,11 @@ abstract class AppLocalizations {
   /// **'Usa máximo {maximo} caracteres.'**
   String m0602TextoLargo(int maximo);
 
-  /// M06-02 etiqueta de la dirección (opcional, editable)
-  ///
-  /// In es, this message translates to:
-  /// **'Dirección o punto de referencia'**
-  String get m0602Direccion;
-
-  /// M06-02 ejemplo de la dirección
-  ///
-  /// In es, this message translates to:
-  /// **'Ej. Cra 45 # 22-18, frente al parque'**
-  String get m0602DireccionHint;
-
   /// M06-02 ubicación del GPS que se enviará
   ///
   /// In es, this message translates to:
   /// **'Ubicación detectada automáticamente: {coordenadas}'**
   String m0602UbicacionDetectada(String coordenadas);
-
-  /// M06-02 sin ubicación: la dirección es obligatoria
-  ///
-  /// In es, this message translates to:
-  /// **'Escribe la dirección a la que debe llegar el prestador.'**
-  String get m0602DireccionRequerida;
 
   /// M06-02 tiempo del prestador elegido
   ///

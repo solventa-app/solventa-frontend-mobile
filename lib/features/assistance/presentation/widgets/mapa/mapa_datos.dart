@@ -49,6 +49,7 @@ final class DatosMapa {
     required this.etiquetaTiempo,
     required this.semanticaPin,
     required this.etiquetaUsuario,
+    this.etiquetaPinUsuario,
   });
 
   final Coordenada origen;
@@ -66,6 +67,9 @@ final class DatosMapa {
   /// Lo que lee TalkBack en el pin (mapa falso).
   final String Function(PrestadorCercano c) semanticaPin;
   final String etiquetaUsuario;
+
+  /// Texto bajo el pin del cliente: «Dirección escrita» (2.0). `null` con GPS.
+  final String? etiquetaPinUsuario;
 
   Iterable<PrestadorCercano> get todos => [...destacados, ...otros];
 }

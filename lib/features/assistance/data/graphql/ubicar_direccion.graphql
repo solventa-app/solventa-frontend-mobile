@@ -1,0 +1,18 @@
+# HU-M06 (KAN-36), contrato v0.50 (B9): sin permiso de ubicación o con el GPS apagado, el cliente escribe su dirección.
+# Las sugerencias y la dirección normalizada llegan en el idioma de la app (`Accept-Language`).
+query AutocompletarDireccion($texto: String!, $pais: String) {
+  autocompletarDireccion(texto: $texto, pais: $pais) {
+    placeId
+    descripcion
+  }
+}
+
+query UbicarDireccion($placeId: String, $texto: String) {
+  ubicarDireccion(placeId: $placeId, texto: $texto) {
+    encontrada
+    latitud
+    longitud
+    direccion
+    codigo
+  }
+}

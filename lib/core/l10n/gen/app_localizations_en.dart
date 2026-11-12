@@ -815,33 +815,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'We don\'t have providers in your area yet.';
 
   @override
-  String get m0601SinPermiso =>
-      'We need your location to show you the nearest providers.';
-
-  @override
-  String get m0601GpsApagado =>
-      'Your location is turned off. Turn it on to see nearby providers.';
-
-  @override
-  String get m0601PermitirUbicacion => 'Allow location';
-
-  @override
-  String get m0601AbrirAjustes => 'Open settings';
-
-  @override
-  String get m0601EscribirDireccion => 'Enter my address';
-
-  @override
-  String get m0601TituloSinOrden => 'Choose a provider';
-
-  @override
-  String get m0601NotaSinOrden =>
-      'Without your location we can\'t sort them by distance. You\'ll enter your address in the next step.';
-
-  @override
-  String get m0601UsarUbicacion => 'Use my location';
-
-  @override
   String get m0601Reintentar => 'Try again';
 
   @override
@@ -906,6 +879,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0601Cerrar => 'Close';
+
+  @override
+  String get ubicacionExplicaTitulo => 'We need your location';
+
+  @override
+  String get ubicacionExplicaTexto =>
+      'To show you the nearest providers and how long they take to arrive.';
+
+  @override
+  String get ubicacionPermitir => 'Allow location';
+
+  @override
+  String get ubicacionNegadaTitulo => 'We don\'t have your location';
+
+  @override
+  String get ubicacionNegadaTexto =>
+      'You can grant permission or type where you are. With the address we show you the same providers.';
+
+  @override
+  String get ubicacionAbrirAjustes => 'Open Settings';
+
+  @override
+  String get gpsApagadoTitulo => 'Your GPS is off';
+
+  @override
+  String get gpsApagadoTexto =>
+      'Turn on your phone\'s location to find providers near you.';
+
+  @override
+  String get gpsActivar => 'Turn on location';
+
+  @override
+  String get direccionEscribir => 'Type my address';
+
+  @override
+  String get direccionTitulo => 'Where are you?';
+
+  @override
+  String get direccionCampo => 'Address, city or landmark';
+
+  @override
+  String get direccionBuscar => 'Search this address';
+
+  @override
+  String get direccionNoEncontrada =>
+      'We couldn\'t find that address. Try another one or a landmark';
+
+  @override
+  String get direccionServicioCaido =>
+      'We couldn\'t search addresses right now. Try again';
+
+  @override
+  String direccionUsando(String direccion) {
+    return 'Using: $direccion';
+  }
+
+  @override
+  String get direccionCambiar => 'Change';
+
+  @override
+  String get direccionUsarActual => 'Use my current location';
+
+  @override
+  String get direccionPinEtiqueta => 'Typed address';
 
   @override
   String get homeReportarTile => 'Report a claim';
@@ -1131,6 +1168,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0602TipoElegir => 'Choose an option';
 
   @override
+  String get m0602AtencionInmediata => 'Immediate attention';
+
+  @override
+  String get m0602AtencionInmediataTexto =>
+      'We are coordinating your request in real time';
+
+  @override
+  String m0602UbicacionEscrita(String direccion) {
+    return '$direccion (the address you typed)';
+  }
+
+  @override
   String get m0602TipoRequerido => 'Choose the type of assistance.';
 
   @override
@@ -1150,19 +1199,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get m0602Direccion => 'Address or landmark';
-
-  @override
-  String get m0602DireccionHint => 'E.g. 45th St, across from the park';
-
-  @override
   String m0602UbicacionDetectada(String coordenadas) {
     return 'Location detected automatically: $coordenadas';
   }
-
-  @override
-  String get m0602DireccionRequerida =>
-      'Enter the address the provider should go to.';
 
   @override
   String m0602TiempoLlegada(String tiempo) {

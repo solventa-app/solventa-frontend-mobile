@@ -183,8 +183,14 @@ extend type Mutation {
 - `idSolicitud` repetido devuelve la misma asistencia (el reintento de M06-03b no crea dos).
 - Mientras no haya prestadores reales, el backend puede simular el desenlace (CONFIRMADA / NO_CONFIRMADA).
 
-## Sin ubicación: dirección a mano (contrato v0.41, CA-M06-02)
+## Sin ubicación: dirección escrita y ubicada (contrato v0.50, CA-M06-02)
 
-Sin permiso de ubicación o con el GPS apagado, M06-01 ofrece «Escribir mi dirección»: muestra el catálogo por ciudad, sin
-distancia ni tiempo, y M06-02 pide la dirección como obligatoria. Se envía con `solicitarAsistenciaConDireccion`;
-M06-04a confirma sin tiempo estimado porque, sin coordenadas, el backend no puede calcularlo.
+> Reemplaza a la dirección a mano sin coordenadas de la v0.41 (`solicitarAsistenciaConDireccion`, ahora `@deprecated`
+> y sin uso en la app). Decisión de Felipe del 2026-11-10, plan de pendientes 2.0 y S1.
+
+Al entrar a Asistencia la app revisa el GPS y luego el permiso, sin pedirlo. La primera vez explica por qué lo pide; si
+lo niega, o el GPS está apagado, siempre ofrece «Escribir mi dirección»: una hoja con las sugerencias de
+`autocompletarDireccion` (Colombia, en el idioma de la app por `Accept-Language`) y, al elegir una, `ubicarDireccion`
+la convierte en coordenadas por el ACL. Con eso el mapa funciona igual que con GPS (aviso «Usando: …» y pin «Dirección
+escrita»), y la solicitud viaja por `solicitarAsistencia` con `origenUbicacion: DIRECCION`. M06-02 ya no tiene el campo
+de texto libre: solo muestra adónde llegará el prestador.

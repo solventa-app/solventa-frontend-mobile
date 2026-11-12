@@ -287,26 +287,6 @@
   "@m0601SinPrestadores": {
     "description": "M06-01 lista vacía"
   },
-  "m0601SinPermiso": "We need your location to show you the nearest providers.",
-  "@m0601SinPermiso": {
-    "description": "M06-01 sin permiso de ubicación"
-  },
-  "m0601GpsApagado": "Your location is turned off. Turn it on to see nearby providers.",
-  "@m0601GpsApagado": {
-    "description": "M06-01 GPS apagado"
-  },
-  "m0601PermitirUbicacion": "Allow location",
-  "@m0601PermitirUbicacion": {
-    "description": "M06-01 reintentar permiso"
-  },
-  "m0601AbrirAjustes": "Open settings",
-  "@m0601AbrirAjustes": {
-    "description": "M06-01 abrir ajustes"
-  },
-  "m0601EscribirDireccion": "Enter my address",
-  "m0601TituloSinOrden": "Choose a provider",
-  "m0601NotaSinOrden": "Without your location we can't sort them by distance. You'll enter your address in the next step.",
-  "m0601UsarUbicacion": "Use my location",
   "m0601Reintentar": "Try again",
   "@m0601Reintentar": {
     "description": "M06-01 reintentar"
@@ -379,6 +359,33 @@
   "m0601CopiarDireccion": "Long-press to copy the address",
   "m0601Copiar": "Copy",
   "m0601Cerrar": "Close",
+  "ubicacionExplicaTitulo": "We need your location",
+  "ubicacionExplicaTexto": "To show you the nearest providers and how long they take to arrive.",
+  "ubicacionPermitir": "Allow location",
+  "ubicacionNegadaTitulo": "We don't have your location",
+  "ubicacionNegadaTexto": "You can grant permission or type where you are. With the address we show you the same providers.",
+  "ubicacionAbrirAjustes": "Open Settings",
+  "gpsApagadoTitulo": "Your GPS is off",
+  "gpsApagadoTexto": "Turn on your phone's location to find providers near you.",
+  "gpsActivar": "Turn on location",
+  "direccionEscribir": "Type my address",
+  "direccionTitulo": "Where are you?",
+  "direccionCampo": "Address, city or landmark",
+  "direccionBuscar": "Search this address",
+  "direccionNoEncontrada": "We couldn't find that address. Try another one or a landmark",
+  "direccionServicioCaido": "We couldn't search addresses right now. Try again",
+  "direccionUsando": "Using: {direccion}",
+  "@direccionUsando": {
+    "description": "2.0 aviso sobre el mapa con la dirección escrita",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "direccionCambiar": "Change",
+  "direccionUsarActual": "Use my current location",
+  "direccionPinEtiqueta": "Typed address",
   "homeReportarTile": "Report a claim",
   "@homeReportarTile": {
     "description": "Inicio: entrada a HU-M05"
@@ -665,15 +672,23 @@
   "m0602TipoMecanica": "Mechanical",
   "m0602TipoGrua": "Tow truck",
   "m0602TipoElegir": "Choose an option",
+  "m0602AtencionInmediata": "Immediate attention",
+  "m0602AtencionInmediataTexto": "We are coordinating your request in real time",
+  "m0602UbicacionEscrita": "{direccion} (the address you typed)",
+  "@m0602UbicacionEscrita": {
+    "description": "M06-02 con la dirección escrita (S1)",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
   "m0602TipoRequerido": "Choose the type of assistance.",
   "m0602TipoNoAtendido": "{nombre} doesn't handle this type of assistance. Choose another provider on the map.",
   "m0602Descripcion": "Briefly describe what happened",
   "m0602DescripcionHint": "E.g. chest pain, dizziness…",
   "m0602TextoLargo": "Use {maximo} characters at most.",
-  "m0602Direccion": "Address or landmark",
-  "m0602DireccionHint": "E.g. 45th St, across from the park",
   "m0602UbicacionDetectada": "Location detected automatically: {coordenadas}",
-  "m0602DireccionRequerida": "Enter the address the provider should go to.",
   "m0602TiempoLlegada": "Estimated arrival time: {tiempo}",
   "m0602Enviar": "Send request",
   "m0603Mensaje": "Confirming availability with {nombre}…",

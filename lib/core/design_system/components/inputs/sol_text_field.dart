@@ -21,6 +21,7 @@ class SolTextField extends StatefulWidget {
     this.helperText,
     this.errorText,
     this.onChanged,
+    this.onSubmitted,
     this.onTap,
     this.readOnly = false,
     this.enabled = true,
@@ -48,6 +49,7 @@ class SolTextField extends StatefulWidget {
        initialValue = value,
        hint = null,
        onChanged = null,
+       onSubmitted = null,
        readOnly = true,
        maxLines = 1,
        minLines = null,
@@ -66,6 +68,9 @@ class SolTextField extends StatefulWidget {
   final String? helperText;
   final String? errorText;
   final ValueChanged<String>? onChanged;
+
+  /// La tecla de acción del teclado (p. ej. «Buscar» en la dirección, HU-M06).
+  final ValueChanged<String>? onSubmitted;
   final VoidCallback? onTap;
   final bool readOnly;
   final bool enabled;
@@ -151,6 +156,7 @@ class _SolTextFieldState extends State<SolTextField> {
       enabled: widget.enabled,
       onTap: widget.onTap,
       onChanged: widget.onChanged,
+      onSubmitted: widget.onSubmitted,
       maxLines: _ocultar ? 1 : widget.maxLines,
       minLines: widget.minLines,
       obscureText: _ocultar,

@@ -451,12 +451,10 @@ class _RootShell extends ConsumerWidget {
       ),
       // «Solicitar» abre M06-02 con el prestador elegido (KAN-265).
       assistance: M0601PrestadoresPage(
-        onSolicitar: (cercano, origen) {
-          ref.read(solicitudProvider.notifier).iniciar(cercano, origen);
-          context.push(AsistenciaRoutes.solicitud);
-        },
-        onSolicitarConDireccion: (prestador) {
-          ref.read(solicitudProvider.notifier).iniciarConDireccion(prestador);
+        onSolicitar: (cercano, origen, direccionEscrita) {
+          ref
+              .read(solicitudProvider.notifier)
+              .iniciar(cercano, origen, direccionEscrita: direccionEscrita);
           context.push(AsistenciaRoutes.solicitud);
         },
       ),

@@ -7,6 +7,7 @@ import '../../../core/network/network_providers.dart';
 import '../../../core/ubicacion/ubicacion_service.dart';
 import '../data/datasources/asistencia_remote_datasource.dart';
 import '../data/datasources/catalogo_local_datasource.dart';
+import '../data/datasources/permiso_pedido_store.dart';
 import '../data/datasources/ruta_externa_service.dart';
 import '../data/repositories/asistencia_repository_impl.dart';
 import '../domain/repositories/asistencia_repository.dart';
@@ -47,6 +48,13 @@ final ubicacionServiceProvider = Provider<UbicacionService>(
   (ref) => _enPruebas || ref.watch(usarFakesProvider)
       ? FakeUbicacionService()
       : const GeolocatorUbicacionService(),
+);
+
+/// Si ya se mostró el diálogo de ubicación (2.0); en memoria en pruebas.
+final permisoPedidoProvider = Provider<PermisoPedidoStore>(
+  (ref) => _enPruebas
+      ? MemoriaPermisoPedidoStore(pedido: true)
+      : const PrefsPermisoPedidoStore(),
 );
 
 final rutaExternaServiceProvider = Provider<RutaExternaService>(

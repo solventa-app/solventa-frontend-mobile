@@ -77,7 +77,7 @@ class MapaFalso extends StatelessWidget {
                 proyectar(datos.origen),
                 Semantics(
                   label: datos.etiquetaUsuario,
-                  child: const SolMapUserPin(),
+                  child: SolMapUserPin(label: datos.etiquetaPinUsuario),
                 ),
                 SolMapUserPin.halo,
                 SolMapUserPin.halo,

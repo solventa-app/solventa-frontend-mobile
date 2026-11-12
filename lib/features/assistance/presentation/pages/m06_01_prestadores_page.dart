@@ -10,6 +10,7 @@ import '../../domain/entities/prestador.dart';
 import '../prestadores_state.dart';
 import '../providers.dart';
 import '../widgets/detalle_prestador.dart';
+import '../widgets/hoja_direccion.dart';
 import '../widgets/mapa/mapa_prestadores.dart';
 
 /// M06-01 · Mapa de prestadores cercanos (Figma 2005:2, KAN-264).
@@ -25,18 +26,16 @@ import '../widgets/mapa/mapa_prestadores.dart';
 /// - Sin prestadores en 50 km: el mapa con el cliente y «Aún no tenemos
 ///   prestadores en tu zona» (M11). Si el mapa falla, solo la lista (CA-M06-04).
 class M0601PrestadoresPage extends ConsumerStatefulWidget {
-  const M0601PrestadoresPage({
-    super.key,
-    required this.onSolicitar,
-    required this.onSolicitarConDireccion,
-  });
+  const M0601PrestadoresPage({super.key, required this.onSolicitar});
 
-  /// El prestador de la fila y la ubicación del cliente (adónde debe llegar).
-  final void Function(PrestadorCercano cercano, Coordenada origen) onSolicitar;
-
-  /// Sin ubicación: el prestador de la fila; la dirección se escribe en M06-02
-  /// (CA-M06-02).
-  final void Function(Prestador prestador) onSolicitarConDireccion;
+  /// El prestador elegido y adónde debe llegar: el GPS o la dirección escrita
+  /// ya ubicada ([direccionEscrita], 2.0); con GPS, `null`.
+  final void Function(
+    PrestadorCercano cercano,
+    Coordenada origen,
+    String? direccionEscrita,
+  )
+  onSolicitar;
 
   @override
   ConsumerState<M0601PrestadoresPage> createState() =>
@@ -69,7 +68,11 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
     // Al volver de Ajustes (permiso o GPS) se reintenta solo.
     _ciclo = AppLifecycleListener(
       onResume: () {
-        if (_volviendoDeAjustes) {
+        final s = ref.read(prestadoresProvider);
+        // Al volver de Ajustes se revisa otra vez; con la dirección escrita,
+        // por si ya dio el permiso («Usar mi ubicación actual», 2.0).
+        if (_volviendoDeAjustes ||
+            (s is PrestadoresListos && s.direccionEscrita != null)) {
           _volviendoDeAjustes = false;
           unawaited(ref.read(prestadoresProvider.notifier).cargar());
         }
@@ -141,7 +144,25 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
     if (_navegando?.isActive ?? false) return;
     // Un solo push a M06-02 aunque se toque dos veces (M12).
     _navegando = Timer(const Duration(milliseconds: 800), () {});
-    widget.onSolicitar(c, origen);
+    final s = ref.read(prestadoresProvider);
+    widget.onSolicitar(
+      c,
+      origen,
+      s is PrestadoresListos ? s.direccionEscrita : null,
+    );
+  }
+
+  /// «Escribir mi dirección» o «Cambiar» (2.0): con la dirección ubicada, el
+  /// mapa se encuadra de nuevo desde ese punto.
+  Future<void> _escribirDireccion() async {
+    final d = await HojaDireccion.abrir(context);
+    if (d == null || !mounted) return;
+    setState(() {
+      _seleccionado = null;
+      _orden = EncuadrarInicio(++_generacionCamara);
+      _verRecentrar = false;
+    });
+    await ref.read(prestadoresProvider.notifier).usarDireccion(d);
   }
 
   void _enfocar(PrestadorCercano c) => setState(() {
@@ -224,8 +245,10 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
     BuildContext context,
     Coordenada origen,
     List<PrestadorCercano> destacados,
-    List<PrestadorCercano> otros,
-  ) {
+    List<PrestadorCercano> otros, {
+    String? direccionEscrita,
+    bool permisoDisponible = false,
+  }) {
     final l10n = context.l10n;
     final conMapa =
         !_mapaFallo && ref.watch(motorMapaProvider) != MotorMapa.ninguno;
@@ -313,7 +336,10 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                               SolFormat.minutes(c.minutosEstimados),
                             ),
                     ),
-                    etiquetaUsuario: l10n.m0601TuUbicacion,
+                    etiquetaUsuario: direccionEscrita ?? l10n.m0601TuUbicacion,
+                    etiquetaPinUsuario: direccionEscrita == null
+                        ? null
+                        : l10n.direccionPinEtiqueta,
                   ),
                   orden: _orden,
                   onTapPrestador: (c) => unawaited(
@@ -339,16 +365,56 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
               ),
               PositionedDirectional(
                 top: SolSpacing.sm,
+                start: SolSpacing.sm,
                 end: SolSpacing.sm,
                 child: SafeArea(
-                  child: SolMapFab(
-                    icon: SolIcons.layers,
-                    semanticLabel: estilo == EstiloMapa.calles
-                        ? l10n.m0601VerSatelite
-                        : l10n.m0601VerCalles,
-                    onPressed: () => unawaited(
-                      ref.read(estiloMapaProvider.notifier).alternar(),
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // 2.0: el aviso recuerda que se usa la dirección escrita.
+                      if (direccionEscrita != null) ...[
+                        SolStatusBanner(
+                          status: SolStatus.warning,
+                          title: l10n.direccionUsando(direccionEscrita),
+                          action: Wrap(
+                            spacing: SolSpacing.md,
+                            children: [
+                              SolLinkButton(
+                                label: l10n.direccionCambiar,
+                                onPressed: () =>
+                                    unawaited(_escribirDireccion()),
+                              ),
+                              if (permisoDisponible)
+                                SolLinkButton(
+                                  label: l10n.direccionUsarActual,
+                                  onPressed: () {
+                                    setState(() {
+                                      _orden = EncuadrarInicio(
+                                        ++_generacionCamara,
+                                      );
+                                    });
+                                    unawaited(
+                                      ref
+                                          .read(prestadoresProvider.notifier)
+                                          .usarUbicacionActual(),
+                                    );
+                                  },
+                                ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: SolSpacing.sm),
+                      ],
+                      SolMapFab(
+                        icon: SolIcons.layers,
+                        semanticLabel: estilo == EstiloMapa.calles
+                            ? l10n.m0601VerSatelite
+                            : l10n.m0601VerCalles,
+                        onPressed: () => unawaited(
+                          ref.read(estiloMapaProvider.notifier).alternar(),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -396,60 +462,57 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
           onAccion: notifier.cargar,
         ),
       ),
+      PrestadoresExplicacion() => _Centro(
+        child: _Aviso(
+          icono: SolIcons.location,
+          titulo: l10n.ubicacionExplicaTitulo,
+          texto: l10n.ubicacionExplicaTexto,
+          accion: l10n.ubicacionPermitir,
+          onAccion: notifier.permitir,
+          accionSecundaria: l10n.direccionEscribir,
+          onAccionSecundaria: _escribirDireccion,
+        ),
+      ),
       PrestadoresSinUbicacion(:final permisoPermanente, :final gpsApagado) =>
         _Centro(
           child: _Aviso(
-            icono: SolIcons.location,
-            texto: gpsApagado ? l10n.m0601GpsApagado : l10n.m0601SinPermiso,
-            accion: permisoPermanente || gpsApagado
-                ? l10n.m0601AbrirAjustes
-                : l10n.m0601PermitirUbicacion,
+            icono: gpsApagado ? SolIcons.gpsOff : SolIcons.locationOff,
+            titulo: gpsApagado
+                ? l10n.gpsApagadoTitulo
+                : l10n.ubicacionNegadaTitulo,
+            texto: gpsApagado
+                ? l10n.gpsApagadoTexto
+                : l10n.ubicacionNegadaTexto,
+            accion: gpsApagado
+                ? l10n.gpsActivar
+                : permisoPermanente
+                ? l10n.ubicacionAbrirAjustes
+                : l10n.ubicacionPermitir,
             onAccion: permisoPermanente || gpsApagado
                 ? () async {
                     _volviendoDeAjustes = true;
                     await notifier.abrirAjustes();
                   }
-                : notifier.cargar,
-            accionSecundaria: l10n.m0601EscribirDireccion,
-            onAccionSecundaria: notifier.escribirDireccion,
+                : notifier.permitir,
+            accionSecundaria: l10n.direccionEscribir,
+            onAccionSecundaria: _escribirDireccion,
           ),
         ),
-      PrestadoresSinOrden(:final prestadores) => SingleChildScrollView(
-        padding: const EdgeInsets.all(SolSpacing.screen),
-        child: SolAdaptiveBody(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SolSectionHeader(title: l10n.m0601TituloSinOrden),
-              SolInlineNote(
-                icon: SolIcons.location,
-                text: l10n.m0601NotaSinOrden,
-              ),
-              const SizedBox(height: SolSpacing.sm),
-              for (final (i, p) in prestadores.indexed) ...[
-                if (i > 0) const SolDivider(),
-                SolProviderRow(
-                  name: p.nombre,
-                  type: _tipoFila(p.tipo),
-                  typeLabel: _tipo(p.tipo),
-                  isPartner: p.aliado,
-                  partnerLabel: l10n.m0601Aliado,
-                  distance: p.ciudad,
-                  requestLabel: l10n.m0601Solicitar,
-                  onRequest: () => widget.onSolicitarConDireccion(p),
-                ),
-              ],
-              const SizedBox(height: SolSpacing.lg),
-              SolButton.tonal(
-                label: l10n.m0601UsarUbicacion,
-                onPressed: () => unawaited(notifier.cargar()),
-              ),
-            ],
-          ),
+      PrestadoresListos(
+        :final origen,
+        :final destacados,
+        :final otros,
+        :final direccionEscrita,
+        :final permisoDisponible,
+      ) =>
+        _mapaYLista(
+          context,
+          origen,
+          destacados,
+          otros,
+          direccionEscrita: direccionEscrita,
+          permisoDisponible: permisoDisponible,
         ),
-      ),
-      PrestadoresListos(:final origen, :final destacados, :final otros) =>
-        _mapaYLista(context, origen, destacados, otros),
     };
   }
 }
@@ -468,16 +531,21 @@ class _Centro extends StatelessWidget {
   );
 }
 
+/// Aviso a pantalla completa. Con [titulo] es el de ubicación (2.0, boceto
+/// pasos 1, 3 y 4): ícono en un círculo, título, texto y dos salidas, una
+/// para arreglarlo y otra para escribir la dirección.
 class _Aviso extends StatelessWidget {
   const _Aviso({
     required this.texto,
     required this.accion,
     required this.onAccion,
+    this.titulo,
     this.icono,
     this.accionSecundaria,
     this.onAccionSecundaria,
   });
 
+  final String? titulo;
   final String texto;
   final String? accion;
   final Future<void> Function() onAccion;
@@ -487,24 +555,67 @@ class _Aviso extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+    final titulo = this.titulo;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Semantics(
-          liveRegion: true,
-          child: SolInlineNote(icon: icono, text: texto, center: true),
-        ),
-        if (accion != null) ...[
+        if (titulo == null)
+          Semantics(
+            liveRegion: true,
+            child: SolInlineNote(icon: icono, text: texto, center: true),
+          )
+        else ...[
+          if (icono != null)
+            ExcludeSemantics(
+              child: Center(
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: context.solColors.navIndicator,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icono, size: 36, fill: 1, color: colors.primary),
+                ),
+              ),
+            ),
           const SizedBox(height: SolSpacing.lg),
-          SolButton.tonal(
-            label: accion!,
-            onPressed: () => unawaited(onAccion()),
+          Semantics(
+            header: true,
+            liveRegion: true,
+            child: Text(
+              titulo,
+              textAlign: TextAlign.center,
+              style: context.solText.headline.copyWith(color: colors.onSurface),
+            ),
           ),
+          const SizedBox(height: SolSpacing.sm),
+          Text(
+            texto,
+            textAlign: TextAlign.center,
+            style: context.solText.body.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+        ],
+        if (accion != null) ...[
+          const SizedBox(height: SolSpacing.xxl),
+          if (titulo == null)
+            SolButton.tonal(
+              label: accion!,
+              onPressed: () => unawaited(onAccion()),
+            )
+          else
+            SolButton.primary(
+              label: accion!,
+              onPressed: () => unawaited(onAccion()),
+            ),
         ],
         if (accionSecundaria != null) ...[
           const SizedBox(height: SolSpacing.sm),
-          SolButton.text(
+          SolButton.outlined(
             label: accionSecundaria!,
             onPressed: () => unawaited(onAccionSecundaria!()),
           ),

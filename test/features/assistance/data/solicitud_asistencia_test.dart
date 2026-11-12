@@ -34,29 +34,63 @@ void main() {
     repo = AsistenciaRepositoryImpl(bff, MemoriaCatalogoLocalDataSource());
   });
 
-  test(
-    'sin ubicación va por la operación de la dirección a mano (v0.41)',
-    () async {
-      final r = await repo.solicitar(
-        SolicitudAsistencia(
-          idSolicitud: id,
-          prestador: clinica,
-          tipo: TipoPrestador.medico,
-          ubicacion: null,
-          descripcion: '  ',
-          direccion: ' Cra 45 # 22-18 ',
-        ),
+  test('v0.50: la dirección escrita y ubicada viaja con coordenadas y origen DIRECCION', () async {
+    final r = await repo.solicitar(
+      SolicitudAsistencia(
+        idSolicitud: id,
+        prestador: clinica,
+        tipo: TipoPrestador.medico,
+        ubicacion: const Coordenada(4.6729, -74.0512),
+        origen: OrigenUbicacion.direccion,
+        descripcion: '  ',
+        direccion: ' Cra 45 # 22-18 ',
+      ),
+    );
+    expect(r, isA<Exito<Asistencia>>());
+    expect(bff.solicitudes.single, {
+      'idSolicitud': id,
+      'prestadorId': 'prs-bog-001',
+      'tipoAsistencia': 'MEDICO',
+      'descripcion': null,
+      'direccion': 'Cra 45 # 22-18',
+      'latitud': 4.6729,
+      'longitud': -74.0512,
+      'origenUbicacion': 'DIRECCION',
+    });
+  });
+
+  group('2.0: dirección escrita', () {
+    test('sugerencias desde 3 letras; con el BFF caído, lista vacía', () async {
+      expect(
+        await repo.sugerirDirecciones('Cr'),
+        isA<Exito<List<SugerenciaDireccion>>>(),
       );
-      expect(r, isA<Exito<Asistencia>>());
-      expect(bff.solicitudes.single, {
-        'idSolicitud': id,
-        'prestadorId': 'prs-bog-001',
-        'tipoAsistencia': 'MEDICO',
-        'direccion': 'Cra 45 # 22-18',
-        'descripcion': null,
-      });
-    },
-  );
+      final r = await repo.sugerirDirecciones('Cra 45');
+      final lista = (r as Exito<List<SugerenciaDireccion>>).valor;
+      expect(lista.first.descripcion, 'Cra 45, Bogotá, Cundinamarca');
+      bff.error = const ErrorRed();
+      final caido = await repo.sugerirDirecciones('Cra 45');
+      expect((caido as Exito<List<SugerenciaDireccion>>).valor, isEmpty);
+    });
+
+    test('ubicar: encontrada, no encontrada o servicio caído', () async {
+      final ok = await repo.ubicarDireccion(texto: 'Cra 45 # 22-18');
+      final d = (ok as Exito<DireccionUbicada>).valor as DireccionEncontrada;
+      expect(d.direccion, 'Cra 45 # 22-18');
+      expect(d.coordenada.latitud, closeTo(4.67, 0.01));
+      final no = await repo.ubicarDireccion(texto: 'calle noexiste');
+      expect(
+        (no as Exito<DireccionUbicada>).valor,
+        isA<DireccionNoEncontrada>(),
+      );
+      bff.lugaresCaidos = true;
+      final caido = await repo.ubicarDireccion(placeId: 'stub:CO:Cra 45');
+      expect(
+        (caido as Exito<DireccionUbicada>).valor,
+        isA<DireccionServicioCaido>(),
+      );
+    });
+  });
 
   test('la entrada lleva el contrato y los textos vacíos viajan como null', () {
     expect(entradaSolicitud(solicitud(descripcion: '  ')), {
@@ -67,6 +101,7 @@ void main() {
       'direccion': null,
       'latitud': 4.676,
       'longitud': -74.048,
+      'origenUbicacion': 'GPS',
     });
     expect(
       entradaSolicitud(solicitud(direccion: ' Cra 45 '))['direccion'],

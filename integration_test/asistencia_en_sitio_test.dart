@@ -28,8 +28,10 @@ import 'soporte/capturas.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('HU-M06: solicitar, reintentar, confirmar y cancelar', (
-    tester,
+  /// Abre M06-01 con el fake del BFF y el GPS dado; devuelve el fake.
+  Future<FakeAsistenciaRemoteDataSource> abrir(
+    WidgetTester tester,
+    FakeUbicacionService gps,
   ) async {
     final bff = FakeAsistenciaRemoteDataSource(latencia: Duration.zero);
     final contenedor = ProviderContainer(
@@ -38,7 +40,7 @@ void main() {
         catalogoLocalDataSourceProvider.overrideWithValue(
           MemoriaCatalogoLocalDataSource(),
         ),
-        ubicacionServiceProvider.overrideWithValue(FakeUbicacionService()),
+        ubicacionServiceProvider.overrideWithValue(gps),
         rutaExternaServiceProvider.overrideWithValue(FakeRutaExternaService()),
         motorMapaProvider.overrideWithValue(MotorMapa.falso),
         duracionMinimaEnvioProvider.overrideWithValue(Duration.zero),
@@ -51,16 +53,14 @@ void main() {
           path: '/',
           builder: (context, _) => Scaffold(
             body: M0601PrestadoresPage(
-              onSolicitar: (cercano, origen) {
+              onSolicitar: (cercano, origen, direccionEscrita) {
                 contenedor
                     .read(solicitudProvider.notifier)
-                    .iniciar(cercano, origen);
-                context.push(AsistenciaRoutes.solicitud);
-              },
-              onSolicitarConDireccion: (prestador) {
-                contenedor
-                    .read(solicitudProvider.notifier)
-                    .iniciarConDireccion(prestador);
+                    .iniciar(
+                      cercano,
+                      origen,
+                      direccionEscrita: direccionEscrita,
+                    );
                 context.push(AsistenciaRoutes.solicitud);
               },
             ),
@@ -103,7 +103,13 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    return bff;
+  }
 
+  testWidgets('HU-M06: solicitar, reintentar, confirmar y cancelar', (
+    tester,
+  ) async {
+    final bff = await abrir(tester, FakeUbicacionService());
     // M06-01 → M06-02 con el prestador más cercano.
     await tester.tap(find.text('Solicitar').first);
     await tester.pumpAndSettle();
@@ -142,4 +148,47 @@ void main() {
     await capturar(tester, 'M06-06 · cancelada');
     expect(bff.asistencias.values.single['estado'], 'CANCELADA');
   });
+
+  testWidgets(
+    'HU-M06 2.0: sin permiso, la dirección escrita y ubicada hasta la asistencia',
+    (tester) async {
+      final bff = await abrir(
+        tester,
+        FakeUbicacionService(
+          resultado: const UbicacionSinPermiso(permanente: true),
+        ),
+      );
+      expect(find.text('No tenemos tu ubicación'), findsOneWidget);
+      await capturar(tester, 'M06-01 · sin permiso');
+
+      await tester.tap(find.text('Escribir mi dirección'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).last, 'Cra 45 # 22-18');
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pumpAndSettle();
+      await capturar(tester, 'M06-01 · escribir la dirección');
+      await tester.tap(find.text('Cra 45 # 22-18, Bogotá, Cundinamarca'));
+      await tester.pumpAndSettle();
+
+      // El mapa funciona igual que con GPS, con el aviso de la dirección.
+      expect(find.text('Usando: Cra 45 # 22-18'), findsOneWidget);
+      await capturar(tester, 'M06-01 · con la dirección escrita');
+
+      await tester.tap(find.text('Solicitar').first);
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('(la dirección que escribiste)'),
+        findsOneWidget,
+      );
+      await tester.ensureVisible(find.text('Enviar solicitud'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Enviar solicitud'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Reintentar'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Solicitud confirmada'), findsOneWidget);
+      expect(bff.solicitudes.last['origenUbicacion'], 'DIRECCION');
+      expect(bff.solicitudes.last['direccion'], 'Cra 45 # 22-18');
+    },
+  );
 }

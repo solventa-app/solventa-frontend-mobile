@@ -816,33 +816,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0601SinPrestadores => 'Aún no tenemos prestadores en tu zona.';
 
   @override
-  String get m0601SinPermiso =>
-      'Necesitamos tu ubicación para mostrarte los prestadores más cercanos.';
-
-  @override
-  String get m0601GpsApagado =>
-      'Tu ubicación está desactivada. Actívala para ver los prestadores cercanos.';
-
-  @override
-  String get m0601PermitirUbicacion => 'Permitir ubicación';
-
-  @override
-  String get m0601AbrirAjustes => 'Abrir ajustes';
-
-  @override
-  String get m0601EscribirDireccion => 'Escribir mi dirección';
-
-  @override
-  String get m0601TituloSinOrden => 'Elige un prestador';
-
-  @override
-  String get m0601NotaSinOrden =>
-      'Sin tu ubicación no podemos ordenarlos por cercanía. En el siguiente paso escribes tu dirección.';
-
-  @override
-  String get m0601UsarUbicacion => 'Usar mi ubicación';
-
-  @override
   String get m0601Reintentar => 'Reintentar';
 
   @override
@@ -907,6 +880,70 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0601Cerrar => 'Cerrar';
+
+  @override
+  String get ubicacionExplicaTitulo => 'Necesitamos tu ubicación';
+
+  @override
+  String get ubicacionExplicaTexto =>
+      'Para mostrarte los prestadores más cercanos y cuánto tardan en llegar.';
+
+  @override
+  String get ubicacionPermitir => 'Permitir ubicación';
+
+  @override
+  String get ubicacionNegadaTitulo => 'No tenemos tu ubicación';
+
+  @override
+  String get ubicacionNegadaTexto =>
+      'Puedes darnos el permiso o escribir dónde estás. Con la dirección te mostramos los mismos prestadores.';
+
+  @override
+  String get ubicacionAbrirAjustes => 'Abrir Ajustes';
+
+  @override
+  String get gpsApagadoTitulo => 'Tu GPS está apagado';
+
+  @override
+  String get gpsApagadoTexto =>
+      'Enciende la ubicación del teléfono para encontrar los prestadores cerca de ti.';
+
+  @override
+  String get gpsActivar => 'Activar ubicación';
+
+  @override
+  String get direccionEscribir => 'Escribir mi dirección';
+
+  @override
+  String get direccionTitulo => '¿Dónde estás?';
+
+  @override
+  String get direccionCampo => 'Dirección, ciudad o punto de referencia';
+
+  @override
+  String get direccionBuscar => 'Buscar esta dirección';
+
+  @override
+  String get direccionNoEncontrada =>
+      'No pudimos ubicar esa dirección. Prueba con otra o con un punto de referencia';
+
+  @override
+  String get direccionServicioCaido =>
+      'No pudimos buscar direcciones ahora. Intenta de nuevo';
+
+  @override
+  String direccionUsando(String direccion) {
+    return 'Usando: $direccion';
+  }
+
+  @override
+  String get direccionCambiar => 'Cambiar';
+
+  @override
+  String get direccionUsarActual => 'Usar mi ubicación actual';
+
+  @override
+  String get direccionPinEtiqueta => 'Dirección escrita';
 
   @override
   String get homeReportarTile => 'Reportar un siniestro';
@@ -1135,6 +1172,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0602TipoElegir => 'Elige una opción';
 
   @override
+  String get m0602AtencionInmediata => 'Atención inmediata';
+
+  @override
+  String get m0602AtencionInmediataTexto =>
+      'Estamos coordinando tu solicitud en tiempo real';
+
+  @override
+  String m0602UbicacionEscrita(String direccion) {
+    return '$direccion (la dirección que escribiste)';
+  }
+
+  @override
   String get m0602TipoRequerido => 'Elige el tipo de asistencia.';
 
   @override
@@ -1154,19 +1203,9 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get m0602Direccion => 'Dirección o punto de referencia';
-
-  @override
-  String get m0602DireccionHint => 'Ej. Cra 45 # 22-18, frente al parque';
-
-  @override
   String m0602UbicacionDetectada(String coordenadas) {
     return 'Ubicación detectada automáticamente: $coordenadas';
   }
-
-  @override
-  String get m0602DireccionRequerida =>
-      'Escribe la dirección a la que debe llegar el prestador.';
 
   @override
   String m0602TiempoLlegada(String tiempo) {
