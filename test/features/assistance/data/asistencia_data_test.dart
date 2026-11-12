@@ -80,6 +80,35 @@ void main() {
       );
     });
 
+    test('M15: polyline6 de ida y vuelta y la ruta del contrato', () {
+      const puntos = [
+        Coordenada(4.6859, -74.0524),
+        Coordenada(4.6767, -74.0483),
+      ];
+      expect(decodificarPolyline6(codificarPolyline6(puntos)), puntos);
+      final r = rutaDesdeMapa({
+        'prestadorId': 'p',
+        'distanciaMetros': 1100,
+        'duracionSegundos': 301,
+        'geometria': codificarPolyline6(puntos),
+        'estimado': false,
+      });
+      expect(r.minutos, 6);
+      expect(r.puntos, puntos);
+      expect(
+        rutaDesdeMapa({
+          ...{
+            'prestadorId': 'p',
+            'distanciaMetros': 1,
+            'duracionSegundos': 60,
+            'estimado': true,
+          },
+          'geometria': null,
+        }).puntos,
+        isEmpty,
+      );
+    });
+
     test('acepta enteros donde el contrato manda números', () {
       final p = prestadorDesdeMapa({..._mapa('a'), 'latitud': 4});
       expect(p!.ubicacion.latitud, 4.0);

@@ -68,3 +68,37 @@ final class PrestadorCercano {
   final double distanciaKm;
   final int minutosEstimados;
 }
+
+/// Ruta de un prestador hasta el cliente (contrato v0.51, M15).
+final class RutaPrestador {
+  const RutaPrestador({
+    required this.prestadorId,
+    required this.distanciaMetros,
+    required this.duracionSegundos,
+    required this.puntos,
+    required this.estimado,
+  });
+
+  final String prestadorId;
+  final int distanciaMetros;
+  final int duracionSegundos;
+
+  /// Del prestador al cliente; vacía si el backend no mandó la geometría
+  /// (solo la trae para los 3 destacados).
+  final List<Coordenada> puntos;
+
+  /// `true` = simulada (línea recta), no con tráfico real.
+  final bool estimado;
+
+  int get minutos => (duracionSegundos / 60).ceil();
+}
+
+/// Color de la ruta tipo semáforo (M15): verde hasta 10 min, amarillo de 10 a
+/// 20 y rojo más de 20. El tiempo va también escrito: no depende del color.
+enum Semaforo { verde, amarillo, rojo }
+
+Semaforo semaforoDe(int minutos) => minutos <= 10
+    ? Semaforo.verde
+    : minutos <= 20
+    ? Semaforo.amarillo
+    : Semaforo.rojo;

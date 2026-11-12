@@ -80,6 +80,17 @@ final class AsistenciaRepositoryImpl implements AsistenciaRepository {
   }
 
   @override
+  Future<Resultado<List<RutaPrestador>>> rutas(
+    Coordenada origen,
+    List<String> prestadorIds,
+  ) => guardarFallas(
+    () async => [
+      for (final m in await _remote.rutasPrestadores(origen, prestadorIds))
+        rutaDesdeMapa(m),
+    ],
+  );
+
+  @override
   Future<Resultado<DireccionUbicada>> ubicarDireccion({
     String? placeId,
     String? texto,

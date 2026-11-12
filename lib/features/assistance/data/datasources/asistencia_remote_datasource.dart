@@ -1,8 +1,12 @@
 import '../../../../core/network/graphql_client.dart';
+import '../../domain/cercania.dart';
+import '../../domain/entities/prestador.dart';
 import '../fixtures/asistencia_fixtures.dart';
 import '../graphql/catalogo_prestadores.graphql.dart';
+import '../graphql/rutas_prestadores.graphql.dart';
 import '../graphql/solicitud_asistencia.graphql.dart';
 import '../graphql/ubicar_direccion.graphql.dart';
+import '../mappers/prestador_mapper.dart';
 
 /// Operaciones de asistencia en sitio del BFF (contratos v0.36 y v0.40).
 ///
@@ -32,6 +36,12 @@ abstract interface class AsistenciaRemoteDataSource {
     String? placeId,
     String? texto,
   });
+
+  /// `data.rutasPrestadores` (contrato v0.51, B8): los destacados primero.
+  Future<List<Map<String, Object?>>> rutasPrestadores(
+    Coordenada origen,
+    List<String> prestadorIds,
+  );
 }
 
 /// El BFF real: parsea con el tipo generado (falla si no cumple el contrato) y
@@ -87,6 +97,25 @@ final class GqlAsistenciaRemoteDataSource
         data,
       ).autocompletarDireccion)
         s.toJson(),
+    ];
+  }
+
+  @override
+  Future<List<Map<String, Object?>>> rutasPrestadores(
+    Coordenada origen,
+    List<String> prestadorIds,
+  ) async {
+    final data = await _cliente.ejecutar(
+      documentNodeQueryRutasPrestadores,
+      variables: Variables$Query$RutasPrestadores(
+        latitud: origen.latitud,
+        longitud: origen.longitud,
+        prestadorIds: prestadorIds,
+      ).toJson(),
+    );
+    return [
+      for (final r in Query$RutasPrestadores.fromJson(data).rutasPrestadores)
+        r.toJson(),
     ];
   }
 
@@ -190,6 +219,42 @@ final class FakeAsistenciaRemoteDataSource
 
   /// Para pruebas: `ubicarDireccion` responde como si Google no contestara.
   bool lugaresCaidos = false;
+
+  /// Para pruebas: `rutasPrestadores` vuelve vacía (proveedor caído).
+  bool rutasCaidas = false;
+
+  /// Como el modo simulado del ACL: línea recta y las reglas de la app;
+  /// geometría solo para los 3 primeros.
+  @override
+  Future<List<Map<String, Object?>>> rutasPrestadores(
+    Coordenada origen,
+    List<String> prestadorIds,
+  ) async {
+    if (latencia > Duration.zero) await Future<void>.delayed(latencia);
+    final e = error;
+    if (e != null) throw e;
+    if (rutasCaidas) return const [];
+    final rutas = <Map<String, Object?>>[];
+    for (final (i, id) in prestadorIds.indexed) {
+      final p = AsistenciaFixtures.prestadores
+          .where((p) => p['id'] == id)
+          .firstOrNull;
+      if (p == null) continue;
+      final destino = Coordenada(
+        (p['latitud']! as num).toDouble(),
+        (p['longitud']! as num).toDouble(),
+      );
+      final km = Cercania.distanciaKm(destino, origen);
+      rutas.add({
+        'prestadorId': id,
+        'distanciaMetros': (km * 1000).round(),
+        'duracionSegundos': Cercania.minutosEstimados(km) * 60,
+        'geometria': i < 3 ? codificarPolyline6([destino, origen]) : null,
+        'estimado': true,
+      });
+    }
+    return rutas;
+  }
 
   /// Como el stub del ACL: sugiere lo escrito con tres ciudades (boceto 5).
   @override

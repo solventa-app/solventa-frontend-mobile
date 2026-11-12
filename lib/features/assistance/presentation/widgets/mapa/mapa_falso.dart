@@ -73,6 +73,20 @@ class MapaFalso extends StatelessWidget {
                   ),
                 ),
               ),
+              // M15: las rutas tipo semáforo, debajo de los pines.
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _Rutas([
+                    for (final r in datos.rutas)
+                      if (r.puntos.length > 1)
+                        (
+                          r.puntos.map(proyectar.call).toList(),
+                          colorSemaforo(context, semaforoDe(r.minutos)),
+                          estiloRuta(r.prestadorId, datos.seleccionadoId),
+                        ),
+                  ], context.colors.surface),
+                ),
+              ),
               _posicionado(
                 proyectar(datos.origen),
                 Semantics(
@@ -200,4 +214,31 @@ class _Calles extends CustomPainter {
 
   @override
   bool shouldRepaint(_Calles old) => old.fondo != fondo || old.calle != calle;
+}
+
+class _Rutas extends CustomPainter {
+  _Rutas(this.rutas, this.borde);
+
+  final List<(List<Offset>, Color, (double, double))> rutas;
+  final Color borde;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (final (puntos, color, (ancho, opacidad)) in rutas) {
+      final path = Path()..addPolygon(puntos, false);
+      Paint linea(Color c, double w) => Paint()
+        ..color = c.withValues(alpha: opacidad)
+        ..strokeWidth = w
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
+      // Borde blanco de 2 px para que se vea sobre calles y satélite.
+      canvas
+        ..drawPath(path, linea(borde, ancho + 4))
+        ..drawPath(path, linea(color, ancho));
+    }
+  }
+
+  @override
+  bool shouldRepaint(_Rutas old) => true;
 }

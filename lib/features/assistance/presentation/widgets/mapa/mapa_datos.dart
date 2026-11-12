@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+
+import '../../../../../core/design_system/solventa_ui.dart';
 import '../../../domain/entities/prestador.dart';
 
 /// Estilo del mapa (M14): calles por defecto; se recuerda la elección.
@@ -50,7 +53,11 @@ final class DatosMapa {
     required this.semanticaPin,
     required this.etiquetaUsuario,
     this.etiquetaPinUsuario,
+    this.rutas = const [],
   });
+
+  /// Rutas tipo semáforo de los destacados (M15); vacía sin rutas.
+  final List<RutaPrestador> rutas;
 
   final Coordenada origen;
   final List<PrestadorCercano> destacados;
@@ -73,3 +80,22 @@ final class DatosMapa {
 
   Iterable<PrestadorCercano> get todos => [...destacados, ...otros];
 }
+
+/// Color de la ruta tipo semáforo (M15), con los tokens del tema. Los colores
+/// exactos están por validar con diseño.
+Color colorSemaforo(BuildContext context, Semaforo s) => switch (s) {
+  Semaforo.verde => context.solColors.success,
+  Semaforo.amarillo => context.solColors.warning,
+  Semaforo.rojo => context.colors.error,
+};
+
+/// Grosor y opacidad de una ruta (M15): sin selección, las 3 de 4 px; con un
+/// prestador elegido, su ruta de 6 px y las otras al 30 %.
+(double ancho, double opacidad) estiloRuta(
+  String prestadorId,
+  String? elegido,
+) => elegido == null
+    ? (4, 1)
+    : prestadorId == elegido
+    ? (6, 1)
+    : (4, 0.3);

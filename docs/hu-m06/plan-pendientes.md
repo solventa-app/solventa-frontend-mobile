@@ -40,6 +40,11 @@ Revisión del 2026-11-12 contra `develop` (mobile `8dac02f`, backend `fb3b4c6`).
 | A21 | La pantalla de explicación (paso 1 del boceto) sale solo si la app nunca pidió el permiso: Android no distingue «nunca pedido» de «negado una vez», así que la app lo recuerda en `SharedPreferences` | Limitación de la API de permisos |
 | A22 | En Mapbox el pin del cliente no lleva la etiqueta «Dirección escrita» (la anotación es una imagen sin texto); la dice el aviso «Usando: …» de arriba. En el mapa falso sí la lleva | Evita dibujar un pin con texto por idioma |
 | A23 | S4 (dirección legible con GPS) queda fuera: con GPS, M06-02 muestra «Ubicación detectada automáticamente» con las coordenadas | Era opcional en el plan |
+| A24 | Las rutas simuladas (local y CI) van **dentro del ACL** (`MAPAS_PROVEEDOR=simulado`), no en un `stub-mapas` aparte | Mismo resultado y un contenedor menos |
+| A25 | En `auditoria_rutas` la **dirección aproximada también va cifrada** | También es un dato personal (regla 6) |
+| A26 | Aún no hay una consulta de `auditoria_rutas` para roles de auditoría; la colección existe con TTL de 90 días | No hay rol de auditoría hoy |
+| A27 | **Hallazgo:** dirección o coordenadas en la query string quedan en el log de acceso del ACL. `/lugares/ubicar` y `/lugares/inversa` van por `POST`. **Preexistente:** `/lugares/autocompletar` y `/lugares/validar` (T19) tienen el mismo problema | Regla 6 |
+| A28 | M15: con rutas, **todos** los prestadores que trae la respuesta (hasta 10) muestran el tiempo de la ruta, sin «~»; sin rutas (falla o circuito abierto), los destacados también llevan «~». Solo los 3 destacados tienen línea | El plan marcaba «~» para los que no son destacados; con la Matrix ya hay tiempo real |
 | A18 | Los pines de Mapbox no son accesibles con TalkBack (son anotaciones nativas): la lista de la hoja tiene los mismos prestadores y acciones. En el mapa falso sí tienen etiqueta | Limitación del SDK |
 
 ### Avance por fase
@@ -48,8 +53,8 @@ Revisión del 2026-11-12 contra `develop` (mobile `8dac02f`, backend `fb3b4c6`).
 |---|---|---|
 | 1 · Catálogo con detalle, grúa y prestadores detrás del ACL (B1, B2, B3, B7) | PR #590 (v0.49, CLAIMS `0007`) | PR #83 |
 | 2 · Mapbox, pines, detalle, hoja arrastrable (M0–M14) | — | PR #84 (apilado sobre #83) |
-| 3 · Dirección ubicada (B4, B9, 2.0, S1) | PR #591 (v0.50, apilada sobre #590) | `feat/KAN-36-movil-direccion-ubicada` (apilada sobre la fase 2) |
-| 4 · Rutas y auditoría (B8, M15) | pendiente | pendiente |
+| 3 · Dirección ubicada (B4, B9, 2.0, S1) | PR #591 (v0.50, apilado sobre #590) | PR #85 (apilado sobre #84) |
+| 4 · Rutas y auditoría (B8, M15) | PR #614 (v0.51, CLAIMS `0008`) | `feat/KAN-36-movil-rutas` (apilada sobre la fase 3) |
 | 5 · «Mis asistencias» y notificación (B5, B6, 4.x) | pendiente | pendiente |
 
 ### Pendiente de verificar fuera de esta máquina (A9)
