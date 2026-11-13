@@ -81,3 +81,10 @@ final esperasVerificacionProvider = Provider<List<Duration>>(
     Duration(seconds: 12),
   ],
 );
+
+/// Reintentos de perfil y estado al abrir una sesión guardada (HU-M02): si la
+/// primera consulta falla (la red justo tras el desbloqueo), prueba a 1 y a 3 s
+/// antes de mostrar «Reintentar» en el Home.
+final esperasReintentoPerfilProvider = Provider<List<Duration>>(
+  (ref) => const [Duration(seconds: 1), Duration(seconds: 3)],
+);

@@ -1,4 +1,5 @@
 import '../../../../core/contrato/schema.graphql.dart';
+import '../../../../core/network/network_exceptions.dart';
 import '../fixtures/onboarding_fixtures.dart';
 import '../graphql/onboarding.graphql.dart';
 import 'onboarding_remote_datasource.dart';
@@ -50,6 +51,10 @@ final class FakeOnboardingRemoteDataSource
   /// Respuestas de `registrarConsentimientoOnboarding` que se usan en orden
   /// antes de la de siempre (p. ej. un `ESTADO_INVALIDO` del recorrido viejo).
   final respuestasConsentimiento = <Map<String, dynamic>>[];
+
+  /// Cuántas consultas seguidas de `yo` fallan por red antes de responder
+  /// (la red justo después del desbloqueo biométrico).
+  int consultasDePerfilQueFallan = 0;
 
   final operaciones = <String>[];
 
@@ -301,9 +306,16 @@ final class FakeOnboardingRemoteDataSource
   }
 
   @override
-  Future<Fragment$UsuarioCampos?> yo() async => Query$Yo.fromJson(
-    await _responder('yo', OnboardingFixtures.yo(usuarioActual)),
-  ).yo;
+  Future<Fragment$UsuarioCampos?> yo() async {
+    if (consultasDePerfilQueFallan > 0) {
+      consultasDePerfilQueFallan--;
+      operaciones.add('yo:falla');
+      throw const ErrorRed();
+    }
+    return Query$Yo.fromJson(
+      await _responder('yo', OnboardingFixtures.yo(usuarioActual)),
+    ).yo;
+  }
 
   @override
   Future<Mutation$ActualizarPreferencias$actualizarPreferencias>

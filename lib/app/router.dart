@@ -375,6 +375,37 @@ class _RootShell extends ConsumerWidget {
     final l10n = context.l10n;
     final notifier = ref.read(onboardingProvider.notifier);
 
+    // Tras abrir una sesión guardada (huella) todavía no se sabe si la cuenta
+    // está verificada ni cómo se llama: se espera en vez de pintarla como
+    // «pendiente» y sin nombre; si no llegó tras los reintentos, se ofrece
+    // «Reintentar» (HU-M02).
+    if (estado.verificacion == null && estado.perfil == null) {
+      if (estado.cargandoPerfil) {
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      }
+      final fallaPerfil = estado.fallaPerfil;
+      if (fallaPerfil != null) {
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(SolSpacing.lg),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SolInlineNote(text: l10n.falla(fallaPerfil), center: true),
+                  SolButton.text(
+                    label: l10n.m05Reintentar,
+                    onPressed: () => unawaited(notifier.reintentarPerfil()),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+    }
+
     final verificado = estado.verificacion == EstadoVerificacion.verificada;
     final cerrada = ref.watch(pistaBiometriaCerradaProvider);
     final pistaCerrada = ref.read(pistaBiometriaCerradaProvider.notifier);

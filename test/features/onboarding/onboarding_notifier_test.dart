@@ -226,6 +226,54 @@ void main() {
       },
     );
 
+    test('reanudarSesion reintenta si el perfil falla una vez y termina con nombre', () async {
+      c = ProviderContainer(
+        overrides: [
+          fakeOnboardingProvider.overrideWithValue(bff),
+          esperasReintentoPerfilProvider.overrideWithValue(const [
+            Duration.zero,
+            Duration.zero,
+          ]),
+        ],
+      );
+      addTearDown(c.dispose);
+      c.read(onboardingProvider);
+      bff.consultasDePerfilQueFallan = 1;
+
+      await notifier().reanudarSesion();
+
+      expect(estado().perfil, isNotNull);
+      expect(estado().cargandoPerfil, isFalse);
+      expect(estado().fallaPerfil, isNull);
+      expect(bff.operaciones.where((o) => o == 'yo:falla'), hasLength(1));
+    });
+
+    test('reanudarSesion sin red tras los reintentos deja la falla para «Reintentar»', () async {
+      c = ProviderContainer(
+        overrides: [
+          fakeOnboardingProvider.overrideWithValue(bff),
+          esperasReintentoPerfilProvider.overrideWithValue(const [
+            Duration.zero,
+            Duration.zero,
+          ]),
+        ],
+      );
+      addTearDown(c.dispose);
+      c.read(onboardingProvider);
+      bff.consultasDePerfilQueFallan = 3;
+
+      await notifier().reanudarSesion();
+
+      expect(estado().perfil, isNull);
+      expect(estado().cargandoPerfil, isFalse);
+      expect(estado().fallaPerfil, isA<SinConexion>());
+
+      await notifier().reintentarPerfil();
+
+      expect(estado().perfil, isNotNull);
+      expect(estado().fallaPerfil, isNull);
+    });
+
     test('marcarSesionVencida vuelve a «Inicia sesión» con la falla', () {
       notifier().marcarSesionVencida();
 

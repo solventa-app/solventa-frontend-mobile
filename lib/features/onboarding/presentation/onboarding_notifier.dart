@@ -36,6 +36,8 @@ final class OnboardingState {
     this.cuentaCreada = false,
     this.perfil,
     this.sesionCerrada = false,
+    this.cargandoPerfil = false,
+    this.fallaPerfil,
   });
 
   final bool consentimientoMarcado;
@@ -71,6 +73,14 @@ final class OnboardingState {
 
   /// El usuario acaba de cerrar sesión: la pantalla de entrada abre en «Inicia sesión».
   final bool sesionCerrada;
+
+  /// Se está trayendo el perfil y el estado de verificación tras abrir una
+  /// sesión guardada. Mientras tanto el Home no sabe si la cuenta está
+  /// verificada: espera en vez de pintarla como «pendiente» y sin nombre.
+  final bool cargandoPerfil;
+
+  /// Por qué no se pudieron traer tras los reintentos (`null` si no falló).
+  final Falla? fallaPerfil;
 
   /// Intentos que quedan tras un rechazo (0: ya no se puede repetir).
   int get intentosRestantes => onboarding?.intentosRestantes ?? 0;
@@ -108,6 +118,9 @@ final class OnboardingState {
     bool? cuentaCreada,
     PerfilUsuario? perfil,
     bool? sesionCerrada,
+    bool? cargandoPerfil,
+    Falla? fallaPerfil,
+    bool limpiarFallaPerfil = false,
     bool limpiarFalla = false,
     bool limpiarVerificacion = false,
     bool limpiarCredencialesPendientes = false,
@@ -140,6 +153,8 @@ final class OnboardingState {
     cuentaCreada: cuentaCreada ?? this.cuentaCreada,
     perfil: limpiarPerfil ? null : perfil ?? this.perfil,
     sesionCerrada: sesionCerrada ?? this.sesionCerrada,
+    cargandoPerfil: cargandoPerfil ?? this.cargandoPerfil,
+    fallaPerfil: limpiarFallaPerfil ? null : fallaPerfil ?? this.fallaPerfil,
   );
 }
 
@@ -188,13 +203,43 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
 
   /// HU-M02: M02-01 abrió la sesión guardada. Marca la cuenta como abierta
   /// (para que `/` muestre el Home y no el login) y trae perfil y estado.
+  ///
+  /// Perfil y estado se piden con reintentos: la sesión se pinta ya, y una sola
+  /// falla pasajera (la red justo tras el desbloqueo) dejaba el Home como «sin
+  /// verificar» y sin nombre aunque la cuenta lo estuviera.
   Future<void> reanudarSesion() async {
     state = state.copyWith(
       cuentaCreada: true,
       sesionCerrada: false,
       limpiarFalla: true,
     );
-    await cargarPerfilYEstado();
+    await _cargarConReintentos();
+  }
+
+  /// «Reintentar» del Home cuando el perfil no se pudo traer.
+  Future<void> reintentarPerfil() => _cargarConReintentos();
+
+  Future<void> _cargarConReintentos() async {
+    final epoca = _epocaSesion;
+    state = state.copyWith(cargandoPerfil: true, limpiarFallaPerfil: true);
+    final esperas = [
+      Duration.zero,
+      ...ref.read(esperasReintentoPerfilProvider),
+    ];
+    Falla? falla;
+    for (final espera in esperas) {
+      if (espera > Duration.zero) await Future<void>.delayed(espera);
+      if (!ref.mounted || epoca != _epocaSesion) return;
+      falla = await _traerPerfilYEstado(epoca);
+      if (!ref.mounted || epoca != _epocaSesion) return;
+      // Una sesión vencida no se arregla reintentando: el gestor ya la maneja.
+      if (falla == null || falla is SesionVencida) break;
+    }
+    state = state.copyWith(
+      cargandoPerfil: false,
+      fallaPerfil: falla,
+      limpiarFallaPerfil: falla == null,
+    );
   }
 
   void limpiarFalla() => state = state.copyWith(limpiarFalla: true);
@@ -652,15 +697,24 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
 
   /// Refresca el perfil (`yo`) y el estado de `miVerificacion`.
   Future<void> cargarPerfilYEstado() async {
+    await _traerPerfilYEstado(_epocaSesion);
+  }
+
+  /// Una pasada: `null` si las dos consultas respondieron (o la sesión cambió
+  /// a mitad), o la primera falla.
+  Future<Falla?> _traerPerfilYEstado(int epoca) async {
     final repo = ref.read(onboardingRepositoryProvider);
-    final epoca = _epocaSesion;
+    Falla? falla;
     final rPerfil = await repo.consultarPerfil();
-    if (epoca != _epocaSesion) return;
+    if (epoca != _epocaSesion) return null;
     if (rPerfil case Exito(:final valor) when valor != null) {
       state = state.copyWith(perfil: valor, cuentaCreada: true);
+    } else if (rPerfil case Fracaso(falla: final f)) {
+      falla = f;
     }
     final rOnb = await repo.consultar();
-    if (epoca != _epocaSesion) return;
+    if (epoca != _epocaSesion) return null;
+    if (rOnb case Fracaso(falla: final f)) falla ??= f;
     if (rOnb case Exito(:final valor)) {
       state = state.copyWith(
         onboarding: valor,
@@ -672,6 +726,7 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
         },
       );
     }
+    return falla;
   }
 
   /// Cierra la sesión actual y reinicia el estado en memoria.
