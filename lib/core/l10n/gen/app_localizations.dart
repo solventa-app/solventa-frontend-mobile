@@ -2617,6 +2617,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.'**
   String get fallaDispositivoNoValido;
+
+  /// M05-03 título de la lista de ciudades
+  ///
+  /// In es, this message translates to:
+  /// **'Elige la ciudad'**
+  String get m0503CiudadElegir;
+
+  /// M05-03 opción para escribir una ciudad que no está en la lista
+  ///
+  /// In es, this message translates to:
+  /// **'Otra ciudad'**
+  String get m0503CiudadOtra;
 }
 
 class _AppLocalizationsDelegate

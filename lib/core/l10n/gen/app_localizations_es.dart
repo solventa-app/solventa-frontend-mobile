@@ -1518,4 +1518,10 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get fallaDispositivoNoValido =>
       'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.';
+
+  @override
+  String get m0503CiudadElegir => 'Elige la ciudad';
+
+  @override
+  String get m0503CiudadOtra => 'Otra ciudad';
 }

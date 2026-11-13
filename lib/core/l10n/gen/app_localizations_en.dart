@@ -1515,4 +1515,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fallaDispositivoNoValido =>
       'We could not verify this phone. Sign in with your email and password.';
+
+  @override
+  String get m0503CiudadElegir => 'Choose the city';
+
+  @override
+  String get m0503CiudadOtra => 'Another city';
 }
