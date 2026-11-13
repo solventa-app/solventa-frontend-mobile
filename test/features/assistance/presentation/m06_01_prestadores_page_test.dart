@@ -6,18 +6,21 @@ import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/core/ubicacion/ubicacion_service.dart';
 import 'package:solventa_mobile/features/assistance/data/datasources/asistencia_remote_datasource.dart';
 import 'package:solventa_mobile/features/assistance/data/datasources/catalogo_local_datasource.dart';
+import 'package:solventa_mobile/features/assistance/data/datasources/permiso_pedido_store.dart';
 import 'package:solventa_mobile/features/assistance/data/datasources/ruta_externa_service.dart';
 import 'package:solventa_mobile/features/assistance/domain/entities/prestador.dart';
 import 'package:solventa_mobile/features/assistance/presentation/pages/m06_01_prestadores_page.dart';
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
-import 'package:solventa_mobile/features/assistance/presentation/widgets/mapa_prestadores.dart';
+import 'package:solventa_mobile/features/assistance/presentation/widgets/detalle_prestador.dart';
+import 'package:solventa_mobile/features/assistance/presentation/widgets/mapa/mapa_prestadores.dart';
 
 void main() {
   late FakeAsistenciaRemoteDataSource bff;
   late FakeUbicacionService gps;
   late FakeRutaExternaService rutas;
   late List<Prestador> solicitados;
-  late List<Prestador> conDireccion;
+  late List<String?> direcciones;
+  late MemoriaPermisoPedidoStore permisoPedido;
 
   Future<void> abrir(WidgetTester tester) async {
     tester.view.physicalSize = const Size(390, 748);
@@ -32,7 +35,8 @@ void main() {
           ),
           ubicacionServiceProvider.overrideWithValue(gps),
           rutaExternaServiceProvider.overrideWithValue(rutas),
-          plantillaTeselasProvider.overrideWithValue(''),
+          motorMapaProvider.overrideWithValue(MotorMapa.falso),
+          permisoPedidoProvider.overrideWithValue(permisoPedido),
         ],
         child: MaterialApp(
           theme: SolTheme.light(),
@@ -41,8 +45,10 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           home: Scaffold(
             body: M0601PrestadoresPage(
-              onSolicitar: (c, _) => solicitados.add(c.prestador),
-              onSolicitarConDireccion: conDireccion.add,
+              onSolicitar: (c, _, direccion) {
+                solicitados.add(c.prestador);
+                direcciones.add(direccion);
+              },
             ),
           ),
         ),
@@ -56,17 +62,160 @@ void main() {
     gps = FakeUbicacionService();
     rutas = FakeRutaExternaService();
     solicitados = [];
-    conDireccion = [];
+    direcciones = [];
+    permisoPedido = MemoriaPermisoPedidoStore(pedido: true);
   });
 
-  testWidgets('CA-M06-01: muestra los 3 prestadores con distancia y tiempo', (
+  List<String> nombresDeFilas(WidgetTester tester) => tester
+      .widgetList<SolProviderRow>(find.byType(SolProviderRow))
+      .map((r) => r.name)
+      .toList();
+
+  testWidgets('CA-M06-01: los 3 más cercanos primero, con distancia y tiempo', (
     tester,
   ) async {
     await abrir(tester);
     expect(find.text('Prestadores cercanos'), findsOneWidget);
-    expect(find.text('3 disponibles'), findsOneWidget);
-    expect(find.byType(SolProviderRow), findsNWidgets(3));
+    // M1: la zona entera cuenta (8 en Bogotá), los 3 primeros son los del Figma.
+    expect(find.text('8 disponibles'), findsOneWidget);
+    expect(nombresDeFilas(tester).take(3), [
+      'Clínica Norte',
+      'Taller AutoAyuda',
+      'Centro Médico Sur',
+    ]);
     expect(find.textContaining('Médico · 1,1'), findsOneWidget);
+  });
+
+  testWidgets('M1 y M9: el resto de la ciudad, aproximado si no hay rutas', (
+    tester,
+  ) async {
+    bff.rutasCaidas = true;
+    await abrir(tester);
+    final mas = find.text('Más prestadores en tu ciudad');
+    await tester.scrollUntilVisible(
+      mas,
+      100,
+      scrollable: find.byType(Scrollable).last,
+    );
+    expect(mas, findsOneWidget);
+    expect(find.textContaining('~'), findsWidgets);
+    expect(nombresDeFilas(tester), contains('Grúas Express'));
+  });
+
+  testWidgets('M15: rutas tipo semáforo de los 3 destacados y sus tiempos', (
+    tester,
+  ) async {
+    await abrir(tester);
+    final datos = tester
+        .widget<MapaPrestadores>(find.byType(MapaPrestadores))
+        .datos;
+    expect(datos.rutas.map((r) => r.prestadorId), [
+      'prs-bog-001',
+      'prs-bog-002',
+      'prs-bog-003',
+    ]);
+    expect(datos.rutas.every((r) => r.puntos.length == 2), isTrue);
+    // Con rutas, los tiempos salen de ellas y no llevan «~».
+    expect(find.textContaining('~'), findsNothing);
+    expect(semaforoDe(datos.rutas.first.minutos), Semaforo.verde);
+  });
+
+  testWidgets('M15: sin rutas del backend, sin líneas y tiempos con «~»', (
+    tester,
+  ) async {
+    bff.rutasCaidas = true;
+    await abrir(tester);
+    final datos = tester
+        .widget<MapaPrestadores>(find.byType(MapaPrestadores))
+        .datos;
+    expect(datos.rutas, isEmpty);
+    expect(
+      find.textContaining(RegExp(r'Médico · 1,1\skm · ~')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('M4: tocar un pin lo selecciona y abre el detalle', (
+    tester,
+  ) async {
+    final semantica = tester.ensureSemantics();
+    await abrir(tester);
+    await tester.tap(find.bySemanticsLabel(RegExp('^Taller AutoAyuda, ')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DetallePrestador), findsOneWidget);
+    expect(find.text('Mecánico · Mecánica general'), findsOneWidget);
+    expect(find.text('Aliado Solventa'), findsOneWidget);
+    expect(find.textContaining(RegExp(r'llega en \d+\smin')), findsOneWidget);
+
+    await tester.tap(find.text('Cómo llegar'));
+    await tester.pump();
+    expect(rutas.abiertas, hasLength(1));
+
+    await tester.tap(find.text('Solicitar asistencia'));
+    await tester.pumpAndSettle();
+    expect(solicitados.single.nombre, 'Taller AutoAyuda');
+    expect(find.byType(DetallePrestador), findsNothing);
+    // Al cerrar, la fila queda marcada.
+    final fila = tester
+        .widgetList<SolProviderRow>(find.byType(SolProviderRow))
+        .firstWhere((r) => r.name == 'Taller AutoAyuda');
+    expect(fila.selected, isTrue);
+    semantica.dispose();
+  });
+
+  testWidgets('M5: tocar la fila enfoca el pin sin abrir el detalle', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await tester.tap(find.textContaining('Médico · 1,1'));
+    await tester.pumpAndSettle();
+    expect(find.byType(DetallePrestador), findsNothing);
+    final mapa = tester.widget<MapaPrestadores>(find.byType(MapaPrestadores));
+    expect(mapa.datos.seleccionadoId, 'prs-bog-001');
+    expect(mapa.orden, isA<EnfocarPrestador>());
+    // M8: tras enfocar aparece «Volver a centrar»; al tocarlo, encuadra.
+    await tester.tap(find.bySemanticsLabel('Volver a centrar en mi ubicación'));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<MapaPrestadores>(find.byType(MapaPrestadores)).orden,
+      isA<EncuadrarInicio>(),
+    );
+    expect(
+      find.bySemanticsLabel('Volver a centrar en mi ubicación'),
+      findsNothing,
+    );
+  });
+
+  testWidgets('M14: el botón de capas alterna calles y satélite', (
+    tester,
+  ) async {
+    await abrir(tester);
+    EstiloMapa estilo() => tester
+        .widget<MapaPrestadores>(find.byType(MapaPrestadores))
+        .datos
+        .estilo;
+    expect(estilo(), EstiloMapa.calles);
+    await tester.tap(find.bySemanticsLabel('Ver satélite'));
+    await tester.pumpAndSettle();
+    expect(estilo(), EstiloMapa.satelite);
+    expect(find.bySemanticsLabel('Ver calles'), findsOneWidget);
+  });
+
+  testWidgets('M13: sin app de mapas, aviso con la dirección y «Copiar»', (
+    tester,
+  ) async {
+    rutas.resultado = false;
+    final semantica = tester.ensureSemantics();
+    await abrir(tester);
+    await tester.tap(find.bySemanticsLabel(RegExp('^Clínica Norte, ')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cómo llegar'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.textContaining('Cl. 93 # 14-20'), findsWidgets);
+    expect(find.text('Copiar'), findsOneWidget);
+    semantica.dispose();
   });
 
   testWidgets('«Solicitar» entrega el prestador de la fila', (tester) async {
@@ -75,79 +224,123 @@ void main() {
     expect(solicitados.single.nombre, 'Clínica Norte');
   });
 
-  testWidgets('tocar el pin abre la ruta en la app de mapas', (tester) async {
-    final semantica = tester.ensureSemantics();
-    await abrir(tester);
-    await tester.tap(find.bySemanticsLabel(RegExp('Cómo llegar a Taller')));
-    await tester.pump();
-    expect(rutas.abiertas, hasLength(1));
-    semantica.dispose();
-  });
-
-  testWidgets('sin prestadores, la hoja lo dice en lugar de quedar vacía', (
+  testWidgets('M11: fuera de cobertura, el mapa con el cliente y el aviso', (
     tester,
   ) async {
     // El emulador arranca en California: ningún prestador a menos de 50 km.
     gps.resultado = const UbicacionObtenida(Coordenada(37.422, -122.084));
     await abrir(tester);
-    expect(
-      find.text('No hay prestadores disponibles cerca de ti en este momento.'),
-      findsOneWidget,
-    );
+    expect(find.text('Aún no tenemos prestadores en tu zona.'), findsOneWidget);
     expect(find.byType(SolProviderRow), findsNothing);
+    expect(find.byType(MapaPrestadores), findsOneWidget);
+    expect(find.byType(SolMapUserPin), findsOneWidget);
   });
 
-  testWidgets('CA-M06-02: sin permiso ofrece permitir la ubicación', (
+  testWidgets('2.0: la primera vez explica antes del diálogo del sistema', (
+    tester,
+  ) async {
+    permisoPedido.pedido = false;
+    gps.estadoInicial = EstadoUbicacion.sinPermiso;
+    await abrir(tester);
+    expect(find.text('Necesitamos tu ubicación'), findsOneWidget);
+    expect(find.text('Permitir ubicación'), findsOneWidget);
+    expect(find.text('Escribir mi dirección'), findsOneWidget);
+
+    gps.estadoInicial = null;
+    await tester.tap(find.text('Permitir ubicación'));
+    await tester.pumpAndSettle();
+    expect(permisoPedido.pedido, isTrue);
+    expect(nombresDeFilas(tester).first, 'Clínica Norte');
+  });
+
+  testWidgets('2.0: negado una vez, «Permitir ubicación» lo vuelve a pedir', (
     tester,
   ) async {
     gps.resultado = const UbicacionSinPermiso(permanente: false);
     await abrir(tester);
+    expect(find.text('No tenemos tu ubicación'), findsOneWidget);
     expect(find.text('Permitir ubicación'), findsOneWidget);
 
     gps.resultado = const UbicacionObtenida(Coordenada(4.6767, -74.0483));
     await tester.tap(find.text('Permitir ubicación'));
     await tester.pumpAndSettle();
-    expect(find.byType(SolProviderRow), findsNWidgets(3));
+    expect(nombresDeFilas(tester).first, 'Clínica Norte');
   });
 
+  testWidgets('2.0: negado para siempre, «Abrir Ajustes»', (tester) async {
+    gps.resultado = const UbicacionSinPermiso(permanente: true);
+    await abrir(tester);
+    expect(find.text('Abrir Ajustes'), findsOneWidget);
+    expect(find.text('Escribir mi dirección'), findsOneWidget);
+  });
+
+  testWidgets('2.0: GPS apagado, «Activar ubicación»', (tester) async {
+    gps.resultado = const UbicacionNoDisponible();
+    await abrir(tester);
+    expect(find.text('Tu GPS está apagado'), findsOneWidget);
+    expect(find.text('Activar ubicación'), findsOneWidget);
+  });
+
+  Future<void> escribirDireccion(WidgetTester tester, String texto) async {
+    await tester.tap(find.text('Escribir mi dirección'));
+    await tester.pumpAndSettle();
+    expect(find.text('¿Dónde estás?'), findsOneWidget);
+    await tester.enterText(find.byType(TextField).last, texto);
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pumpAndSettle();
+  }
+
   testWidgets(
-    'CA-M06-02: sin permiso se puede seguir con la dirección a mano',
+    '2.0: con la dirección escrita el mapa funciona igual y la solicitud la lleva',
     (tester) async {
       gps.resultado = const UbicacionSinPermiso(permanente: true);
       await abrir(tester);
-      await tester.tap(find.text('Escribir mi dirección'));
+      await escribirDireccion(tester, 'Cra 45 # 22-18');
+      expect(find.text('Cra 45 # 22-18, Bogotá, Cundinamarca'), findsOneWidget);
+      await tester.tap(find.text('Cra 45 # 22-18, Bogotá, Cundinamarca'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Elige un prestador'), findsOneWidget);
-      expect(find.byType(MapaPrestadores), findsNothing);
-      final filas = find.byType(SolProviderRow);
-      expect(filas, findsWidgets);
-      // Sin coordenadas no hay tiempo: la fila dice la ciudad.
-      expect(find.textContaining(' min'), findsNothing);
-      expect(find.textContaining('Bogotá'), findsWidgets);
+      expect(find.text('Usando: Cra 45 # 22-18'), findsOneWidget);
+      expect(find.text('Cambiar'), findsOneWidget);
+      expect(find.text('Dirección escrita'), findsOneWidget);
+      expect(nombresDeFilas(tester).first, 'Clínica Norte');
+      expect(find.textContaining(RegExp(r'\d+\smin')), findsWidgets);
 
       await tester.tap(find.text('Solicitar').first);
-      expect(conDireccion, hasLength(1));
-      expect(solicitados, isEmpty);
+      expect(direcciones.single, 'Cra 45 # 22-18');
     },
   );
 
-  testWidgets('CA-M06-02: con el GPS apagado también, y se puede volver a él', (
+  testWidgets('2.0: una dirección que no existe muestra el mensaje', (
     tester,
   ) async {
     gps.resultado = const UbicacionNoDisponible();
     await abrir(tester);
-    await tester.tap(find.text('Escribir mi dirección'));
+    await escribirDireccion(tester, 'calle noexiste');
+    await tester.tap(find.text('Buscar esta dirección'));
     await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'No pudimos ubicar esa dirección. Prueba con otra o con un punto de '
+        'referencia',
+      ),
+      findsOneWidget,
+    );
+  });
 
-    gps.resultado = const UbicacionObtenida(Coordenada(4.6767, -74.0483));
-    final volver = find.text('Usar mi ubicación');
-    await tester.ensureVisible(volver);
+  testWidgets('2.0: si Places no responde, se puede intentar de nuevo', (
+    tester,
+  ) async {
+    bff.lugaresCaidos = true;
+    gps.resultado = const UbicacionNoDisponible();
+    await abrir(tester);
+    await escribirDireccion(tester, 'Cra 45');
+    await tester.tap(find.text('Buscar esta dirección'));
     await tester.pumpAndSettle();
-    await tester.tap(volver);
-    await tester.pumpAndSettle();
-    expect(find.byType(MapaPrestadores), findsOneWidget);
-    expect(find.byType(SolProviderRow), findsNWidgets(3));
+    expect(
+      find.text('No pudimos buscar direcciones ahora. Intenta de nuevo'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('CA-M06-04: si el mapa falla queda la lista, no un error', (
@@ -158,16 +351,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(MapaPrestadores), findsNothing);
-    expect(find.byType(SolProviderRow), findsNWidgets(3));
+    expect(find.byType(SolMapFab), findsNothing);
+    expect(nombresDeFilas(tester).take(3), hasLength(3));
     expect(find.text('Prestadores cercanos'), findsOneWidget);
-  });
-
-  testWidgets('permiso negado para siempre o GPS apagado: «Abrir ajustes»', (
-    tester,
-  ) async {
-    gps.resultado = const UbicacionNoDisponible();
-    await abrir(tester);
-    expect(find.textContaining('ubicación está desactivada'), findsOneWidget);
-    expect(find.text('Abrir ajustes'), findsOneWidget);
   });
 }

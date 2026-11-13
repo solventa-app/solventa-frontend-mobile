@@ -13,6 +13,8 @@ opciones=(
   --release
   --flavor prod
   --dart-define-from-file=config/prod.json
+  # HU-M06 (M0): token público de Mapbox desde el secreto MAPBOX_PUBLIC_TOKEN; vacío = sin mapa.
+  --dart-define=MAPBOX_ACCESS_TOKEN="${MAPBOX_PUBLIC_TOKEN:-}"
   --obfuscate
   --split-debug-info=build-symbols
   --build-name="$nombre"

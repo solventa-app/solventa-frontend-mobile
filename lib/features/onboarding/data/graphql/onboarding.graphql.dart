@@ -8956,10 +8956,12 @@ class Variables$Mutation$IniciarSesionConDispositivo {
     required String dispositivoId,
     required String reto,
     required String firma,
+    Input$DispositivoPushInput? dispositivo,
   }) => Variables$Mutation$IniciarSesionConDispositivo._({
     r'dispositivoId': dispositivoId,
     r'reto': reto,
     r'firma': firma,
+    if (dispositivo != null) r'dispositivo': dispositivo,
   });
 
   Variables$Mutation$IniciarSesionConDispositivo._(this._$data);
@@ -8974,6 +8976,14 @@ class Variables$Mutation$IniciarSesionConDispositivo {
     result$data['reto'] = (l$reto as String);
     final l$firma = data['firma'];
     result$data['firma'] = (l$firma as String);
+    if (data.containsKey('dispositivo')) {
+      final l$dispositivo = data['dispositivo'];
+      result$data['dispositivo'] = l$dispositivo == null
+          ? null
+          : Input$DispositivoPushInput.fromJson(
+              (l$dispositivo as Map<String, dynamic>),
+            );
+    }
     return Variables$Mutation$IniciarSesionConDispositivo._(result$data);
   }
 
@@ -8985,6 +8995,9 @@ class Variables$Mutation$IniciarSesionConDispositivo {
 
   String get firma => (_$data['firma'] as String);
 
+  Input$DispositivoPushInput? get dispositivo =>
+      (_$data['dispositivo'] as Input$DispositivoPushInput?);
+
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$dispositivoId = dispositivoId;
@@ -8993,6 +9006,10 @@ class Variables$Mutation$IniciarSesionConDispositivo {
     result$data['reto'] = l$reto;
     final l$firma = firma;
     result$data['firma'] = l$firma;
+    if (_$data.containsKey('dispositivo')) {
+      final l$dispositivo = dispositivo;
+      result$data['dispositivo'] = l$dispositivo?.toJson();
+    }
     return result$data;
   }
 
@@ -9020,6 +9037,15 @@ class Variables$Mutation$IniciarSesionConDispositivo {
     if (l$firma != lOther$firma) {
       return false;
     }
+    final l$dispositivo = dispositivo;
+    final lOther$dispositivo = other.dispositivo;
+    if (_$data.containsKey('dispositivo') !=
+        other._$data.containsKey('dispositivo')) {
+      return false;
+    }
+    if (l$dispositivo != lOther$dispositivo) {
+      return false;
+    }
     return true;
   }
 
@@ -9028,7 +9054,13 @@ class Variables$Mutation$IniciarSesionConDispositivo {
     final l$dispositivoId = dispositivoId;
     final l$reto = reto;
     final l$firma = firma;
-    return Object.hashAll([l$dispositivoId, l$reto, l$firma]);
+    final l$dispositivo = dispositivo;
+    return Object.hashAll([
+      l$dispositivoId,
+      l$reto,
+      l$firma,
+      _$data.containsKey('dispositivo') ? l$dispositivo : const {},
+    ]);
   }
 }
 
@@ -9122,6 +9154,15 @@ const documentNodeMutationIniciarSesionConDispositivo = DocumentNode(
           defaultValue: DefaultValueNode(value: null),
           directives: [],
         ),
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'dispositivo')),
+          type: NamedTypeNode(
+            name: NameNode(value: 'DispositivoPushInput'),
+            isNonNull: false,
+          ),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
       ],
       directives: [],
       selectionSet: SelectionSetNode(
@@ -9141,6 +9182,10 @@ const documentNodeMutationIniciarSesionConDispositivo = DocumentNode(
               ArgumentNode(
                 name: NameNode(value: 'firma'),
                 value: VariableNode(name: NameNode(value: 'firma')),
+              ),
+              ArgumentNode(
+                name: NameNode(value: 'dispositivo'),
+                value: VariableNode(name: NameNode(value: 'dispositivo')),
               ),
             ],
             directives: [],

@@ -8,6 +8,7 @@ import 'package:solventa_mobile/features/onboarding/data/datasources/fake_onboar
 import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/providers.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/widgets/onboarding_widgets.dart';
 
 import '../../helpers/sol_test_app.dart';
 
@@ -126,7 +127,7 @@ void main() {
   ) async {
     await abrir(tester);
     await hastaPruebaDeVida(tester);
-    await tester.tap(find.text('Continuar'));
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
     expect(
       find.text('¡Identidad verificada! Bienvenido a Solventa.'),
@@ -145,7 +146,7 @@ void main() {
   ) async {
     await abrir(tester);
     await hastaPruebaDeVida(tester);
-    await tester.tap(find.text('Continuar'));
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ir al inicio'));
     await tester.pumpAndSettle();
@@ -156,7 +157,7 @@ void main() {
   testWidgets('M01-08 no deja seguir sin bloqueo de pantalla', (tester) async {
     await abrir(tester, biometria: false);
     await hastaPruebaDeVida(tester);
-    await tester.tap(find.text('Continuar'));
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Activar huella o rostro'));
     await tester.pumpAndSettle();
@@ -176,7 +177,7 @@ void main() {
     await abrir(tester);
     await hastaPruebaDeVida(tester);
     bff.resultado = OnboardingFixtures.onboarding(estado: 'EN_REVISION');
-    await tester.tap(find.text('Continuar'));
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
     expect(
       find.text('Estamos revisando tu identidad, te avisamos.'),
@@ -195,7 +196,7 @@ void main() {
         intento: 1,
         intentosRestantes: 2,
       );
-      await tester.tap(find.text('Continuar'));
+      await tester.tap(find.text('Grabar video'));
       await tester.pumpAndSettle();
       expect(
         find.textContaining('No pudimos verificar tu documento'),
@@ -386,8 +387,16 @@ void main() {
     // El token del recorrido (30 min) ya no sirve: toda subida falla.
     bff.respuestaSubida = OnboardingFixtures.subidaTokenInvalido;
     await hastaPruebaDeVida(tester);
-    await tester.tap(find.text('Continuar'));
+    // M01-05: antes de grabar explica el video y pide mover la cabeza.
+    expect(find.textContaining('grabaremos 3 segundos'), findsOneWidget);
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
+    // Con la selfie y el video tomados la cámara se cierra.
+    expect(find.byType(SolLiveCameraFrame), findsNothing);
+    expect(
+      find.text('Listo, ya tenemos tu selfie y tu video.'),
+      findsOneWidget,
+    );
     expect(find.text('Tu registro venció. Empieza de nuevo.'), findsOneWidget);
     await tester.tap(find.text('Empezar de nuevo'));
     await tester.pumpAndSettle();
@@ -442,7 +451,7 @@ void main() {
       intento: 3,
       intentosRestantes: 0,
     );
-    await tester.tap(find.text('Continuar'));
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Ya no quedan intentos'), findsOneWidget);
     expect(find.text('Reintentar'), findsNothing);

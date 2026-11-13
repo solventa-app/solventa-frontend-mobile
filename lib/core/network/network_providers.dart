@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sentry_dio/sentry_dio.dart';
 
 import '../config/app_config.dart';
+import '../l10n/l10n.dart';
 import '../sesion/gestor_sesion.dart';
 import '../sesion/llavero_sesion.dart';
 import '../sesion/sesion_remota.dart';
@@ -62,7 +63,10 @@ final sesionStoreProvider = Provider<SesionStore>(
 /// Cliente para `renovarSesion` y `cerrarSesion`: sin token ni renovación
 /// automática (si renovar falla por sesión, no se vuelve a renovar).
 final graphqlClientSesionProvider = Provider<GraphqlClient>(
-  (ref) => GraphqlClient(ref.watch(dioProvider)),
+  (ref) => GraphqlClient(
+    ref.watch(dioProvider),
+    leerIdioma: () => ref.read(localeProvider).languageCode,
+  ),
 );
 
 final sesionRemotaProvider = Provider<SesionRemota>(
@@ -92,6 +96,7 @@ final graphqlClientProvider = Provider<GraphqlClient>((ref) {
   final gestor = ref.watch(gestorSesionProvider);
   return GraphqlClient(
     ref.watch(dioProvider),
+    leerIdioma: () => ref.read(localeProvider).languageCode,
     leerToken: ref.watch(lectorTokenProvider),
     renovarSesion: () async =>
         await gestor.renovar() == ResultadoRenovar.renovada,

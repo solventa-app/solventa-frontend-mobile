@@ -273,6 +273,8 @@ abstract final class AsistenciaFixtures {
     String? motivo,
     String solicitadaEn = '2026-11-07T15:00:00+00:00',
     String? canceladaEn,
+    String? confirmadaEn,
+    String? llegadaEstimada,
   }) => {
     '__typename': 'Asistencia',
     'id': id,
@@ -282,6 +284,8 @@ abstract final class AsistenciaFixtures {
     'motivo': motivo,
     'solicitadaEn': solicitadaEn,
     'canceladaEn': canceladaEn,
+    'confirmadaEn': confirmadaEn,
+    'llegadaEstimada': llegadaEstimada,
     'prestador': {'__typename': 'Prestador', ...(prestador ?? prestadores[0])},
   };
 

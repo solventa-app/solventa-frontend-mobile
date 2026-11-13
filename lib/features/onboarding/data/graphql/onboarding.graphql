@@ -249,8 +249,18 @@ mutation DesafioDispositivo($dispositivoId: ID!) {
   }
 }
 
-mutation IniciarSesionConDispositivo($dispositivoId: ID!, $reto: String!, $firma: String!) {
-  iniciarSesionConDispositivo(dispositivoId: $dispositivoId, reto: $reto, firma: $firma) {
+mutation IniciarSesionConDispositivo(
+  $dispositivoId: ID!
+  $reto: String!
+  $firma: String!
+  $dispositivo: DispositivoPushInput
+) {
+  iniciarSesionConDispositivo(
+    dispositivoId: $dispositivoId
+    reto: $reto
+    firma: $firma
+    dispositivo: $dispositivo
+  ) {
     __typename
     ... on Sesion {
       token

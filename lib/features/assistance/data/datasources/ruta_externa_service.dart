@@ -8,37 +8,47 @@ abstract interface class RutaExternaService {
   Future<bool> abrirRuta(Coordenada destino, {required String nombre});
 }
 
-/// Usa el intent `geo:` de Android: abre la app de mapas por defecto o, si hay
-/// varias (Google Maps, Waze…), el selector del sistema. Si ninguna lo atiende,
-/// abre la ruta de Google Maps en el navegador.
+/// «Cómo llegar» sin selector de apps (HU-M06, M13), en este orden:
+/// 1. el enlace universal de Google Maps en una app que no sea el navegador
+///    (`externalNonBrowserApplication`): abre Google Maps directo;
+/// 2. el intent `geo:`, si no hay Google Maps (otra app de mapas, Waze…);
+/// 3. el mismo enlace en el navegador predeterminado.
+/// Si nada abre, devuelve `false` y la pantalla ofrece copiar la dirección.
+/// El `AndroidManifest.xml` declara los `<queries>` de `https` y `geo`.
 final class UrlLauncherRutaExternaService implements RutaExternaService {
   const UrlLauncherRutaExternaService();
 
   @override
   Future<bool> abrirRuta(Coordenada destino, {required String nombre}) async {
-    for (final uri in urisRuta(destino, nombre: nombre)) {
+    for (final (uri, modo) in intentosRuta(destino, nombre: nombre)) {
       try {
-        if (await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-          return true;
-        }
+        if (await launchUrl(uri, mode: modo)) return true;
       } on Exception {
-        // Sin app que atienda este esquema: se prueba el siguiente.
+        // Sin app que atienda este intento: se prueba el siguiente.
       }
     }
     return false;
   }
 }
 
-/// URIs en orden de preferencia (visible para pruebas).
-List<Uri> urisRuta(Coordenada destino, {required String nombre}) {
+/// Intentos en orden de preferencia (visible para pruebas).
+List<(Uri, LaunchMode)> intentosRuta(
+  Coordenada destino, {
+  required String nombre,
+}) {
   final punto = '${destino.latitud},${destino.longitud}';
+  final web = Uri.https('www.google.com', '/maps/dir/', {
+    'api': '1',
+    'destination': punto,
+    'travelmode': 'driving',
+  });
   return [
-    Uri.parse('geo:$punto?q=$punto(${Uri.encodeComponent(nombre)})'),
-    Uri.https('www.google.com', '/maps/dir/', {
-      'api': '1',
-      'destination': punto,
-      'travelmode': 'driving',
-    }),
+    (web, LaunchMode.externalNonBrowserApplication),
+    (
+      Uri.parse('geo:$punto?q=$punto(${Uri.encodeComponent(nombre)})'),
+      LaunchMode.externalApplication,
+    ),
+    (web, LaunchMode.externalApplication),
   ];
 }
 
