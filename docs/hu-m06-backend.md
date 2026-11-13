@@ -37,7 +37,8 @@ Consecuencias para el plan:
 
 - **KAN-263 se simplifica**: ya no es «API que calcula los 3 más cercanos» sino «catálogo maestro sembrado + consulta
   versionada». No hace falta el proveedor de mapas en el ACL ni su circuit breaker (decisión D-M06: la app dibuja el mapa
-  con `flutter_map` y OpenStreetMap, sin clave).
+  con `flutter_map` y OpenStreetMap, sin clave). **Cambió el 2026-11-10:** el mapa es de Mapbox (`mapbox_maps_flutter`)
+  y las rutas irán por el ACL (plan de pendientes, M0 y B8).
 - **Privacidad**: la ubicación del cliente no viaja al backend para listar prestadores (Ley 1581, minimización). Solo
   viajará cuando el cliente **solicite** la asistencia (sección 6).
 - **EC011/EC012** (p95 ≤ 150 ms, p99 ≤ 300 ms) aplican a `catalogoPrestadores`, que es una lectura de una colección

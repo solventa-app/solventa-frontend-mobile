@@ -812,7 +812,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0601SinPrestadores =>
-      'There are no providers available near you right now.';
+      'We don\'t have providers in your area yet.';
 
   @override
   String get m0601SinPermiso =>
@@ -848,16 +848,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0601TuUbicacion => 'Your location';
 
   @override
-  String m0601ComoLlegar(String nombre, String tiempo) {
-    return 'Directions to $nombre, $tiempo';
-  }
-
-  @override
   String get m0601RutaNoDisponible =>
       'We couldn\'t find a maps app to open the route.';
 
   @override
-  String get m0601Atribucion => '© OpenStreetMap contributors';
+  String m0601PinSemantica(String nombre, String tipo, String tiempo) {
+    return '$nombre, $tipo, $tiempo';
+  }
+
+  @override
+  String get m0601VerSatelite => 'Show satellite';
+
+  @override
+  String get m0601VerCalles => 'Show streets';
+
+  @override
+  String get m0601Recentrar => 'Re-center on my location';
+
+  @override
+  String get m0601ExpandirLista => 'Expand list';
+
+  @override
+  String get m0601ContraerLista => 'Collapse list';
+
+  @override
+  String get m0601MasPrestadores => 'More providers in your city';
+
+  @override
+  String m0601Aproximado(String tiempo) {
+    return '~$tiempo';
+  }
+
+  @override
+  String m0601DetalleTipo(String tipo, String especialidad) {
+    return '$tipo · $especialidad';
+  }
+
+  @override
+  String m0601DetalleLlegada(String distancia, String tiempo) {
+    return '$distancia · arrives in $tiempo';
+  }
+
+  @override
+  String get m0601SolicitarAsistencia => 'Request assistance';
+
+  @override
+  String get m0601ComoLlegarBoton => 'Get directions';
+
+  @override
+  String get m0601DireccionCopiada => 'Address copied';
+
+  @override
+  String get m0601CopiarDireccion => 'Long-press to copy the address';
+
+  @override
+  String get m0601Copiar => 'Copy';
+
+  @override
+  String get m0601Cerrar => 'Close';
 
   @override
   String get homeReportarTile => 'Report a claim';

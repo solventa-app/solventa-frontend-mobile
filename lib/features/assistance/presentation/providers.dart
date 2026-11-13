@@ -10,9 +10,11 @@ import '../data/datasources/catalogo_local_datasource.dart';
 import '../data/datasources/ruta_externa_service.dart';
 import '../data/repositories/asistencia_repository_impl.dart';
 import '../domain/repositories/asistencia_repository.dart';
+import 'estilo_mapa_notifier.dart';
 import 'prestadores_notifier.dart';
 import 'prestadores_state.dart';
 import 'solicitud_notifier.dart';
+import 'widgets/mapa/mapa_datos.dart';
 
 bool get _enPruebas => Platform.environment.containsKey('FLUTTER_TEST');
 
@@ -51,10 +53,18 @@ final rutaExternaServiceProvider = Provider<RutaExternaService>(
   (ref) => const UrlLauncherRutaExternaService(),
 );
 
-/// Plantilla de teselas del mapa (`MAP_TILE_URL`). Vacía = sin teselas
-/// (pruebas y goldens, sin red).
-final plantillaTeselasProvider = Provider<String>(
-  (ref) => _enPruebas ? '' : AppConfig.mapTileUrl,
+/// Qué dibuja el mapa de M06-01 (M0): Mapbox con token; el mapa falso en
+/// pruebas y con `API_ENV=mock` sin token; y fuera de mock sin token, solo la
+/// lista (como si el mapa fallara, CA-M06-04).
+final motorMapaProvider = Provider<MotorMapa>((ref) {
+  if (_enPruebas) return MotorMapa.falso;
+  if (AppConfig.mapboxAccessToken.isNotEmpty) return MotorMapa.mapbox;
+  return ref.watch(usarFakesProvider) ? MotorMapa.falso : MotorMapa.ninguno;
+});
+
+/// Calles o satélite (M14), recordado entre sesiones.
+final estiloMapaProvider = NotifierProvider<EstiloMapaNotifier, EstiloMapa>(
+  EstiloMapaNotifier.new,
 );
 
 final prestadoresProvider =

@@ -9,6 +9,7 @@ import 'package:solventa_mobile/features/assistance/data/fixtures/asistencia_fix
 import 'package:solventa_mobile/features/assistance/data/mappers/prestador_mapper.dart';
 import 'package:solventa_mobile/features/assistance/data/repositories/asistencia_repository_impl.dart';
 import 'package:solventa_mobile/features/assistance/domain/entities/prestador.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Map<String, Object?> _mapa(String id, {String tipo = 'MEDICO', bool? activo}) =>
     {
@@ -158,18 +159,20 @@ void main() {
     });
   });
 
-  test(
-    'la ruta usa primero geo: (app de mapas por defecto) y luego la web',
-    () {
-      final uris = urisRuta(
-        const Coordenada(4.7, -74.1),
-        nombre: 'Clínica Norte',
-      );
-      expect(uris.first.scheme, 'geo');
-      expect(uris.first.toString(), contains('4.7,-74.1'));
-      expect(uris.first.toString(), contains('Cl%C3%ADnica%20Norte'));
-      expect(uris.last.host, 'www.google.com');
-      expect(uris.last.queryParameters['destination'], '4.7,-74.1');
-    },
-  );
+  test('M13: Google Maps directo, luego geo: y al final el navegador, sin selector', () {
+    final intentos = intentosRuta(
+      const Coordenada(4.7, -74.1),
+      nombre: 'Clínica Norte',
+    );
+    final (google, modoGoogle) = intentos[0];
+    expect(google.host, 'www.google.com');
+    expect(google.queryParameters['destination'], '4.7,-74.1');
+    expect(modoGoogle, LaunchMode.externalNonBrowserApplication);
+    final (geo, _) = intentos[1];
+    expect(geo.scheme, 'geo');
+    expect(geo.toString(), contains('Cl%C3%ADnica%20Norte'));
+    final (web, modoWeb) = intentos[2];
+    expect(web, google);
+    expect(modoWeb, LaunchMode.externalApplication);
+  });
 }

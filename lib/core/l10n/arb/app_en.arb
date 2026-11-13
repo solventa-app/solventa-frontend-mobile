@@ -283,7 +283,7 @@
   "@m0601Buscando": {
     "description": "M06-01 cargando"
   },
-  "m0601SinPrestadores": "There are no providers available near you right now.",
+  "m0601SinPrestadores": "We don't have providers in your area yet.",
   "@m0601SinPrestadores": {
     "description": "M06-01 lista vacía"
   },
@@ -315,11 +315,18 @@
   "@m0601TuUbicacion": {
     "description": "M06-01 lectura del pin del cliente"
   },
-  "m0601ComoLlegar": "Directions to {nombre}, {tiempo}",
-  "@m0601ComoLlegar": {
-    "description": "M06-01 lectura del pin de prestador; abre la app de mapas",
+  "m0601RutaNoDisponible": "We couldn't find a maps app to open the route.",
+  "@m0601RutaNoDisponible": {
+    "description": "M06-01 sin app de mapas"
+  },
+  "m0601PinSemantica": "{nombre}, {tipo}, {tiempo}",
+  "@m0601PinSemantica": {
+    "description": "M06-01 lectura del pin del mapa; abre el detalle",
     "placeholders": {
       "nombre": {
+        "type": "String"
+      },
+      "tipo": {
         "type": "String"
       },
       "tiempo": {
@@ -327,14 +334,51 @@
       }
     }
   },
-  "m0601RutaNoDisponible": "We couldn't find a maps app to open the route.",
-  "@m0601RutaNoDisponible": {
-    "description": "M06-01 sin app de mapas"
+  "m0601VerSatelite": "Show satellite",
+  "m0601VerCalles": "Show streets",
+  "m0601Recentrar": "Re-center on my location",
+  "m0601ExpandirLista": "Expand list",
+  "m0601ContraerLista": "Collapse list",
+  "m0601MasPrestadores": "More providers in your city",
+  "m0601Aproximado": "~{tiempo}",
+  "@m0601Aproximado": {
+    "description": "M06-01 tiempo aproximado de los que no son de los 3 (M9)",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
   },
-  "m0601Atribucion": "© OpenStreetMap contributors",
-  "@m0601Atribucion": {
-    "description": "M06-01 atribución del mapa"
+  "m0601DetalleTipo": "{tipo} · {especialidad}",
+  "@m0601DetalleTipo": {
+    "description": "Detalle del prestador (2.2): tipo y especialidad",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "especialidad": {
+        "type": "String"
+      }
+    }
   },
+  "m0601DetalleLlegada": "{distancia} · arrives in {tiempo}",
+  "@m0601DetalleLlegada": {
+    "description": "Detalle del prestador (2.2): distancia y llegada",
+    "placeholders": {
+      "distancia": {
+        "type": "String"
+      },
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601SolicitarAsistencia": "Request assistance",
+  "m0601ComoLlegarBoton": "Get directions",
+  "m0601DireccionCopiada": "Address copied",
+  "m0601CopiarDireccion": "Long-press to copy the address",
+  "m0601Copiar": "Copy",
+  "m0601Cerrar": "Close",
   "homeReportarTile": "Report a claim",
   "@homeReportarTile": {
     "description": "Inicio: entrada a HU-M05"

@@ -25,18 +25,24 @@ Revisión del 2026-11-12 contra `develop` (mobile `8dac02f`, backend `fb3b4c6`).
 | A5 | **Resuelto:** CLAIMS llama directo al ACL Worker, como ya lo hacen PAYMENTS, POLICY y UNDER (`llama` en `.github/servicios.json`) | Se verificó en el código |
 | A6 | La ubicación sale del teléfono al abrir el mapa (rutas por el backend) y `auditoria_rutas` la guarda 90 días cifrada: actualizar el aviso de privacidad y `docs/hu-m06-backend.md` §1 de mobile | Contradice la decisión anterior de que no saliera del teléfono |
 | A7 | Claves de texto `misAsistenciasEnCamino` y `misAsistenciasYaLlegaron` en vez de `homeEnCamino` y `homeYaLlegaron` | Ya no está en Inicio |
-| A8 | Volver a pasar MobSF y revisar R8 por Mapbox y los permisos nuevos | Cambian el APK y sus permisos |
+| A8 | Volver a pasar MobSF y revisar R8 por Mapbox y los permisos nuevos. **R8 compila** (APK release de dev en el devcontainer); el APK pesa 147 MB por las librerías nativas de Mapbox de todas las ABI: usar `--split-per-abi` o el AAB en el CD. Con AGP 9 y `android.builtInKotlin=false`, `android/build.gradle.kts` aplica el plugin de Kotlin solo al módulo de Mapbox | Cambian el APK y sus permisos |
 | A9 | En la máquina de desarrollo solo se corre lo que cabe en contenedores (análisis, unitarias, widget, goldens, pytest, ruff, migraciones contra Mongo y Newman con el compose). **Emuladores, Mapbox real, teléfono real y staging quedan pendientes** para una prueba posterior | Regla del equipo |
 | A10 | `stub-prestadores` usa el puerto **8109** | El 8107 que proponía el plan ya es de `stub-vehiculos` y el 8108 lo toma `stub-eventos-parametricos` en el PR #589 |
 | A11 | `fotoUrl` queda **null** en toda la semilla: ALMACENAMIENTO no sirve archivos públicos, así que no hay de dónde salir una foto de sede. La app usa el placeholder del tipo y está lista para la foto (se prueba con el fake) | B3 pedía fotos en algunos |
 | A12 | Los minutos de llegada simulados se calculan en `stubs/prestadores` (Haversine, 20 km/h + 2 min) y `PRESTADORES_MINUTOS_FIJOS` vive allí | CLAIMS ya no simula (B7) |
+| A13 | **A3 resuelto:** compilar no pide token de descargas. El plugin agrega el Maven de releases de Mapbox sin credenciales (solo las *snapshots* las piden); se verificó con `flutter build apk --release` en el devcontainer. Solo hace falta el token público en ejecución | Se verificó en el `build.gradle` del plugin y al compilar |
+| A14 | `mapbox_maps_flutter` **3.34.2**, para que las cuatro piezas del plugin (fachada, móvil, web e interfaz) vayan en la misma versión (con 3.33.1 se mezclaban con 3.34.2) | La 3.34.0 fue retirada |
+| A15 | Los placeholders de la foto (2.2, S2, 4.4) **se dibujan** (`SolPhotoBanner`: degradado y el ícono del tipo) en vez de `assets/prestadores/*.webp` de banco | No hay fotos con licencia en el repo; cuando existan, basta con `fotoUrl` o con agregar los assets |
+| A16 | Sin token de Mapbox: con `API_ENV=mock` (Emuladores, Test Lab y la demo) se usa un **mapa falso** dibujado en Flutter; fuera de mock, la lista sin mapa (como CA-M06-04). Las pruebas y los goldens usan siempre el mapa falso | La vista nativa no se pinta en `flutter test` |
+| A17 | «Más prestadores en tu ciudad» son todos los del radio de 50 km (M16), no se filtra por el nombre de la ciudad | El radio ya separa las ciudades del catálogo |
+| A18 | Los pines de Mapbox no son accesibles con TalkBack (son anotaciones nativas): la lista de la hoja tiene los mismos prestadores y acciones. En el mapa falso sí tienen etiqueta | Limitación del SDK |
 
 ### Avance por fase
 
 | Fase | Backend | Mobile |
 |---|---|---|
 | 1 · Catálogo con detalle, grúa y prestadores detrás del ACL (B1, B2, B3, B7) | PR #590 (v0.49, CLAIMS `0007`) | `feat/KAN-36-movil-prestadores-aliados-gruas` |
-| 2 · Mapbox, pines, detalle, hoja arrastrable (M0–M14) | — | pendiente |
+| 2 · Mapbox, pines, detalle, hoja arrastrable (M0–M14) | — | `feat/KAN-36-movil-mapbox` (apilada sobre la fase 1) |
 | 3 · Dirección ubicada (B4, B9, 2.0, S1) | pendiente | pendiente |
 | 4 · Rutas y auditoría (B8, M15) | pendiente | pendiente |
 | 5 · «Mis asistencias» y notificación (B5, B6, 4.x) | pendiente | pendiente |
@@ -44,7 +50,9 @@ Revisión del 2026-11-12 contra `develop` (mobile `8dac02f`, backend `fb3b4c6`).
 ### Pendiente de verificar fuera de esta máquina (A9)
 
 - Emuladores (`emuladores.yml`) con las pruebas de integración nuevas de M06.
-- Mapbox real (token público en la app y secreto en el ACL), estilos calles y satélite.
+- Mapbox real (token público en la app y secreto en el ACL), estilos calles y satélite: tamaño de los pines (densidad
+  del PNG), que las anotaciones sobrevivan al cambio de estilo, encuadre inicial y límites, toque en el vacío y logo y
+  atribución visibles.
 - Teléfono real: permisos, GPS, «Cómo llegar», notificación con la app cerrada, «Te alejaste».
 - Staging (Anexo B.6) y `auditoria_rutas` en Mongo de staging.
 

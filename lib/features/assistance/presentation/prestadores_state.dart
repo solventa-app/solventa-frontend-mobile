@@ -10,12 +10,24 @@ final class PrestadoresCargando extends PrestadoresState {
   const PrestadoresCargando();
 }
 
-/// Lista lista (puede venir vacía: «no hay prestadores disponibles»).
+/// Mapa y lista listos. Sin destacados = fuera de cobertura (M11).
 final class PrestadoresListos extends PrestadoresState {
-  const PrestadoresListos({required this.origen, required this.cercanos});
+  const PrestadoresListos({
+    required this.origen,
+    required this.destacados,
+    this.otros = const [],
+  });
 
   final Coordenada origen;
-  final List<PrestadorCercano> cercanos;
+
+  /// Los 3 más cercanos (pines grandes y lista inicial).
+  final List<PrestadorCercano> destacados;
+
+  /// El resto dentro del radio, por distancia (M1, M9).
+  final List<PrestadorCercano> otros;
+
+  /// Compatibilidad: los de la lista inicial.
+  List<PrestadorCercano> get cercanos => destacados;
 }
 
 /// Sin permiso o con el GPS apagado (CA-M06-02).

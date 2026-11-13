@@ -17,6 +17,7 @@ import 'package:solventa_mobile/features/assistance/presentation/pages/m06_04_re
 import 'package:solventa_mobile/features/assistance/presentation/pages/m06_06_cancelada_page.dart';
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
 import 'package:solventa_mobile/features/assistance/presentation/solicitud_notifier.dart';
+import 'package:solventa_mobile/features/assistance/presentation/widgets/mapa/mapa_datos.dart';
 
 import 'soporte/capturas.dart';
 
@@ -39,7 +40,7 @@ void main() {
         ),
         ubicacionServiceProvider.overrideWithValue(FakeUbicacionService()),
         rutaExternaServiceProvider.overrideWithValue(FakeRutaExternaService()),
-        plantillaTeselasProvider.overrideWithValue(''),
+        motorMapaProvider.overrideWithValue(MotorMapa.falso),
         duracionMinimaEnvioProvider.overrideWithValue(Duration.zero),
       ],
     );
