@@ -93,7 +93,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0105Instruccion =>
-      'Gira tu rostro lentamente dentro del marco (cámara frontal)';
+      'Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.';
 
   @override
   String get verificacionTitulo => 'Verificación';
@@ -804,38 +804,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0601TipoMecanico => 'Mecánico';
 
   @override
+  String get m0601TipoGrua => 'Grúa';
+
+  @override
+  String get m0601Aliado => 'Aliado Solventa';
+
+  @override
   String get m0601Buscando => 'Buscando prestadores cerca de ti…';
 
   @override
-  String get m0601SinPrestadores =>
-      'No hay prestadores disponibles cerca de ti en este momento.';
-
-  @override
-  String get m0601SinPermiso =>
-      'Necesitamos tu ubicación para mostrarte los prestadores más cercanos.';
-
-  @override
-  String get m0601GpsApagado =>
-      'Tu ubicación está desactivada. Actívala para ver los prestadores cercanos.';
-
-  @override
-  String get m0601PermitirUbicacion => 'Permitir ubicación';
-
-  @override
-  String get m0601AbrirAjustes => 'Abrir ajustes';
-
-  @override
-  String get m0601EscribirDireccion => 'Escribir mi dirección';
-
-  @override
-  String get m0601TituloSinOrden => 'Elige un prestador';
-
-  @override
-  String get m0601NotaSinOrden =>
-      'Sin tu ubicación no podemos ordenarlos por cercanía. En el siguiente paso escribes tu dirección.';
-
-  @override
-  String get m0601UsarUbicacion => 'Usar mi ubicación';
+  String get m0601SinPrestadores => 'Aún no tenemos prestadores en tu zona.';
 
   @override
   String get m0601Reintentar => 'Reintentar';
@@ -844,16 +822,128 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0601TuUbicacion => 'Tu ubicación';
 
   @override
-  String m0601ComoLlegar(String nombre, String tiempo) {
-    return 'Cómo llegar a $nombre, $tiempo';
-  }
-
-  @override
   String get m0601RutaNoDisponible =>
       'No encontramos una app de mapas para abrir la ruta.';
 
   @override
-  String get m0601Atribucion => '© colaboradores de OpenStreetMap';
+  String m0601PinSemantica(String nombre, String tipo, String tiempo) {
+    return '$nombre, $tipo, $tiempo';
+  }
+
+  @override
+  String get m0601VerSatelite => 'Ver satélite';
+
+  @override
+  String get m0601VerCalles => 'Ver calles';
+
+  @override
+  String get m0601Recentrar => 'Volver a centrar en mi ubicación';
+
+  @override
+  String get m0601ExpandirLista => 'Expandir lista';
+
+  @override
+  String get m0601ContraerLista => 'Contraer lista';
+
+  @override
+  String get m0601MasPrestadores => 'Más prestadores en tu ciudad';
+
+  @override
+  String m0601Aproximado(String tiempo) {
+    return '~$tiempo';
+  }
+
+  @override
+  String m0601DetalleTipo(String tipo, String especialidad) {
+    return '$tipo · $especialidad';
+  }
+
+  @override
+  String m0601DetalleLlegada(String distancia, String tiempo) {
+    return '$distancia · llega en $tiempo';
+  }
+
+  @override
+  String get m0601SolicitarAsistencia => 'Solicitar asistencia';
+
+  @override
+  String get m0601ComoLlegarBoton => 'Cómo llegar';
+
+  @override
+  String get m0601DireccionCopiada => 'Dirección copiada';
+
+  @override
+  String get m0601CopiarDireccion => 'Mantén pulsado para copiar la dirección';
+
+  @override
+  String get m0601Copiar => 'Copiar';
+
+  @override
+  String get m0601Cerrar => 'Cerrar';
+
+  @override
+  String get ubicacionExplicaTitulo => 'Necesitamos tu ubicación';
+
+  @override
+  String get ubicacionExplicaTexto =>
+      'Para mostrarte los prestadores más cercanos y cuánto tardan en llegar.';
+
+  @override
+  String get ubicacionPermitir => 'Permitir ubicación';
+
+  @override
+  String get ubicacionNegadaTitulo => 'No tenemos tu ubicación';
+
+  @override
+  String get ubicacionNegadaTexto =>
+      'Puedes darnos el permiso o escribir dónde estás. Con la dirección te mostramos los mismos prestadores.';
+
+  @override
+  String get ubicacionAbrirAjustes => 'Abrir Ajustes';
+
+  @override
+  String get gpsApagadoTitulo => 'Tu GPS está apagado';
+
+  @override
+  String get gpsApagadoTexto =>
+      'Enciende la ubicación del teléfono para encontrar los prestadores cerca de ti.';
+
+  @override
+  String get gpsActivar => 'Activar ubicación';
+
+  @override
+  String get direccionEscribir => 'Escribir mi dirección';
+
+  @override
+  String get direccionTitulo => '¿Dónde estás?';
+
+  @override
+  String get direccionCampo => 'Dirección, ciudad o punto de referencia';
+
+  @override
+  String get direccionBuscar => 'Buscar esta dirección';
+
+  @override
+  String get direccionNoEncontrada =>
+      'No pudimos ubicar esa dirección. Prueba con otra o con un punto de referencia';
+
+  @override
+  String get direccionServicioCaido =>
+      'No pudimos buscar direcciones ahora. Intenta de nuevo';
+
+  @override
+  String direccionUsando(String direccion) {
+    return 'Usando: $direccion';
+  }
+
+  @override
+  String get direccionCambiar => 'Cambiar';
+
+  @override
+  String get direccionUsarActual => 'Usar mi ubicación actual';
+
+  @override
+  String get direccionPinEtiqueta => 'Dirección escrita';
 
   @override
   String get homeReportarTile => 'Reportar un siniestro';
@@ -1076,7 +1166,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0602TipoMecanica => 'Mecánica';
 
   @override
+  String get m0602TipoGrua => 'Grúa';
+
+  @override
   String get m0602TipoElegir => 'Elige una opción';
+
+  @override
+  String get m0602AtencionInmediata => 'Atención inmediata';
+
+  @override
+  String get m0602AtencionInmediataTexto =>
+      'Estamos coordinando tu solicitud en tiempo real';
+
+  @override
+  String m0602UbicacionEscrita(String direccion) {
+    return '$direccion (la dirección que escribiste)';
+  }
 
   @override
   String get m0602TipoRequerido => 'Elige el tipo de asistencia.';
@@ -1098,19 +1203,9 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get m0602Direccion => 'Dirección o punto de referencia';
-
-  @override
-  String get m0602DireccionHint => 'Ej. Cra 45 # 22-18, frente al parque';
-
-  @override
   String m0602UbicacionDetectada(String coordenadas) {
     return 'Ubicación detectada automáticamente: $coordenadas';
   }
-
-  @override
-  String get m0602DireccionRequerida =>
-      'Escribe la dirección a la que debe llegar el prestador.';
 
   @override
   String m0602TiempoLlegada(String tiempo) {
@@ -1198,6 +1293,114 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0606SolicitarDeNuevo => 'Solicitar de nuevo';
+
+  @override
+  String get navMisAsistencias => 'Mis asistencias';
+
+  @override
+  String navMisAsistenciasEnCamino(String cantidad) {
+    return 'Mis asistencias, $cantidad en camino';
+  }
+
+  @override
+  String get misAsistenciasTitulo => 'Mis asistencias';
+
+  @override
+  String get misAsistenciasVacio => 'Aún no has pedido asistencia';
+
+  @override
+  String get misAsistenciasSolicitar => 'Solicitar asistencia en sitio';
+
+  @override
+  String misAsistenciasEnCamino(String cantidad) {
+    return 'En camino ($cantidad)';
+  }
+
+  @override
+  String misAsistenciasYaLlegaron(String cantidad) {
+    return 'Ya llegaron ($cantidad)';
+  }
+
+  @override
+  String get misAsistenciasError => 'No pudimos cargar tus asistencias.';
+
+  @override
+  String get misAsistenciasCargando => 'Cargando tus asistencias…';
+
+  @override
+  String asistenciaPedida(String tipo, String hora) {
+    return '$tipo · pedida $hora';
+  }
+
+  @override
+  String asistenciaLlegaEn(String minutos) {
+    return 'Llega en $minutos min';
+  }
+
+  @override
+  String get asistenciaLlegaMenosDeUno => 'Llega en menos de 1 min';
+
+  @override
+  String asistenciaHoraEstimada(String hora) {
+    return 'Hora estimada $hora';
+  }
+
+  @override
+  String asistenciaLlego(String hora) {
+    return 'Llegó · $hora';
+  }
+
+  @override
+  String get asistenciaNoConfirmada => 'No pudimos confirmar';
+
+  @override
+  String get asistenciaReintentar => 'Reintentar';
+
+  @override
+  String asistenciaEnCaminoLlega(String minutos) {
+    return 'En camino · llega en $minutos min';
+  }
+
+  @override
+  String get asistenciaNotifTitulo => 'Tu asistencia llegó';
+
+  @override
+  String asistenciaNotifCuerpo(String prestador) {
+    return '$prestador ya debería estar en tu ubicación';
+  }
+
+  @override
+  String get asistenciaNotifNota => 'Te avisaremos cuando llegue el prestador.';
+
+  @override
+  String asistenciaLlegoSnack(String prestador) {
+    return '$prestador llegó';
+  }
+
+  @override
+  String get asistenciaVer => 'Ver';
+
+  @override
+  String get asistenciaDetalleTitulo => 'Tu asistencia';
+
+  @override
+  String asistenciaTeAlejaste(String direccion) {
+    return 'Te alejaste del lugar donde pediste la asistencia. El prestador va a $direccion';
+  }
+
+  @override
+  String get asistenciaLugarPedido => 'el lugar donde la pediste';
+
+  @override
+  String get asistenciaCancelarYPedirOtra => 'Cancelar y pedir otra';
+
+  @override
+  String asistenciaLectura(String prestador, String tipo, String estado) {
+    return '$prestador, $tipo, $estado';
+  }
+
+  @override
+  String get asistenciaNoEncontrada => 'No encontramos esa asistencia.';
 
   @override
   String get m0402Titulo => 'Indemnización';
@@ -1462,6 +1665,24 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get fallaDispositivoNoValido =>
       'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.';
+
+  @override
+  String get m0105Grabar => 'Grabar video';
+
+  @override
+  String get m0105Grabando => 'Grabando';
+
+  @override
+  String m0105GrabandoInstruccion(int segundos) {
+    return 'Mueve la cabeza despacio de un lado a otro… $segundos';
+  }
+
+  @override
+  String get m0105Capturado => 'Listo, ya tenemos tu selfie y tu video.';
+
+  @override
+  String get m0105Verificando =>
+      'Estamos enviando tus fotos y verificando tu identidad con nuestro proveedor. Puede tardar unos segundos.';
 
   @override
   String get homeCargandoCuenta => 'Cargando tu cuenta…';

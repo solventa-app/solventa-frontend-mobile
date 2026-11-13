@@ -207,7 +207,38 @@ void main() {
   });
 
   group('SolBottomNav', () {
-    testWidgets('3 destinos con etiqueta, 80 dp y estado seleccionado', (
+    testWidgets('HU-M06 4.1: badge de en camino y su lectura en TalkBack', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await pumpSol(
+        tester,
+        Scaffold(
+          bottomNavigationBar: SolBottomNav(
+            selectedIndex: 0,
+            onDestinationSelected: (_) {},
+            destinations: const [
+              SolNavDestination(label: 'Inicio', icon: SolIcons.home),
+              SolNavDestination(
+                label: 'Mis asistencias',
+                icon: SolIcons.misAsistencias,
+                badgeCount: 2,
+                semanticLabel: 'Mis asistencias, 2 en camino',
+              ),
+            ],
+          ),
+        ),
+        scaffold: false,
+      );
+      expect(find.text('2'), findsOneWidget);
+      expect(
+        find.bySemanticsLabel('Mis asistencias, 2 en camino'),
+        findsOneWidget,
+      );
+      handle.dispose();
+    });
+
+    testWidgets('4 destinos con etiqueta, 80 dp y estado seleccionado', (
       tester,
     ) async {
       final handle = tester.ensureSemantics();
@@ -223,14 +254,19 @@ void main() {
         scaffold: false,
       );
       expect(tester.getSize(find.byType(SolBottomNav)).height, 80);
-      for (final label in ['Inicio', 'Asistencia', 'Cerrar sesión']) {
+      for (final label in [
+        'Inicio',
+        'Asistencia',
+        'Mis asistencias',
+        'Cerrar sesión',
+      ]) {
         expect(find.text(label), findsOneWidget);
       }
       expect(
         tester.getSemantics(find.bySemanticsLabel('Inicio')),
         matchesSemantics(
           label: 'Inicio',
-          hint: 'Pestaña 1 de 3',
+          hint: 'Pestaña 1 de 4',
           isButton: true,
           hasSelectedState: true,
           isSelected: true,
@@ -323,6 +359,54 @@ void main() {
       expect(tester.getSize(find.byType(SolProviderRow)).height, 68);
       await expectA11yGuidelines(tester);
     });
+
+    testWidgets(
+      'aliado: verified, insignia en TalkBack y color primario (M3)',
+      (tester) async {
+        await pumpSol(
+          tester,
+          Column(
+            children: [
+              SolProviderRow(
+                name: 'Grúas Express',
+                type: SolProviderType.grua,
+                distance: '2.8 km',
+                isPartner: true,
+                partnerLabel: 'Aliado Solventa',
+                onRequest: () {},
+              ),
+              SolProviderRow(
+                name: 'Grúas 24/7',
+                type: SolProviderType.grua,
+                distance: '4.6 km',
+                onRequest: () {},
+              ),
+            ],
+          ),
+        );
+        expect(find.byIcon(SolIcons.towTruck), findsNWidgets(2));
+        expect(find.byIcon(SolIcons.verifiedProvider), findsOneWidget);
+        expect(
+          find.bySemanticsLabel(RegExp('Aliado Solventa')),
+          findsOneWidget,
+        );
+        final fondos = tester
+            .widgetList<Container>(
+              find.ancestor(
+                of: find.byIcon(SolIcons.towTruck),
+                matching: find.byType(Container),
+              ),
+            )
+            .map((c) => (c.decoration as BoxDecoration?)?.color)
+            .whereType<Color>()
+            .toList();
+        final scheme = Theme.of(
+          tester.element(find.byType(SolProviderRow).first),
+        ).colorScheme;
+        expect(fondos, [scheme.primaryContainer, scheme.surfaceContainer]);
+        await expectA11yGuidelines(tester);
+      },
+    );
 
     testWidgets('al 200 % el botón baja de línea sin desbordar', (
       tester,

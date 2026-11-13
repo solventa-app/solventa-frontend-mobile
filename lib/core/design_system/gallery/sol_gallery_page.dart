@@ -97,6 +97,7 @@ class _SolGalleryPageState extends State<SolGalleryPage> {
           SolProviderRow(
             name: 'Clínica Norte',
             type: SolProviderType.medico,
+            isPartner: true,
             distance: '1.2 km',
             eta: '6 min',
             onRequest: _noop,
@@ -108,6 +109,52 @@ class _SolGalleryPageState extends State<SolGalleryPage> {
             distance: '2.0 km',
             eta: '9 min',
             onRequest: _noop,
+          ),
+
+          // HU-M06: piezas del mapa (pines, botón flotante y banner).
+          const _Section('Mapa: pines, botón flotante y banner'),
+          Wrap(
+            spacing: 16,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              const SolMapPin(
+                style: SolMapPinStyle(
+                  type: SolProviderType.medico,
+                  isPartner: true,
+                  featured: true,
+                  label: '6 min',
+                ),
+              ),
+              const SolMapPin(
+                style: SolMapPinStyle(
+                  type: SolProviderType.grua,
+                  isPartner: false,
+                  featured: true,
+                  selected: true,
+                  label: '12 min',
+                ),
+              ),
+              const SolMapPin(
+                style: SolMapPinStyle(
+                  type: SolProviderType.mecanico,
+                  isPartner: false,
+                ),
+              ),
+              const SolMapUserPin(),
+              SolMapFab(
+                icon: SolIcons.layers,
+                semanticLabel: 'Ver satélite',
+                onPressed: _noop,
+              ),
+            ],
+          ),
+          const SizedBox(height: SolSpacing.sm),
+          const SolPhotoBanner(
+            placeholderIcon: SolIcons.medical,
+            title: 'Atención inmediata',
+            subtitle: 'Estamos coordinando tu solicitud',
+            strongVeil: true,
           ),
 
           const _Section('Disparador de demo (2018:17)'),

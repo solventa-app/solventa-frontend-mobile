@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/network_providers.dart';
 import '../../../core/network/subida_archivo_service.dart';
+import '../../../core/push/instalacion_id.dart';
 import '../data/datasources/captura_service.dart';
 import '../data/datasources/fake_onboarding_remote_datasource.dart';
 import '../data/datasources/onboarding_remote_datasource.dart';
@@ -19,7 +20,10 @@ final fakeOnboardingProvider = Provider<FakeOnboardingRemoteDataSource>(
 final onboardingRemoteDataSourceProvider = Provider<OnboardingRemoteDataSource>(
   (ref) => ref.watch(usarFakesProvider)
       ? ref.watch(fakeOnboardingProvider)
-      : GqlOnboardingRemoteDataSource(ref.watch(graphqlClientProvider)),
+      : GqlOnboardingRemoteDataSource(
+          ref.watch(graphqlClientProvider),
+          instalacion: ref.watch(instalacionIdStoreProvider),
+        ),
 );
 
 final subidaArchivoServiceProvider = Provider<SubidaArchivoService>(

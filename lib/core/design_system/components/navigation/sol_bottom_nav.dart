@@ -14,11 +14,19 @@ class SolNavDestination {
     required this.label,
     required this.icon,
     IconData? selectedIcon,
+    this.badgeCount = 0,
+    this.semanticLabel,
   }) : selectedIcon = selectedIcon ?? icon;
 
   final String label;
   final IconData icon;
   final IconData selectedIcon;
+
+  /// Número del badge (HU-M06: asistencias en camino). 0 = sin badge.
+  final int badgeCount;
+
+  /// Lectura de TalkBack con el badge («Mis asistencias, 2 en camino»).
+  final String? semanticLabel;
 }
 
 /// Barra de navegación inferior M3 de 80 dp (Figma 2018:76).
@@ -32,7 +40,8 @@ class SolBottomNav extends StatelessWidget {
     this.destinations = defaultDestinations,
   });
 
-  /// Inicio, Asistencia y Cerrar sesión, como en el Figma.
+  /// Inicio, Asistencia, Mis asistencias (HU-M06 4.1) y Cerrar sesión. La
+  /// app pasa los textos traducidos; estos son los del Figma, en español.
   static const List<SolNavDestination> defaultDestinations = [
     SolNavDestination(label: 'Inicio', icon: SolIcons.home),
     SolNavDestination(
@@ -40,6 +49,7 @@ class SolBottomNav extends StatelessWidget {
       icon: SolIcons.assistance,
       selectedIcon: SolIcons.assistanceActive,
     ),
+    SolNavDestination(label: 'Mis asistencias', icon: SolIcons.misAsistencias),
     SolNavDestination(label: 'Cerrar sesión', icon: SolIcons.logout),
   ];
 
@@ -123,7 +133,7 @@ class _NavItem extends StatelessWidget {
     return Semantics(
       button: true,
       selected: selected,
-      label: destination.label,
+      label: destination.semanticLabel ?? destination.label,
       hint: 'Pestaña ${index + 1} de $count',
       onTap: onTap,
       excludeSemantics: true,
@@ -147,11 +157,17 @@ class _NavItem extends StatelessWidget {
                     borderRadius: SolRadius.fullAll,
                   ),
                   alignment: Alignment.center,
-                  child: Icon(
-                    selected ? destination.selectedIcon : destination.icon,
-                    size: SolSizes.icon,
-                    fill: selected ? 1 : 0,
-                    color: color,
+                  child: Badge(
+                    isLabelVisible: destination.badgeCount > 0,
+                    label: Text('${destination.badgeCount}'),
+                    backgroundColor: colors.error,
+                    textColor: colors.onError,
+                    child: Icon(
+                      selected ? destination.selectedIcon : destination.icon,
+                      size: SolSizes.icon,
+                      fill: selected ? 1 : 0,
+                      color: color,
+                    ),
                   ),
                 ),
                 const SizedBox(height: SolSpacing.xxs),

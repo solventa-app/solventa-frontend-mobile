@@ -17,4 +17,9 @@ abstract final class SolRadius {
   static const BorderRadius fullAll = BorderRadius.all(Radius.circular(full));
   static const BorderRadius cardAll = BorderRadius.all(Radius.circular(card));
   static const BorderRadius fieldAll = BorderRadius.all(Radius.circular(field));
+
+  /// Hoja inferior: solo las esquinas de arriba.
+  static const BorderRadius sheetTop = BorderRadius.vertical(
+    top: Radius.circular(card),
+  );
 }

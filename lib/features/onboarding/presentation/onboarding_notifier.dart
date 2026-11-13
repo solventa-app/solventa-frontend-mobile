@@ -39,6 +39,7 @@ final class OnboardingState {
     this.sesionCerrada = false,
     this.cargandoPerfil = false,
     this.perfilSinCargar = false,
+    this.grabandoVideo = false,
   });
 
   final bool consentimientoMarcado;
@@ -83,6 +84,10 @@ final class OnboardingState {
   /// lo dice y ofrece «Reintentar», sin mostrar un estado que no sabe.
   final bool perfilSinCargar;
 
+  /// M01-05 está grabando el video de la prueba de vida: la pantalla lo dice
+  /// y pide mover la cabeza mientras dura.
+  final bool grabandoVideo;
+
   /// Intentos que quedan tras un rechazo (0: ya no se puede repetir).
   int get intentosRestantes => onboarding?.intentosRestantes ?? 0;
 
@@ -121,6 +126,7 @@ final class OnboardingState {
     bool? sesionCerrada,
     bool? cargandoPerfil,
     bool? perfilSinCargar,
+    bool? grabandoVideo,
     bool limpiarFalla = false,
     bool limpiarVerificacion = false,
     bool limpiarCredencialesPendientes = false,
@@ -155,6 +161,7 @@ final class OnboardingState {
     sesionCerrada: sesionCerrada ?? this.sesionCerrada,
     cargandoPerfil: cargandoPerfil ?? this.cargandoPerfil,
     perfilSinCargar: perfilSinCargar ?? this.perfilSinCargar,
+    grabandoVideo: grabandoVideo ?? this.grabandoVideo,
   );
 }
 
@@ -354,7 +361,10 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
       state = state.copyWith(rostroCapturado: true);
     }
     if (!_capturasEnMemoria.containsKey(PasoOnboarding.video)) {
-      if (!await _capturar(PasoOnboarding.video, captura.video)) return false;
+      state = state.copyWith(grabandoVideo: true);
+      final grabado = await _capturar(PasoOnboarding.video, captura.video);
+      state = state.copyWith(grabandoVideo: false);
+      if (!grabado) return false;
       state = state.copyWith(videoCapturado: true);
     }
 

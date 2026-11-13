@@ -180,7 +180,7 @@ Flavors de Android + `--dart-define-from-file`:
 - `flutter run` sin `--flavor` usa dev (`default-flavor: dev` en `pubspec.yaml`). Prod en local: `flutter run --flavor prod --dart-define-from-file=config/prod.json`.
 - Claves de `config/*.json`: `FLAVOR`, `API_ENV` (`mock`, `local`, `dev`, `prod`) y `API_BASE_URL`, leídas en `lib/core/config/app_config.dart`. Archivos: `mock.json` (fakes, sin red), `local.json` (backend en tu máquina), `dev.json` (staging) y `prod.json`; detalle en [`integracion-backend.md`](integracion-backend.md). `dev.json` y `prod.json` apuntan al gateway de staging (`gateway_url` del backend), y los APKs de dev (App Distribution) y prod (GitHub Releases) hablan con ese backend. Las pruebas del CI, los emuladores y Test Lab siguen con `config/mock.json`, sin red, para no depender de staging encendido.
 - En tu máquina no hay llaves: el build de release se firma con la de debug. En el CI, `tool/firma.sh` escribe `android/key.properties` (prod) o `android/key-dev.properties` (dev) desde los secretos.
-- FCM (`google-services.json`) y Google Maps (llave restringida por paquete) se configurarán por flavor con sus HU.
+- FCM: `develop.yml` y `cd.yml` escriben `android/app/google-services.json` desde el secreto `GOOGLE_SERVICES_JSON_BASE64` (`tool/google-services.sh`, proyecto Firebase `solventa-ec254`, un solo archivo con los paquetes de prod y `.dev`). Sin el secreto el APK compila igual con el push apagado; el plugin `com.google.gms.google-services` solo se aplica si el archivo existe. Google Maps (llave restringida por paquete) se configurará con su HU.
 
 ## Secretos y variables
 
@@ -191,6 +191,7 @@ Flavors de Android + `--dart-define-from-file`:
 | `FIREBASE_SERVICE_ACCOUNT` (secreto), `FIREBASE_APP_ID_DEV`, `FIREBASE_PROJECT_ID` (variables) | Environment `dev` | App Distribution y Test Lab | Falta cuenta |
 | `SONAR_TOKEN` | Repo | SonarCloud | Hoy |
 | `SENTRY_AUTH_TOKEN` | Environment `production` | Subir símbolos a Sentry (`uniandes-xm`) | Listo en `cd.yml` y `rollback.yml`, falta secreto |
+| `MAPBOX_PUBLIC_TOKEN` | Repo (o environments `dev` y `production`) | Token **público** de Mapbox (`pk.…`) para el mapa de M06-01 (HU-M06, M0). `develop.yml` y `cd.yml` lo pasan a `tool/build-*.sh` como `--dart-define=MAPBOX_ACCESS_TOKEN`. Sin él la app compila igual y muestra la lista sin mapa (Emuladores y Test Lab usan `mock`, con el mapa falso, y no lo necesitan). **No hace falta token de descargas**: el plugin baja el SDK del Maven de Mapbox sin credenciales (verificado al compilar el APK en el devcontainer) | Listo, falta secreto |
 
 ## Versionado
 

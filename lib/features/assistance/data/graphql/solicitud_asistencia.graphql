@@ -1,4 +1,5 @@
-# HU-M06 (KAN-265 y KAN-266): solicitar y cancelar la asistencia en sitio, contrato v0.40. Idempotentes: reenviar con
+# HU-M06 (KAN-265 y KAN-266): solicitar y cancelar la asistencia en sitio, contrato v0.40 (v0.50: `origenUbicacion`;
+# `solicitarAsistenciaConDireccion` se dejó de usar, está deprecada). Idempotentes: reenviar con
 # el mismo `idSolicitud` no crea otra asistencia (si quedó NO_CONFIRMADA, reintenta confirmarla).
 mutation SolicitarAsistencia($entrada: SolicitudAsistenciaInput!) {
   solicitarAsistencia(entrada: $entrada) {
@@ -10,6 +11,8 @@ mutation SolicitarAsistencia($entrada: SolicitudAsistenciaInput!) {
       motivo
       solicitadaEn
       canceladaEn
+      confirmadaEn
+      llegadaEstimada
       prestador {
         id
         nombre
@@ -18,34 +21,11 @@ mutation SolicitarAsistencia($entrada: SolicitudAsistenciaInput!) {
         latitud
         longitud
         activo
-      }
-    }
-    ... on ErrorAsistencia {
-      codigo
-      mensaje
-    }
-  }
-}
-
-# Contrato v0.41 (KAN-264, CA-M06-02): sin ubicación, con la dirección a mano.
-mutation SolicitarAsistenciaConDireccion($entrada: SolicitudAsistenciaDireccionInput!) {
-  solicitarAsistenciaConDireccion(entrada: $entrada) {
-    ... on Asistencia {
-      id
-      estado
-      tipoAsistencia
-      minutosEstimados
-      motivo
-      solicitadaEn
-      canceladaEn
-      prestador {
-        id
-        nombre
-        tipo
-        ciudad
-        latitud
-        longitud
-        activo
+        aliado
+        especialidad
+        direccion
+        horario
+        fotoUrl
       }
     }
     ... on ErrorAsistencia {
@@ -65,6 +45,8 @@ mutation CancelarAsistencia($id: ID!) {
       motivo
       solicitadaEn
       canceladaEn
+      confirmadaEn
+      llegadaEstimada
       prestador {
         id
         nombre
@@ -73,6 +55,11 @@ mutation CancelarAsistencia($id: ID!) {
         latitud
         longitud
         activo
+        aliado
+        especialidad
+        direccion
+        horario
+        fotoUrl
       }
     }
     ... on ErrorAsistencia {

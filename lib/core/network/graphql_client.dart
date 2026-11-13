@@ -17,7 +17,16 @@ typedef RenovadorSesion = Future<bool> Function();
 /// `graphql_codegen` y devuelve el `data` crudo para que el datasource lo
 /// parsee con el `fromJson` generado.
 class GraphqlClient {
-  GraphqlClient(this._dio, {this.leerToken, this.renovarSesion});
+  GraphqlClient(
+    this._dio, {
+    this.leerToken,
+    this.renovarSesion,
+    this.leerIdioma,
+  });
+
+  /// Idioma de la app (`es`/`en`) para `Accept-Language` (HU-M06, A4): el
+  /// BFF lo usa para traducir sus mensajes y lo pasa a Google Places.
+  final String Function()? leerIdioma;
 
   /// Ruta del canal móvil en el BFF y en el gateway.
   static const ruta = '/graphql/app';
@@ -71,6 +80,7 @@ class GraphqlClient {
         },
         options: Options(
           headers: {
+            if (leerIdioma != null) 'Accept-Language': leerIdioma!(),
             ...cabeceras,
             if (token != null) 'Authorization': 'Bearer $token',
           },

@@ -93,6 +93,23 @@ KAN-280). Plan, diseños, decisiones (M04-D1 a D5) y pendientes en [`docs/hu-m04
   de fusionar, por la fuente `Inter` (`docs/entorno-local.md`).
 - Jira: KAN-280 (M04-04 · Mi cobertura) bajo KAN-38 (2026-11-08).
 
+### En curso: pendientes de HU-M06 (KAN-36), por fases
+
+Plan, bocetos, decisiones y ajustes (A1 a A12) en [`docs/hu-m06/plan-pendientes.md`](docs/hu-m06/plan-pendientes.md).
+Las cinco fases quedaron en PR el 2026-11-12, cada una apilada sobre la anterior (integrar en orden):
+
+| Fase | Mobile | Backend | Contrato |
+|---|---|---|---|
+| 1 · Grúa, detalle del prestador y color por aliado | #83 | #590 | v0.49 |
+| 2 · Mapbox, pines, detalle, hoja arrastrable | #84 | — | — |
+| 3 · Ubicación al entrar y dirección escrita ubicada | #85 | #591 | v0.50 |
+| 4 · Rutas tipo semáforo y auditoría | #86 | #614 | v0.51 |
+| 5 · «Mis asistencias», detalle, «Te alejaste» y notificación local | #89 | #615 | v0.52 |
+
+Las versiones v0.46 a v0.48 las reserva el backend #589 (KAN-259). Pasos manuales: secreto `MAPBOX_PUBLIC_TOKEN` en
+GitHub y `mapbox-token` en GCP (plan, Anexo B). Pendiente fuera de esta máquina: Emuladores, Mapbox real, teléfono
+real, staging y el aviso de privacidad (A6).
+
 ### Pendiente
 
 - HU-M04: confirmar los goldens regenerados en el devcontainer; `google-services.json` real (paso del usuario);

@@ -11,9 +11,11 @@ import '../providers.dart';
 
 /// M06-02 · Formulario de solicitud (Figma 2005:140, KAN-148).
 ///
-/// Prestador elegido en M06-01, tipo de asistencia (obligatorio), qué pasó
-/// (opcional) y la ubicación detectada con una dirección que el cliente puede
-/// corregir. «Enviar solicitud» pasa a M06-03.
+/// Banner «Atención inmediata» (S2), prestador elegido en M06-01, tipo de
+/// asistencia prellenado con el del prestador (S3, se puede cambiar), qué pasó
+/// (opcional) y adónde llegará: la ubicación detectada o la dirección que el
+/// cliente escribió antes del mapa (S1: aquí ya no se escribe).
+/// «Enviar solicitud» pasa a M06-03.
 class M0602SolicitudPage extends ConsumerStatefulWidget {
   const M0602SolicitudPage({super.key});
 
@@ -23,9 +25,7 @@ class M0602SolicitudPage extends ConsumerStatefulWidget {
 
 class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
   late final TextEditingController _descripcion;
-  late final TextEditingController _direccion;
   final _claveTipo = GlobalKey();
-  final _claveDireccion = GlobalKey();
   bool _intentoEnviar = false;
 
   @override
@@ -33,19 +33,18 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
     super.initState();
     final s = ref.read(solicitudProvider);
     _descripcion = TextEditingController(text: s.descripcion);
-    _direccion = TextEditingController(text: s.direccion);
   }
 
   @override
   void dispose() {
     _descripcion.dispose();
-    _direccion.dispose();
     super.dispose();
   }
 
   String _nombreTipo(TipoPrestador t) => switch (t) {
     TipoPrestador.medico => context.l10n.m0602TipoMedica,
     TipoPrestador.mecanico => context.l10n.m0602TipoMecanica,
+    TipoPrestador.grua => context.l10n.m0602TipoGrua,
   };
 
   Future<void> _elegirTipo() async {
@@ -79,9 +78,6 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
       if (s.tipo == null || s.tipoNoAtendido) {
         final destino = _claveTipo.currentContext;
         if (destino != null) Scrollable.ensureVisible(destino);
-      } else if (s.faltaDireccion) {
-        final destino = _claveDireccion.currentContext;
-        if (destino != null) Scrollable.ensureVisible(destino);
       }
       return;
     }
@@ -106,8 +102,6 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
         : null;
     final descripcionLarga =
         estado.descripcion.trim().length > ReglasSolicitud.maxDescripcion;
-    final direccionLarga =
-        estado.direccion.trim().length > ReglasSolicitud.maxDireccion;
 
     return SolFlowScaffold(
       title: l10n.m0602Titulo,
@@ -116,6 +110,19 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          SolPhotoBanner(
+            photoUrl: prestador.fotoUrl,
+            placeholderIcon: switch (prestador.tipo) {
+              TipoPrestador.medico => SolIcons.medical,
+              TipoPrestador.mecanico => SolIcons.mechanic,
+              TipoPrestador.grua => SolIcons.towTruck,
+            },
+            title: l10n.m0602AtencionInmediata,
+            subtitle: l10n.m0602AtencionInmediataTexto,
+            height: 96,
+            strongVeil: true,
+          ),
+          const SizedBox(height: SolSpacing.lg),
           _TarjetaPrestador(
             rotulo: l10n.m0602PrestadorAsignado,
             prestador: prestador,
@@ -148,32 +155,18 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
                 : null,
             onChanged: (v) => notifier.fijarTextos(descripcion: v),
           ),
-          const SizedBox(height: SolSpacing.lg),
-          KeyedSubtree(
-            key: _claveDireccion,
-            child: SolTextField(
-              label: l10n.m0602Direccion,
-              hint: l10n.m0602DireccionHint,
-              controller: _direccion,
-              textInputAction: TextInputAction.done,
-              errorText: direccionLarga
-                  ? l10n.m0602TextoLargo(ReglasSolicitud.maxDireccion)
-                  : _intentoEnviar && estado.faltaDireccion
-                  ? l10n.m0602DireccionRequerida
-                  : null,
-              onChanged: (v) => notifier.fijarTextos(direccion: v),
-            ),
-          ),
-          if (estado.origen case final u?) ...[
-            const SizedBox(height: SolSpacing.md),
-            SolInlineNote(
-              icon: SolIcons.location,
-              text: l10n.m0602UbicacionDetectada(
+          const SizedBox(height: SolSpacing.md),
+          SolInlineNote(
+            icon: SolIcons.location,
+            text: switch ((estado.direccionEscrita, estado.origen)) {
+              (final String d, _) => l10n.m0602UbicacionEscrita(d),
+              (_, final u?) => l10n.m0602UbicacionDetectada(
                 '${u.latitud.toStringAsFixed(4)}, '
                 '${u.longitud.toStringAsFixed(4)}',
               ),
-            ),
-          ],
+              _ => '',
+            },
+          ),
           if (cercano != null) ...[
             const SizedBox(height: SolSpacing.sm),
             SolInlineNote(
@@ -185,7 +178,15 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
           ],
         ],
       ),
-      actions: [SolButton.primary(label: l10n.m0602Enviar, onPressed: _enviar)],
+      actions: [
+        // 4.5: antes del diálogo de notificaciones (Android 13+), para qué es.
+        SolInlineNote(
+          icon: SolIcons.notifications,
+          text: l10n.asistenciaNotifNota,
+        ),
+        const SizedBox(height: SolSpacing.sm),
+        SolButton.primary(label: l10n.m0602Enviar, onPressed: _enviar),
+      ],
     );
   }
 }
@@ -204,12 +205,11 @@ class _TarjetaPrestador extends StatelessWidget {
         child: Row(
           children: [
             ExcludeSemantics(
-              child: Icon(
-                prestador.tipo == TipoPrestador.medico
-                    ? SolIcons.medical
-                    : SolIcons.mechanic,
-                color: colors.primary,
-              ),
+              child: Icon(switch (prestador.tipo) {
+                TipoPrestador.medico => SolIcons.medical,
+                TipoPrestador.mecanico => SolIcons.mechanic,
+                TipoPrestador.grua => SolIcons.towTruck,
+              }, color: colors.primary),
             ),
             const SizedBox(width: SolSpacing.md),
             Expanded(

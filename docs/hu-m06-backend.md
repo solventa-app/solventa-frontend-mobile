@@ -11,6 +11,12 @@
 > (`ASISTENCIA_SIMULACION=primero_falla`: el primer intento queda NO_CONFIRMADA y el reintento se confirma). La app lo
 > consume en M06-02 a M06-06 (`lib/features/assistance/presentation/pages/`).
 
+> **Estado (2026-11-12):** contrato **v0.49** (backend #590): `TipoPrestador.GRUA` y `Prestador` con `aliado`,
+> `especialidad`, `direccion`, `horario` y `fotoUrl`; el desenlace de la asistencia lo decide `stubs/prestadores` detrás
+> del ACL. Lo que sigue (Mapbox, rutas por el backend, dirección ubicada, «Mis asistencias») está en
+> [`hu-m06/plan-pendientes.md`](hu-m06/plan-pendientes.md); allí la sección 1 de este documento cambia: con las rutas
+> por el backend la ubicación sí sale del teléfono al abrir el mapa (ajuste A6).
+
 Para el equipo y los agentes de `solventa-backend`. Historia **KAN-36** (HU-M06, Journey 3); tarea de backend **KAN-263**
 (`S3-M06-1`). Escrito desde la app móvil el 2026-11-04, con la app ya construida contra un fake con estos mismos datos
 (rama `feat/KAN-36-asistencia-en-sitio` de `solventa-frontend-mobile`).
@@ -31,9 +37,13 @@ Consecuencias para el plan:
 
 - **KAN-263 se simplifica**: ya no es «API que calcula los 3 más cercanos» sino «catálogo maestro sembrado + consulta
   versionada». No hace falta el proveedor de mapas en el ACL ni su circuit breaker (decisión D-M06: la app dibuja el mapa
-  con `flutter_map` y OpenStreetMap, sin clave).
+  con `flutter_map` y OpenStreetMap, sin clave). **Cambió el 2026-11-10:** el mapa es de Mapbox (`mapbox_maps_flutter`)
+  y las rutas irán por el ACL (plan de pendientes, M0 y B8).
 - **Privacidad**: la ubicación del cliente no viaja al backend para listar prestadores (Ley 1581, minimización). Solo
-  viajará cuando el cliente **solicite** la asistencia (sección 6).
+  viajará cuando el cliente **solicite** la asistencia (sección 6). **Cambió en la v0.51 (2026-11-12, decisión de
+  Felipe del 2026-11-10):** al abrir el mapa la app pide `rutasPrestadores`, así que la ubicación viaja al backend y,
+  por el ACL, a Mapbox; CLAIMS la guarda **cifrada** 90 días en `auditoria_rutas` junto con una dirección aproximada
+  (también cifrada). Nunca va a logs. **Pendiente:** actualizar el aviso de privacidad (ajuste A6).
 - **EC011/EC012** (p95 ≤ 150 ms, p99 ≤ 300 ms) aplican a `catalogoPrestadores`, que es una lectura de una colección
   pequeña sobre la réplica; con la respuesta `vigente` casi siempre viaja vacía.
 
@@ -176,8 +186,14 @@ extend type Mutation {
 - `idSolicitud` repetido devuelve la misma asistencia (el reintento de M06-03b no crea dos).
 - Mientras no haya prestadores reales, el backend puede simular el desenlace (CONFIRMADA / NO_CONFIRMADA).
 
-## Sin ubicación: dirección a mano (contrato v0.41, CA-M06-02)
+## Sin ubicación: dirección escrita y ubicada (contrato v0.50, CA-M06-02)
 
-Sin permiso de ubicación o con el GPS apagado, M06-01 ofrece «Escribir mi dirección»: muestra el catálogo por ciudad, sin
-distancia ni tiempo, y M06-02 pide la dirección como obligatoria. Se envía con `solicitarAsistenciaConDireccion`;
-M06-04a confirma sin tiempo estimado porque, sin coordenadas, el backend no puede calcularlo.
+> Reemplaza a la dirección a mano sin coordenadas de la v0.41 (`solicitarAsistenciaConDireccion`, ahora `@deprecated`
+> y sin uso en la app). Decisión de Felipe del 2026-11-10, plan de pendientes 2.0 y S1.
+
+Al entrar a Asistencia la app revisa el GPS y luego el permiso, sin pedirlo. La primera vez explica por qué lo pide; si
+lo niega, o el GPS está apagado, siempre ofrece «Escribir mi dirección»: una hoja con las sugerencias de
+`autocompletarDireccion` (Colombia, en el idioma de la app por `Accept-Language`) y, al elegir una, `ubicarDireccion`
+la convierte en coordenadas por el ACL. Con eso el mapa funciona igual que con GPS (aviso «Usando: …» y pin «Dirección
+escrita»), y la solicitud viaja por `solicitarAsistencia` con `origenUbicacion: DIRECCION`. M06-02 ya no tiene el campo
+de texto libre: solo muestra adónde llegará el prestador.

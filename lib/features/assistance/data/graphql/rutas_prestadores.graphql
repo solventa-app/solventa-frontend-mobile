@@ -1,0 +1,11 @@
+# HU-M06 (KAN-36), contrato v0.51 (B8): tiempo y ruta de los prestadores hasta el cliente para las rutas tipo semáforo.
+# Los destacados van primero: solo ellos traen `geometria` (polyline6). Si el proveedor falla, lista vacía.
+query RutasPrestadores($latitud: Float!, $longitud: Float!, $prestadorIds: [ID!]!) {
+  rutasPrestadores(latitud: $latitud, longitud: $longitud, prestadorIds: $prestadorIds) {
+    prestadorId
+    distanciaMetros
+    duracionSegundos
+    geometria
+    estimado
+  }
+}

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:solventa_mobile/core/contrato/schema.graphql.dart';
 import 'package:solventa_mobile/core/network/graphql_client.dart';
+import 'package:solventa_mobile/core/push/instalacion_id.dart';
 import 'package:solventa_mobile/features/onboarding/data/datasources/onboarding_remote_datasource.dart';
 import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
 import 'package:solventa_mobile/features/onboarding/data/graphql/onboarding.graphql.dart';
@@ -10,7 +11,7 @@ import 'package:solventa_mobile/features/onboarding/data/graphql/onboarding.grap
 /// BFF de prueba: responde [data] a cualquier operación y guarda la última
 /// petición (cuerpo y cabeceras) para revisar qué mandó el datasource.
 class _Bff {
-  _Bff() {
+  _Bff({InstalacionIdStore? instalacion}) {
     final dio = Dio(BaseOptions(baseUrl: 'http://bff.test'));
     _adaptador = DioAdapter(dio: dio, matcher: const UrlRequestMatcher());
     dio.interceptors.add(
@@ -22,7 +23,10 @@ class _Bff {
         },
       ),
     );
-    remoto = GqlOnboardingRemoteDataSource(GraphqlClient(dio));
+    remoto = GqlOnboardingRemoteDataSource(
+      GraphqlClient(dio),
+      instalacion: instalacion,
+    );
   }
 
   late final DioAdapter _adaptador;
@@ -59,6 +63,57 @@ void main() {
     expect(entrada['usuario'], 'maria@ejemplo.co');
     expect(entrada['clave'], 'Clave-segura-1');
     expect(bff.tokenOnboarding, isNull);
+  });
+
+  test(
+    'iniciarSesion manda el dispositivo de push de la instalación (KAN-259)',
+    () async {
+      final conInstalacion = _Bff(
+        instalacion: MemoriaInstalacionIdStore('inst-123'),
+      );
+      conInstalacion.responder(OnboardingFixtures.iniciarSesion);
+
+      await conInstalacion.remoto.iniciarSesion('maria@ejemplo.co', 'Clave-1');
+
+      final entrada =
+          conInstalacion.variables['entrada'] as Map<String, dynamic>;
+      expect(entrada['dispositivo'], {
+        'instalacionId': 'inst-123',
+        'plataforma': 'ANDROID',
+      });
+    },
+  );
+
+  test('el ingreso con huella también manda el dispositivo de push', () async {
+    final conInstalacion = _Bff(
+      instalacion: const MemoriaInstalacionIdStore('inst-123'),
+    );
+    conInstalacion.responder({
+      '__typename': 'Mutation',
+      'iniciarSesionConDispositivo':
+          (OnboardingFixtures.iniciarSesion['iniciarSesion']!
+              as Map<String, dynamic>),
+    });
+
+    await conInstalacion.remoto.iniciarSesionConDispositivo(
+      'd-1',
+      'reto',
+      'firma',
+    );
+
+    expect(conInstalacion.variables['dispositivo'], {
+      'instalacionId': 'inst-123',
+      'plataforma': 'ANDROID',
+    });
+  });
+
+  test('sin instalación, iniciarSesion no manda dispositivo', () async {
+    bff.responder(OnboardingFixtures.iniciarSesion);
+
+    await bff.remoto.iniciarSesion('maria@ejemplo.co', 'Clave-1');
+
+    final entrada = bff.variables['entrada'] as Map<String, dynamic>;
+    expect(entrada.containsKey('dispositivo'), isFalse);
   });
 
   group('operaciones del recorrido (llevan X-Onboarding-Token)', () {

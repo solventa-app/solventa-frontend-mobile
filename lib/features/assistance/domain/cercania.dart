@@ -55,4 +55,36 @@ abstract final class Cercania {
         ),
     ];
   }
+
+  /// HU-M06 (M1): el mapa muestra **todos** los prestadores dentro de
+  /// [radioMaxKm], no solo 3. [MapaCercania.destacados] son los
+  /// [cantidad] más cercanos (pines grandes, con tiempo y en la lista
+  /// inicial); [MapaCercania.otros], el resto ordenado por distancia (pines
+  /// pequeños y «Más prestadores en tu ciudad», con tiempo aproximado).
+  /// El radio solo filtra; no se dibuja (M16).
+  static MapaCercania destacadosYOtros(
+    Coordenada origen,
+    List<Prestador> catalogo, {
+    int cantidad = 3,
+  }) {
+    final todos = masCercanos(origen, catalogo, cantidad: catalogo.length);
+    return MapaCercania(
+      destacados: todos.take(cantidad).toList(),
+      otros: todos.skip(cantidad).toList(),
+    );
+  }
+
+  /// Más de 500 m desde la última ubicación: vale la pena recalcular (M12).
+  static bool seMovio(Coordenada antes, Coordenada ahora) =>
+      distanciaKm(antes, ahora) > 0.5;
+}
+
+/// Prestadores de M06-01 vistos desde la ubicación del cliente.
+final class MapaCercania {
+  const MapaCercania({required this.destacados, required this.otros});
+
+  final List<PrestadorCercano> destacados;
+  final List<PrestadorCercano> otros;
+
+  bool get vacio => destacados.isEmpty;
 }
