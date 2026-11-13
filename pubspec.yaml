@@ -60,7 +60,7 @@ dependencies:
   # HU-M06: mapa con teselas de OpenStreetMap (decisión D-M06), ubicación y
   # ruta en la app de mapas del teléfono.
   flutter_map: ^8.2.2
-  latlong2: ^0.9.1
+  latlong2: ^0.10.1
   geolocator: ^14.0.2
   url_launcher: ^6.3.2
   biometric_signature: ^13.3.0
