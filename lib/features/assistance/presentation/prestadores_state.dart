@@ -18,7 +18,16 @@ final class PrestadoresListos extends PrestadoresState {
     this.otros = const [],
     this.direccionEscrita,
     this.permisoDisponible = false,
+    this.rutas = const {},
+    this.rutasAproximadas = false,
   });
+
+  /// Rutas por prestador (M15). Llegan después del mapa, sin bloquearlo.
+  final Map<String, RutaPrestador> rutas;
+
+  /// El backend no devolvió rutas (falla o circuito abierto): sin líneas y los
+  /// tiempos de Haversine van marcados como aproximados (M15).
+  final bool rutasAproximadas;
 
   /// GPS del teléfono o la dirección escrita ya ubicada (2.0).
   final Coordenada origen;
@@ -46,6 +55,18 @@ final class PrestadoresListos extends PrestadoresState {
     otros: otros,
     direccionEscrita: direccionEscrita,
     permisoDisponible: true,
+    rutas: rutas,
+    rutasAproximadas: rutasAproximadas,
+  );
+
+  PrestadoresListos conRutas(List<RutaPrestador> lista) => PrestadoresListos(
+    origen: origen,
+    destacados: destacados,
+    otros: otros,
+    direccionEscrita: direccionEscrita,
+    permisoDisponible: permisoDisponible,
+    rutas: {for (final r in lista) r.prestadorId: r},
+    rutasAproximadas: lista.isEmpty,
   );
 }
 

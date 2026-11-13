@@ -148,6 +148,30 @@ final class PrestadoresNotifier extends Notifier<PrestadoresState> {
       Fracaso(:final falla) =>
         anterior is PrestadoresListos ? anterior : PrestadoresFallidos(falla),
     };
+    final listos = state;
+    if (listos is PrestadoresListos && listos.destacados.isNotEmpty) {
+      unawaited(_cargarRutas(generacion, listos));
+    }
+  }
+
+  /// M15: las rutas llegan después del mapa (no lo bloquean). Hasta 10
+  /// prestadores, los destacados primero (solo ellos traen la línea). Una
+  /// respuesta vieja se descarta.
+  Future<void> _cargarRutas(int generacion, PrestadoresListos listos) async {
+    final ids = [
+      ...listos.destacados,
+      ...listos.otros,
+    ].take(10).map((c) => c.prestador.id).toList();
+    final r = await ref
+        .read(asistenciaRepositoryProvider)
+        .rutas(listos.origen, ids);
+    if (!ref.mounted || generacion != _generacion) return;
+    final actual = state;
+    if (actual is! PrestadoresListos || actual.origen != listos.origen) return;
+    state = actual.conRutas(switch (r) {
+      Exito(:final valor) => valor,
+      Fracaso() => const [],
+    });
   }
 
   /// «Abrir Ajustes» (negado para siempre) o «Activar ubicación» (GPS

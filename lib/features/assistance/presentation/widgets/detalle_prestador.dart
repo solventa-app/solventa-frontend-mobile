@@ -23,7 +23,12 @@ class DetallePrestador extends StatelessWidget {
     required this.tipo,
     required this.onSolicitar,
     required this.onComoLlegar,
+    this.tiempo,
   });
+
+  /// Tiempo ya formateado (de la ruta, M15, o aproximado con «~»). Sin él, el
+  /// de Haversine.
+  final String? tiempo;
 
   final PrestadorCercano cercano;
 
@@ -41,10 +46,10 @@ class DetallePrestador extends StatelessWidget {
     final colors = context.colors;
     final p = cercano.prestador;
     final (Color fondo, Color frente) = solProviderColors(context, p.aliado);
-    final tiempo = SolFormat.minutes(cercano.minutosEstimados);
+    final haversine = SolFormat.minutes(cercano.minutosEstimados);
     final llegada = l10n.m0601DetalleLlegada(
       SolFormat.distanceKm(cercano.distanciaKm),
-      destacado ? tiempo : l10n.m0601Aproximado(tiempo),
+      tiempo ?? (destacado ? haversine : l10n.m0601Aproximado(haversine)),
     );
     final textoNota = context.solText.body.copyWith(
       color: colors.onSurfaceVariant,

@@ -86,9 +86,10 @@ void main() {
     expect(find.textContaining('Médico · 1,1'), findsOneWidget);
   });
 
-  testWidgets('M1 y M9: el resto de la ciudad con tiempo aproximado', (
+  testWidgets('M1 y M9: el resto de la ciudad, aproximado si no hay rutas', (
     tester,
   ) async {
+    bff.rutasCaidas = true;
     await abrir(tester);
     final mas = find.text('Más prestadores en tu ciudad');
     await tester.scrollUntilVisible(
@@ -99,6 +100,39 @@ void main() {
     expect(mas, findsOneWidget);
     expect(find.textContaining('~'), findsWidgets);
     expect(nombresDeFilas(tester), contains('Grúas Express'));
+  });
+
+  testWidgets('M15: rutas tipo semáforo de los 3 destacados y sus tiempos', (
+    tester,
+  ) async {
+    await abrir(tester);
+    final datos = tester
+        .widget<MapaPrestadores>(find.byType(MapaPrestadores))
+        .datos;
+    expect(datos.rutas.map((r) => r.prestadorId), [
+      'prs-bog-001',
+      'prs-bog-002',
+      'prs-bog-003',
+    ]);
+    expect(datos.rutas.every((r) => r.puntos.length == 2), isTrue);
+    // Con rutas, los tiempos salen de ellas y no llevan «~».
+    expect(find.textContaining('~'), findsNothing);
+    expect(semaforoDe(datos.rutas.first.minutos), Semaforo.verde);
+  });
+
+  testWidgets('M15: sin rutas del backend, sin líneas y tiempos con «~»', (
+    tester,
+  ) async {
+    bff.rutasCaidas = true;
+    await abrir(tester);
+    final datos = tester
+        .widget<MapaPrestadores>(find.byType(MapaPrestadores))
+        .datos;
+    expect(datos.rutas, isEmpty);
+    expect(
+      find.textContaining(RegExp(r'Médico · 1,1\skm · ~')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('M4: tocar un pin lo selecciona y abre el detalle', (

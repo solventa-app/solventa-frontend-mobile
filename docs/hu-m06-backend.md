@@ -40,7 +40,10 @@ Consecuencias para el plan:
   con `flutter_map` y OpenStreetMap, sin clave). **Cambió el 2026-11-10:** el mapa es de Mapbox (`mapbox_maps_flutter`)
   y las rutas irán por el ACL (plan de pendientes, M0 y B8).
 - **Privacidad**: la ubicación del cliente no viaja al backend para listar prestadores (Ley 1581, minimización). Solo
-  viajará cuando el cliente **solicite** la asistencia (sección 6).
+  viajará cuando el cliente **solicite** la asistencia (sección 6). **Cambió en la v0.51 (2026-11-12, decisión de
+  Felipe del 2026-11-10):** al abrir el mapa la app pide `rutasPrestadores`, así que la ubicación viaja al backend y,
+  por el ACL, a Mapbox; CLAIMS la guarda **cifrada** 90 días en `auditoria_rutas` junto con una dirección aproximada
+  (también cifrada). Nunca va a logs. **Pendiente:** actualizar el aviso de privacidad (ajuste A6).
 - **EC011/EC012** (p95 ≤ 150 ms, p99 ≤ 300 ms) aplican a `catalogoPrestadores`, que es una lectura de una colección
   pequeña sobre la réplica; con la respuesta `vigente` casi siempre viaja vacía.
 

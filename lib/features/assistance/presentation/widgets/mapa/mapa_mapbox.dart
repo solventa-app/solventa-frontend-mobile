@@ -54,6 +54,7 @@ class MapaMapbox extends StatefulWidget {
 class _MapaMapboxState extends State<MapaMapbox> {
   MapboxMap? _mapa;
   PointAnnotationManager? _pines;
+  PolylineAnnotationManager? _lineas;
   final _porAnotacion = <String, PrestadorCercano>{};
   final _imagenes = <Object, Uint8List>{};
   final _suscripciones = <StreamSubscription<Object?>>[];
@@ -72,7 +73,9 @@ class _MapaMapboxState extends State<MapaMapbox> {
     }
     if (old.datos.seleccionadoId != widget.datos.seleccionadoId ||
         !identical(old.datos.destacados, widget.datos.destacados) ||
-        !identical(old.datos.otros, widget.datos.otros)) {
+        !identical(old.datos.otros, widget.datos.otros) ||
+        !identical(old.datos.rutas, widget.datos.rutas)) {
+      unawaited(_pintarRutas());
       unawaited(_pintarPines());
     }
     if (widget.orden?.generacion != _ordenAplicada) {
@@ -97,6 +100,8 @@ class _MapaMapboxState extends State<MapaMapbox> {
       );
       await mapa.compass.updateSettings(CompassSettings(enabled: false));
       await mapa.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
+      // Las rutas primero: quedan debajo de los pines (M15).
+      _lineas = await mapa.annotations.createPolylineAnnotationManager();
       _pines = await mapa.annotations.createPointAnnotationManager();
       await _pines!.setIconAllowOverlap(true);
       _toques = _pines!.tapEvents(
@@ -124,6 +129,7 @@ class _MapaMapboxState extends State<MapaMapbox> {
         ..add(mapa.gestures.pan.gestureEvents.listen(gesto))
         ..add(mapa.gestures.zoom.gestureEvents.listen(gesto));
       await _limites();
+      await _pintarRutas();
       await _pintarPines();
       await _aplicarOrden();
     } catch (e) {
@@ -230,6 +236,40 @@ class _MapaMapboxState extends State<MapaMapbox> {
       final c = orden[i];
       if (a != null && c != null) _porAnotacion[a.id] = c;
     }
+  }
+
+  /// M15: rutas tipo semáforo con borde blanco de 2 px.
+  Future<void> _pintarRutas() async {
+    final lineas = _lineas;
+    if (lineas == null || !mounted) return;
+    final borde = context.colors.surface.toARGB32();
+    final opciones = [
+      for (final r in widget.datos.rutas)
+        if (r.puntos.length > 1)
+          () {
+            final (ancho, opacidad) = estiloRuta(
+              r.prestadorId,
+              widget.datos.seleccionadoId,
+            );
+            return PolylineAnnotationOptions(
+              geometry: LineString(
+                coordinates: [
+                  for (final p in r.puntos) Position(p.longitud, p.latitud),
+                ],
+              ),
+              lineColor: colorSemaforo(
+                context,
+                semaforoDe(r.minutos),
+              ).toARGB32(),
+              lineWidth: ancho,
+              lineOpacity: opacidad,
+              lineBorderColor: borde,
+              lineBorderWidth: 2,
+            );
+          }(),
+    ];
+    await lineas.deleteAll();
+    if (opciones.isNotEmpty) await lineas.createMulti(opciones);
   }
 
   Future<void> _aplicarOrden() async {

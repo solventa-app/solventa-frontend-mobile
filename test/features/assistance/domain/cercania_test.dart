@@ -91,4 +91,15 @@ void main() {
       isTrue,
     );
   });
+
+  test(
+    'M15: semáforo verde hasta 10 min, amarillo hasta 20 y rojo después',
+    () {
+      expect(semaforoDe(6), Semaforo.verde);
+      expect(semaforoDe(10), Semaforo.verde);
+      expect(semaforoDe(11), Semaforo.amarillo);
+      expect(semaforoDe(20), Semaforo.amarillo);
+      expect(semaforoDe(21), Semaforo.rojo);
+    },
+  );
 }

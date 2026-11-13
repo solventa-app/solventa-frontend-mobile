@@ -187,6 +187,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
         builder: (hoja) => DetallePrestador(
           cercano: c,
           destacado: destacado,
+          tiempo: _tiempo(c, destacado: destacado),
           tipo: _tipo(c.prestador.tipo),
           onSolicitar: () {
             Navigator.of(hoja).pop();
@@ -219,13 +220,25 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
     }
   }
 
+  /// M15: el tiempo de la ruta si el backend la mandó; si no, Haversine,
+  /// aproximado («~») para los que no son destacados o si no hubo rutas.
+  String _tiempo(PrestadorCercano c, {required bool destacado}) {
+    final s = ref.read(prestadoresProvider);
+    final ruta = s is PrestadoresListos ? s.rutas[c.prestador.id] : null;
+    if (ruta != null) return SolFormat.minutes(ruta.minutos);
+    final texto = SolFormat.minutes(c.minutosEstimados);
+    final aproximado =
+        !destacado || (s is PrestadoresListos && s.rutasAproximadas);
+    return aproximado ? context.l10n.m0601Aproximado(texto) : texto;
+  }
+
   Widget _fila(
     PrestadorCercano c,
     Coordenada origen, {
     required bool destacado,
   }) {
     final l10n = context.l10n;
-    final tiempo = SolFormat.minutes(c.minutosEstimados);
+    final tiempo = _tiempo(c, destacado: destacado);
     return SolProviderRow(
       name: c.prestador.nombre,
       type: _tipoFila(c.prestador.tipo),
@@ -233,7 +246,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
       isPartner: c.prestador.aliado,
       partnerLabel: l10n.m0601Aliado,
       distance: SolFormat.distanceKm(c.distanciaKm),
-      eta: destacado ? tiempo : l10n.m0601Aproximado(tiempo),
+      eta: tiempo,
       requestLabel: l10n.m0601Solicitar,
       selected: c.prestador.id == _seleccionado,
       onTap: () => _tocarFila(c),
@@ -248,6 +261,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
     List<PrestadorCercano> otros, {
     String? direccionEscrita,
     bool permisoDisponible = false,
+    Map<String, RutaPrestador> rutas = const {},
   }) {
     final l10n = context.l10n;
     final conMapa =
@@ -325,17 +339,18 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                     seleccionadoId: _seleccionado,
                     estilo: estilo,
                     paddingInferior: inicial * alto,
-                    etiquetaTiempo: (c) =>
-                        SolFormat.minutes(c.minutosEstimados),
+                    etiquetaTiempo: (c) => _tiempo(c, destacado: true),
                     semanticaPin: (c) => l10n.m0601PinSemantica(
                       c.prestador.nombre,
                       _tipo(c.prestador.tipo),
-                      destacadosIds.contains(c.prestador.id)
-                          ? SolFormat.minutes(c.minutosEstimados)
-                          : l10n.m0601Aproximado(
-                              SolFormat.minutes(c.minutosEstimados),
-                            ),
+                      _tiempo(
+                        c,
+                        destacado: destacadosIds.contains(c.prestador.id),
+                      ),
                     ),
+                    rutas: rutas.values
+                        .where((r) => destacadosIds.contains(r.prestadorId))
+                        .toList(),
                     etiquetaUsuario: direccionEscrita ?? l10n.m0601TuUbicacion,
                     etiquetaPinUsuario: direccionEscrita == null
                         ? null
@@ -504,6 +519,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
         :final otros,
         :final direccionEscrita,
         :final permisoDisponible,
+        :final rutas,
       ) =>
         _mapaYLista(
           context,
@@ -512,6 +528,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
           otros,
           direccionEscrita: direccionEscrita,
           permisoDisponible: permisoDisponible,
+          rutas: rutas,
         ),
     };
   }
