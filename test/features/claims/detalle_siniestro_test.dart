@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:solventa_mobile/core/contrato/schema.graphql.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/core/network/network_providers.dart';
@@ -14,7 +15,11 @@ import 'package:solventa_mobile/features/claims/presentation/providers.dart';
 void main() {
   late FakeReporteSiniestroRemoteDataSource bff;
 
-  Future<void> abrir(WidgetTester tester, String ruta) async {
+  Future<void> abrir(
+    WidgetTester tester,
+    String ruta, {
+    DateTime Function()? ahora,
+  }) async {
     tester.view.physicalSize = const Size(390, 1200);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -27,8 +32,11 @@ void main() {
         ),
         GoRoute(
           path: '/siniestros/:id',
-          builder: (_, state) =>
-              M0507DetalleSiniestroPage(id: state.pathParameters['id']!),
+          builder: (_, state) => M0507DetalleSiniestroPage(
+            id: state.pathParameters['id']!,
+            ahora: ahora ?? DateTime.now,
+            cadaCuanto: const Duration(seconds: 30),
+          ),
         ),
       ],
     );
@@ -100,4 +108,75 @@ void main() {
     await abrir(tester, '/siniestros/ajeno');
     expect(find.text('No encontramos este siniestro.'), findsOneWidget);
   });
+
+  group('plazo de revisión', () {
+    // El caso reportado vence el 2026-11-06 a las 22:00 UTC (fake).
+    Future<String> reportado() async {
+      bff.sinHistorial = true;
+      await bff.reportar(_entradaMinima());
+      // El id del caso es el `idReporte` que mandó la app.
+      return 'rep-detalle-1';
+    }
+
+    testWidgets('cuenta lo que queda: días, horas y minutos', (tester) async {
+      final id = await reportado();
+      await abrir(
+        tester,
+        '/siniestros/$id',
+        ahora: () => DateTime.utc(2026, 11, 5, 17, 40),
+      );
+      expect(find.text('Tiempo restante: 1 d 4 h 20 min'), findsOneWidget);
+    });
+
+    testWidgets('el tiempo baja con el reloj', (tester) async {
+      final id = await reportado();
+      var ahora = DateTime.utc(2026, 11, 6, 20);
+      await abrir(tester, '/siniestros/$id', ahora: () => ahora);
+      expect(find.text('Tiempo restante: 2 h 0 min'), findsOneWidget);
+
+      ahora = DateTime.utc(2026, 11, 6, 20, 30);
+      await tester.pump(const Duration(seconds: 30));
+      expect(find.text('Tiempo restante: 1 h 30 min'), findsOneWidget);
+    });
+
+    testWidgets('en cero avisa que está procesando y deja de contar', (
+      tester,
+    ) async {
+      final id = await reportado();
+      await abrir(
+        tester,
+        '/siniestros/$id',
+        ahora: () => DateTime.utc(2026, 11, 6, 22, 0, 1),
+      );
+      expect(find.textContaining('Tiempo restante'), findsNothing);
+      expect(
+        find.textContaining('El plazo de revisión venció'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('un caso ya resuelto no cuenta tiempo', (tester) async {
+      await abrir(tester, '/siniestros/demo-3');
+      expect(find.textContaining('Tiempo restante'), findsNothing);
+    });
+  });
 }
+
+Input$ReporteSiniestroInput _entradaMinima() => Input$ReporteSiniestroInput(
+  idReporte: 'rep-detalle-1',
+  polizaId: 'pol-demo-01',
+  ocurridoEn: DateTime.utc(2026, 11, 4, 13),
+  descripcion: 'Me chocaron por detrás en un semáforo.',
+  ubicacion: Input$UbicacionReporteInput(
+    descripcion: 'Cra 15 con Calle 93',
+    ciudad: 'Bogotá',
+    latitud: 4.6767,
+    longitud: -74.0483,
+  ),
+  fotos: [
+    Input$FotoReporteInput(
+      archivoId: 'a1',
+      tomadaEn: DateTime.utc(2026, 11, 4),
+    ),
+  ],
+);

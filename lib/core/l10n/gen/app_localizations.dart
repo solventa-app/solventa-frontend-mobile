@@ -2617,6 +2617,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'otro motivo'**
   String get m0507MotivoOtro;
+
+  /// M05-07 tiempo que queda del plazo de revisión
+  ///
+  /// In es, this message translates to:
+  /// **'Tiempo restante: {tiempo}'**
+  String m0507Restante(String tiempo);
+
+  /// M05-07 plazo vencido, aprobación automática en curso
+  ///
+  /// In es, this message translates to:
+  /// **'El plazo de revisión venció. Estamos procesando tu caso: verás el resultado aquí en unos minutos.'**
+  String get m0507PlazoVencido;
 }
 
 class _AppLocalizationsDelegate

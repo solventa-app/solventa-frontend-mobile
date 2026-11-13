@@ -1521,4 +1521,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0507MotivoOtro => 'another reason';
+
+  @override
+  String m0507Restante(String tiempo) {
+    return 'Time left: $tiempo';
+  }
+
+  @override
+  String get m0507PlazoVencido =>
+      'The review period has ended. We are processing your claim: you will see the result here in a few minutes.';
 }

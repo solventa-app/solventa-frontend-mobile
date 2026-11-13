@@ -1526,4 +1526,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0507MotivoOtro => 'otro motivo';
+
+  @override
+  String m0507Restante(String tiempo) {
+    return 'Tiempo restante: $tiempo';
+  }
+
+  @override
+  String get m0507PlazoVencido =>
+      'El plazo de revisión venció. Estamos procesando tu caso: verás el resultado aquí en unos minutos.';
 }

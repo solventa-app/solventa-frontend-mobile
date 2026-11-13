@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,22 +15,81 @@ import '../providers.dart';
 /// rechazo con cómo pedir que lo revisen. Sin frame en Figma: sistema de
 /// diseño. Sale de la misma lista de M05-06 (`misSiniestros`), sin consulta
 /// nueva.
-class M0507DetalleSiniestroPage extends ConsumerWidget {
-  const M0507DetalleSiniestroPage({required this.id, super.key});
+///
+/// Mientras el caso está `PENDIENTE` cuenta el tiempo que queda del plazo de
+/// revisión (se actualiza cada medio minuto). Al llegar a cero la mesa aprueba
+/// el caso sola (CLAIMS, cada minuto): la pantalla vuelve a consultar hasta ver
+/// el cambio de estado.
+class M0507DetalleSiniestroPage extends ConsumerStatefulWidget {
+  const M0507DetalleSiniestroPage({
+    required this.id,
+    this.ahora = DateTime.now,
+    this.cadaCuanto = const Duration(seconds: 30),
+    super.key,
+  });
 
   final String id;
 
+  /// El reloj; las pruebas lo fijan.
+  final DateTime Function() ahora;
+
+  /// Cada cuánto se redibuja el tiempo restante y, vencido el plazo, se
+  /// vuelve a consultar el caso.
+  final Duration cadaCuanto;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<M0507DetalleSiniestroPage> createState() =>
+      _M0507DetalleSiniestroPageState();
+}
+
+class _M0507DetalleSiniestroPageState
+    extends ConsumerState<M0507DetalleSiniestroPage> {
+  Timer? _reloj;
+
+  @override
+  void initState() {
+    super.initState();
+    _reloj = Timer.periodic(widget.cadaCuanto, (_) {
+      if (!mounted) return;
+      final caso = _caso();
+      // Vencido y todavía sin resolver: la aprobación automática ya debió
+      // correr; se consulta de nuevo sin esperar a que el cliente tire.
+      if (caso != null &&
+          caso.estado == 'PENDIENTE' &&
+          !widget.ahora().isBefore(caso.venceDictamenEn)) {
+        ref.invalidate(misSiniestrosProvider);
+      }
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _reloj?.cancel();
+    super.dispose();
+  }
+
+  SiniestroReportado? _caso() {
+    final datos = ref.read(misSiniestrosProvider).value;
+    return switch (datos) {
+      Exito(:final valor) => valor.where((c) => c.id == widget.id).firstOrNull,
+      _ => null,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final casos = ref.watch(misSiniestrosProvider);
 
-    final cuerpo = switch (casos) {
-      AsyncData(value: Exito(:final valor)) => _cuerpo(
+    // `value` conserva lo último que llegó mientras se vuelve a consultar: la
+    // pantalla no salta al esqueleto en cada vuelta.
+    final cuerpo = switch (casos.value) {
+      Exito(:final valor) => _cuerpo(
         context,
-        valor.where((c) => c.id == id).firstOrNull,
+        valor.where((c) => c.id == widget.id).firstOrNull,
       ),
-      AsyncData(value: Fracaso(:final falla)) => Column(
+      Fracaso(:final falla) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SolInlineNote(text: l10n.falla(falla)),
@@ -38,7 +99,7 @@ class M0507DetalleSiniestroPage extends ConsumerWidget {
           ),
         ],
       ),
-      _ => SolSkeletonGroup(
+      null => SolSkeletonGroup(
         message: l10n.m0506Cargando,
         child: const SolCard.outlined(
           child: Column(
@@ -115,12 +176,14 @@ class M0507DetalleSiniestroPage extends ConsumerWidget {
                   caso.fotos,
                 ),
               ),
-              if (caso.estado == 'PENDIENTE')
+              if (caso.estado == 'PENDIENTE') ...[
                 linea(
                   l10n.m0506PendienteDetalle(
                     SolFormat.date(caso.venceDictamenEn.toLocal()),
                   ),
                 ),
+                linea(_restante(l10n, caso.venceDictamenEn)),
+              ],
               if (caso.estado == 'EN_REVISION')
                 linea(l10n.m0506EnRevisionDetalle),
             ],
@@ -156,6 +219,21 @@ class M0507DetalleSiniestroPage extends ConsumerWidget {
         ],
       ],
     );
+  }
+
+  /// «Tiempo restante: 1 d 4 h 20 min», o el aviso de plazo vencido.
+  String _restante(AppLocalizations l10n, DateTime vence) {
+    final falta = vence.difference(widget.ahora());
+    if (falta <= Duration.zero) return l10n.m0507PlazoVencido;
+    final dias = falta.inDays;
+    final horas = falta.inHours % 24;
+    final minutos = falta.inMinutes % 60;
+    final partes = [
+      if (dias > 0) '$dias d',
+      if (dias > 0 || horas > 0) '$horas h',
+      '$minutos min',
+    ];
+    return l10n.m0507Restante(partes.join(' '));
   }
 
   String _textoMotivo(AppLocalizations l10n, String motivo) => switch (motivo) {

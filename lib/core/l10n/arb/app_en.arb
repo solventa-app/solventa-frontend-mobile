@@ -803,5 +803,18 @@
   "m0507MotivoOtro": "another reason",
   "@m0507MotivoOtro": {
     "description": "M05-07 reason OTRO"
+  },
+  "m0507Restante": "Time left: {tiempo}",
+  "@m0507Restante": {
+    "description": "M05-07 time left in the review period",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507PlazoVencido": "The review period has ended. We are processing your claim: you will see the result here in a few minutes.",
+  "@m0507PlazoVencido": {
+    "description": "M05-07 deadline passed, automatic approval in progress"
   }
 }

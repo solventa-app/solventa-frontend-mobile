@@ -1653,5 +1653,18 @@
   "m0507MotivoOtro": "otro motivo",
   "@m0507MotivoOtro": {
     "description": "M05-07 motivo OTRO"
+  },
+  "m0507Restante": "Tiempo restante: {tiempo}",
+  "@m0507Restante": {
+    "description": "M05-07 tiempo que queda del plazo de revisión",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507PlazoVencido": "El plazo de revisión venció. Estamos procesando tu caso: verás el resultado aquí en unos minutos.",
+  "@m0507PlazoVencido": {
+    "description": "M05-07 plazo vencido, aprobación automática en curso"
   }
 }
