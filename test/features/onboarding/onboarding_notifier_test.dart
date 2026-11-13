@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/errors/falla.dart';
+import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/features/onboarding/data/datasources/fake_onboarding_remote_datasource.dart';
 import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
 import 'package:solventa_mobile/features/onboarding/domain/entities/verificacion_identidad.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/preferencias_de_la_cuenta.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/providers.dart';
 
 /// Cuenta, código por correo, inicio de sesión y consulta del resultado de
@@ -225,6 +227,54 @@ void main() {
         expect(estado().perfil, isNotNull);
       },
     );
+
+    group('idioma y moneda de la cuenta', () {
+      test('al abrir la sesión se aplican las del perfil', () async {
+        bff.usuarioActual = {
+          ...bff.usuarioActual,
+          'idioma': 'EN',
+          'moneda': 'USD',
+        };
+        c.read(preferenciasDeLaCuentaProvider);
+
+        await notifier().reanudarSesion();
+
+        expect(c.read(localeProvider).languageCode, 'en');
+        expect(c.read(monedaProvider), 'USD');
+        // Ya coinciden con la cuenta: no se vuelven a guardar.
+        await Future<void>.delayed(const Duration(milliseconds: 900));
+        expect(
+          bff.operaciones,
+          isNot(contains('actualizarPreferencias')),
+          reason:
+              'perfil=${estado().perfil?.idioma}/${estado().perfil?.moneda} local=${c.read(localeProvider)}/${c.read(monedaProvider)} cuenta=${bff.usuarioActual['idioma']}/${bff.usuarioActual['moneda']}',
+        );
+      });
+
+      test('lo que se cambia con sesión se guarda en la cuenta', () async {
+        c.read(preferenciasDeLaCuentaProvider);
+        await notifier().reanudarSesion();
+        expect(c.read(localeProvider).languageCode, 'es');
+
+        c.read(localeProvider.notifier).cambiar(AppLocales.en);
+        c.read(monedaProvider.notifier).cambiar('MXN');
+        await Future<void>.delayed(const Duration(milliseconds: 900));
+
+        expect(
+          bff.operaciones.where((o) => o == 'actualizarPreferencias'),
+          hasLength(1),
+        );
+        expect(estado().perfil!.idioma.toUpperCase(), 'EN');
+        expect(estado().perfil!.moneda, 'MXN');
+      });
+
+      test('sin sesión no se manda nada a la cuenta', () async {
+        c.read(localeProvider.notifier).cambiar(AppLocales.en);
+        await Future<void>.delayed(const Duration(milliseconds: 900));
+
+        expect(bff.operaciones, isNot(contains('actualizarPreferencias')));
+      });
+    });
 
     test('marcarSesionVencida vuelve a «Inicia sesión» con la falla', () {
       notifier().marcarSesionVencida();
