@@ -7,4 +7,8 @@ abstract final class ReporteRoutes {
   static const enviando = '/siniestro/enviando';
   static const resultado = '/siniestro/resultado';
   static const misSiniestros = '/siniestros';
+  static const detalle = '/siniestros/:id';
+
+  /// La ruta del detalle de un caso (M05-07).
+  static String detalleDe(String id) => '/siniestros/$id';
 }

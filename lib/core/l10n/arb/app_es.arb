@@ -1919,5 +1919,104 @@
   "homeReintentarCuenta": "Reintentar",
   "@homeReintentarCuenta": {
     "description": "Inicio: reintentar la carga de la cuenta"
+  },
+  "m0507Titulo": "Detalle del siniestro",
+  "@m0507Titulo": {
+    "description": "M05-07 título"
+  },
+  "m0507NoEncontrado": "No encontramos este siniestro.",
+  "@m0507NoEncontrado": {
+    "description": "M05-07 caso no está en la lista"
+  },
+  "m0507Ocurrio": "Ocurrió el {fecha}",
+  "@m0507Ocurrio": {
+    "description": "M05-07 fecha del siniestro",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Resolucion": "Resolución",
+  "@m0507Resolucion": {
+    "description": "M05-07 título del bloque de resolución"
+  },
+  "m0507ResueltoEl": "Resuelto el {fecha}",
+  "@m0507ResueltoEl": {
+    "description": "M05-07 fecha de la resolución",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Indemnizacion": "Indemnización aprobada: {monto}",
+  "@m0507Indemnizacion": {
+    "description": "M05-07 monto aprobado",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507PlazoPago": "Plazo de pago: {plazo}",
+  "@m0507PlazoPago": {
+    "description": "M05-07 plazo de dispersión",
+    "placeholders": {
+      "plazo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Motivo": "Motivo: {motivo}",
+  "@m0507Motivo": {
+    "description": "M05-07 motivo del rechazo",
+    "placeholders": {
+      "motivo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507ViaRecurso": "Cómo pedir una revisión: {via}",
+  "@m0507ViaRecurso": {
+    "description": "M05-07 vía de recurso",
+    "placeholders": {
+      "via": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507MotivoEvidencia": "la evidencia no fue suficiente",
+  "@m0507MotivoEvidencia": {
+    "description": "M05-07 motivo EVIDENCIA_INSUFICIENTE"
+  },
+  "m0507MotivoCobertura": "el hecho está fuera de la cobertura",
+  "@m0507MotivoCobertura": {
+    "description": "M05-07 motivo FUERA_DE_COBERTURA"
+  },
+  "m0507MotivoPoliza": "la póliza no estaba vigente",
+  "@m0507MotivoPoliza": {
+    "description": "M05-07 motivo POLIZA_NO_VIGENTE"
+  },
+  "m0507MotivoRelato": "el relato no es consistente con la evidencia",
+  "@m0507MotivoRelato": {
+    "description": "M05-07 motivo INCONSISTENCIA_EN_RELATO"
+  },
+  "m0507MotivoOtro": "otro motivo",
+  "@m0507MotivoOtro": {
+    "description": "M05-07 motivo OTRO"
+  },
+  "m0507Restante": "Tiempo restante: {tiempo}",
+  "@m0507Restante": {
+    "description": "M05-07 tiempo que queda del plazo de revisión",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507PlazoVencido": "El plazo de revisión venció. Estamos procesando tu caso: verás el resultado aquí en unos minutos.",
+  "@m0507PlazoVencido": {
+    "description": "M05-07 plazo vencido, aprobación automática en curso"
   }
 }

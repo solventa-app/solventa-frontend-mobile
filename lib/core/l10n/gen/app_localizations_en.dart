@@ -1691,4 +1691,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeReintentarCuenta => 'Try again';
+
+  @override
+  String get m0507Titulo => 'Claim details';
+
+  @override
+  String get m0507NoEncontrado => 'We couldn\'t find this claim.';
+
+  @override
+  String m0507Ocurrio(String fecha) {
+    return 'Happened on $fecha';
+  }
+
+  @override
+  String get m0507Resolucion => 'Resolution';
+
+  @override
+  String m0507ResueltoEl(String fecha) {
+    return 'Resolved on $fecha';
+  }
+
+  @override
+  String m0507Indemnizacion(String monto) {
+    return 'Approved compensation: $monto';
+  }
+
+  @override
+  String m0507PlazoPago(String plazo) {
+    return 'Payment deadline: $plazo';
+  }
+
+  @override
+  String m0507Motivo(String motivo) {
+    return 'Reason: $motivo';
+  }
+
+  @override
+  String m0507ViaRecurso(String via) {
+    return 'How to ask for a review: $via';
+  }
+
+  @override
+  String get m0507MotivoEvidencia => 'the evidence was not enough';
+
+  @override
+  String get m0507MotivoCobertura => 'the event is outside the coverage';
+
+  @override
+  String get m0507MotivoPoliza => 'the policy was not in force';
+
+  @override
+  String get m0507MotivoRelato => 'the account does not match the evidence';
+
+  @override
+  String get m0507MotivoOtro => 'another reason';
+
+  @override
+  String m0507Restante(String tiempo) {
+    return 'Time left: $tiempo';
+  }
+
+  @override
+  String get m0507PlazoVencido =>
+      'The review period has ended. We are processing your claim: you will see the result here in a few minutes.';
 }

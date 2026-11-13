@@ -28,6 +28,21 @@ SiniestroReportado siniestroDesdeGql(Fragment$SiniestroReportadoCampos s) =>
       notificadoEn: s.notificadoEn,
       venceDictamenEn: s.venceDictamenEn,
       fotos: s.fotos,
+      ocurridoEn: s.ocurridoEn,
+      resolucion: switch (s.resolucion) {
+        final r? => ResolucionSiniestro(
+          tipo: r.tipo.name,
+          resueltaEn: r.resueltaEn,
+          motivo: r.motivo?.name,
+          viaRecurso: r.viaRecurso,
+          indemnizacion: switch (r.indemnizacion) {
+            final m? => num.tryParse(m.valor),
+            null => null,
+          },
+          plazoDispersion: r.plazoDispersion,
+        ),
+        null => null,
+      },
     );
 
 /// La entrada del contrato. [archivos] son los ids ya subidos, en el mismo

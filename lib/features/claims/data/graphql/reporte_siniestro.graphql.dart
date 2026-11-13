@@ -15,6 +15,7 @@ class Fragment$SiniestroReportadoCampos {
     required this.venceDictamenEn,
     required this.fotos,
     this.tipoSiniestroAuto,
+    this.resolucion,
     this.$__typename = 'SiniestroReportado',
   });
 
@@ -30,6 +31,7 @@ class Fragment$SiniestroReportadoCampos {
     final l$venceDictamenEn = json['venceDictamenEn'];
     final l$fotos = json['fotos'];
     final l$tipoSiniestroAuto = json['tipoSiniestroAuto'];
+    final l$resolucion = json['resolucion'];
     final l$$__typename = json['__typename'];
     return Fragment$SiniestroReportadoCampos(
       id: (l$id as String),
@@ -43,6 +45,11 @@ class Fragment$SiniestroReportadoCampos {
       tipoSiniestroAuto: l$tipoSiniestroAuto == null
           ? null
           : fromJson$Enum$TipoSiniestroAuto((l$tipoSiniestroAuto as String)),
+      resolucion: l$resolucion == null
+          ? null
+          : Fragment$SiniestroReportadoCampos$resolucion.fromJson(
+              (l$resolucion as Map<String, dynamic>),
+            ),
       $__typename: (l$$__typename as String),
     );
   }
@@ -64,6 +71,8 @@ class Fragment$SiniestroReportadoCampos {
   final int fotos;
 
   final Enum$TipoSiniestroAuto? tipoSiniestroAuto;
+
+  final Fragment$SiniestroReportadoCampos$resolucion? resolucion;
 
   final String $__typename;
 
@@ -89,6 +98,8 @@ class Fragment$SiniestroReportadoCampos {
     _resultData['tipoSiniestroAuto'] = l$tipoSiniestroAuto == null
         ? null
         : toJson$Enum$TipoSiniestroAuto(l$tipoSiniestroAuto);
+    final l$resolucion = resolucion;
+    _resultData['resolucion'] = l$resolucion?.toJson();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -105,6 +116,7 @@ class Fragment$SiniestroReportadoCampos {
     final l$venceDictamenEn = venceDictamenEn;
     final l$fotos = fotos;
     final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    final l$resolucion = resolucion;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -116,6 +128,7 @@ class Fragment$SiniestroReportadoCampos {
       l$venceDictamenEn,
       l$fotos,
       l$tipoSiniestroAuto,
+      l$resolucion,
       l$$__typename,
     ]);
   }
@@ -172,6 +185,11 @@ class Fragment$SiniestroReportadoCampos {
     final l$tipoSiniestroAuto = tipoSiniestroAuto;
     final lOther$tipoSiniestroAuto = other.tipoSiniestroAuto;
     if (l$tipoSiniestroAuto != lOther$tipoSiniestroAuto) {
+      return false;
+    }
+    final l$resolucion = resolucion;
+    final lOther$resolucion = other.resolucion;
+    if (l$resolucion != lOther$resolucion) {
       return false;
     }
     final l$$__typename = $__typename;
@@ -258,6 +276,89 @@ const fragmentDefinitionSiniestroReportadoCampos = FragmentDefinitionNode(
         selectionSet: null,
       ),
       FieldNode(
+        name: NameNode(value: 'resolucion'),
+        alias: null,
+        arguments: [],
+        directives: [],
+        selectionSet: SelectionSetNode(
+          selections: [
+            FieldNode(
+              name: NameNode(value: 'tipo'),
+              alias: null,
+              arguments: [],
+              directives: [],
+              selectionSet: null,
+            ),
+            FieldNode(
+              name: NameNode(value: 'resueltaEn'),
+              alias: null,
+              arguments: [],
+              directives: [],
+              selectionSet: null,
+            ),
+            FieldNode(
+              name: NameNode(value: 'motivo'),
+              alias: null,
+              arguments: [],
+              directives: [],
+              selectionSet: null,
+            ),
+            FieldNode(
+              name: NameNode(value: 'viaRecurso'),
+              alias: null,
+              arguments: [],
+              directives: [],
+              selectionSet: null,
+            ),
+            FieldNode(
+              name: NameNode(value: 'indemnizacion'),
+              alias: null,
+              arguments: [],
+              directives: [],
+              selectionSet: SelectionSetNode(
+                selections: [
+                  FieldNode(
+                    name: NameNode(value: 'valor'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null,
+                  ),
+                  FieldNode(
+                    name: NameNode(value: 'moneda'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null,
+                  ),
+                  FieldNode(
+                    name: NameNode(value: '__typename'),
+                    alias: null,
+                    arguments: [],
+                    directives: [],
+                    selectionSet: null,
+                  ),
+                ],
+              ),
+            ),
+            FieldNode(
+              name: NameNode(value: 'plazoDispersion'),
+              alias: null,
+              arguments: [],
+              directives: [],
+              selectionSet: null,
+            ),
+            FieldNode(
+              name: NameNode(value: '__typename'),
+              alias: null,
+              arguments: [],
+              directives: [],
+              selectionSet: null,
+            ),
+          ],
+        ),
+      ),
+      FieldNode(
         name: NameNode(value: '__typename'),
         alias: null,
         arguments: [],
@@ -270,6 +371,221 @@ const fragmentDefinitionSiniestroReportadoCampos = FragmentDefinitionNode(
 const documentNodeFragmentSiniestroReportadoCampos = DocumentNode(
   definitions: [fragmentDefinitionSiniestroReportadoCampos],
 );
+
+class Fragment$SiniestroReportadoCampos$resolucion {
+  Fragment$SiniestroReportadoCampos$resolucion({
+    required this.tipo,
+    required this.resueltaEn,
+    this.motivo,
+    this.viaRecurso,
+    this.indemnizacion,
+    this.plazoDispersion,
+    this.$__typename = 'ResolucionCliente',
+  });
+
+  factory Fragment$SiniestroReportadoCampos$resolucion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$tipo = json['tipo'];
+    final l$resueltaEn = json['resueltaEn'];
+    final l$motivo = json['motivo'];
+    final l$viaRecurso = json['viaRecurso'];
+    final l$indemnizacion = json['indemnizacion'];
+    final l$plazoDispersion = json['plazoDispersion'];
+    final l$$__typename = json['__typename'];
+    return Fragment$SiniestroReportadoCampos$resolucion(
+      tipo: fromJson$Enum$TipoResolucion((l$tipo as String)),
+      resueltaEn: DateTime.parse((l$resueltaEn as String)),
+      motivo: l$motivo == null
+          ? null
+          : fromJson$Enum$MotivoRechazo((l$motivo as String)),
+      viaRecurso: (l$viaRecurso as String?),
+      indemnizacion: l$indemnizacion == null
+          ? null
+          : Fragment$SiniestroReportadoCampos$resolucion$indemnizacion.fromJson(
+              (l$indemnizacion as Map<String, dynamic>),
+            ),
+      plazoDispersion: (l$plazoDispersion as String?),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Enum$TipoResolucion tipo;
+
+  final DateTime resueltaEn;
+
+  final Enum$MotivoRechazo? motivo;
+
+  final String? viaRecurso;
+
+  final Fragment$SiniestroReportadoCampos$resolucion$indemnizacion?
+  indemnizacion;
+
+  final String? plazoDispersion;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$tipo = tipo;
+    _resultData['tipo'] = toJson$Enum$TipoResolucion(l$tipo);
+    final l$resueltaEn = resueltaEn;
+    _resultData['resueltaEn'] = l$resueltaEn.toIso8601String();
+    final l$motivo = motivo;
+    _resultData['motivo'] = l$motivo == null
+        ? null
+        : toJson$Enum$MotivoRechazo(l$motivo);
+    final l$viaRecurso = viaRecurso;
+    _resultData['viaRecurso'] = l$viaRecurso;
+    final l$indemnizacion = indemnizacion;
+    _resultData['indemnizacion'] = l$indemnizacion?.toJson();
+    final l$plazoDispersion = plazoDispersion;
+    _resultData['plazoDispersion'] = l$plazoDispersion;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$tipo = tipo;
+    final l$resueltaEn = resueltaEn;
+    final l$motivo = motivo;
+    final l$viaRecurso = viaRecurso;
+    final l$indemnizacion = indemnizacion;
+    final l$plazoDispersion = plazoDispersion;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$tipo,
+      l$resueltaEn,
+      l$motivo,
+      l$viaRecurso,
+      l$indemnizacion,
+      l$plazoDispersion,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Fragment$SiniestroReportadoCampos$resolucion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$tipo = tipo;
+    final lOther$tipo = other.tipo;
+    if (l$tipo != lOther$tipo) {
+      return false;
+    }
+    final l$resueltaEn = resueltaEn;
+    final lOther$resueltaEn = other.resueltaEn;
+    if (l$resueltaEn != lOther$resueltaEn) {
+      return false;
+    }
+    final l$motivo = motivo;
+    final lOther$motivo = other.motivo;
+    if (l$motivo != lOther$motivo) {
+      return false;
+    }
+    final l$viaRecurso = viaRecurso;
+    final lOther$viaRecurso = other.viaRecurso;
+    if (l$viaRecurso != lOther$viaRecurso) {
+      return false;
+    }
+    final l$indemnizacion = indemnizacion;
+    final lOther$indemnizacion = other.indemnizacion;
+    if (l$indemnizacion != lOther$indemnizacion) {
+      return false;
+    }
+    final l$plazoDispersion = plazoDispersion;
+    final lOther$plazoDispersion = other.plazoDispersion;
+    if (l$plazoDispersion != lOther$plazoDispersion) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Fragment$SiniestroReportadoCampos$resolucion$indemnizacion {
+  Fragment$SiniestroReportadoCampos$resolucion$indemnizacion({
+    required this.valor,
+    required this.moneda,
+    this.$__typename = 'Monto',
+  });
+
+  factory Fragment$SiniestroReportadoCampos$resolucion$indemnizacion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$valor = json['valor'];
+    final l$moneda = json['moneda'];
+    final l$$__typename = json['__typename'];
+    return Fragment$SiniestroReportadoCampos$resolucion$indemnizacion(
+      valor: (l$valor as String),
+      moneda: (l$moneda as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String valor;
+
+  final String moneda;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$valor = valor;
+    _resultData['valor'] = l$valor;
+    final l$moneda = moneda;
+    _resultData['moneda'] = l$moneda;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$valor = valor;
+    final l$moneda = moneda;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$valor, l$moneda, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Fragment$SiniestroReportadoCampos$resolucion$indemnizacion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$valor = valor;
+    final lOther$valor = other.valor;
+    if (l$valor != lOther$valor) {
+      return false;
+    }
+    final l$moneda = moneda;
+    final lOther$moneda = other.moneda;
+    if (l$moneda != lOther$moneda) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
 
 class Query$PolizasParaReporte {
   Query$PolizasParaReporte({
@@ -2481,6 +2797,7 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     required this.venceDictamenEn,
     required this.fotos,
     this.tipoSiniestroAuto,
+    this.resolucion,
     this.$__typename = 'SiniestroReportado',
   });
 
@@ -2496,6 +2813,7 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     final l$venceDictamenEn = json['venceDictamenEn'];
     final l$fotos = json['fotos'];
     final l$tipoSiniestroAuto = json['tipoSiniestroAuto'];
+    final l$resolucion = json['resolucion'];
     final l$$__typename = json['__typename'];
     return Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado(
       id: (l$id as String),
@@ -2509,6 +2827,11 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
       tipoSiniestroAuto: l$tipoSiniestroAuto == null
           ? null
           : fromJson$Enum$TipoSiniestroAuto((l$tipoSiniestroAuto as String)),
+      resolucion: l$resolucion == null
+          ? null
+          : Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion.fromJson(
+              (l$resolucion as Map<String, dynamic>),
+            ),
       $__typename: (l$$__typename as String),
     );
   }
@@ -2530,6 +2853,9 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
   final int fotos;
 
   final Enum$TipoSiniestroAuto? tipoSiniestroAuto;
+
+  final Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion?
+  resolucion;
 
   final String $__typename;
 
@@ -2555,6 +2881,8 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     _resultData['tipoSiniestroAuto'] = l$tipoSiniestroAuto == null
         ? null
         : toJson$Enum$TipoSiniestroAuto(l$tipoSiniestroAuto);
+    final l$resolucion = resolucion;
+    _resultData['resolucion'] = l$resolucion?.toJson();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -2571,6 +2899,7 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     final l$venceDictamenEn = venceDictamenEn;
     final l$fotos = fotos;
     final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    final l$resolucion = resolucion;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -2582,6 +2911,7 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
       l$venceDictamenEn,
       l$fotos,
       l$tipoSiniestroAuto,
+      l$resolucion,
       l$$__typename,
     ]);
   }
@@ -2639,6 +2969,230 @@ class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado
     final l$tipoSiniestroAuto = tipoSiniestroAuto;
     final lOther$tipoSiniestroAuto = other.tipoSiniestroAuto;
     if (l$tipoSiniestroAuto != lOther$tipoSiniestroAuto) {
+      return false;
+    }
+    final l$resolucion = resolucion;
+    final lOther$resolucion = other.resolucion;
+    if (l$resolucion != lOther$resolucion) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion
+    implements Fragment$SiniestroReportadoCampos$resolucion {
+  Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion({
+    required this.tipo,
+    required this.resueltaEn,
+    this.motivo,
+    this.viaRecurso,
+    this.indemnizacion,
+    this.plazoDispersion,
+    this.$__typename = 'ResolucionCliente',
+  });
+
+  factory Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$tipo = json['tipo'];
+    final l$resueltaEn = json['resueltaEn'];
+    final l$motivo = json['motivo'];
+    final l$viaRecurso = json['viaRecurso'];
+    final l$indemnizacion = json['indemnizacion'];
+    final l$plazoDispersion = json['plazoDispersion'];
+    final l$$__typename = json['__typename'];
+    return Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion(
+      tipo: fromJson$Enum$TipoResolucion((l$tipo as String)),
+      resueltaEn: DateTime.parse((l$resueltaEn as String)),
+      motivo: l$motivo == null
+          ? null
+          : fromJson$Enum$MotivoRechazo((l$motivo as String)),
+      viaRecurso: (l$viaRecurso as String?),
+      indemnizacion: l$indemnizacion == null
+          ? null
+          : Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion$indemnizacion.fromJson(
+              (l$indemnizacion as Map<String, dynamic>),
+            ),
+      plazoDispersion: (l$plazoDispersion as String?),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Enum$TipoResolucion tipo;
+
+  final DateTime resueltaEn;
+
+  final Enum$MotivoRechazo? motivo;
+
+  final String? viaRecurso;
+
+  final Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion$indemnizacion?
+  indemnizacion;
+
+  final String? plazoDispersion;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$tipo = tipo;
+    _resultData['tipo'] = toJson$Enum$TipoResolucion(l$tipo);
+    final l$resueltaEn = resueltaEn;
+    _resultData['resueltaEn'] = l$resueltaEn.toIso8601String();
+    final l$motivo = motivo;
+    _resultData['motivo'] = l$motivo == null
+        ? null
+        : toJson$Enum$MotivoRechazo(l$motivo);
+    final l$viaRecurso = viaRecurso;
+    _resultData['viaRecurso'] = l$viaRecurso;
+    final l$indemnizacion = indemnizacion;
+    _resultData['indemnizacion'] = l$indemnizacion?.toJson();
+    final l$plazoDispersion = plazoDispersion;
+    _resultData['plazoDispersion'] = l$plazoDispersion;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$tipo = tipo;
+    final l$resueltaEn = resueltaEn;
+    final l$motivo = motivo;
+    final l$viaRecurso = viaRecurso;
+    final l$indemnizacion = indemnizacion;
+    final l$plazoDispersion = plazoDispersion;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$tipo,
+      l$resueltaEn,
+      l$motivo,
+      l$viaRecurso,
+      l$indemnizacion,
+      l$plazoDispersion,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$tipo = tipo;
+    final lOther$tipo = other.tipo;
+    if (l$tipo != lOther$tipo) {
+      return false;
+    }
+    final l$resueltaEn = resueltaEn;
+    final lOther$resueltaEn = other.resueltaEn;
+    if (l$resueltaEn != lOther$resueltaEn) {
+      return false;
+    }
+    final l$motivo = motivo;
+    final lOther$motivo = other.motivo;
+    if (l$motivo != lOther$motivo) {
+      return false;
+    }
+    final l$viaRecurso = viaRecurso;
+    final lOther$viaRecurso = other.viaRecurso;
+    if (l$viaRecurso != lOther$viaRecurso) {
+      return false;
+    }
+    final l$indemnizacion = indemnizacion;
+    final lOther$indemnizacion = other.indemnizacion;
+    if (l$indemnizacion != lOther$indemnizacion) {
+      return false;
+    }
+    final l$plazoDispersion = plazoDispersion;
+    final lOther$plazoDispersion = other.plazoDispersion;
+    if (l$plazoDispersion != lOther$plazoDispersion) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion$indemnizacion
+    implements Fragment$SiniestroReportadoCampos$resolucion$indemnizacion {
+  Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion$indemnizacion({
+    required this.valor,
+    required this.moneda,
+    this.$__typename = 'Monto',
+  });
+
+  factory Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion$indemnizacion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$valor = json['valor'];
+    final l$moneda = json['moneda'];
+    final l$$__typename = json['__typename'];
+    return Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion$indemnizacion(
+      valor: (l$valor as String),
+      moneda: (l$moneda as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String valor;
+
+  final String moneda;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$valor = valor;
+    _resultData['valor'] = l$valor;
+    final l$moneda = moneda;
+    _resultData['moneda'] = l$moneda;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$valor = valor;
+    final l$moneda = moneda;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$valor, l$moneda, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Mutation$ReportarSiniestro$reportarSiniestro$$SiniestroReportado$resolucion$indemnizacion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$valor = valor;
+    final lOther$valor = other.valor;
+    if (l$valor != lOther$valor) {
+      return false;
+    }
+    final l$moneda = moneda;
+    final lOther$moneda = other.moneda;
+    if (l$moneda != lOther$moneda) {
       return false;
     }
     final l$$__typename = $__typename;
