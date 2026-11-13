@@ -4,4 +4,9 @@ abstract final class AsistenciaRoutes {
   static const enviando = '/asistencia/enviando';
   static const resultado = '/asistencia/resultado';
   static const cancelada = '/asistencia/cancelada';
+
+  /// Detalle de una asistencia de «Mis asistencias» (4.4), también al tocar
+  /// la notificación de llegada (4.5).
+  static const detalle = '/asistencias';
+  static String detalleCon(String id) => '$detalle/$id';
 }

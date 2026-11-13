@@ -178,7 +178,15 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
           ],
         ],
       ),
-      actions: [SolButton.primary(label: l10n.m0602Enviar, onPressed: _enviar)],
+      actions: [
+        // 4.5: antes del diálogo de notificaciones (Android 13+), para qué es.
+        SolInlineNote(
+          icon: SolIcons.notifications,
+          text: l10n.asistenciaNotifNota,
+        ),
+        const SizedBox(height: SolSpacing.sm),
+        SolButton.primary(label: l10n.m0602Enviar, onPressed: _enviar),
+      ],
     );
   }
 }

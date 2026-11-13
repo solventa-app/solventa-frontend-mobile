@@ -24,6 +24,7 @@ Resultado<Asistencia> asistenciaDesdeMapa(Map<String, Object?> m) {
         'CONFIRMADA' => EstadoAsistencia.confirmada,
         'NO_CONFIRMADA' => EstadoAsistencia.noConfirmada,
         'CANCELADA' => EstadoAsistencia.cancelada,
+        'LLEGO' => EstadoAsistencia.llego,
         final otro => throw FormatException('estado desconocido: $otro'),
       },
       tipo: _tipo(m['tipoAsistencia']),
@@ -44,13 +45,33 @@ Resultado<Asistencia> asistenciaDesdeMapa(Map<String, Object?> m) {
       ),
       minutosEstimados: (m['minutosEstimados'] as num?)?.toInt(),
       solicitadaEn: DateTime.parse(m['solicitadaEn']! as String),
-      canceladaEn: switch (m['canceladaEn']) {
-        final String f => DateTime.parse(f),
+      canceladaEn: _fecha(m['canceladaEn']),
+      confirmadaEn: _fecha(m['confirmadaEn']),
+      llegadaEstimada: _fecha(m['llegadaEstimada']),
+      descripcion: m['descripcion'] as String?,
+      ubicacion: switch (m['ubicacion']) {
+        final Map<String, Object?> u => UbicacionSolicitud(
+          origen: u['origen'] == 'DIRECCION'
+              ? OrigenUbicacion.direccion
+              : OrigenUbicacion.gps,
+          coordenada: u['latitud'] == null || u['longitud'] == null
+              ? null
+              : Coordenada(
+                  (u['latitud']! as num).toDouble(),
+                  (u['longitud']! as num).toDouble(),
+                ),
+          direccion: u['direccion'] as String?,
+        ),
         _ => null,
       },
     ),
   );
 }
+
+DateTime? _fecha(Object? valor) => switch (valor) {
+  final String f => DateTime.parse(f),
+  _ => null,
+};
 
 /// [SolicitudAsistencia] → `SolicitudAsistenciaInput`. Los textos vacíos
 /// viajan como `null` (son opcionales).

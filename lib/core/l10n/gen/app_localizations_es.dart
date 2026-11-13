@@ -1295,6 +1295,114 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0606SolicitarDeNuevo => 'Solicitar de nuevo';
 
   @override
+  String get navMisAsistencias => 'Mis asistencias';
+
+  @override
+  String navMisAsistenciasEnCamino(String cantidad) {
+    return 'Mis asistencias, $cantidad en camino';
+  }
+
+  @override
+  String get misAsistenciasTitulo => 'Mis asistencias';
+
+  @override
+  String get misAsistenciasVacio => 'Aún no has pedido asistencia';
+
+  @override
+  String get misAsistenciasSolicitar => 'Solicitar asistencia en sitio';
+
+  @override
+  String misAsistenciasEnCamino(String cantidad) {
+    return 'En camino ($cantidad)';
+  }
+
+  @override
+  String misAsistenciasYaLlegaron(String cantidad) {
+    return 'Ya llegaron ($cantidad)';
+  }
+
+  @override
+  String get misAsistenciasError => 'No pudimos cargar tus asistencias.';
+
+  @override
+  String get misAsistenciasCargando => 'Cargando tus asistencias…';
+
+  @override
+  String asistenciaPedida(String tipo, String hora) {
+    return '$tipo · pedida $hora';
+  }
+
+  @override
+  String asistenciaLlegaEn(String minutos) {
+    return 'Llega en $minutos min';
+  }
+
+  @override
+  String get asistenciaLlegaMenosDeUno => 'Llega en menos de 1 min';
+
+  @override
+  String asistenciaHoraEstimada(String hora) {
+    return 'Hora estimada $hora';
+  }
+
+  @override
+  String asistenciaLlego(String hora) {
+    return 'Llegó · $hora';
+  }
+
+  @override
+  String get asistenciaNoConfirmada => 'No pudimos confirmar';
+
+  @override
+  String get asistenciaReintentar => 'Reintentar';
+
+  @override
+  String asistenciaEnCaminoLlega(String minutos) {
+    return 'En camino · llega en $minutos min';
+  }
+
+  @override
+  String get asistenciaNotifTitulo => 'Tu asistencia llegó';
+
+  @override
+  String asistenciaNotifCuerpo(String prestador) {
+    return '$prestador ya debería estar en tu ubicación';
+  }
+
+  @override
+  String get asistenciaNotifNota => 'Te avisaremos cuando llegue el prestador.';
+
+  @override
+  String asistenciaLlegoSnack(String prestador) {
+    return '$prestador llegó';
+  }
+
+  @override
+  String get asistenciaVer => 'Ver';
+
+  @override
+  String get asistenciaDetalleTitulo => 'Tu asistencia';
+
+  @override
+  String asistenciaTeAlejaste(String direccion) {
+    return 'Te alejaste del lugar donde pediste la asistencia. El prestador va a $direccion';
+  }
+
+  @override
+  String get asistenciaLugarPedido => 'el lugar donde la pediste';
+
+  @override
+  String get asistenciaCancelarYPedirOtra => 'Cancelar y pedir otra';
+
+  @override
+  String asistenciaLectura(String prestador, String tipo, String estado) {
+    return '$prestador, $tipo, $estado';
+  }
+
+  @override
+  String get asistenciaNoEncontrada => 'No encontramos esa asistencia.';
+
+  @override
   String get m0402Titulo => 'Indemnización';
 
   @override

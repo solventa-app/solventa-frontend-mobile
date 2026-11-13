@@ -3,6 +3,7 @@ import '../../domain/cercania.dart';
 import '../../domain/entities/prestador.dart';
 import '../fixtures/asistencia_fixtures.dart';
 import '../graphql/catalogo_prestadores.graphql.dart';
+import '../graphql/mis_asistencias.graphql.dart';
 import '../graphql/rutas_prestadores.graphql.dart';
 import '../graphql/solicitud_asistencia.graphql.dart';
 import '../graphql/ubicar_direccion.graphql.dart';
@@ -36,6 +37,12 @@ abstract interface class AsistenciaRemoteDataSource {
     String? placeId,
     String? texto,
   });
+
+  /// `data.misAsistencias` (contrato v0.52, B6).
+  Future<List<Map<String, Object?>>> misAsistencias();
+
+  /// `data.asistencia(id)` (contrato v0.52, B6): union `ResultadoAsistencia`.
+  Future<Map<String, Object?>> asistencia(String id);
 
   /// `data.rutasPrestadores` (contrato v0.51, B8): los destacados primero.
   Future<List<Map<String, Object?>>> rutasPrestadores(
@@ -98,6 +105,24 @@ final class GqlAsistenciaRemoteDataSource
       ).autocompletarDireccion)
         s.toJson(),
     ];
+  }
+
+  @override
+  Future<List<Map<String, Object?>>> misAsistencias() async {
+    final data = await _cliente.ejecutar(documentNodeQueryMisAsistencias);
+    return [
+      for (final a in Query$MisAsistencias.fromJson(data).misAsistencias)
+        a.toJson(),
+    ];
+  }
+
+  @override
+  Future<Map<String, Object?>> asistencia(String id) async {
+    final data = await _cliente.ejecutar(
+      documentNodeQueryAsistenciaPorId,
+      variables: Variables$Query$AsistenciaPorId(id: id).toJson(),
+    );
+    return Query$AsistenciaPorId.fromJson(data).asistencia.toJson();
   }
 
   @override
@@ -212,7 +237,15 @@ final class FakeAsistenciaRemoteDataSource
             tipoAsistencia: entrada['tipoAsistencia']! as String,
             minutosEstimados: confirmar ? 6 : null,
             motivo: confirmar ? null : 'PRESTADOR_SIN_RESPUESTA',
+            confirmadaEn: confirmar ? reloj().toUtc().toIso8601String() : null,
+            llegadaEstimada: confirmar
+                ? reloj()
+                      .add(const Duration(minutes: 6))
+                      .toUtc()
+                      .toIso8601String()
+                : null,
           );
+    _pedidos[id] = entrada;
     asistencias[id] = respuesta;
     return respuesta;
   }
@@ -222,6 +255,55 @@ final class FakeAsistenciaRemoteDataSource
 
   /// Para pruebas: `rutasPrestadores` vuelve vacía (proveedor caído).
   bool rutasCaidas = false;
+
+  /// Reloj del fake (la llegada estimada y LLEGO se calculan con él).
+  DateTime Function() reloj = DateTime.now;
+
+  /// Lo que pidió cada asistencia (para «Mis asistencias», v0.52).
+  final Map<String, Map<String, Object?>> _pedidos = {};
+
+  /// Como el backend (v0.52): las pedidas aquí, la más reciente primero,
+  /// con LLEGO derivado al leer.
+  @override
+  Future<List<Map<String, Object?>>> misAsistencias() async {
+    if (latencia > Duration.zero) await Future<void>.delayed(latencia);
+    final e = error;
+    if (e != null) throw e;
+    return [for (final id in asistencias.keys.toList().reversed) _detalle(id)];
+  }
+
+  @override
+  Future<Map<String, Object?>> asistencia(String id) async {
+    if (latencia > Duration.zero) await Future<void>.delayed(latencia);
+    final e = error;
+    if (e != null) throw e;
+    if (!asistencias.containsKey(id)) {
+      return AsistenciaFixtures.errorAsistencia('NO_ENCONTRADA');
+    }
+    return _detalle(id);
+  }
+
+  Map<String, Object?> _detalle(String id) {
+    final a = asistencias[id]!;
+    final pedido = _pedidos[id] ?? const <String, Object?>{};
+    final llegada = a['llegadaEstimada'] as String?;
+    final llego =
+        a['estado'] == 'CONFIRMADA' &&
+        llegada != null &&
+        !DateTime.parse(llegada).isAfter(reloj());
+    return {
+      ...a,
+      'estado': llego ? 'LLEGO' : a['estado'],
+      'descripcion': pedido['descripcion'],
+      'ubicacion': {
+        '__typename': 'UbicacionAsistencia',
+        'latitud': pedido['latitud'],
+        'longitud': pedido['longitud'],
+        'direccion': pedido['direccion'],
+        'origen': pedido['origenUbicacion'] ?? 'GPS',
+      },
+    };
+  }
 
   /// Como el modo simulado del ACL: línea recta y las reglas de la app;
   /// geometría solo para los 3 primeros.

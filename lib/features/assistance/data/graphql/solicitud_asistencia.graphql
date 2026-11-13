@@ -11,6 +11,8 @@ mutation SolicitarAsistencia($entrada: SolicitudAsistenciaInput!) {
       motivo
       solicitadaEn
       canceladaEn
+      confirmadaEn
+      llegadaEstimada
       prestador {
         id
         nombre
@@ -43,6 +45,8 @@ mutation CancelarAsistencia($id: ID!) {
       motivo
       solicitadaEn
       canceladaEn
+      confirmadaEn
+      llegadaEstimada
       prestador {
         id
         nombre
