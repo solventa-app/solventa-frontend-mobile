@@ -28,6 +28,7 @@ import '../features/claims/presentation/pages/m05_03_relato_page.dart';
 import '../features/claims/presentation/pages/m05_04_enviando_page.dart';
 import '../features/claims/presentation/pages/m05_05_resultado_page.dart';
 import '../features/claims/presentation/pages/m05_06_mis_siniestros_page.dart';
+import '../features/claims/presentation/pages/m05_07_detalle_siniestro_page.dart';
 import '../features/claims/presentation/providers.dart';
 import '../features/claims/presentation/reporte_routes.dart';
 import '../features/home/presentation/home_page.dart';
@@ -298,6 +299,12 @@ GoRouter crearRouter({
       path: ReporteRoutes.misSiniestros,
       name: 'm05-06',
       builder: (_, _) => const M0506MisSiniestrosPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.detalle,
+      name: 'm05-07',
+      builder: (_, state) =>
+          M0507DetalleSiniestroPage(id: state.pathParameters['id']!),
     ),
     GoRoute(
       path: AsistenciaRoutes.solicitud,

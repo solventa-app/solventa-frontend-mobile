@@ -717,5 +717,91 @@
   "cuentaIngresarConHuella": "{tipo, select, huella{Sign in with fingerprint} rostro{Sign in with face} bloqueo{Sign in with your phone lock} other{Sign in with your phone's security}}",
   "accesoBiometricoMotivo": "Confirm it's you to sign in to Solventa",
   "accesoBiometricoActivarMotivo": "Confirm your fingerprint or face to sign in without typing your password",
-  "fallaDispositivoNoValido": "We could not verify this phone. Sign in with your email and password."
+  "fallaDispositivoNoValido": "We could not verify this phone. Sign in with your email and password.",
+  "m0507Titulo": "Claim details",
+  "@m0507Titulo": {
+    "description": "M05-07 title"
+  },
+  "m0507NoEncontrado": "We couldn't find this claim.",
+  "@m0507NoEncontrado": {
+    "description": "M05-07 claim not in the list"
+  },
+  "m0507Ocurrio": "Happened on {fecha}",
+  "@m0507Ocurrio": {
+    "description": "M05-07 claim date",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Resolucion": "Resolution",
+  "@m0507Resolucion": {
+    "description": "M05-07 resolution block title"
+  },
+  "m0507ResueltoEl": "Resolved on {fecha}",
+  "@m0507ResueltoEl": {
+    "description": "M05-07 resolution date",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Indemnizacion": "Approved compensation: {monto}",
+  "@m0507Indemnizacion": {
+    "description": "M05-07 approved amount",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507PlazoPago": "Payment deadline: {plazo}",
+  "@m0507PlazoPago": {
+    "description": "M05-07 payout deadline",
+    "placeholders": {
+      "plazo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Motivo": "Reason: {motivo}",
+  "@m0507Motivo": {
+    "description": "M05-07 rejection reason",
+    "placeholders": {
+      "motivo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507ViaRecurso": "How to ask for a review: {via}",
+  "@m0507ViaRecurso": {
+    "description": "M05-07 appeal route",
+    "placeholders": {
+      "via": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507MotivoEvidencia": "the evidence was not enough",
+  "@m0507MotivoEvidencia": {
+    "description": "M05-07 reason EVIDENCIA_INSUFICIENTE"
+  },
+  "m0507MotivoCobertura": "the event is outside the coverage",
+  "@m0507MotivoCobertura": {
+    "description": "M05-07 reason FUERA_DE_COBERTURA"
+  },
+  "m0507MotivoPoliza": "the policy was not in force",
+  "@m0507MotivoPoliza": {
+    "description": "M05-07 reason POLIZA_NO_VIGENTE"
+  },
+  "m0507MotivoRelato": "the account does not match the evidence",
+  "@m0507MotivoRelato": {
+    "description": "M05-07 reason INCONSISTENCIA_EN_RELATO"
+  },
+  "m0507MotivoOtro": "another reason",
+  "@m0507MotivoOtro": {
+    "description": "M05-07 reason OTRO"
+  }
 }

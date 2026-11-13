@@ -7,6 +7,7 @@ import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
+import '../reporte_routes.dart';
 
 /// M05-06 · Mis siniestros: los casos que reportó el cliente y su estado en la
 /// mesa de siniestros (HU-W04). Sin frame en Figma: sistema de diseño.
@@ -101,31 +102,35 @@ class _FilaSiniestro extends StatelessWidget {
       ),
     };
     return MergeSemantics(
-      child: SolCard.outlined(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(caso.radicado, style: context.solText.title),
+      child: InkWell(
+        borderRadius: SolRadius.cardAll,
+        onTap: () => context.push(ReporteRoutes.detalleDe(caso.id)),
+        child: SolCard.outlined(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(caso.radicado, style: context.solText.title),
+                  ),
+                  SolStatusBadge(status: status, label: estado),
+                ],
+              ),
+              const SizedBox(height: SolSpacing.xs),
+              Text(
+                l10n.m0506Reportado(
+                  SolFormat.date(caso.notificadoEn.toLocal()),
+                  caso.fotos,
                 ),
-                SolStatusBadge(status: status, label: estado),
-              ],
-            ),
-            const SizedBox(height: SolSpacing.xs),
-            Text(
-              l10n.m0506Reportado(
-                SolFormat.date(caso.notificadoEn.toLocal()),
-                caso.fotos,
+                style: context.solText.body.copyWith(
+                  color: colors.onSurfaceVariant,
+                ),
               ),
-              style: context.solText.body.copyWith(
-                color: colors.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: SolSpacing.xs),
-            Text(detalle, style: context.solText.body),
-          ],
+              const SizedBox(height: SolSpacing.xs),
+              Text(detalle, style: context.solText.body),
+            ],
+          ),
         ),
       ),
     );

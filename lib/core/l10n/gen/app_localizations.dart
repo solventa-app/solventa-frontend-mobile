@@ -2533,6 +2533,90 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.'**
   String get fallaDispositivoNoValido;
+
+  /// M05-07 título
+  ///
+  /// In es, this message translates to:
+  /// **'Detalle del siniestro'**
+  String get m0507Titulo;
+
+  /// M05-07 caso no está en la lista
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos este siniestro.'**
+  String get m0507NoEncontrado;
+
+  /// M05-07 fecha del siniestro
+  ///
+  /// In es, this message translates to:
+  /// **'Ocurrió el {fecha}'**
+  String m0507Ocurrio(String fecha);
+
+  /// M05-07 título del bloque de resolución
+  ///
+  /// In es, this message translates to:
+  /// **'Resolución'**
+  String get m0507Resolucion;
+
+  /// M05-07 fecha de la resolución
+  ///
+  /// In es, this message translates to:
+  /// **'Resuelto el {fecha}'**
+  String m0507ResueltoEl(String fecha);
+
+  /// M05-07 monto aprobado
+  ///
+  /// In es, this message translates to:
+  /// **'Indemnización aprobada: {monto}'**
+  String m0507Indemnizacion(String monto);
+
+  /// M05-07 plazo de dispersión
+  ///
+  /// In es, this message translates to:
+  /// **'Plazo de pago: {plazo}'**
+  String m0507PlazoPago(String plazo);
+
+  /// M05-07 motivo del rechazo
+  ///
+  /// In es, this message translates to:
+  /// **'Motivo: {motivo}'**
+  String m0507Motivo(String motivo);
+
+  /// M05-07 vía de recurso
+  ///
+  /// In es, this message translates to:
+  /// **'Cómo pedir una revisión: {via}'**
+  String m0507ViaRecurso(String via);
+
+  /// M05-07 motivo EVIDENCIA_INSUFICIENTE
+  ///
+  /// In es, this message translates to:
+  /// **'la evidencia no fue suficiente'**
+  String get m0507MotivoEvidencia;
+
+  /// M05-07 motivo FUERA_DE_COBERTURA
+  ///
+  /// In es, this message translates to:
+  /// **'el hecho está fuera de la cobertura'**
+  String get m0507MotivoCobertura;
+
+  /// M05-07 motivo POLIZA_NO_VIGENTE
+  ///
+  /// In es, this message translates to:
+  /// **'la póliza no estaba vigente'**
+  String get m0507MotivoPoliza;
+
+  /// M05-07 motivo INCONSISTENCIA_EN_RELATO
+  ///
+  /// In es, this message translates to:
+  /// **'el relato no es consistente con la evidencia'**
+  String get m0507MotivoRelato;
+
+  /// M05-07 motivo OTRO
+  ///
+  /// In es, this message translates to:
+  /// **'otro motivo'**
+  String get m0507MotivoOtro;
 }
 
 class _AppLocalizationsDelegate

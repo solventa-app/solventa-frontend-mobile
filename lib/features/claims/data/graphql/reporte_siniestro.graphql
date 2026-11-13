@@ -84,4 +84,15 @@ fragment SiniestroReportadoCampos on SiniestroReportado {
   venceDictamenEn
   fotos
   tipoSiniestroAuto
+  resolucion {
+    tipo
+    resueltaEn
+    motivo
+    viaRecurso
+    indemnizacion {
+      valor
+      moneda
+    }
+    plazoDispersion
+  }
 }

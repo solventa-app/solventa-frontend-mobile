@@ -78,6 +78,7 @@ abstract final class ReporteSiniestroFixtures {
       'venceDictamenEn': '2026-11-06T22:00:00+00:00',
       'fotos': fotos,
       'tipoSiniestroAuto': null, // KAN-290: solo en pólizas de auto
+      'resolucion': null, // v0.37: null mientras está PENDIENTE
     },
   };
 
@@ -94,8 +95,9 @@ abstract final class ReporteSiniestroFixtures {
     String id,
     String radicado,
     String estado,
-    String notificadoEn,
-  ) => {
+    String notificadoEn, [
+    Map<String, Object?>? resolucion,
+  ]) => {
     '__typename': 'SiniestroReportado',
     'id': id,
     'radicado': radicado,
@@ -106,6 +108,7 @@ abstract final class ReporteSiniestroFixtures {
     'venceDictamenEn': '2026-11-06T22:00:00+00:00',
     'fotos': 2,
     'tipoSiniestroAuto': null,
+    'resolucion': resolucion,
   };
 
   /// `misSiniestros`: los que reportó en esta sesión del fake (PENDIENTE) y,
@@ -135,12 +138,34 @@ abstract final class ReporteSiniestroFixtures {
           'SIN-2026-0942',
           'APROBADO',
           '2026-10-15T15:00:00+00:00',
+          {
+            '__typename': 'ResolucionCliente',
+            'tipo': 'APROBACION',
+            'resueltaEn': '2026-10-17T15:00:00+00:00',
+            'motivo': null,
+            'viaRecurso': null,
+            'indemnizacion': {
+              '__typename': 'Monto',
+              'valor': '4500000.00',
+              'moneda': 'COP',
+            },
+            'plazoDispersion': '5 días hábiles',
+          },
         ),
         _caso(
           'demo-4',
           'SIN-2026-0915',
           'RECHAZADO',
           '2026-10-02T15:00:00+00:00',
+          {
+            '__typename': 'ResolucionCliente',
+            'tipo': 'RECHAZO',
+            'resueltaEn': '2026-10-04T15:00:00+00:00',
+            'motivo': 'EVIDENCIA_INSUFICIENTE',
+            'viaRecurso': 'Escribe a soporte con tu radicado.',
+            'indemnizacion': null,
+            'plazoDispersion': null,
+          },
         ),
       ],
     ],
