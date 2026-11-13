@@ -66,24 +66,28 @@ Map<String, Object?> entradaSolicitud(SolicitudAsistencia s) {
     },
     'descripcion': opcional(s.descripcion),
     'direccion': opcional(s.direccion),
-    'latitud': s.ubicacion!.latitud,
-    'longitud': s.ubicacion!.longitud,
+    'latitud': s.ubicacion.latitud,
+    'longitud': s.ubicacion.longitud,
+    'origenUbicacion': switch (s.origen) {
+      OrigenUbicacion.gps => 'GPS',
+      OrigenUbicacion.direccion => 'DIRECCION',
+    },
   };
 }
 
-/// [SolicitudAsistencia] sin ubicación → `SolicitudAsistenciaDireccionInput`
-/// (contrato v0.41, CA-M06-02). La dirección es obligatoria.
-Map<String, Object?> entradaSolicitudConDireccion(SolicitudAsistencia s) {
-  final descripcion = s.descripcion.trim();
-  return {
-    'idSolicitud': s.idSolicitud,
-    'prestadorId': s.prestador.id,
-    'tipoAsistencia': switch (s.tipo) {
-      TipoPrestador.medico => 'MEDICO',
-      TipoPrestador.mecanico => 'MECANICO',
-      TipoPrestador.grua => 'GRUA',
-    },
-    'direccion': s.direccion.trim(),
-    'descripcion': descripcion.isEmpty ? null : descripcion,
-  };
+/// `data.ubicarDireccion` → [DireccionUbicada]. Un código desconocido se
+/// trata como servicio caído (se puede reintentar).
+DireccionUbicada direccionDesdeMapa(Map<String, Object?> m) {
+  if (m['encontrada'] == true) {
+    return DireccionEncontrada(
+      coordenada: Coordenada(
+        (m['latitud']! as num).toDouble(),
+        (m['longitud']! as num).toDouble(),
+      ),
+      direccion: (m['direccion'] as String?) ?? '',
+    );
+  }
+  return m['codigo'] == 'DIRECCION_NO_ENCONTRADA'
+      ? const DireccionNoEncontrada()
+      : const DireccionServicioCaido();
 }

@@ -1,27 +1,85 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/resultado.dart';
 import '../../../core/ubicacion/ubicacion_service.dart';
 import '../domain/cercania.dart';
+import '../domain/entities/asistencia.dart';
+import '../domain/entities/prestador.dart';
 import 'prestadores_state.dart';
 import 'providers.dart';
 
-/// M06-01: obtiene la ubicación y ordena el catálogo por cercanía.
+/// M06-01: ubica al cliente y ordena el catálogo por cercanía.
 ///
-/// M12: solo la **primera** carga bloquea (estado [PrestadoresCargando]); una
-/// recarga deja el mapa como está y, si llega tarde, se descarta (número de
-/// generación). Con la misma ubicación (menos de 500 m) no recalcula.
+/// **Ubicación (2.0, plan de pendientes):** al entrar a la pestaña se revisa
+/// primero el GPS y luego el permiso, sin pedir nada. La primera vez se
+/// explica por qué ([PrestadoresExplicacion]); si lo negó o el GPS está
+/// apagado, [PrestadoresSinUbicacion]. En los dos casos el cliente puede
+/// escribir su dirección: ya ubicada, el mapa funciona igual que con GPS.
+///
+/// **M12:** solo la primera carga bloquea; una recarga deja el mapa como está
+/// y, si llega tarde, se descarta (número de generación). Con la misma
+/// ubicación (menos de 500 m) no recalcula.
 final class PrestadoresNotifier extends Notifier<PrestadoresState> {
   int _generacion = 0;
 
   @override
   PrestadoresState build() => const PrestadoresCargando();
 
+  /// Al entrar (y al volver de Ajustes): revisa sin pedir el permiso.
   Future<void> cargar() async {
     final generacion = ++_generacion;
     final anterior = state;
+    final servicio = ref.read(ubicacionServiceProvider);
+    final estado = await servicio.estado();
+    if (!ref.mounted || generacion != _generacion) return;
+
+    // Con la dirección escrita en pantalla no se le quita el mapa: si al
+    // volver de Ajustes ya hay permiso, solo aparece «Usar mi ubicación».
+    if (anterior is PrestadoresListos && anterior.direccionEscrita != null) {
+      if (estado == EstadoUbicacion.concedido && !anterior.permisoDisponible) {
+        state = anterior.conPermisoDisponible();
+      }
+      return;
+    }
+    switch (estado) {
+      case EstadoUbicacion.gpsApagado:
+        state = const PrestadoresSinUbicacion(
+          permisoPermanente: false,
+          gpsApagado: true,
+        );
+      case EstadoUbicacion.negadoSiempre:
+        state = const PrestadoresSinUbicacion(
+          permisoPermanente: true,
+          gpsApagado: false,
+        );
+      case EstadoUbicacion.sinPermiso:
+        final pedido = await ref.read(permisoPedidoProvider).leer();
+        if (!ref.mounted || generacion != _generacion) return;
+        state = pedido
+            ? const PrestadoresSinUbicacion(
+                permisoPermanente: false,
+                gpsApagado: false,
+              )
+            : const PrestadoresExplicacion();
+      case EstadoUbicacion.concedido:
+        await _conGps(generacion, anterior);
+    }
+  }
+
+  /// «Permitir ubicación» (explicación o permiso negado una vez): ahora sí
+  /// aparece el diálogo del sistema.
+  Future<void> permitir() async {
+    unawaited(ref.read(permisoPedidoProvider).marcar());
+    await _conGps(++_generacion, state);
+  }
+
+  /// «Usar mi ubicación actual» desde el aviso de la dirección escrita.
+  Future<void> usarUbicacionActual() => _conGps(++_generacion, null);
+
+  Future<void> _conGps(int generacion, PrestadoresState? anterior) async {
     if (anterior is! PrestadoresListos) state = const PrestadoresCargando();
-    // El catálogo (copia local casi siempre) se pide mientras se ubica al cliente.
     final catalogo = ref
         .read(asistenciaRepositoryProvider)
         .catalogoPrestadores();
@@ -35,61 +93,65 @@ final class PrestadoresNotifier extends Notifier<PrestadoresState> {
           permisoPermanente: permanente,
           gpsApagado: false,
         );
-        return;
       case UbicacionNoDisponible():
         state = const PrestadoresSinUbicacion(
           permisoPermanente: false,
           gpsApagado: true,
         );
-        return;
       case UbicacionObtenida(:final coordenada):
         if (anterior is PrestadoresListos &&
+            anterior.direccionEscrita == null &&
             !Cercania.seMovio(anterior.origen, coordenada)) {
           return;
         }
-        final r = await catalogo;
-        if (!ref.mounted || generacion != _generacion) return;
-        state = switch (r) {
-          Exito(:final valor) => () {
-            final mapa = Cercania.destacadosYOtros(
-              coordenada,
-              valor.prestadores,
-            );
-            return PrestadoresListos(
-              origen: coordenada,
-              destacados: mapa.destacados,
-              otros: mapa.otros,
-            );
-          }(),
-          Fracaso(:final falla) =>
-            anterior is PrestadoresListos
-                ? anterior
-                : PrestadoresFallidos(falla),
-        };
+        await _listos(generacion, catalogo, coordenada, null, anterior);
     }
   }
 
-  /// «Escribir mi dirección» desde el aviso sin ubicación (CA-M06-02): sin
-  /// coordenadas no se puede ordenar por cercanía, así que va por ciudad.
-  Future<void> escribirDireccion() async {
-    ++_generacion;
-    state = const PrestadoresCargando();
-    final r = await ref
+  /// La dirección que escribió el cliente, ya ubicada (2.0): el mapa funciona
+  /// igual que con GPS, con el aviso «Usando: …».
+  Future<void> usarDireccion(DireccionEncontrada direccion) async {
+    final generacion = ++_generacion;
+    final anterior = state;
+    if (anterior is! PrestadoresListos) state = const PrestadoresCargando();
+    final catalogo = ref
         .read(asistenciaRepositoryProvider)
         .catalogoPrestadores();
-    if (!ref.mounted) return;
+    await _listos(
+      generacion,
+      catalogo,
+      direccion.coordenada,
+      direccion.direccion,
+      anterior,
+    );
+  }
+
+  Future<void> _listos(
+    int generacion,
+    Future<Resultado<CatalogoPrestadores>> catalogo,
+    Coordenada origen,
+    String? direccionEscrita,
+    PrestadoresState? anterior,
+  ) async {
+    final r = await catalogo;
+    if (!ref.mounted || generacion != _generacion) return;
     state = switch (r) {
-      Exito(:final valor) => PrestadoresSinOrden(
-        [...valor.prestadores]..sort((a, b) {
-          final ciudad = a.ciudad.compareTo(b.ciudad);
-          return ciudad != 0 ? ciudad : a.nombre.compareTo(b.nombre);
-        }),
-      ),
-      Fracaso(:final falla) => PrestadoresFallidos(falla),
+      Exito(:final valor) => () {
+        final mapa = Cercania.destacadosYOtros(origen, valor.prestadores);
+        return PrestadoresListos(
+          origen: origen,
+          destacados: mapa.destacados,
+          otros: mapa.otros,
+          direccionEscrita: direccionEscrita,
+        );
+      }(),
+      Fracaso(:final falla) =>
+        anterior is PrestadoresListos ? anterior : PrestadoresFallidos(falla),
     };
   }
 
-  /// «Abrir ajustes» desde el aviso sin ubicación; al volver se reintenta.
+  /// «Abrir Ajustes» (negado para siempre) o «Activar ubicación» (GPS
+  /// apagado); al volver, la página llama otra vez a [cargar].
   Future<void> abrirAjustes() async {
     final s = state;
     if (s is! PrestadoresSinUbicacion) return;

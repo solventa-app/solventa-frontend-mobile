@@ -16,9 +16,20 @@ final class PrestadoresListos extends PrestadoresState {
     required this.origen,
     required this.destacados,
     this.otros = const [],
+    this.direccionEscrita,
+    this.permisoDisponible = false,
   });
 
+  /// GPS del teléfono o la dirección escrita ya ubicada (2.0).
   final Coordenada origen;
+
+  /// Con la dirección escrita: el aviso «Usando: …» y el pin «Dirección
+  /// escrita». `null` = GPS.
+  final String? direccionEscrita;
+
+  /// Con la dirección escrita, el permiso se dio al volver de Ajustes:
+  /// aparece «Usar mi ubicación actual».
+  final bool permisoDisponible;
 
   /// Los 3 más cercanos (pines grandes y lista inicial).
   final List<PrestadorCercano> destacados;
@@ -28,9 +39,24 @@ final class PrestadoresListos extends PrestadoresState {
 
   /// Compatibilidad: los de la lista inicial.
   List<PrestadorCercano> get cercanos => destacados;
+
+  PrestadoresListos conPermisoDisponible() => PrestadoresListos(
+    origen: origen,
+    destacados: destacados,
+    otros: otros,
+    direccionEscrita: direccionEscrita,
+    permisoDisponible: true,
+  );
 }
 
-/// Sin permiso o con el GPS apagado (CA-M06-02).
+/// La primera vez, antes del diálogo del sistema: por qué pedimos la
+/// ubicación, con «Permitir ubicación» y «Escribir mi dirección» (2.0).
+final class PrestadoresExplicacion extends PrestadoresState {
+  const PrestadoresExplicacion();
+}
+
+/// Permiso negado (una vez o para siempre) o GPS apagado (2.0). Siempre hay
+/// dos salidas: arreglarlo o escribir la dirección (CA-M06-02).
 final class PrestadoresSinUbicacion extends PrestadoresState {
   const PrestadoresSinUbicacion({
     required this.permisoPermanente,
@@ -39,14 +65,6 @@ final class PrestadoresSinUbicacion extends PrestadoresState {
 
   final bool permisoPermanente;
   final bool gpsApagado;
-}
-
-/// Sin ubicación, el cliente eligió escribir la dirección (CA-M06-02): el
-/// catálogo sin ordenar por cercanía.
-final class PrestadoresSinOrden extends PrestadoresState {
-  const PrestadoresSinOrden(this.prestadores);
-
-  final List<Prestador> prestadores;
 }
 
 final class PrestadoresFallidos extends PrestadoresState {

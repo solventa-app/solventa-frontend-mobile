@@ -675,38 +675,6 @@
   "@m0601SinPrestadores": {
     "description": "M06-01 lista vacía"
   },
-  "m0601SinPermiso": "Necesitamos tu ubicación para mostrarte los prestadores más cercanos.",
-  "@m0601SinPermiso": {
-    "description": "M06-01 sin permiso de ubicación"
-  },
-  "m0601GpsApagado": "Tu ubicación está desactivada. Actívala para ver los prestadores cercanos.",
-  "@m0601GpsApagado": {
-    "description": "M06-01 GPS apagado"
-  },
-  "m0601PermitirUbicacion": "Permitir ubicación",
-  "@m0601PermitirUbicacion": {
-    "description": "M06-01 reintentar permiso"
-  },
-  "m0601AbrirAjustes": "Abrir ajustes",
-  "@m0601AbrirAjustes": {
-    "description": "M06-01 abrir ajustes"
-  },
-  "m0601EscribirDireccion": "Escribir mi dirección",
-  "@m0601EscribirDireccion": {
-    "description": "M06-01 sin ubicación: pedir asistencia con la dirección a mano (CA-M06-02)"
-  },
-  "m0601TituloSinOrden": "Elige un prestador",
-  "@m0601TituloSinOrden": {
-    "description": "M06-01 sin ubicación: título de la lista"
-  },
-  "m0601NotaSinOrden": "Sin tu ubicación no podemos ordenarlos por cercanía. En el siguiente paso escribes tu dirección.",
-  "@m0601NotaSinOrden": {
-    "description": "M06-01 sin ubicación: nota sobre la lista"
-  },
-  "m0601UsarUbicacion": "Usar mi ubicación",
-  "@m0601UsarUbicacion": {
-    "description": "M06-01 sin ubicación: volver a intentar con el GPS"
-  },
   "m0601Reintentar": "Reintentar",
   "@m0601Reintentar": {
     "description": "M06-01 reintentar"
@@ -814,6 +782,87 @@
   "m0601Cerrar": "Cerrar",
   "@m0601Cerrar": {
     "description": "Aviso sin app de mapas (M13)"
+  },
+  "ubicacionExplicaTitulo": "Necesitamos tu ubicación",
+  "@ubicacionExplicaTitulo": {
+    "description": "2.0 explicación antes del diálogo del sistema"
+  },
+  "ubicacionExplicaTexto": "Para mostrarte los prestadores más cercanos y cuánto tardan en llegar.",
+  "@ubicacionExplicaTexto": {
+    "description": "2.0 explicación"
+  },
+  "ubicacionPermitir": "Permitir ubicación",
+  "@ubicacionPermitir": {
+    "description": "2.0 botón principal"
+  },
+  "ubicacionNegadaTitulo": "No tenemos tu ubicación",
+  "@ubicacionNegadaTitulo": {
+    "description": "2.0 permiso negado"
+  },
+  "ubicacionNegadaTexto": "Puedes darnos el permiso o escribir dónde estás. Con la dirección te mostramos los mismos prestadores.",
+  "@ubicacionNegadaTexto": {
+    "description": "2.0 permiso negado"
+  },
+  "ubicacionAbrirAjustes": "Abrir Ajustes",
+  "@ubicacionAbrirAjustes": {
+    "description": "2.0 permiso negado para siempre"
+  },
+  "gpsApagadoTitulo": "Tu GPS está apagado",
+  "@gpsApagadoTitulo": {
+    "description": "2.0 GPS apagado"
+  },
+  "gpsApagadoTexto": "Enciende la ubicación del teléfono para encontrar los prestadores cerca de ti.",
+  "@gpsApagadoTexto": {
+    "description": "2.0 GPS apagado"
+  },
+  "gpsActivar": "Activar ubicación",
+  "@gpsActivar": {
+    "description": "2.0 GPS apagado: abre los ajustes de ubicación"
+  },
+  "direccionEscribir": "Escribir mi dirección",
+  "@direccionEscribir": {
+    "description": "2.0 botón secundario"
+  },
+  "direccionTitulo": "¿Dónde estás?",
+  "@direccionTitulo": {
+    "description": "2.0 hoja para escribir la dirección"
+  },
+  "direccionCampo": "Dirección, ciudad o punto de referencia",
+  "@direccionCampo": {
+    "description": "2.0 campo de la dirección"
+  },
+  "direccionBuscar": "Buscar esta dirección",
+  "@direccionBuscar": {
+    "description": "2.0 enviar el texto escrito sin elegir sugerencia"
+  },
+  "direccionNoEncontrada": "No pudimos ubicar esa dirección. Prueba con otra o con un punto de referencia",
+  "@direccionNoEncontrada": {
+    "description": "2.0 ubicarDireccion: DIRECCION_NO_ENCONTRADA"
+  },
+  "direccionServicioCaido": "No pudimos buscar direcciones ahora. Intenta de nuevo",
+  "@direccionServicioCaido": {
+    "description": "2.0 ubicarDireccion: SERVICIO_NO_DISPONIBLE o sin red"
+  },
+  "direccionUsando": "Usando: {direccion}",
+  "@direccionUsando": {
+    "description": "2.0 aviso sobre el mapa con la dirección escrita",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "direccionCambiar": "Cambiar",
+  "@direccionCambiar": {
+    "description": "2.0 aviso: volver a escribir la dirección"
+  },
+  "direccionUsarActual": "Usar mi ubicación actual",
+  "@direccionUsarActual": {
+    "description": "2.0 aviso: el permiso se dio al volver de Ajustes"
+  },
+  "direccionPinEtiqueta": "Dirección escrita",
+  "@direccionPinEtiqueta": {
+    "description": "2.0 etiqueta del pin del cliente"
   },
   "homeReportarTile": "Reportar un siniestro",
   "@homeReportarTile": {
@@ -1122,6 +1171,23 @@
   "@m0602TipoElegir": {
     "description": "M06-02 selector sin valor"
   },
+  "m0602AtencionInmediata": "Atención inmediata",
+  "@m0602AtencionInmediata": {
+    "description": "M06-02 banner (S2)"
+  },
+  "m0602AtencionInmediataTexto": "Estamos coordinando tu solicitud en tiempo real",
+  "@m0602AtencionInmediataTexto": {
+    "description": "M06-02 banner (S2)"
+  },
+  "m0602UbicacionEscrita": "{direccion} (la dirección que escribiste)",
+  "@m0602UbicacionEscrita": {
+    "description": "M06-02 con la dirección escrita (S1)",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
   "m0602TipoRequerido": "Elige el tipo de asistencia.",
   "@m0602TipoRequerido": {
     "description": "M06-02 error del selector vacío"
@@ -1152,14 +1218,6 @@
       }
     }
   },
-  "m0602Direccion": "Dirección o punto de referencia",
-  "@m0602Direccion": {
-    "description": "M06-02 etiqueta de la dirección (opcional, editable)"
-  },
-  "m0602DireccionHint": "Ej. Cra 45 # 22-18, frente al parque",
-  "@m0602DireccionHint": {
-    "description": "M06-02 ejemplo de la dirección"
-  },
   "m0602UbicacionDetectada": "Ubicación detectada automáticamente: {coordenadas}",
   "@m0602UbicacionDetectada": {
     "description": "M06-02 ubicación del GPS que se enviará",
@@ -1168,10 +1226,6 @@
         "type": "String"
       }
     }
-  },
-  "m0602DireccionRequerida": "Escribe la dirección a la que debe llegar el prestador.",
-  "@m0602DireccionRequerida": {
-    "description": "M06-02 sin ubicación: la dirección es obligatoria"
   },
   "m0602TiempoLlegada": "Tiempo estimado de llegada: {tiempo}",
   "@m0602TiempoLlegada": {

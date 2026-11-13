@@ -30,6 +30,8 @@ abstract final class SolIcons {
   static const IconData towTruck = Symbols.auto_towing; // HU-M06 v0.49
   static const IconData myLocation = Symbols.my_location; // HU-M06 M8
   static const IconData layers = Symbols.layers; // HU-M06 M14
+  static const IconData locationOff = Symbols.location_off; // HU-M06 2.0
+  static const IconData gpsOff = Symbols.location_disabled; // HU-M06 2.0
   static const IconData verifiedProvider = Symbols.verified;
   static const IconData location = Symbols.location_on;
   static const IconData schedule = Symbols.schedule;

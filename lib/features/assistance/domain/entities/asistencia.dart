@@ -3,6 +3,9 @@ import 'prestador.dart';
 /// Estado de una asistencia en sitio (contrato v0.40).
 enum EstadoAsistencia { confirmada, noConfirmada, cancelada }
 
+/// De dónde salió la ubicación del cliente (contrato v0.50, B4).
+enum OrigenUbicacion { gps, direccion }
+
 /// Lo que el cliente pide en M06-02. [idSolicitud] lo genera la app: es el id
 /// de la asistencia y su clave de idempotencia (reenviar no crea otra).
 final class SolicitudAsistencia {
@@ -11,6 +14,7 @@ final class SolicitudAsistencia {
     required this.prestador,
     required this.tipo,
     required this.ubicacion,
+    this.origen = OrigenUbicacion.gps,
     this.descripcion = '',
     this.direccion = '',
   });
@@ -19,11 +23,48 @@ final class SolicitudAsistencia {
   final Prestador prestador;
   final TipoPrestador tipo;
 
-  /// Adónde debe llegar el prestador (GPS del teléfono). `null` si el cliente
-  /// no dio la ubicación y escribió la dirección a mano (CA-M06-02).
-  final Coordenada? ubicacion;
+  /// Adónde debe llegar el prestador: el GPS del teléfono o la dirección que
+  /// escribió el cliente, ya convertida en coordenadas (`ubicarDireccion`).
+  final Coordenada ubicacion;
+  final OrigenUbicacion origen;
   final String descripcion;
+
+  /// Solo con [OrigenUbicacion.direccion]: la dirección ubicada.
   final String direccion;
+}
+
+/// Una sugerencia de `autocompletarDireccion` (Google Places por el ACL).
+final class SugerenciaDireccion {
+  const SugerenciaDireccion({required this.placeId, required this.descripcion});
+
+  final String placeId;
+  final String descripcion;
+}
+
+/// Resultado de `ubicarDireccion` (contrato v0.50). El backend no manda
+/// textos: la app pone el mensaje en el idioma del usuario.
+sealed class DireccionUbicada {
+  const DireccionUbicada();
+}
+
+final class DireccionEncontrada extends DireccionUbicada {
+  const DireccionEncontrada({
+    required this.coordenada,
+    required this.direccion,
+  });
+
+  final Coordenada coordenada;
+  final String direccion;
+}
+
+/// Ni Places ni Geocoding la encontraron.
+final class DireccionNoEncontrada extends DireccionUbicada {
+  const DireccionNoEncontrada();
+}
+
+/// Google no respondió o el circuito del ACL está abierto: reintentar.
+final class DireccionServicioCaido extends DireccionUbicada {
+  const DireccionServicioCaido();
 }
 
 /// Respuesta del backend a solicitar o cancelar.

@@ -2337,6 +2337,7 @@ class Input$SolicitudAsistenciaInput {
     String? direccion,
     required double latitud,
     required double longitud,
+    Enum$OrigenUbicacion? origenUbicacion,
   }) => Input$SolicitudAsistenciaInput._({
     r'idSolicitud': idSolicitud,
     r'prestadorId': prestadorId,
@@ -2345,6 +2346,7 @@ class Input$SolicitudAsistenciaInput {
     if (direccion != null) r'direccion': direccion,
     r'latitud': latitud,
     r'longitud': longitud,
+    if (origenUbicacion != null) r'origenUbicacion': origenUbicacion,
   });
 
   Input$SolicitudAsistenciaInput._(this._$data);
@@ -2371,6 +2373,12 @@ class Input$SolicitudAsistenciaInput {
     result$data['latitud'] = (l$latitud as num).toDouble();
     final l$longitud = data['longitud'];
     result$data['longitud'] = (l$longitud as num).toDouble();
+    if (data.containsKey('origenUbicacion')) {
+      final l$origenUbicacion = data['origenUbicacion'];
+      result$data['origenUbicacion'] = fromJson$Enum$OrigenUbicacion(
+        (l$origenUbicacion as String),
+      );
+    }
     return Input$SolicitudAsistenciaInput._(result$data);
   }
 
@@ -2390,6 +2398,9 @@ class Input$SolicitudAsistenciaInput {
   double get latitud => (_$data['latitud'] as double);
 
   double get longitud => (_$data['longitud'] as double);
+
+  Enum$OrigenUbicacion? get origenUbicacion =>
+      (_$data['origenUbicacion'] as Enum$OrigenUbicacion?);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -2411,6 +2422,12 @@ class Input$SolicitudAsistenciaInput {
     result$data['latitud'] = l$latitud;
     final l$longitud = longitud;
     result$data['longitud'] = l$longitud;
+    if (_$data.containsKey('origenUbicacion')) {
+      final l$origenUbicacion = origenUbicacion;
+      result$data['origenUbicacion'] = toJson$Enum$OrigenUbicacion(
+        (l$origenUbicacion as Enum$OrigenUbicacion),
+      );
+    }
     return result$data;
   }
 
@@ -2466,6 +2483,15 @@ class Input$SolicitudAsistenciaInput {
     if (l$longitud != lOther$longitud) {
       return false;
     }
+    final l$origenUbicacion = origenUbicacion;
+    final lOther$origenUbicacion = other.origenUbicacion;
+    if (_$data.containsKey('origenUbicacion') !=
+        other._$data.containsKey('origenUbicacion')) {
+      return false;
+    }
+    if (l$origenUbicacion != lOther$origenUbicacion) {
+      return false;
+    }
     return true;
   }
 
@@ -2478,6 +2504,7 @@ class Input$SolicitudAsistenciaInput {
     final l$direccion = direccion;
     final l$latitud = latitud;
     final l$longitud = longitud;
+    final l$origenUbicacion = origenUbicacion;
     return Object.hashAll([
       l$idSolicitud,
       l$prestadorId,
@@ -2486,6 +2513,7 @@ class Input$SolicitudAsistenciaInput {
       _$data.containsKey('direccion') ? l$direccion : const {},
       l$latitud,
       l$longitud,
+      _$data.containsKey('origenUbicacion') ? l$origenUbicacion : const {},
     ]);
   }
 }
@@ -4449,6 +4477,72 @@ Enum$CodigoErrorAsistencia fromJson$Enum$CodigoErrorAsistencia(String value) {
       return Enum$CodigoErrorAsistencia.NO_ENCONTRADA;
     default:
       return Enum$CodigoErrorAsistencia.$unknown;
+  }
+}
+
+enum Enum$OrigenUbicacion {
+  GPS,
+  DIRECCION,
+  $unknown;
+
+  factory Enum$OrigenUbicacion.fromJson(String value) =>
+      fromJson$Enum$OrigenUbicacion(value);
+
+  String toJson() => toJson$Enum$OrigenUbicacion(this);
+}
+
+String toJson$Enum$OrigenUbicacion(Enum$OrigenUbicacion e) {
+  switch (e) {
+    case Enum$OrigenUbicacion.GPS:
+      return r'GPS';
+    case Enum$OrigenUbicacion.DIRECCION:
+      return r'DIRECCION';
+    case Enum$OrigenUbicacion.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$OrigenUbicacion fromJson$Enum$OrigenUbicacion(String value) {
+  switch (value) {
+    case r'GPS':
+      return Enum$OrigenUbicacion.GPS;
+    case r'DIRECCION':
+      return Enum$OrigenUbicacion.DIRECCION;
+    default:
+      return Enum$OrigenUbicacion.$unknown;
+  }
+}
+
+enum Enum$CodigoUbicacion {
+  DIRECCION_NO_ENCONTRADA,
+  SERVICIO_NO_DISPONIBLE,
+  $unknown;
+
+  factory Enum$CodigoUbicacion.fromJson(String value) =>
+      fromJson$Enum$CodigoUbicacion(value);
+
+  String toJson() => toJson$Enum$CodigoUbicacion(this);
+}
+
+String toJson$Enum$CodigoUbicacion(Enum$CodigoUbicacion e) {
+  switch (e) {
+    case Enum$CodigoUbicacion.DIRECCION_NO_ENCONTRADA:
+      return r'DIRECCION_NO_ENCONTRADA';
+    case Enum$CodigoUbicacion.SERVICIO_NO_DISPONIBLE:
+      return r'SERVICIO_NO_DISPONIBLE';
+    case Enum$CodigoUbicacion.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$CodigoUbicacion fromJson$Enum$CodigoUbicacion(String value) {
+  switch (value) {
+    case r'DIRECCION_NO_ENCONTRADA':
+      return Enum$CodigoUbicacion.DIRECCION_NO_ENCONTRADA;
+    case r'SERVICIO_NO_DISPONIBLE':
+      return Enum$CodigoUbicacion.SERVICIO_NO_DISPONIBLE;
+    default:
+      return Enum$CodigoUbicacion.$unknown;
   }
 }
 

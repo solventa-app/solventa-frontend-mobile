@@ -2,6 +2,7 @@ import '../../../../core/network/graphql_client.dart';
 import '../fixtures/asistencia_fixtures.dart';
 import '../graphql/catalogo_prestadores.graphql.dart';
 import '../graphql/solicitud_asistencia.graphql.dart';
+import '../graphql/ubicar_direccion.graphql.dart';
 
 /// Operaciones de asistencia en sitio del BFF (contratos v0.36 y v0.40).
 ///
@@ -19,14 +20,18 @@ abstract interface class AsistenciaRemoteDataSource {
     Map<String, Object?> entrada,
   );
 
-  /// `data.solicitarAsistenciaConDireccion` (contrato v0.41, CA-M06-02).
-  /// [entrada] es un `SolicitudAsistenciaDireccionInput`.
-  Future<Map<String, Object?>> solicitarAsistenciaConDireccion(
-    Map<String, Object?> entrada,
-  );
-
   /// `data.cancelarAsistencia` (contrato v0.40).
   Future<Map<String, Object?>> cancelarAsistencia(String id);
+
+  /// `data.autocompletarDireccion` en Colombia (contrato v0.32, usado por
+  /// HU-M06 desde la v0.50): `[{placeId, descripcion}]`.
+  Future<List<Map<String, Object?>>> autocompletarDireccion(String texto);
+
+  /// `data.ubicarDireccion` (contrato v0.50, B9).
+  Future<Map<String, Object?>> ubicarDireccion({
+    String? placeId,
+    String? texto,
+  });
 }
 
 /// El BFF real: parsea con el tipo generado (falla si no cumple el contrato) y
@@ -67,18 +72,37 @@ final class GqlAsistenciaRemoteDataSource
   }
 
   @override
-  Future<Map<String, Object?>> solicitarAsistenciaConDireccion(
-    Map<String, Object?> entrada,
+  Future<List<Map<String, Object?>>> autocompletarDireccion(
+    String texto,
   ) async {
     final data = await _cliente.ejecutar(
-      documentNodeMutationSolicitarAsistenciaConDireccion,
-      variables: Variables$Mutation$SolicitarAsistenciaConDireccion.fromJson({
-        'entrada': entrada,
-      }).toJson(),
+      documentNodeQueryAutocompletarDireccion,
+      variables: Variables$Query$AutocompletarDireccion(
+        texto: texto,
+        pais: 'CO',
+      ).toJson(),
     );
-    return Mutation$SolicitarAsistenciaConDireccion.fromJson(data)
-        .solicitarAsistenciaConDireccion
-        .toJson();
+    return [
+      for (final s in Query$AutocompletarDireccion.fromJson(
+        data,
+      ).autocompletarDireccion)
+        s.toJson(),
+    ];
+  }
+
+  @override
+  Future<Map<String, Object?>> ubicarDireccion({
+    String? placeId,
+    String? texto,
+  }) async {
+    final data = await _cliente.ejecutar(
+      documentNodeQueryUbicarDireccion,
+      variables: Variables$Query$UbicarDireccion(
+        placeId: placeId,
+        texto: texto,
+      ).toJson(),
+    );
+    return Query$UbicarDireccion.fromJson(data).ubicarDireccion.toJson();
   }
 
   @override
@@ -120,7 +144,7 @@ final class FakeAsistenciaRemoteDataSource
         : AsistenciaFixtures.catalogo;
   }
 
-  /// Como CLAIMS con `ASISTENCIA_SIMULACION=primero_falla`: el primer envío
+  /// Como `stubs/prestadores` con `primero_falla` (v0.49): el primer envío
   /// queda NO_CONFIRMADA y el reenvío con el mismo id se confirma.
   final Map<String, Map<String, Object?>> asistencias = {};
 
@@ -157,20 +181,61 @@ final class FakeAsistenciaRemoteDataSource
             estado: confirmar ? 'CONFIRMADA' : 'NO_CONFIRMADA',
             prestador: prestador,
             tipoAsistencia: entrada['tipoAsistencia']! as String,
-            // Sin coordenadas no hay cómo estimarlo (contrato v0.41).
-            minutosEstimados: confirmar && entrada.containsKey('latitud')
-                ? 6
-                : null,
+            minutosEstimados: confirmar ? 6 : null,
             motivo: confirmar ? null : 'PRESTADOR_SIN_RESPUESTA',
           );
     asistencias[id] = respuesta;
     return respuesta;
   }
 
+  /// Para pruebas: `ubicarDireccion` responde como si Google no contestara.
+  bool lugaresCaidos = false;
+
+  /// Como el stub del ACL: sugiere lo escrito con tres ciudades (boceto 5).
   @override
-  Future<Map<String, Object?>> solicitarAsistenciaConDireccion(
-    Map<String, Object?> entrada,
-  ) => solicitarAsistencia(entrada);
+  Future<List<Map<String, Object?>>> autocompletarDireccion(
+    String texto,
+  ) async {
+    if (latencia > Duration.zero) await Future<void>.delayed(latencia);
+    final e = error;
+    if (e != null) throw e;
+    return [
+      for (final ciudad in const [
+        'Bogotá, Cundinamarca',
+        'Medellín, Antioquia',
+        'Cali, Valle del Cauca',
+      ])
+        {'placeId': 'stub:CO:$texto|$ciudad', 'descripcion': '$texto, $ciudad'},
+    ];
+  }
+
+  /// Como el stub del ACL: cerca del Parque de la 93; «noexiste» no se
+  /// encuentra.
+  @override
+  Future<Map<String, Object?>> ubicarDireccion({
+    String? placeId,
+    String? texto,
+  }) async {
+    if (latencia > Duration.zero) await Future<void>.delayed(latencia);
+    final e = error;
+    if (e != null) throw e;
+    if (lugaresCaidos) {
+      return {'encontrada': false, 'codigo': 'SERVICIO_NO_DISPONIBLE'};
+    }
+    final valor = placeId == null
+        ? (texto ?? '')
+        : placeId.split(':').skip(2).join(':').split('|').first;
+    if (valor.trim().length < 3 || valor.contains('noexiste')) {
+      return {'encontrada': false, 'codigo': 'DIRECCION_NO_ENCONTRADA'};
+    }
+    return {
+      'encontrada': true,
+      'latitud': 4.6729,
+      'longitud': -74.0512,
+      'direccion': valor.trim(),
+      'codigo': null,
+    };
+  }
 
   @override
   Future<Map<String, Object?>> cancelarAsistencia(String id) async {

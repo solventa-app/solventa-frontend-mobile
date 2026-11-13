@@ -57,13 +57,37 @@ final class AsistenciaRepositoryImpl implements AsistenciaRepository {
 
   @override
   Future<Resultado<Asistencia>> solicitar(SolicitudAsistencia solicitud) =>
-      _union(
-        () => solicitud.ubicacion == null
-            ? _remote.solicitarAsistenciaConDireccion(
-                entradaSolicitudConDireccion(solicitud),
-              )
-            : _remote.solicitarAsistencia(entradaSolicitud(solicitud)),
-      );
+      _union(() => _remote.solicitarAsistencia(entradaSolicitud(solicitud)));
+
+  @override
+  Future<Resultado<List<SugerenciaDireccion>>> sugerirDirecciones(
+    String texto,
+  ) async {
+    final limpio = texto.trim();
+    if (limpio.length < 3) return const Exito([]);
+    final r = await guardarFallas(() => _remote.autocompletarDireccion(limpio));
+    return switch (r) {
+      Exito(:final valor) => Exito([
+        for (final m in valor)
+          SugerenciaDireccion(
+            placeId: m['placeId']! as String,
+            descripcion: m['descripcion']! as String,
+          ),
+      ]),
+      // Sin sugerencias se puede seguir con el texto escrito (2.0).
+      Fracaso() => const Exito([]),
+    };
+  }
+
+  @override
+  Future<Resultado<DireccionUbicada>> ubicarDireccion({
+    String? placeId,
+    String? texto,
+  }) => guardarFallas(
+    () async => direccionDesdeMapa(
+      await _remote.ubicarDireccion(placeId: placeId, texto: texto),
+    ),
+  );
 
   @override
   Future<Resultado<Asistencia>> cancelar(String id) =>
