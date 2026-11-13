@@ -938,6 +938,18 @@
   "@m0105Verificando": {
     "description": "M01-05 mientras sube y espera a Didit"
   },
+  "homeCargandoCuenta": "Loading your account…",
+  "@homeCargandoCuenta": {
+    "description": "Inicio: cargando perfil y verificación (TalkBack)"
+  },
+  "homeCuentaSinCargar": "We couldn't load your account information. Check your connection and try again.",
+  "@homeCuentaSinCargar": {
+    "description": "Inicio: no cargó el perfil ni la verificación"
+  },
+  "homeReintentarCuenta": "Try again",
+  "@homeReintentarCuenta": {
+    "description": "Inicio: reintentar la carga de la cuenta"
+  },
   "m0507Titulo": "Claim details",
   "@m0507Titulo": {
     "description": "M05-07 title"

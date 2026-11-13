@@ -1683,6 +1683,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'We\'re sending your photos and verifying your identity with our provider. It may take a few seconds.';
 
   @override
+  String get homeCargandoCuenta => 'Loading your account…';
+
+  @override
+  String get homeCuentaSinCargar =>
+      'We couldn\'t load your account information. Check your connection and try again.';
+
+  @override
+  String get homeReintentarCuenta => 'Try again';
+
+  @override
   String get m0507Titulo => 'Claim details';
 
   @override

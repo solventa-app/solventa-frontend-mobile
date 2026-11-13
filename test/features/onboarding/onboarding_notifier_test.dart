@@ -30,6 +30,11 @@ void main() {
           Duration.zero,
           Duration.zero,
         ]),
+        esperasCargaPerfilProvider.overrideWithValue(const [
+          Duration.zero,
+          Duration.zero,
+          Duration.zero,
+        ]),
       ],
     );
     addTearDown(c.dispose);
@@ -223,6 +228,38 @@ void main() {
         expect(estado().cuentaCreada, isTrue);
         expect(estado().sesionCerrada, isFalse);
         expect(estado().perfil, isNotNull);
+      },
+    );
+
+    test('al desbloquear con la huella un corte de red se reintenta: queda '
+        'verificada y con su nombre (antes quedaba «sin verificar»)', () async {
+      bff.fallasDeRed['yo'] = 1;
+      bff.fallasDeRed['miVerificacion'] = 2;
+
+      await notifier().reanudarSesion();
+
+      expect(estado().perfil?.nombre, 'María');
+      expect(estado().verificacion, EstadoVerificacion.verificada);
+      expect(estado().cargandoPerfil, isFalse);
+      expect(estado().perfilSinCargar, isFalse);
+    });
+
+    test(
+      'si nunca carga, no inventa un estado: perfilSinCargar para reintentar',
+      () async {
+        bff.fallasDeRed['yo'] = 9;
+        bff.fallasDeRed['miVerificacion'] = 9;
+
+        await notifier().reanudarSesion();
+
+        expect(estado().verificacion, isNull);
+        expect(estado().perfilSinCargar, isTrue);
+        expect(estado().cargandoPerfil, isFalse);
+
+        bff.fallasDeRed.clear();
+        await notifier().cargarPerfilYEstado();
+        expect(estado().verificacion, EstadoVerificacion.verificada);
+        expect(estado().perfilSinCargar, isFalse);
       },
     );
 

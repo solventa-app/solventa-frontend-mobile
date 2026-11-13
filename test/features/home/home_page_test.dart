@@ -144,4 +144,65 @@ void main() {
     );
     expect(find.text('Turn on'), findsOneWidget);
   });
+
+  group('cuenta aún sin cargar (desbloqueo con la huella)', () {
+    Future<void> abrirSinCargar(
+      WidgetTester tester, {
+      required bool cargando,
+      VoidCallback? onReintentar,
+    }) async {
+      tester.view.physicalSize = const Size(390, 1800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: SolTheme.light(),
+          locale: AppLocales.es,
+          supportedLocales: AppLocales.supported,
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            ...SolLocalizations.delegates,
+          ],
+          home: Scaffold(
+            body: HomePage(
+              userName: '',
+              onCompleteRegistration: () {},
+              onRequestAssistance: () {},
+              cargandoCuenta: cargando,
+              cuentaSinCargar: !cargando,
+              onReintentarCuenta: onReintentar,
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+    }
+
+    testWidgets('mientras carga no dice «Completa tu registro»', (
+      tester,
+    ) async {
+      await abrirSinCargar(tester, cargando: true);
+      expect(find.byType(SolSkeletonGroup), findsOneWidget);
+      expect(find.text('Completa tu registro'), findsNothing);
+      expect(find.text('Bienvenido a Solventa'), findsNothing);
+    });
+
+    testWidgets('si no cargó ofrece «Reintentar» en vez de un estado falso', (
+      tester,
+    ) async {
+      var reintentos = 0;
+      await abrirSinCargar(
+        tester,
+        cargando: false,
+        onReintentar: () => reintentos++,
+      );
+      expect(
+        find.textContaining('No pudimos cargar la información'),
+        findsOneWidget,
+      );
+      expect(find.text('Completa tu registro'), findsNothing);
+      await tester.tap(find.text('Reintentar'));
+      expect(reintentos, 1);
+    });
+  });
 }
