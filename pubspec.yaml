@@ -67,8 +67,8 @@ dependencies:
   # HU-M04 Fase 6 (KAN-259): push de indemnización liquidada. Sin
   # `google-services.json` real en el repo (regla del CLAUDE.md): el
   # servicio de push queda apagado hasta que exista (ver `lib/core/push/`).
-  firebase_core: ^4.3.0
-  firebase_messaging: ^16.0.3
+  firebase_core: ^5.1.0
+  firebase_messaging: ^17.0.1
   # HU-M06 (4.5): notificación local programada para la llegada de la
   # asistencia (convive con FCM en su propio canal, ajuste A2).
   flutter_local_notifications: 22.3.3
