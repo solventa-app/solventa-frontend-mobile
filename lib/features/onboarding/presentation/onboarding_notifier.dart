@@ -7,6 +7,7 @@ import '../../../core/biometria/llave_dispositivo.dart';
 import '../../../core/errors/falla.dart';
 import '../../../core/errors/resultado.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/log/sol_log.dart';
 import '../../../core/network/network_providers.dart';
 import '../../../core/sesion/gestor_sesion.dart';
 import '../data/datasources/captura_service.dart';
@@ -37,6 +38,8 @@ final class OnboardingState {
     this.cuentaCreada = false,
     this.perfil,
     this.sesionCerrada = false,
+    this.cargandoPerfil = false,
+    this.perfilSinCargar = false,
     this.grabandoVideo = false,
   });
 
@@ -73,6 +76,14 @@ final class OnboardingState {
 
   /// El usuario acaba de cerrar sesión: la pantalla de entrada abre en «Inicia sesión».
   final bool sesionCerrada;
+
+  /// Cargando el perfil y el estado de la cuenta: el inicio muestra un
+  /// skeleton en vez de «sin verificar».
+  final bool cargandoPerfil;
+
+  /// No se pudo cargar tras los reintentos (red o servicio caído): el inicio
+  /// lo dice y ofrece «Reintentar», sin mostrar un estado que no sabe.
+  final bool perfilSinCargar;
 
   /// M01-05 está grabando el video de la prueba de vida: la pantalla lo dice
   /// y pide mover la cabeza mientras dura.
@@ -114,6 +125,8 @@ final class OnboardingState {
     bool? cuentaCreada,
     PerfilUsuario? perfil,
     bool? sesionCerrada,
+    bool? cargandoPerfil,
+    bool? perfilSinCargar,
     bool? grabandoVideo,
     bool limpiarFalla = false,
     bool limpiarVerificacion = false,
@@ -147,6 +160,8 @@ final class OnboardingState {
     cuentaCreada: cuentaCreada ?? this.cuentaCreada,
     perfil: limpiarPerfil ? null : perfil ?? this.perfil,
     sesionCerrada: sesionCerrada ?? this.sesionCerrada,
+    cargandoPerfil: cargandoPerfil ?? this.cargandoPerfil,
+    perfilSinCargar: perfilSinCargar ?? this.perfilSinCargar,
     grabandoVideo: grabandoVideo ?? this.grabandoVideo,
   );
 }
@@ -706,27 +721,60 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
   }
 
   /// Refresca el perfil (`yo`) y el estado de `miVerificacion`.
+  /// Perfil (`yo`) y estado de la verificación. Una falla transitoria (red,
+  /// servicio caído) se reintenta con [esperasCargaPerfilProvider]: justo al
+  /// desbloquear con la huella un corte dejaba el inicio como «sin verificar»
+  /// y sin el nombre hasta reabrir la app. Una falla que no es transitoria
+  /// (p. ej. una cuenta sin recorrido) se deja como antes.
   Future<void> cargarPerfilYEstado() async {
     final repo = ref.read(onboardingRepositoryProvider);
     final epoca = _epocaSesion;
-    final rPerfil = await repo.consultarPerfil();
-    if (epoca != _epocaSesion) return;
-    if (rPerfil case Exito(:final valor) when valor != null) {
-      state = state.copyWith(perfil: valor, cuentaCreada: true);
+    state = state.copyWith(cargandoPerfil: true, perfilSinCargar: false);
+    var perfilListo = false;
+    var estadoListo = false;
+    for (final espera in ref.read(esperasCargaPerfilProvider)) {
+      if (espera > Duration.zero) await Future<void>.delayed(espera);
+      if (!ref.mounted || epoca != _epocaSesion) return;
+      if (!perfilListo) {
+        final r = await repo.consultarPerfil();
+        if (!ref.mounted || epoca != _epocaSesion) return;
+        switch (r) {
+          case Exito(:final valor):
+            perfilListo = true;
+            if (valor != null) {
+              state = state.copyWith(perfil: valor, cuentaCreada: true);
+            }
+          case Fracaso(:final falla):
+            perfilListo = !falla.reintentable;
+        }
+      }
+      if (!estadoListo) {
+        final r = await repo.consultar();
+        if (!ref.mounted || epoca != _epocaSesion) return;
+        switch (r) {
+          case Exito(:final valor):
+            estadoListo = true;
+            state = state.copyWith(
+              onboarding: valor,
+              verificacion: switch (valor.estado) {
+                EstadoOnboarding.verificada => EstadoVerificacion.verificada,
+                EstadoOnboarding.rechazada => EstadoVerificacion.rechazada,
+                EstadoOnboarding.enRevision => EstadoVerificacion.enRevision,
+                _ => state.verificacion,
+              },
+            );
+          case Fracaso(:final falla):
+            estadoListo = !falla.reintentable;
+        }
+      }
+      if (perfilListo && estadoListo) break;
     }
-    final rOnb = await repo.consultar();
-    if (epoca != _epocaSesion) return;
-    if (rOnb case Exito(:final valor)) {
-      state = state.copyWith(
-        onboarding: valor,
-        verificacion: switch (valor.estado) {
-          EstadoOnboarding.verificada => EstadoVerificacion.verificada,
-          EstadoOnboarding.rechazada => EstadoVerificacion.rechazada,
-          EstadoOnboarding.enRevision => EstadoVerificacion.enRevision,
-          _ => state.verificacion,
-        },
-      );
+    if (!ref.mounted || epoca != _epocaSesion) return;
+    final cargado = perfilListo && estadoListo;
+    if (!cargado) {
+      SolLog.warning('No se pudo cargar el perfil o el estado de la cuenta');
     }
+    state = state.copyWith(cargandoPerfil: false, perfilSinCargar: !cargado);
   }
 
   /// Cierra la sesión actual y reinicia el estado en memoria.
