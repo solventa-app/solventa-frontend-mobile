@@ -84,6 +84,29 @@ void main() {
     },
   );
 
+  test('el ingreso con huella también manda el dispositivo de push', () async {
+    final conInstalacion = _Bff(
+      instalacion: const MemoriaInstalacionIdStore('inst-123'),
+    );
+    conInstalacion.responder({
+      '__typename': 'Mutation',
+      'iniciarSesionConDispositivo':
+          (OnboardingFixtures.iniciarSesion['iniciarSesion']!
+              as Map<String, dynamic>),
+    });
+
+    await conInstalacion.remoto.iniciarSesionConDispositivo(
+      'd-1',
+      'reto',
+      'firma',
+    );
+
+    expect(conInstalacion.variables['dispositivo'], {
+      'instalacionId': 'inst-123',
+      'plataforma': 'ANDROID',
+    });
+  });
+
   test('sin instalación, iniciarSesion no manda dispositivo', () async {
     bff.responder(OnboardingFixtures.iniciarSesion);
 
