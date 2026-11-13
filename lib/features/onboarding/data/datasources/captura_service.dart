@@ -48,6 +48,10 @@ abstract interface class CapturaService {
 final class CamaraCapturaService implements CapturaService {
   CamaraCapturaService({this.permitirRespaldo = false});
 
+  /// Lo que dura el video de la prueba de vida. M01-05 lo muestra como cuenta
+  /// regresiva mientras pide mover la cabeza.
+  static const duracionVideo = Duration(seconds: 3);
+
   final bool permitirRespaldo;
 
   CameraController? _controladorEnVivo;
@@ -77,7 +81,7 @@ final class CamaraCapturaService implements CapturaService {
     try {
       if (!ctrl.value.isRecordingVideo) {
         await ctrl.startVideoRecording();
-        await Future<void>.delayed(const Duration(seconds: 2));
+        await Future<void>.delayed(duracionVideo);
       }
       final archivo = await ctrl.stopVideoRecording();
       final bytes = await archivo.readAsBytes();
