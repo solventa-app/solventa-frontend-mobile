@@ -2882,6 +2882,24 @@ abstract class AppLocalizations {
   /// **'Estamos enviando tus fotos y verificando tu identidad con nuestro proveedor. Puede tardar unos segundos.'**
   String get m0105Verificando;
 
+  /// Inicio: cargando perfil y verificación (TalkBack)
+  ///
+  /// In es, this message translates to:
+  /// **'Cargando tu cuenta…'**
+  String get homeCargandoCuenta;
+
+  /// Inicio: no cargó el perfil ni la verificación
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar la información de tu cuenta. Revisa tu conexión e inténtalo de nuevo.'**
+  String get homeCuentaSinCargar;
+
+  /// Inicio: reintentar la carga de la cuenta
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get homeReintentarCuenta;
+
   /// M05-03 título de la lista de ciudades
   ///
   /// In es, this message translates to:
