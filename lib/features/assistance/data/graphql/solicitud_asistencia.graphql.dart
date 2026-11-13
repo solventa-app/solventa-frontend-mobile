@@ -210,6 +210,20 @@ const documentNodeMutationSolicitarAsistencia = DocumentNode(
                         selectionSet: null,
                       ),
                       FieldNode(
+                        name: NameNode(value: 'confirmadaEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'llegadaEstimada'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
                         name: NameNode(value: 'prestador'),
                         alias: null,
                         arguments: [],
@@ -511,6 +525,8 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia
     this.motivo,
     required this.solicitadaEn,
     this.canceladaEn,
+    this.confirmadaEn,
+    this.llegadaEstimada,
     required this.prestador,
     this.$__typename = 'Asistencia',
   });
@@ -525,6 +541,8 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia
     final l$motivo = json['motivo'];
     final l$solicitadaEn = json['solicitadaEn'];
     final l$canceladaEn = json['canceladaEn'];
+    final l$confirmadaEn = json['confirmadaEn'];
+    final l$llegadaEstimada = json['llegadaEstimada'];
     final l$prestador = json['prestador'];
     final l$$__typename = json['__typename'];
     return Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia(
@@ -539,6 +557,12 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia
       canceladaEn: l$canceladaEn == null
           ? null
           : DateTime.parse((l$canceladaEn as String)),
+      confirmadaEn: l$confirmadaEn == null
+          ? null
+          : DateTime.parse((l$confirmadaEn as String)),
+      llegadaEstimada: l$llegadaEstimada == null
+          ? null
+          : DateTime.parse((l$llegadaEstimada as String)),
       prestador:
           Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador.fromJson(
             (l$prestador as Map<String, dynamic>),
@@ -560,6 +584,10 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia
   final DateTime solicitadaEn;
 
   final DateTime? canceladaEn;
+
+  final DateTime? confirmadaEn;
+
+  final DateTime? llegadaEstimada;
 
   final Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia$prestador
   prestador;
@@ -584,6 +612,10 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia
     _resultData['solicitadaEn'] = l$solicitadaEn.toIso8601String();
     final l$canceladaEn = canceladaEn;
     _resultData['canceladaEn'] = l$canceladaEn?.toIso8601String();
+    final l$confirmadaEn = confirmadaEn;
+    _resultData['confirmadaEn'] = l$confirmadaEn?.toIso8601String();
+    final l$llegadaEstimada = llegadaEstimada;
+    _resultData['llegadaEstimada'] = l$llegadaEstimada?.toIso8601String();
     final l$prestador = prestador;
     _resultData['prestador'] = l$prestador.toJson();
     final l$$__typename = $__typename;
@@ -600,6 +632,8 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia
     final l$motivo = motivo;
     final l$solicitadaEn = solicitadaEn;
     final l$canceladaEn = canceladaEn;
+    final l$confirmadaEn = confirmadaEn;
+    final l$llegadaEstimada = llegadaEstimada;
     final l$prestador = prestador;
     final l$$__typename = $__typename;
     return Object.hashAll([
@@ -610,6 +644,8 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia
       l$motivo,
       l$solicitadaEn,
       l$canceladaEn,
+      l$confirmadaEn,
+      l$llegadaEstimada,
       l$prestador,
       l$$__typename,
     ]);
@@ -658,6 +694,16 @@ class Mutation$SolicitarAsistencia$solicitarAsistencia$$Asistencia
     final l$canceladaEn = canceladaEn;
     final lOther$canceladaEn = other.canceladaEn;
     if (l$canceladaEn != lOther$canceladaEn) {
+      return false;
+    }
+    final l$confirmadaEn = confirmadaEn;
+    final lOther$confirmadaEn = other.confirmadaEn;
+    if (l$confirmadaEn != lOther$confirmadaEn) {
+      return false;
+    }
+    final l$llegadaEstimada = llegadaEstimada;
+    final lOther$llegadaEstimada = other.llegadaEstimada;
+    if (l$llegadaEstimada != lOther$llegadaEstimada) {
       return false;
     }
     final l$prestador = prestador;
@@ -1166,6 +1212,20 @@ const documentNodeMutationCancelarAsistencia = DocumentNode(
                         selectionSet: null,
                       ),
                       FieldNode(
+                        name: NameNode(value: 'confirmadaEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'llegadaEstimada'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
                         name: NameNode(value: 'prestador'),
                         alias: null,
                         arguments: [],
@@ -1466,6 +1526,8 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia
     this.motivo,
     required this.solicitadaEn,
     this.canceladaEn,
+    this.confirmadaEn,
+    this.llegadaEstimada,
     required this.prestador,
     this.$__typename = 'Asistencia',
   });
@@ -1480,6 +1542,8 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia
     final l$motivo = json['motivo'];
     final l$solicitadaEn = json['solicitadaEn'];
     final l$canceladaEn = json['canceladaEn'];
+    final l$confirmadaEn = json['confirmadaEn'];
+    final l$llegadaEstimada = json['llegadaEstimada'];
     final l$prestador = json['prestador'];
     final l$$__typename = json['__typename'];
     return Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia(
@@ -1494,6 +1558,12 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia
       canceladaEn: l$canceladaEn == null
           ? null
           : DateTime.parse((l$canceladaEn as String)),
+      confirmadaEn: l$confirmadaEn == null
+          ? null
+          : DateTime.parse((l$confirmadaEn as String)),
+      llegadaEstimada: l$llegadaEstimada == null
+          ? null
+          : DateTime.parse((l$llegadaEstimada as String)),
       prestador:
           Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador.fromJson(
             (l$prestador as Map<String, dynamic>),
@@ -1515,6 +1585,10 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia
   final DateTime solicitadaEn;
 
   final DateTime? canceladaEn;
+
+  final DateTime? confirmadaEn;
+
+  final DateTime? llegadaEstimada;
 
   final Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia$prestador
   prestador;
@@ -1539,6 +1613,10 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia
     _resultData['solicitadaEn'] = l$solicitadaEn.toIso8601String();
     final l$canceladaEn = canceladaEn;
     _resultData['canceladaEn'] = l$canceladaEn?.toIso8601String();
+    final l$confirmadaEn = confirmadaEn;
+    _resultData['confirmadaEn'] = l$confirmadaEn?.toIso8601String();
+    final l$llegadaEstimada = llegadaEstimada;
+    _resultData['llegadaEstimada'] = l$llegadaEstimada?.toIso8601String();
     final l$prestador = prestador;
     _resultData['prestador'] = l$prestador.toJson();
     final l$$__typename = $__typename;
@@ -1555,6 +1633,8 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia
     final l$motivo = motivo;
     final l$solicitadaEn = solicitadaEn;
     final l$canceladaEn = canceladaEn;
+    final l$confirmadaEn = confirmadaEn;
+    final l$llegadaEstimada = llegadaEstimada;
     final l$prestador = prestador;
     final l$$__typename = $__typename;
     return Object.hashAll([
@@ -1565,6 +1645,8 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia
       l$motivo,
       l$solicitadaEn,
       l$canceladaEn,
+      l$confirmadaEn,
+      l$llegadaEstimada,
       l$prestador,
       l$$__typename,
     ]);
@@ -1612,6 +1694,16 @@ class Mutation$CancelarAsistencia$cancelarAsistencia$$Asistencia
     final l$canceladaEn = canceladaEn;
     final lOther$canceladaEn = other.canceladaEn;
     if (l$canceladaEn != lOther$canceladaEn) {
+      return false;
+    }
+    final l$confirmadaEn = confirmadaEn;
+    final lOther$confirmadaEn = other.confirmadaEn;
+    if (l$confirmadaEn != lOther$confirmadaEn) {
+      return false;
+    }
+    final l$llegadaEstimada = llegadaEstimada;
+    final lOther$llegadaEstimada = other.llegadaEstimada;
+    if (l$llegadaEstimada != lOther$llegadaEstimada) {
       return false;
     }
     final l$prestador = prestador;

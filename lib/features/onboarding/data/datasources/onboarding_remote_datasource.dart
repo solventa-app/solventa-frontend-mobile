@@ -1,5 +1,6 @@
 import '../../../../core/contrato/schema.graphql.dart';
 import '../../../../core/network/graphql_client.dart';
+import '../../../../core/push/instalacion_id.dart';
 import '../graphql/onboarding.graphql.dart';
 
 /// Acceso al BFF para el onboarding y sesión de la app (contrato v0.21).
@@ -106,7 +107,7 @@ abstract interface class OnboardingRemoteDataSource {
 /// Implementación real contra `POST /graphql/app`.
 final class GqlOnboardingRemoteDataSource
     implements OnboardingRemoteDataSource {
-  const GqlOnboardingRemoteDataSource(this._cliente);
+  const GqlOnboardingRemoteDataSource(this._cliente, {this._instalacion});
 
   static const cabeceraToken = 'X-Onboarding-Token';
 
@@ -117,7 +118,22 @@ final class GqlOnboardingRemoteDataSource
 
   final GraphqlClient _cliente;
 
+  /// KAN-259: con él, `iniciarSesion` manda `CredencialesInput.dispositivo` para que AUTH deje
+  /// activo el dispositivo de push de esta instalación. Sin eso, `registrarTokenPush` responde
+  /// error (no hay dispositivo con push activo) y el teléfono nunca recibe pushes.
+  final InstalacionIdStore? _instalacion;
+
   Map<String, String> _con(String token) => {cabeceraToken: token};
+
+  /// KAN-259: el dispositivo de push de esta instalación, para los dos ingresos (clave y huella).
+  Future<Input$DispositivoPushInput?> _dispositivoPush() async {
+    final instalacionId = await _instalacion?.obtener();
+    if (instalacionId == null) return null;
+    return Input$DispositivoPushInput(
+      instalacionId: instalacionId,
+      plataforma: Enum$PlataformaMovil.ANDROID,
+    );
+  }
 
   @override
   Future<Mutation$IniciarOnboarding$iniciarOnboarding> iniciar(
@@ -331,12 +347,14 @@ final class GqlOnboardingRemoteDataSource
     String reto,
     String firma,
   ) async {
+    final dispositivo = await _dispositivoPush();
     final data = await _cliente.ejecutar(
       documentNodeMutationIniciarSesionConDispositivo,
       variables: Variables$Mutation$IniciarSesionConDispositivo(
         dispositivoId: dispositivoId,
         reto: reto,
         firma: firma,
+        dispositivo: dispositivo,
       ).toJson(),
     );
     return Mutation$IniciarSesionConDispositivo.fromJson(data)
@@ -360,6 +378,7 @@ final class GqlOnboardingRemoteDataSource
     String usuario,
     String clave,
   ) async {
+    final dispositivo = await _dispositivoPush();
     final data = await _cliente.ejecutar(
       documentNodeMutationIniciarSesion,
       variables: Variables$Mutation$IniciarSesion(
@@ -367,6 +386,7 @@ final class GqlOnboardingRemoteDataSource
           usuario: usuario,
           clave: clave,
           rol: rolApp,
+          dispositivo: dispositivo,
         ),
       ).toJson(),
     );

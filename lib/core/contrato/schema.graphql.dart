@@ -4375,6 +4375,7 @@ enum Enum$EstadoAsistencia {
   CONFIRMADA,
   NO_CONFIRMADA,
   CANCELADA,
+  LLEGO,
   $unknown;
 
   factory Enum$EstadoAsistencia.fromJson(String value) =>
@@ -4391,6 +4392,8 @@ String toJson$Enum$EstadoAsistencia(Enum$EstadoAsistencia e) {
       return r'NO_CONFIRMADA';
     case Enum$EstadoAsistencia.CANCELADA:
       return r'CANCELADA';
+    case Enum$EstadoAsistencia.LLEGO:
+      return r'LLEGO';
     case Enum$EstadoAsistencia.$unknown:
       return r'$unknown';
   }
@@ -4404,6 +4407,8 @@ Enum$EstadoAsistencia fromJson$Enum$EstadoAsistencia(String value) {
       return Enum$EstadoAsistencia.NO_CONFIRMADA;
     case r'CANCELADA':
       return Enum$EstadoAsistencia.CANCELADA;
+    case r'LLEGO':
+      return Enum$EstadoAsistencia.LLEGO;
     default:
       return Enum$EstadoAsistencia.$unknown;
   }

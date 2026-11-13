@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/falla.dart';
@@ -5,6 +7,7 @@ import '../../../core/errors/resultado.dart';
 import '../../../core/ids/uuid.dart';
 import '../domain/entities/asistencia.dart';
 import '../domain/entities/prestador.dart';
+import 'mis_asistencias_notifier.dart';
 import 'providers.dart';
 
 /// Desenlace del envío (M06-03 → M06-04a / M06-04b).
@@ -115,6 +118,10 @@ final duracionMinimaEnvioProvider = Provider<Duration>(
 );
 
 final class SolicitudNotifier extends Notifier<SolicitudState> {
+  /// El permiso de notificaciones se pide una vez, al enviar la primera
+  /// solicitud (4.5); M06-02 explica antes para qué.
+  static bool _permisoPedido = false;
+
   @override
   SolicitudState build() => SolicitudState(idSolicitud: uuidV4());
 
@@ -144,6 +151,10 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
     final s = state;
     if (!s.listoParaEnviar || s.envio is Enviando) return;
     state = s.copyWith(envio: const Enviando());
+    if (!_permisoPedido) {
+      _permisoPedido = true;
+      unawaited(ref.read(notificacionesAsistenciaProvider).pedirPermiso());
+    }
     final espera = Future<void>.delayed(ref.read(duracionMinimaEnvioProvider));
     final r = await ref
         .read(asistenciaRepositoryProvider)
@@ -162,6 +173,8 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
         );
     await espera;
     if (!ref.mounted) return;
+    // 4.5: confirmada, se programa la notificación de llegada.
+    if (r case Exito(:final valor)) unawaited(programarLlegada(ref, valor));
     state = state.copyWith(
       intentos: s.intentos + 1,
       envio: switch (r) {
@@ -177,6 +190,8 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
     if (actual == null || state.cancelando) return false;
     if (actual.estado == EstadoAsistencia.cancelada) return true;
     state = state.copyWith(cancelando: true, limpiarFalloCancelar: true);
+    // 4.6: la notificación se cancela antes de responder; si falla, vuelve.
+    await ref.read(notificacionesAsistenciaProvider).cancelar(actual.id);
     final r = await ref.read(asistenciaRepositoryProvider).cancelar(actual.id);
     if (!ref.mounted) return false;
     switch (r) {
@@ -184,6 +199,7 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
         state = state.copyWith(cancelando: false, envio: Respondida(valor));
         return true;
       case Fracaso(:final falla):
+        unawaited(programarLlegada(ref, actual));
         state = state.copyWith(cancelando: false, falloCancelar: falla);
         return false;
     }

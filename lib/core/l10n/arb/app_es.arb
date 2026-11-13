@@ -104,9 +104,9 @@
   "@m0105Titulo": {
     "description": "M01-05 barra superior"
   },
-  "m0105Instruccion": "Gira tu rostro lentamente dentro del marco (cámara frontal)",
+  "m0105Instruccion": "Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.",
   "@m0105Instruccion": {
-    "description": "M01-05 instrucción"
+    "description": "M01-05 instrucción antes de grabar"
   },
   "verificacionTitulo": "Verificación",
   "@verificacionTitulo": {
@@ -1362,6 +1362,187 @@
   "@m0606SolicitarDeNuevo": {
     "description": "M06-06 vuelve al mapa de prestadores"
   },
+  "navMisAsistencias": "Mis asistencias",
+  "@navMisAsistencias": {
+    "description": "Barra inferior: destino «Mis asistencias» (HU-M06 4.1)"
+  },
+  "navMisAsistenciasEnCamino": "Mis asistencias, {cantidad} en camino",
+  "@navMisAsistenciasEnCamino": {
+    "description": "TalkBack del destino con badge (4.1)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasTitulo": "Mis asistencias",
+  "@misAsistenciasTitulo": {
+    "description": "4.1 título de la pestaña"
+  },
+  "misAsistenciasVacio": "Aún no has pedido asistencia",
+  "@misAsistenciasVacio": {
+    "description": "4.1 estado vacío"
+  },
+  "misAsistenciasSolicitar": "Solicitar asistencia en sitio",
+  "@misAsistenciasSolicitar": {
+    "description": "4.1 estado vacío: va a la pestaña Asistencia"
+  },
+  "misAsistenciasEnCamino": "En camino ({cantidad})",
+  "@misAsistenciasEnCamino": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasYaLlegaron": "Ya llegaron ({cantidad})",
+  "@misAsistenciasYaLlegaron": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasError": "No pudimos cargar tus asistencias.",
+  "@misAsistenciasError": {
+    "description": "4.1 error al cargar"
+  },
+  "misAsistenciasCargando": "Cargando tus asistencias…",
+  "@misAsistenciasCargando": {
+    "description": "4.1 cargando la lista o el detalle"
+  },
+  "asistenciaPedida": "{tipo} · pedida {hora}",
+  "@asistenciaPedida": {
+    "description": "4.2 subtítulo de la tarjeta",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaEn": "Llega en {minutos} min",
+  "@asistenciaLlegaEn": {
+    "description": "4.2 cuenta regresiva",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaMenosDeUno": "Llega en menos de 1 min",
+  "@asistenciaLlegaMenosDeUno": {
+    "description": "4.2 cuenta regresiva bajo 1 min"
+  },
+  "asistenciaHoraEstimada": "Hora estimada {hora}",
+  "@asistenciaHoraEstimada": {
+    "description": "4.2 hora estimada",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlego": "Llegó · {hora}",
+  "@asistenciaLlego": {
+    "description": "4.2 insignia ya llegó",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoConfirmada": "No pudimos confirmar",
+  "@asistenciaNoConfirmada": {
+    "description": "4.2 aviso de no confirmada"
+  },
+  "asistenciaReintentar": "Reintentar",
+  "@asistenciaReintentar": {
+    "description": "4.2 reintentar (reenvío de M06-03b)"
+  },
+  "asistenciaEnCaminoLlega": "En camino · llega en {minutos} min",
+  "@asistenciaEnCaminoLlega": {
+    "description": "4.4 estado en el detalle",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifTitulo": "Tu asistencia llegó",
+  "@asistenciaNotifTitulo": {
+    "description": "4.5 título de la notificación"
+  },
+  "asistenciaNotifCuerpo": "{prestador} ya debería estar en tu ubicación",
+  "@asistenciaNotifCuerpo": {
+    "description": "4.5 cuerpo de la notificación",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifNota": "Te avisaremos cuando llegue el prestador.",
+  "@asistenciaNotifNota": {
+    "description": "4.5 línea antes de pedir el permiso de notificaciones"
+  },
+  "asistenciaLlegoSnack": "{prestador} llegó",
+  "@asistenciaLlegoSnack": {
+    "description": "4.5 aviso con la app abierta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaVer": "Ver",
+  "@asistenciaVer": {
+    "description": "4.5 acción del aviso"
+  },
+  "asistenciaDetalleTitulo": "Tu asistencia",
+  "@asistenciaDetalleTitulo": {
+    "description": "4.4 título del detalle"
+  },
+  "asistenciaTeAlejaste": "Te alejaste del lugar donde pediste la asistencia. El prestador va a {direccion}",
+  "@asistenciaTeAlejaste": {
+    "description": "4.4b aviso",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLugarPedido": "el lugar donde la pediste",
+  "@asistenciaLugarPedido": {
+    "description": "4.4b sin dirección escrita"
+  },
+  "asistenciaCancelarYPedirOtra": "Cancelar y pedir otra",
+  "@asistenciaCancelarYPedirOtra": {
+    "description": "4.4b acción"
+  },
+  "asistenciaLectura": "{prestador}, {tipo}, {estado}",
+  "@asistenciaLectura": {
+    "description": "4.2 lectura de TalkBack de la tarjeta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      },
+      "tipo": {
+        "type": "String"
+      },
+      "estado": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoEncontrada": "No encontramos esa asistencia.",
+  "@asistenciaNoEncontrada": {
+    "description": "4.4 detalle: ajena o inexistente"
+  },
   "m0402Titulo": "Indemnización",
   "@m0402Titulo": {
     "description": "M04-02: título de la barra"
@@ -1701,5 +1882,30 @@
         "type": "String"
       }
     }
+  },
+  "m0105Grabar": "Grabar video",
+  "@m0105Grabar": {
+    "description": "M01-05 botón que toma la selfie y graba el video"
+  },
+  "m0105Grabando": "Grabando",
+  "@m0105Grabando": {
+    "description": "M01-05 etiqueta sobre el visor mientras graba"
+  },
+  "m0105GrabandoInstruccion": "Mueve la cabeza despacio de un lado a otro… {segundos}",
+  "@m0105GrabandoInstruccion": {
+    "description": "M01-05 instrucción mientras graba, con la cuenta regresiva",
+    "placeholders": {
+      "segundos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0105Capturado": "Listo, ya tenemos tu selfie y tu video.",
+  "@m0105Capturado": {
+    "description": "M01-05 capturas tomadas (la cámara ya se cerró)"
+  },
+  "m0105Verificando": "Estamos enviando tus fotos y verificando tu identidad con nuestro proveedor. Puede tardar unos segundos.",
+  "@m0105Verificando": {
+    "description": "M01-05 mientras sube y espera a Didit"
   }
 }

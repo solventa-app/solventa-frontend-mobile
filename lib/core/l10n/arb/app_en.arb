@@ -24,7 +24,7 @@
   "m0104Consejo": "Avoid direct glare and strong shadows over the barcode and fingerprint.",
   "m0104Calidad": "Good focus and lighting",
   "m0105Titulo": "Liveness check",
-  "m0105Instruccion": "Slowly turn your face inside the frame (front camera)",
+  "m0105Instruccion": "Place your face inside the circle. When you tap “Record video” we'll record 3 seconds: slowly move your head from side to side.",
   "verificacionTitulo": "Verification",
   "m0106Validando": "Checking with the KYC/AML provider...",
   "m0107aMensaje": "Identity verified! Welcome to Solventa.",
@@ -712,6 +712,139 @@
   "m0606Mensaje": "Your request was cancelled. The assigned service no longer applies and there will be no charges for this request.",
   "m0606VolverInicio": "Back to home",
   "m0606SolicitarDeNuevo": "Request again",
+  "navMisAsistencias": "My requests",
+  "navMisAsistenciasEnCamino": "My requests, {cantidad} on the way",
+  "@navMisAsistenciasEnCamino": {
+    "description": "TalkBack del destino con badge (4.1)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasTitulo": "My requests",
+  "misAsistenciasVacio": "You haven't requested assistance yet",
+  "misAsistenciasSolicitar": "Request on-site assistance",
+  "misAsistenciasEnCamino": "On the way ({cantidad})",
+  "@misAsistenciasEnCamino": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasYaLlegaron": "Arrived ({cantidad})",
+  "@misAsistenciasYaLlegaron": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasError": "We couldn't load your requests.",
+  "misAsistenciasCargando": "Loading your requests…",
+  "asistenciaPedida": "{tipo} · requested {hora}",
+  "@asistenciaPedida": {
+    "description": "4.2 subtítulo de la tarjeta",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaEn": "Arrives in {minutos} min",
+  "@asistenciaLlegaEn": {
+    "description": "4.2 cuenta regresiva",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaMenosDeUno": "Arrives in less than 1 min",
+  "asistenciaHoraEstimada": "Estimated time {hora}",
+  "@asistenciaHoraEstimada": {
+    "description": "4.2 hora estimada",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlego": "Arrived · {hora}",
+  "@asistenciaLlego": {
+    "description": "4.2 insignia ya llegó",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoConfirmada": "We couldn't confirm",
+  "asistenciaReintentar": "Try again",
+  "asistenciaEnCaminoLlega": "On the way · arrives in {minutos} min",
+  "@asistenciaEnCaminoLlega": {
+    "description": "4.4 estado en el detalle",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifTitulo": "Your assistance has arrived",
+  "asistenciaNotifCuerpo": "{prestador} should be at your location now",
+  "@asistenciaNotifCuerpo": {
+    "description": "4.5 cuerpo de la notificación",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifNota": "We'll let you know when the provider arrives.",
+  "asistenciaLlegoSnack": "{prestador} has arrived",
+  "@asistenciaLlegoSnack": {
+    "description": "4.5 aviso con la app abierta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaVer": "View",
+  "asistenciaDetalleTitulo": "Your assistance",
+  "asistenciaTeAlejaste": "You moved away from where you requested assistance. The provider is going to {direccion}",
+  "@asistenciaTeAlejaste": {
+    "description": "4.4b aviso",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLugarPedido": "the place where you requested it",
+  "asistenciaCancelarYPedirOtra": "Cancel and request another",
+  "asistenciaLectura": "{prestador}, {tipo}, {estado}",
+  "@asistenciaLectura": {
+    "description": "4.2 lectura de TalkBack de la tarjeta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      },
+      "tipo": {
+        "type": "String"
+      },
+      "estado": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoEncontrada": "We couldn't find that request.",
   "m0402Titulo": "Payout",
   "m0402Mensaje": "Your payout is on its way!",
   "m0402Monto": "{monto} deposited",
@@ -776,5 +909,33 @@
   "cuentaIngresarConHuella": "{tipo, select, huella{Sign in with fingerprint} rostro{Sign in with face} bloqueo{Sign in with your phone lock} other{Sign in with your phone's security}}",
   "accesoBiometricoMotivo": "Confirm it's you to sign in to Solventa",
   "accesoBiometricoActivarMotivo": "Confirm your fingerprint or face to sign in without typing your password",
-  "fallaDispositivoNoValido": "We could not verify this phone. Sign in with your email and password."
+  "fallaDispositivoNoValido": "We could not verify this phone. Sign in with your email and password.",
+  "@m0105Instruccion": {
+    "description": "M01-05 instrucción antes de grabar"
+  },
+  "m0105Grabar": "Record video",
+  "@m0105Grabar": {
+    "description": "M01-05 botón que toma la selfie y graba el video"
+  },
+  "m0105Grabando": "Recording",
+  "@m0105Grabando": {
+    "description": "M01-05 etiqueta sobre el visor mientras graba"
+  },
+  "m0105GrabandoInstruccion": "Slowly move your head from side to side… {segundos}",
+  "@m0105GrabandoInstruccion": {
+    "description": "M01-05 instrucción mientras graba, con la cuenta regresiva",
+    "placeholders": {
+      "segundos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0105Capturado": "Done, we have your selfie and your video.",
+  "@m0105Capturado": {
+    "description": "M01-05 capturas tomadas (la cámara ya se cerró)"
+  },
+  "m0105Verificando": "We're sending your photos and verifying your identity with our provider. It may take a few seconds.",
+  "@m0105Verificando": {
+    "description": "M01-05 mientras sube y espera a Didit"
+  }
 }
