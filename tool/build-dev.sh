@@ -8,7 +8,9 @@ cd "$(dirname "$0")/.."
 nombre="${1:?Falta la versión}"
 build="${2:?Falta el build}"
 
+# HU-M06 (M0): token público de Mapbox desde el secreto MAPBOX_PUBLIC_TOKEN; vacío = sin mapa.
 flutter build apk --release --flavor dev --dart-define-from-file=config/dev.json \
+  --dart-define=MAPBOX_ACCESS_TOKEN="${MAPBOX_PUBLIC_TOKEN:-}" \
   --build-name="$nombre" --build-number="$build"
 
 rm -rf dist && mkdir -p dist

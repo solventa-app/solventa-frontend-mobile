@@ -96,10 +96,19 @@ KAN-280). Plan, diseños, decisiones (M04-D1 a D5) y pendientes en [`docs/hu-m04
 ### En curso: pendientes de HU-M06 (KAN-36), por fases
 
 Plan, bocetos, decisiones y ajustes (A1 a A12) en [`docs/hu-m06/plan-pendientes.md`](docs/hu-m06/plan-pendientes.md).
-Fase 1 (2026-11-12): grúa, detalle del prestador y color por aliado (M3) con el contrato v0.49 (backend #590). La
-copia local del catálogo anterior a la v0.49 se vuelve a pedir aunque no hayan pasado 7 días. Las versiones v0.46 a
-v0.48 las reserva el backend #589 (KAN-259), por eso M06 empieza en v0.49. Siguen Mapbox (fase 2), dirección ubicada
-(3), rutas (4) y «Mis asistencias» con la notificación (5). Emuladores, Mapbox real y teléfono real quedan pendientes.
+Las cinco fases quedaron en PR el 2026-11-12, cada una apilada sobre la anterior (integrar en orden):
+
+| Fase | Mobile | Backend | Contrato |
+|---|---|---|---|
+| 1 · Grúa, detalle del prestador y color por aliado | #83 | #590 | v0.49 |
+| 2 · Mapbox, pines, detalle, hoja arrastrable | #84 | — | — |
+| 3 · Ubicación al entrar y dirección escrita ubicada | #85 | #591 | v0.50 |
+| 4 · Rutas tipo semáforo y auditoría | #86 | #614 | v0.51 |
+| 5 · «Mis asistencias», detalle, «Te alejaste» y notificación local | #89 | #615 | v0.52 |
+
+Las versiones v0.46 a v0.48 las reserva el backend #589 (KAN-259). Pasos manuales: secreto `MAPBOX_PUBLIC_TOKEN` en
+GitHub y `mapbox-token` en GCP (plan, Anexo B). Pendiente fuera de esta máquina: Emuladores, Mapbox real, teléfono
+real, staging y el aviso de privacidad (A6).
 
 ### Pendiente
 

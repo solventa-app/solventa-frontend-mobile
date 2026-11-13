@@ -26,6 +26,8 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        // HU-M06 (4.5): flutter_local_notifications necesita desugaring para programar notificaciones.
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -92,6 +94,8 @@ android {
 }
 
 dependencies {
+    // HU-M06 (4.5): desugaring que pide flutter_local_notifications.
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     // Corre integration_test/ en Firebase Test Lab (android/app/src/androidTest/).
     androidTestImplementation("androidx.test:runner:1.6.2")
     androidTestImplementation("androidx.test:rules:1.6.1")

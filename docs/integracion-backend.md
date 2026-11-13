@@ -83,7 +83,7 @@ Notas:
 | `FLAVOR` | `dev`, `prod` | PR de CI/CD |
 | `API_BASE_URL` | URL sin `/` final; vacío en `mock` | PR de CI/CD |
 | `API_ENV` | `mock`, `local`, `dev`, `prod` | Este documento (se agrega a los cuatro archivos) |
-| `MAP_TILE_URL` | Plantilla `{z}/{x}/{y}` de teselas; hoy OpenStreetMap en los cuatro | HU-M06 (decisión D-M06; cambiar de proveedor es cambiar esta URL) |
+| `MAPBOX_ACCESS_TOKEN` | Token público de Mapbox (`pk.…`). **No va en `config/*.json`**: llega por `--dart-define` desde el secreto `MAPBOX_PUBLIC_TOKEN` (CI) o la consola de cada desarrollador. Vacío: mapa falso en `mock`, lista sin mapa en el resto | HU-M06 (M0, reemplaza a `MAP_TILE_URL` y la decisión D-M06 de OpenStreetMap) |
 
 Se leen en `lib/core/config/app_config.dart` (`AppConfig.flavor`, `AppConfig.apiBaseUrl`, `isDev`, `isProd`, y
 `AppConfig.apiEnv` que agrega HU-M01). **Nada secreto** en estos archivos: todo lo que entra por `--dart-define`

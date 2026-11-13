@@ -16,11 +16,13 @@ import '../features/acceso/presentation/acceso_routes.dart';
 import '../features/acceso/presentation/pages/m02_01_desbloqueo_page.dart';
 import '../features/acceso/presentation/pages/m02_03_acceso_concedido_page.dart';
 import '../features/assistance/presentation/asistencia_routes.dart';
+import '../features/assistance/presentation/pages/asistencia_detalle_page.dart';
 import '../features/assistance/presentation/pages/m06_01_prestadores_page.dart';
 import '../features/assistance/presentation/pages/m06_02_solicitud_page.dart';
 import '../features/assistance/presentation/pages/m06_03_enviando_page.dart';
 import '../features/assistance/presentation/pages/m06_04_resultado_page.dart';
 import '../features/assistance/presentation/pages/m06_06_cancelada_page.dart';
+import '../features/assistance/presentation/pages/mis_asistencias_page.dart';
 import '../features/assistance/presentation/providers.dart';
 import '../features/claims/presentation/pages/m05_01_poliza_page.dart';
 import '../features/claims/presentation/pages/m05_02_fotos_page.dart';
@@ -67,6 +69,9 @@ GoRouter? enrutadorActivo;
 /// `true` si [ubicacion] es una de las rutas de HU-M04 que el push puede
 /// abrir directamente ([ParametricRoutes.celebracion] y `.detalle`).
 bool _esRutaM04(String ubicacion) =>
+    // HU-M06 (4.5): el detalle de la asistencia también llega desde una
+    // notificación y pide sesión, como el push de M04.
+    ubicacion.startsWith('${AsistenciaRoutes.detalle}/') ||
     ubicacion.startsWith('${ParametricRoutes.celebracion}/') ||
     ubicacion.startsWith('${ParametricRoutes.detalle}/') ||
     ubicacion == ParametricRoutes.cobertura;
@@ -241,6 +246,18 @@ GoRouter crearRouter({
       builder: (_, _) => const ProfilePage(),
     ),
     GoRoute(
+      path: '${AsistenciaRoutes.detalle}/:id',
+      name: 'm06-mis-asistencias-detalle',
+      builder: (context, state) => AsistenciaDetallePage(
+        id: state.pathParameters['id']!,
+        // Atrás vuelve a «Mis asistencias», también si llegó por la
+        // notificación sin pila previa (4.4).
+        onBack: () => _volverAPestana(context, SolAppShell.misAsistenciasIndex),
+        onPedirOtra: () =>
+            _volverAPestana(context, SolAppShell.assistanceIndex),
+      ),
+    ),
+    GoRoute(
       path: '${ParametricRoutes.celebracion}/:id',
       name: 'm04-02',
       builder: (context, state) {
@@ -408,6 +425,7 @@ class _RootShell extends ConsumerWidget {
       }
     }
 
+    final enCamino = ref.watch(enCaminoCantidadProvider);
     return SolAppShell(
       home: HomePage(
         userName: nombre,
@@ -458,15 +476,40 @@ class _RootShell extends ConsumerWidget {
       ),
       // «Solicitar» abre M06-02 con el prestador elegido (KAN-265).
       assistance: M0601PrestadoresPage(
-        onSolicitar: (cercano, origen) {
-          ref.read(solicitudProvider.notifier).iniciar(cercano, origen);
-          context.push(AsistenciaRoutes.solicitud);
-        },
-        onSolicitarConDireccion: (prestador) {
-          ref.read(solicitudProvider.notifier).iniciarConDireccion(prestador);
+        onSolicitar: (cercano, origen, direccionEscrita) {
+          ref
+              .read(solicitudProvider.notifier)
+              .iniciar(cercano, origen, direccionEscrita: direccionEscrita);
           context.push(AsistenciaRoutes.solicitud);
         },
       ),
+      // HU-M06 (4.1): «Mis asistencias», con el badge de las en camino.
+      misAsistencias: ValueListenableBuilder<int>(
+        valueListenable: ref.watch(pestanaInicioProvider),
+        builder: (context, pestana, _) => MisAsistenciasPage(
+          visible: pestana == SolAppShell.misAsistenciasIndex,
+          onVerDetalle: (id) => context.push(AsistenciaRoutes.detalleCon(id)),
+          onSolicitar: () => ref.read(pestanaInicioProvider).value =
+              SolAppShell.assistanceIndex,
+        ),
+      ),
+      destinations: [
+        SolNavDestination(label: l10n.navInicio, icon: SolIcons.home),
+        SolNavDestination(
+          label: l10n.navAsistencia,
+          icon: SolIcons.assistance,
+          selectedIcon: SolIcons.assistanceActive,
+        ),
+        SolNavDestination(
+          label: l10n.navMisAsistencias,
+          icon: SolIcons.misAsistencias,
+          badgeCount: enCamino,
+          semanticLabel: enCamino > 0
+              ? l10n.navMisAsistenciasEnCamino('$enCamino')
+              : null,
+        ),
+        SolNavDestination(label: l10n.navCerrarSesion, icon: SolIcons.logout),
+      ],
       pestana: ref.watch(pestanaInicioProvider),
       onWordmarkLongPress: kDebugMode
           ? () => context.push(SolGalleryPage.routeName)

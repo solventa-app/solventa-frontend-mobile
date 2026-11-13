@@ -1245,6 +1245,17 @@ type Prestador {
   fotoUrl: String # foto de la sede; null = la app muestra el placeholder del tipo
 }
 
+# v0.51 (HU-M06, B8): tiempo y ruta de un prestador hasta el cliente, por el ACL (Mapbox Matrix y Directions; simulado
+# en local). Para pintar en la app las rutas tipo semáforo. Cada consulta queda en `auditoria_rutas` (CLAIMS) con la
+# ubicación y la dirección aproximada cifradas, 90 días.
+type RutaPrestador {
+  prestadorId: ID!
+  distanciaMetros: Int!
+  duracionSegundos: Int!
+  geometria: String # polyline6, del prestador al cliente; solo los 3 primeros de prestadorIds
+  estimado: Boolean! # true = simulado (línea recta), no tráfico real
+}
+
 type CatalogoPrestadores {
   version: String! # versión vigente en el backend (AAAA-MM-DD.n)
   vigente: Boolean! # true si versionLocal ya es la vigente: entonces prestadores viene vacía
@@ -1259,6 +1270,7 @@ enum EstadoAsistencia {
   CONFIRMADA # el prestador va en camino (`minutosEstimados`)
   NO_CONFIRMADA # no se pudo confirmar (`motivo`); reenviar con el mismo idSolicitud reintenta
   CANCELADA
+  LLEGO # v0.52: CONFIRMADA cuya llegadaEstimada ya pasó; se deriva al leer (misAsistencias, asistencia)
 }
 
 enum MotivoNoConfirmada {
@@ -1277,9 +1289,32 @@ input SolicitudAsistenciaInput {
   prestadorId: ID!
   tipoAsistencia: TipoPrestador!
   descripcion: String = null # opcional, hasta 500 caracteres
-  direccion: String = null # la que el cliente confirmó o corrigió, hasta 200 caracteres
-  latitud: Float! # WGS84, del GPS del teléfono
+  direccion: String = null # la que el cliente confirmó o corrigió, hasta 200 caracteres; obligatoria con DIRECCION
+  latitud: Float! # WGS84, del GPS del teléfono o de la dirección ubicada (`ubicarDireccion`)
   longitud: Float!
+  # v0.50 (HU-M06, B4): de dónde salió la ubicación. Se guarda con la asistencia y en la auditoría.
+  origenUbicacion: OrigenUbicacion! = GPS
+}
+
+# v0.50 (HU-M06, B4 y B9): sin permiso de ubicación o con el GPS apagado, el cliente escribe su dirección; la app la
+# convierte en coordenadas con `ubicarDireccion` y el mapa funciona igual que con GPS.
+enum OrigenUbicacion {
+  GPS
+  DIRECCION
+}
+
+# El backend no devuelve textos para mostrar: la app pone el mensaje en el idioma del usuario.
+enum CodigoUbicacion {
+  DIRECCION_NO_ENCONTRADA # ni Places ni Geocoding la encontraron (o no es de Colombia)
+  SERVICIO_NO_DISPONIBLE # Google no respondió o el circuito del ACL está abierto: reintentar
+}
+
+type UbicacionDireccion {
+  encontrada: Boolean!
+  latitud: Float # WGS84; solo si encontrada
+  longitud: Float
+  direccion: String # normalizada por Google, en el idioma de la app (`Accept-Language`)
+  codigo: CodigoUbicacion # solo si no encontrada
 }
 
 # v0.41 (CA-M06-02): sin permiso de ubicación o con el GPS apagado, el cliente escribe adónde debe llegar el prestador.
@@ -1300,6 +1335,19 @@ type Asistencia {
   motivo: MotivoNoConfirmada # solo NO_CONFIRMADA
   solicitadaEn: DateTime!
   canceladaEn: DateTime
+  # v0.52 (HU-M06, B5): para la cuenta regresiva de «Mis asistencias» y la notificación de llegada.
+  confirmadaEn: DateTime # solo CONFIRMADA o LLEGO
+  llegadaEstimada: DateTime # confirmadaEn + minutosEstimados; null sin tiempo estimado
+  # v0.52 (B6): solo en misAsistencias y asistencia(id), y solo al cliente dueño: lo que pidió y adónde.
+  descripcion: String
+  ubicacion: UbicacionAsistencia
+}
+
+type UbicacionAsistencia {
+  latitud: Float
+  longitud: Float
+  direccion: String
+  origen: OrigenUbicacion!
 }
 
 type ErrorAsistencia {
@@ -1359,6 +1407,16 @@ type Query {
   # ---------- v0.36 (HU-M06) ----------
   # Sesión de CLIENTE (SIN_SESION si no hay). versionLocal null o distinta de la vigente: la lista completa.
   catalogoPrestadores(versionLocal: String = null): CatalogoPrestadores!
+  # v0.50 (HU-M06, B9): coordenadas de la dirección escrita, por el ACL (Place Details con `placeId` de
+  # `autocompletarDireccion`, o Geocoding con `texto`; solo Colombia). Solo CLIENTE. La dirección no se registra.
+  ubicarDireccion(placeId: String = null, texto: String = null): UbicacionDireccion!
+  # v0.51 (HU-M06, B8): solo CLIENTE; hasta 10 prestadores, los destacados primero. Si el proveedor falla, lista vacía
+  # (la app usa tiempos aproximados): nunca un error.
+  rutasPrestadores(latitud: Float!, longitud: Float!, prestadorIds: [ID!]!): [RutaPrestador!]!
+  # v0.52 (HU-M06, B6): las asistencias del CLIENTE de los últimos 30 días, más recientes primero (máximo 50).
+  misAsistencias: [Asistencia!]!
+  # v0.52 (B6): una asistencia del CLIENTE (al tocar la notificación de llegada). Ajena o inexistente: NO_ENCONTRADA.
+  asistencia(id: ID!): ResultadoAsistencia!
   # ---------- v0.48 (KAN-259, HU-M04 Fase 5) ----------
   # Sesión de CLIENTE: el detalle de una indemnización paramétrica. null si no existe, no es paramétrica o la
   # póliza no es del cliente del token (nunca filtra el expediente de otro cliente).
@@ -1511,6 +1569,7 @@ type Mutation {
   solicitarAsistencia(entrada: SolicitudAsistenciaInput!): ResultadoAsistencia!
   # v0.41 (HU-M06, CA-M06-02): lo mismo sin ubicación, con la dirección a mano. Sin dirección: DATOS_INVALIDOS.
   solicitarAsistenciaConDireccion(entrada: SolicitudAsistenciaDireccionInput!): ResultadoAsistencia!
+    @deprecated(reason: "v0.50: usar solicitarAsistencia con las coordenadas de ubicarDireccion y origenUbicacion DIRECCION")
   # Idempotente: cancelar dos veces devuelve la misma asistencia CANCELADA.
   cancelarAsistencia(id: ID!): ResultadoAsistencia!
 }

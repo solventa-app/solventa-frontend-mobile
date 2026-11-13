@@ -191,6 +191,7 @@ Flavors de Android + `--dart-define-from-file`:
 | `FIREBASE_SERVICE_ACCOUNT` (secreto), `FIREBASE_APP_ID_DEV`, `FIREBASE_PROJECT_ID` (variables) | Environment `dev` | App Distribution y Test Lab | Falta cuenta |
 | `SONAR_TOKEN` | Repo | SonarCloud | Hoy |
 | `SENTRY_AUTH_TOKEN` | Environment `production` | Subir símbolos a Sentry (`uniandes-xm`) | Listo en `cd.yml` y `rollback.yml`, falta secreto |
+| `MAPBOX_PUBLIC_TOKEN` | Repo (o environments `dev` y `production`) | Token **público** de Mapbox (`pk.…`) para el mapa de M06-01 (HU-M06, M0). `develop.yml` y `cd.yml` lo pasan a `tool/build-*.sh` como `--dart-define=MAPBOX_ACCESS_TOKEN`. Sin él la app compila igual y muestra la lista sin mapa (Emuladores y Test Lab usan `mock`, con el mapa falso, y no lo necesitan). **No hace falta token de descargas**: el plugin baja el SDK del Maven de Mapbox sin credenciales (verificado al compilar el APK en el devcontainer) | Listo, falta secreto |
 
 ## Versionado
 

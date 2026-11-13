@@ -1,0 +1,78 @@
+# HU-M06 (KAN-36), contrato v0.52 (B5 y B6): «Mis asistencias» y el detalle al tocar la notificación de llegada.
+# LLEGO se deriva en el backend al leer (CONFIRMADA cuya llegada ya pasó). La ubicación y la descripción solo llegan
+# al cliente dueño: sirven para el detalle y el aviso «Te alejaste».
+query MisAsistencias {
+  misAsistencias {
+    id
+    estado
+    tipoAsistencia
+    minutosEstimados
+    motivo
+    solicitadaEn
+    canceladaEn
+    confirmadaEn
+    llegadaEstimada
+    descripcion
+    ubicacion {
+      latitud
+      longitud
+      direccion
+      origen
+    }
+    prestador {
+      id
+      nombre
+      tipo
+      ciudad
+      latitud
+      longitud
+      activo
+      aliado
+      especialidad
+      direccion
+      horario
+      fotoUrl
+    }
+  }
+}
+
+query AsistenciaPorId($id: ID!) {
+  asistencia(id: $id) {
+    ... on Asistencia {
+      id
+      estado
+      tipoAsistencia
+      minutosEstimados
+      motivo
+      solicitadaEn
+      canceladaEn
+      confirmadaEn
+      llegadaEstimada
+      descripcion
+      ubicacion {
+        latitud
+        longitud
+        direccion
+        origen
+      }
+      prestador {
+        id
+        nombre
+        tipo
+        ciudad
+        latitud
+        longitud
+        activo
+        aliado
+        especialidad
+        direccion
+        horario
+        fotoUrl
+      }
+    }
+    ... on ErrorAsistencia {
+      codigo
+      mensaje
+    }
+  }
+}

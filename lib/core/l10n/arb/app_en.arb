@@ -24,7 +24,7 @@
   "m0104Consejo": "Avoid direct glare and strong shadows over the barcode and fingerprint.",
   "m0104Calidad": "Good focus and lighting",
   "m0105Titulo": "Liveness check",
-  "m0105Instruccion": "Slowly turn your face inside the frame (front camera)",
+  "m0105Instruccion": "Place your face inside the circle. When you tap “Record video” we'll record 3 seconds: slowly move your head from side to side.",
   "verificacionTitulo": "Verification",
   "m0106Validando": "Checking with the KYC/AML provider...",
   "m0107aMensaje": "Identity verified! Welcome to Solventa.",
@@ -283,30 +283,10 @@
   "@m0601Buscando": {
     "description": "M06-01 cargando"
   },
-  "m0601SinPrestadores": "There are no providers available near you right now.",
+  "m0601SinPrestadores": "We don't have providers in your area yet.",
   "@m0601SinPrestadores": {
     "description": "M06-01 lista vacía"
   },
-  "m0601SinPermiso": "We need your location to show you the nearest providers.",
-  "@m0601SinPermiso": {
-    "description": "M06-01 sin permiso de ubicación"
-  },
-  "m0601GpsApagado": "Your location is turned off. Turn it on to see nearby providers.",
-  "@m0601GpsApagado": {
-    "description": "M06-01 GPS apagado"
-  },
-  "m0601PermitirUbicacion": "Allow location",
-  "@m0601PermitirUbicacion": {
-    "description": "M06-01 reintentar permiso"
-  },
-  "m0601AbrirAjustes": "Open settings",
-  "@m0601AbrirAjustes": {
-    "description": "M06-01 abrir ajustes"
-  },
-  "m0601EscribirDireccion": "Enter my address",
-  "m0601TituloSinOrden": "Choose a provider",
-  "m0601NotaSinOrden": "Without your location we can't sort them by distance. You'll enter your address in the next step.",
-  "m0601UsarUbicacion": "Use my location",
   "m0601Reintentar": "Try again",
   "@m0601Reintentar": {
     "description": "M06-01 reintentar"
@@ -315,11 +295,18 @@
   "@m0601TuUbicacion": {
     "description": "M06-01 lectura del pin del cliente"
   },
-  "m0601ComoLlegar": "Directions to {nombre}, {tiempo}",
-  "@m0601ComoLlegar": {
-    "description": "M06-01 lectura del pin de prestador; abre la app de mapas",
+  "m0601RutaNoDisponible": "We couldn't find a maps app to open the route.",
+  "@m0601RutaNoDisponible": {
+    "description": "M06-01 sin app de mapas"
+  },
+  "m0601PinSemantica": "{nombre}, {tipo}, {tiempo}",
+  "@m0601PinSemantica": {
+    "description": "M06-01 lectura del pin del mapa; abre el detalle",
     "placeholders": {
       "nombre": {
+        "type": "String"
+      },
+      "tipo": {
         "type": "String"
       },
       "tiempo": {
@@ -327,14 +314,78 @@
       }
     }
   },
-  "m0601RutaNoDisponible": "We couldn't find a maps app to open the route.",
-  "@m0601RutaNoDisponible": {
-    "description": "M06-01 sin app de mapas"
+  "m0601VerSatelite": "Show satellite",
+  "m0601VerCalles": "Show streets",
+  "m0601Recentrar": "Re-center on my location",
+  "m0601ExpandirLista": "Expand list",
+  "m0601ContraerLista": "Collapse list",
+  "m0601MasPrestadores": "More providers in your city",
+  "m0601Aproximado": "~{tiempo}",
+  "@m0601Aproximado": {
+    "description": "M06-01 tiempo aproximado de los que no son de los 3 (M9)",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
   },
-  "m0601Atribucion": "© OpenStreetMap contributors",
-  "@m0601Atribucion": {
-    "description": "M06-01 atribución del mapa"
+  "m0601DetalleTipo": "{tipo} · {especialidad}",
+  "@m0601DetalleTipo": {
+    "description": "Detalle del prestador (2.2): tipo y especialidad",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "especialidad": {
+        "type": "String"
+      }
+    }
   },
+  "m0601DetalleLlegada": "{distancia} · arrives in {tiempo}",
+  "@m0601DetalleLlegada": {
+    "description": "Detalle del prestador (2.2): distancia y llegada",
+    "placeholders": {
+      "distancia": {
+        "type": "String"
+      },
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601SolicitarAsistencia": "Request assistance",
+  "m0601ComoLlegarBoton": "Get directions",
+  "m0601DireccionCopiada": "Address copied",
+  "m0601CopiarDireccion": "Long-press to copy the address",
+  "m0601Copiar": "Copy",
+  "m0601Cerrar": "Close",
+  "ubicacionExplicaTitulo": "We need your location",
+  "ubicacionExplicaTexto": "To show you the nearest providers and how long they take to arrive.",
+  "ubicacionPermitir": "Allow location",
+  "ubicacionNegadaTitulo": "We don't have your location",
+  "ubicacionNegadaTexto": "You can grant permission or type where you are. With the address we show you the same providers.",
+  "ubicacionAbrirAjustes": "Open Settings",
+  "gpsApagadoTitulo": "Your GPS is off",
+  "gpsApagadoTexto": "Turn on your phone's location to find providers near you.",
+  "gpsActivar": "Turn on location",
+  "direccionEscribir": "Type my address",
+  "direccionTitulo": "Where are you?",
+  "direccionCampo": "Address, city or landmark",
+  "direccionBuscar": "Search this address",
+  "direccionNoEncontrada": "We couldn't find that address. Try another one or a landmark",
+  "direccionServicioCaido": "We couldn't search addresses right now. Try again",
+  "direccionUsando": "Using: {direccion}",
+  "@direccionUsando": {
+    "description": "2.0 aviso sobre el mapa con la dirección escrita",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "direccionCambiar": "Change",
+  "direccionUsarActual": "Use my current location",
+  "direccionPinEtiqueta": "Typed address",
   "homeReportarTile": "Report a claim",
   "@homeReportarTile": {
     "description": "Inicio: entrada a HU-M05"
@@ -621,15 +672,23 @@
   "m0602TipoMecanica": "Mechanical",
   "m0602TipoGrua": "Tow truck",
   "m0602TipoElegir": "Choose an option",
+  "m0602AtencionInmediata": "Immediate attention",
+  "m0602AtencionInmediataTexto": "We are coordinating your request in real time",
+  "m0602UbicacionEscrita": "{direccion} (the address you typed)",
+  "@m0602UbicacionEscrita": {
+    "description": "M06-02 con la dirección escrita (S1)",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
   "m0602TipoRequerido": "Choose the type of assistance.",
   "m0602TipoNoAtendido": "{nombre} doesn't handle this type of assistance. Choose another provider on the map.",
   "m0602Descripcion": "Briefly describe what happened",
   "m0602DescripcionHint": "E.g. chest pain, dizziness…",
   "m0602TextoLargo": "Use {maximo} characters at most.",
-  "m0602Direccion": "Address or landmark",
-  "m0602DireccionHint": "E.g. 45th St, across from the park",
   "m0602UbicacionDetectada": "Location detected automatically: {coordenadas}",
-  "m0602DireccionRequerida": "Enter the address the provider should go to.",
   "m0602TiempoLlegada": "Estimated arrival time: {tiempo}",
   "m0602Enviar": "Send request",
   "m0603Mensaje": "Confirming availability with {nombre}…",
@@ -653,6 +712,139 @@
   "m0606Mensaje": "Your request was cancelled. The assigned service no longer applies and there will be no charges for this request.",
   "m0606VolverInicio": "Back to home",
   "m0606SolicitarDeNuevo": "Request again",
+  "navMisAsistencias": "My requests",
+  "navMisAsistenciasEnCamino": "My requests, {cantidad} on the way",
+  "@navMisAsistenciasEnCamino": {
+    "description": "TalkBack del destino con badge (4.1)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasTitulo": "My requests",
+  "misAsistenciasVacio": "You haven't requested assistance yet",
+  "misAsistenciasSolicitar": "Request on-site assistance",
+  "misAsistenciasEnCamino": "On the way ({cantidad})",
+  "@misAsistenciasEnCamino": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasYaLlegaron": "Arrived ({cantidad})",
+  "@misAsistenciasYaLlegaron": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasError": "We couldn't load your requests.",
+  "misAsistenciasCargando": "Loading your requests…",
+  "asistenciaPedida": "{tipo} · requested {hora}",
+  "@asistenciaPedida": {
+    "description": "4.2 subtítulo de la tarjeta",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaEn": "Arrives in {minutos} min",
+  "@asistenciaLlegaEn": {
+    "description": "4.2 cuenta regresiva",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaMenosDeUno": "Arrives in less than 1 min",
+  "asistenciaHoraEstimada": "Estimated time {hora}",
+  "@asistenciaHoraEstimada": {
+    "description": "4.2 hora estimada",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlego": "Arrived · {hora}",
+  "@asistenciaLlego": {
+    "description": "4.2 insignia ya llegó",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoConfirmada": "We couldn't confirm",
+  "asistenciaReintentar": "Try again",
+  "asistenciaEnCaminoLlega": "On the way · arrives in {minutos} min",
+  "@asistenciaEnCaminoLlega": {
+    "description": "4.4 estado en el detalle",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifTitulo": "Your assistance has arrived",
+  "asistenciaNotifCuerpo": "{prestador} should be at your location now",
+  "@asistenciaNotifCuerpo": {
+    "description": "4.5 cuerpo de la notificación",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifNota": "We'll let you know when the provider arrives.",
+  "asistenciaLlegoSnack": "{prestador} has arrived",
+  "@asistenciaLlegoSnack": {
+    "description": "4.5 aviso con la app abierta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaVer": "View",
+  "asistenciaDetalleTitulo": "Your assistance",
+  "asistenciaTeAlejaste": "You moved away from where you requested assistance. The provider is going to {direccion}",
+  "@asistenciaTeAlejaste": {
+    "description": "4.4b aviso",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLugarPedido": "the place where you requested it",
+  "asistenciaCancelarYPedirOtra": "Cancel and request another",
+  "asistenciaLectura": "{prestador}, {tipo}, {estado}",
+  "@asistenciaLectura": {
+    "description": "4.2 lectura de TalkBack de la tarjeta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      },
+      "tipo": {
+        "type": "String"
+      },
+      "estado": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoEncontrada": "We couldn't find that request.",
   "m0402Titulo": "Payout",
   "m0402Mensaje": "Your payout is on its way!",
   "m0402Monto": "{monto} deposited",
@@ -718,6 +910,34 @@
   "accesoBiometricoMotivo": "Confirm it's you to sign in to Solventa",
   "accesoBiometricoActivarMotivo": "Confirm your fingerprint or face to sign in without typing your password",
   "fallaDispositivoNoValido": "We could not verify this phone. Sign in with your email and password.",
+  "@m0105Instruccion": {
+    "description": "M01-05 instrucción antes de grabar"
+  },
+  "m0105Grabar": "Record video",
+  "@m0105Grabar": {
+    "description": "M01-05 botón que toma la selfie y graba el video"
+  },
+  "m0105Grabando": "Recording",
+  "@m0105Grabando": {
+    "description": "M01-05 etiqueta sobre el visor mientras graba"
+  },
+  "m0105GrabandoInstruccion": "Slowly move your head from side to side… {segundos}",
+  "@m0105GrabandoInstruccion": {
+    "description": "M01-05 instrucción mientras graba, con la cuenta regresiva",
+    "placeholders": {
+      "segundos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0105Capturado": "Done, we have your selfie and your video.",
+  "@m0105Capturado": {
+    "description": "M01-05 capturas tomadas (la cámara ya se cerró)"
+  },
+  "m0105Verificando": "We're sending your photos and verifying your identity with our provider. It may take a few seconds.",
+  "@m0105Verificando": {
+    "description": "M01-05 mientras sube y espera a Didit"
+  },
   "m0507Titulo": "Claim details",
   "@m0507Titulo": {
     "description": "M05-07 title"
