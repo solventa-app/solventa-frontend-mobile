@@ -1683,4 +1683,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get m0105Verificando =>
       'Estamos enviando tus fotos y verificando tu identidad con nuestro proveedor. Puede tardar unos segundos.';
+
+  @override
+  String get homeCargandoCuenta => 'Cargando tu cuenta…';
+
+  @override
+  String get homeCuentaSinCargar =>
+      'No pudimos cargar la información de tu cuenta. Revisa tu conexión e inténtalo de nuevo.';
+
+  @override
+  String get homeReintentarCuenta => 'Reintentar';
 }

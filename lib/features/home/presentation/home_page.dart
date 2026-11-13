@@ -27,6 +27,9 @@ class HomePage extends StatelessWidget {
     this.onMyClaims,
     this.onMyCoverage,
     this.verificacion,
+    this.cargandoCuenta = false,
+    this.cuentaSinCargar = false,
+    this.onReintentarCuenta,
     this.motivoRechazo,
     this.onCheckStatus,
     this.onOpenProfile,
@@ -47,6 +50,13 @@ class HomePage extends StatelessWidget {
   /// HU-M04: cupo, movimientos y pagos de la cobertura paramétrica (M04-04).
   final VoidCallback? onMyCoverage;
   final EstadoVerificacion? verificacion;
+
+  /// Cargando el perfil y la verificación: skeleton en vez de «sin verificar».
+  final bool cargandoCuenta;
+
+  /// No se pudo cargar: aviso con «Reintentar» ([onReintentarCuenta]).
+  final bool cuentaSinCargar;
+  final VoidCallback? onReintentarCuenta;
   final String? motivoRechazo;
   final VoidCallback? onCheckStatus;
   final VoidCallback? onOpenProfile;
@@ -66,6 +76,16 @@ class HomePage extends StatelessWidget {
     final saludo = tieneNombre
         ? (l10n?.homeSaludoHola(userName.trim()) ?? 'Hola, ${userName.trim()}')
         : (l10n?.homeSaludoBienvenida ?? 'Bienvenido a Solventa');
+
+    // Sin saber todavía el estado de la cuenta no se afirma que falte
+    // verificarla: se espera o se ofrece reintentar.
+    final desconocida = verificacion == null && !tieneNombre;
+    if (desconocida && (cargandoCuenta || cuentaSinCargar)) {
+      return _CuentaPorCargar(
+        cargando: cargandoCuenta,
+        onReintentar: onReintentarCuenta,
+      );
+    }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(
@@ -363,6 +383,69 @@ class _PistaBiometria extends StatelessWidget {
             icon: const Icon(SolIcons.close, size: 20),
           ),
       ],
+    );
+  }
+}
+
+/// Mientras se carga el perfil y la verificación (o si no se pudo), en lugar
+/// de la tarjeta «Completa tu registro», que sería falsa para una cuenta ya
+/// verificada.
+class _CuentaPorCargar extends StatelessWidget {
+  const _CuentaPorCargar({required this.cargando, this.onReintentar});
+
+  final bool cargando;
+  final VoidCallback? onReintentar;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = Localizations.of<AppLocalizations>(context, AppLocalizations);
+    final padding = const EdgeInsets.fromLTRB(
+      SolSpacing.screen,
+      SolSpacing.xl,
+      SolSpacing.screen,
+      SolSpacing.xxl,
+    );
+    if (cargando) {
+      return Padding(
+        padding: padding,
+        child: SolSkeletonGroup(
+          message: l10n?.homeCargandoCuenta ?? 'Cargando tu cuenta…',
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SolSkeleton(widthFactor: 0.6, height: 28),
+              SizedBox(height: SolSpacing.lg),
+              SolSkeleton(height: 120, radius: SolRadius.cardAll),
+              SizedBox(height: SolSpacing.lg),
+              SolSkeleton(height: 56, radius: SolRadius.cardAll),
+              SizedBox(height: SolSpacing.sm),
+              SolSkeleton(height: 56, radius: SolRadius.cardAll),
+            ],
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: padding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Semantics(
+            liveRegion: true,
+            child: SolInlineNote(
+              icon: SolIcons.info,
+              text:
+                  l10n?.homeCuentaSinCargar ??
+                  'No pudimos cargar la información de tu cuenta.',
+            ),
+          ),
+          const SizedBox(height: SolSpacing.md),
+          SolButton.tonal(
+            label: l10n?.homeReintentarCuenta ?? 'Reintentar',
+            onPressed: onReintentar,
+          ),
+        ],
+      ),
     );
   }
 }
