@@ -35,17 +35,32 @@ Revisión del 2026-11-12 contra `develop` (mobile `8dac02f`, backend `fb3b4c6`).
 | A15 | Los placeholders de la foto (2.2, S2, 4.4) **se dibujan** (`SolPhotoBanner`: degradado y el ícono del tipo) en vez de `assets/prestadores/*.webp` de banco | No hay fotos con licencia en el repo; cuando existan, basta con `fotoUrl` o con agregar los assets |
 | A16 | Sin token de Mapbox: con `API_ENV=mock` (Emuladores, Test Lab y la demo) se usa un **mapa falso** dibujado en Flutter; fuera de mock, la lista sin mapa (como CA-M06-04). Las pruebas y los goldens usan siempre el mapa falso | La vista nativa no se pinta en `flutter test` |
 | A17 | «Más prestadores en tu ciudad» son todos los del radio de 50 km (M16), no se filtra por el nombre de la ciudad | El radio ya separa las ciudades del catálogo |
+| A19 | La dirección se guarda en la asistencia tal como la devolvió Google en el idioma de la app; la versión en español para soporte y auditoría (2.0) se agrega con `auditoria_rutas` (fase 4) | Evita una segunda llamada a Google en cada solicitud |
+| A20 | `origenUbicacion` es `OrigenUbicacion! = GPS` (no nulo con valor por defecto): una app anterior a la v0.50 sigue funcionando sin mandarlo | Strawberry lo expone así y el contrato debe ser idéntico |
+| A21 | La pantalla de explicación (paso 1 del boceto) sale solo si la app nunca pidió el permiso: Android no distingue «nunca pedido» de «negado una vez», así que la app lo recuerda en `SharedPreferences` | Limitación de la API de permisos |
+| A22 | En Mapbox el pin del cliente no lleva la etiqueta «Dirección escrita» (la anotación es una imagen sin texto); la dice el aviso «Usando: …» de arriba. En el mapa falso sí la lleva | Evita dibujar un pin con texto por idioma |
+| A23 | S4 (dirección legible con GPS) queda fuera: con GPS, M06-02 muestra «Ubicación detectada automáticamente» con las coordenadas | Era opcional en el plan |
+| A24 | Las rutas simuladas (local y CI) van **dentro del ACL** (`MAPAS_PROVEEDOR=simulado`), no en un `stub-mapas` aparte | Mismo resultado y un contenedor menos |
+| A25 | En `auditoria_rutas` la **dirección aproximada también va cifrada** | También es un dato personal (regla 6) |
+| A26 | Aún no hay una consulta de `auditoria_rutas` para roles de auditoría; la colección existe con TTL de 90 días | No hay rol de auditoría hoy |
+| A27 | **Hallazgo:** dirección o coordenadas en la query string quedan en el log de acceso del ACL. `/lugares/ubicar` y `/lugares/inversa` van por `POST`. **Preexistente:** `/lugares/autocompletar` y `/lugares/validar` (T19) tienen el mismo problema | Regla 6 |
+| A28 | M15: con rutas, **todos** los prestadores que trae la respuesta (hasta 10) muestran el tiempo de la ruta, sin «~»; sin rutas (falla o circuito abierto), los destacados también llevan «~». Solo los 3 destacados tienen línea | El plan marcaba «~» para los que no son destacados; con la Matrix ya hay tiempo real |
+| A29 | B6: `misAsistencias` y `asistencia(id)` traen, solo al dueño, la descripción y la ubicación de la solicitud (para el detalle y «Te alejaste»), con tope de 50 | Sin la ubicación no hay con qué comparar; guardarla en el teléfono sería otro dato personal en disco |
+| A30 | La notificación local se programa con `inexactAllowWhileIdle` y un instante absoluto (UTC), sin `flutter_timezone` ni alarmas exactas; el permiso de Android 13+ se pide una vez por ejecución de la app al enviar la primera solicitud, con la línea «Te avisaremos cuando llegue el prestador.» en M06-02 | Menos permisos; puede llegar un par de minutos tarde (aceptado en 4.5) |
+| A31 | Con la app abierta y la pestaña «Mis asistencias» visible, al llegar se cancela la notificación del sistema y se muestra «X llegó · Ver». En otra pantalla de la app sí puede salir la del sistema | El reloj de 1 s solo corre con la pestaña visible (4.3) |
+| A32 | «Mis asistencias» muestra el estado vacío también si solo hay canceladas (no se listan) | Propuesta del plan (4.1) |
+| A33 | La barra inferior ahora toma los textos del catálogo (ES/EN); antes estaban fijos en español en el sistema de diseño | Regla de l10n del repo |
 | A18 | Los pines de Mapbox no son accesibles con TalkBack (son anotaciones nativas): la lista de la hoja tiene los mismos prestadores y acciones. En el mapa falso sí tienen etiqueta | Limitación del SDK |
 
 ### Avance por fase
 
 | Fase | Backend | Mobile |
 |---|---|---|
-| 1 · Catálogo con detalle, grúa y prestadores detrás del ACL (B1, B2, B3, B7) | PR #590 (v0.49, CLAIMS `0007`) | `feat/KAN-36-movil-prestadores-aliados-gruas` |
-| 2 · Mapbox, pines, detalle, hoja arrastrable (M0–M14) | — | `feat/KAN-36-movil-mapbox` (apilada sobre la fase 1) |
-| 3 · Dirección ubicada (B4, B9, 2.0, S1) | pendiente | pendiente |
-| 4 · Rutas y auditoría (B8, M15) | pendiente | pendiente |
-| 5 · «Mis asistencias» y notificación (B5, B6, 4.x) | pendiente | pendiente |
+| 1 · Catálogo con detalle, grúa y prestadores detrás del ACL (B1, B2, B3, B7) | PR #590 (v0.49, CLAIMS `0007`) | PR #83 |
+| 2 · Mapbox, pines, detalle, hoja arrastrable (M0–M14) | — | PR #84 (apilado sobre #83) |
+| 3 · Dirección ubicada (B4, B9, 2.0, S1) | PR #591 (v0.50, apilado sobre #590) | PR #85 (apilado sobre #84) |
+| 4 · Rutas y auditoría (B8, M15) | PR #614 (v0.51, CLAIMS `0008`) | PR #86 (apilado sobre #85) |
+| 5 · «Mis asistencias» y notificación (B5, B6, 4.x) | PR #615 (v0.52, CLAIMS `0009`) | PR #89 (apilado sobre #86) |
 
 ### Pendiente de verificar fuera de esta máquina (A9)
 
@@ -53,7 +68,11 @@ Revisión del 2026-11-12 contra `develop` (mobile `8dac02f`, backend `fb3b4c6`).
 - Mapbox real (token público en la app y secreto en el ACL), estilos calles y satélite: tamaño de los pines (densidad
   del PNG), que las anotaciones sobrevivan al cambio de estilo, encuadre inicial y límites, toque en el vacío y logo y
   atribución visibles.
-- Teléfono real: permisos, GPS, «Cómo llegar», notificación con la app cerrada, «Te alejaste».
+- Teléfono real: permisos, GPS, «Cómo llegar», notificación con la app cerrada (y tras reiniciar el teléfono), el
+  diálogo de notificaciones de Android 13+, tocar la notificación sin sesión (biometría y luego el detalle) y «Te
+  alejaste» con la ubicación del emulador (Extended controls → Location).
+- Las 3 pruebas de `integration_test/asistencia_en_sitio_test.dart` pasan en `flutter-tester` (sin emulador); falta
+  correrlas en Emuladores.
 - Staging (Anexo B.6) y `auditoria_rutas` en Mongo de staging.
 
 ---

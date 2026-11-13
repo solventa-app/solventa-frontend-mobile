@@ -15,4 +15,28 @@ abstract interface class AsistenciaRepository {
 
   /// Cancela (M06-05). Cancelar dos veces devuelve la misma cancelada.
   Future<Resultado<Asistencia>> cancelar(String id);
+
+  /// Sugerencias mientras el cliente escribe su dirección (2.0, Colombia).
+  /// Si el backend no responde, lista vacía: se puede seguir con el texto.
+  Future<Resultado<List<SugerenciaDireccion>>> sugerirDirecciones(String texto);
+
+  /// «Mis asistencias» (v0.52): las de los últimos 30 días.
+  Future<Resultado<List<Asistencia>>> misAsistencias();
+
+  /// Una asistencia (al tocar la notificación). Ajena o inexistente:
+  /// `FallaNegocio(NO_ENCONTRADA)`.
+  Future<Resultado<Asistencia>> asistencia(String id);
+
+  /// Rutas de los prestadores hasta [origen] (M15), los destacados primero.
+  /// Vacía si el proveedor falla: la app sigue con tiempos aproximados.
+  Future<Resultado<List<RutaPrestador>>> rutas(
+    Coordenada origen,
+    List<String> prestadorIds,
+  );
+
+  /// Coordenadas de la dirección elegida ([placeId]) o escrita ([texto]).
+  Future<Resultado<DireccionUbicada>> ubicarDireccion({
+    String? placeId,
+    String? texto,
+  });
 }

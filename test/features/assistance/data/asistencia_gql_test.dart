@@ -84,24 +84,44 @@ void main() {
     expect(r['codigo'], 'NO_ENCONTRADA');
   });
 
-  test('solicitarAsistenciaConDireccion manda la dirección escrita', () async {
+  test(
+    'autocompletarDireccion pide Colombia y devuelve las sugerencias',
+    () async {
+      bff.responder({
+        '__typename': 'Query',
+        'autocompletarDireccion': [
+          {
+            '__typename': 'SugerenciaDireccion',
+            'placeId': 'ChIJ1',
+            'descripcion': 'Carrera 45 # 22-18, Bogotá',
+          },
+        ],
+      });
+
+      final r = await remoto.autocompletarDireccion('Cra 45');
+
+      expect(r.single['placeId'], 'ChIJ1');
+      expect(bff.variables, {'texto': 'Cra 45', 'pais': 'CO'});
+    },
+  );
+
+  test('ubicarDireccion (v0.50) pasa por el tipo generado', () async {
     bff.responder({
-      '__typename': 'Mutation',
-      'solicitarAsistenciaConDireccion': asistencia('CONFIRMADA'),
+      '__typename': 'Query',
+      'ubicarDireccion': {
+        '__typename': 'UbicacionDireccion',
+        'encontrada': false,
+        'latitud': null,
+        'longitud': null,
+        'direccion': null,
+        'codigo': 'DIRECCION_NO_ENCONTRADA',
+      },
     });
 
-    final r = await remoto.solicitarAsistenciaConDireccion(const {
-      'idSolicitud': 'sol-1',
-      'prestadorId': 'p-1',
-      'tipoAsistencia': 'MEDICO',
-      'direccion': 'Calle 1 # 2-3',
-    });
+    final r = await remoto.ubicarDireccion(texto: 'calle noexiste');
 
-    expect(r['estado'], 'CONFIRMADA');
-    expect(
-      (bff.variables['entrada'] as Map<String, dynamic>)['direccion'],
-      'Calle 1 # 2-3',
-    );
+    expect(r['codigo'], 'DIRECCION_NO_ENCONTRADA');
+    expect(bff.variables['texto'], 'calle noexiste');
   });
 
   test('cancelarAsistencia manda el id y devuelve la cancelada', () async {

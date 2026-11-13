@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/falla.dart';
@@ -5,6 +7,7 @@ import '../../../core/errors/resultado.dart';
 import '../../../core/ids/uuid.dart';
 import '../domain/entities/asistencia.dart';
 import '../domain/entities/prestador.dart';
+import 'mis_asistencias_notifier.dart';
 import 'providers.dart';
 
 /// Desenlace del envío (M06-03 → M06-04a / M06-04b).
@@ -38,11 +41,10 @@ final class SolicitudState {
   const SolicitudState({
     required this.idSolicitud,
     this.cercano,
-    this.prestadorElegido,
     this.origen,
+    this.direccionEscrita,
     this.tipo,
     this.descripcion = '',
-    this.direccion = '',
     this.intentos = 0,
     this.envio = const SinEnviar(),
     this.cancelando = false,
@@ -52,14 +54,14 @@ final class SolicitudState {
   final String idSolicitud;
   final PrestadorCercano? cercano;
 
-  /// El prestador elegido sin ubicación (CA-M06-02): no hay distancia ni tiempo.
-  final Prestador? prestadorElegido;
-
-  /// Ubicación del cliente al abrir el mapa: adónde debe llegar el prestador.
+  /// Adónde debe llegar el prestador: el GPS o la dirección escrita ya
+  /// ubicada (2.0).
   final Coordenada? origen;
+
+  /// La dirección que escribió el cliente (origen `DIRECCION`); `null` = GPS.
+  final String? direccionEscrita;
   final TipoPrestador? tipo;
   final String descripcion;
-  final String direccion;
 
   /// Envíos ya hechos con este `idSolicitud` (M06-03b si es mayor que 0).
   final int intentos;
@@ -67,10 +69,7 @@ final class SolicitudState {
   final bool cancelando;
   final Falla? falloCancelar;
 
-  Prestador? get prestador => cercano?.prestador ?? prestadorElegido;
-
-  /// Sin ubicación, la dirección es lo único que dice adónde ir (CA-M06-02).
-  bool get faltaDireccion => origen == null && direccion.trim().isEmpty;
+  Prestador? get prestador => cercano?.prestador;
 
   /// El tipo elegido no lo atiende el prestador (CA de M06-02).
   bool get tipoNoAtendido =>
@@ -78,11 +77,10 @@ final class SolicitudState {
 
   bool get listoParaEnviar =>
       prestador != null &&
-      !faltaDireccion &&
+      origen != null &&
       tipo != null &&
       !tipoNoAtendido &&
-      descripcion.trim().length <= ReglasSolicitud.maxDescripcion &&
-      direccion.trim().length <= ReglasSolicitud.maxDireccion;
+      descripcion.trim().length <= ReglasSolicitud.maxDescripcion;
 
   Asistencia? get asistencia => switch (envio) {
     Respondida(:final asistencia) => asistencia,
@@ -92,7 +90,6 @@ final class SolicitudState {
   SolicitudState copyWith({
     TipoPrestador? tipo,
     String? descripcion,
-    String? direccion,
     int? intentos,
     EnvioSolicitud? envio,
     bool? cancelando,
@@ -101,11 +98,10 @@ final class SolicitudState {
   }) => SolicitudState(
     idSolicitud: idSolicitud,
     cercano: cercano,
-    prestadorElegido: prestadorElegido,
     origen: origen,
+    direccionEscrita: direccionEscrita,
     tipo: tipo ?? this.tipo,
     descripcion: descripcion ?? this.descripcion,
-    direccion: direccion ?? this.direccion,
     intentos: intentos ?? this.intentos,
     envio: envio ?? this.envio,
     cancelando: cancelando ?? this.cancelando,
@@ -122,25 +118,32 @@ final duracionMinimaEnvioProvider = Provider<Duration>(
 );
 
 final class SolicitudNotifier extends Notifier<SolicitudState> {
+  /// El permiso de notificaciones se pide una vez, al enviar la primera
+  /// solicitud (4.5); M06-02 explica antes para qué.
+  static bool _permisoPedido = false;
+
   @override
   SolicitudState build() => SolicitudState(idSolicitud: uuidV4());
 
-  /// «Solicitar» en M06-01: una solicitud nueva (otro `idSolicitud`). El tipo
-  /// arranca vacío: el cliente dice qué le pasa.
-  void iniciar(PrestadorCercano cercano, Coordenada origen) => state =
-      SolicitudState(idSolicitud: uuidV4(), cercano: cercano, origen: origen);
-
-  /// «Solicitar» en M06-01 sin ubicación (CA-M06-02): la dirección se escribe
-  /// en M06-02.
-  void iniciarConDireccion(Prestador prestador) => state = SolicitudState(
+  /// «Solicitar» en M06-01: una solicitud nueva (otro `idSolicitud`). S3: el
+  /// tipo llega prellenado con el del prestador, así el botón queda listo; el
+  /// cliente lo puede cambiar. [direccionEscrita] solo sin GPS (2.0).
+  void iniciar(
+    PrestadorCercano cercano,
+    Coordenada origen, {
+    String? direccionEscrita,
+  }) => state = SolicitudState(
     idSolicitud: uuidV4(),
-    prestadorElegido: prestador,
+    cercano: cercano,
+    origen: origen,
+    direccionEscrita: direccionEscrita,
+    tipo: cercano.prestador.tipo,
   );
 
   void fijarTipo(TipoPrestador tipo) => state = state.copyWith(tipo: tipo);
 
-  void fijarTextos({String? descripcion, String? direccion}) =>
-      state = state.copyWith(descripcion: descripcion, direccion: direccion);
+  void fijarTextos({String? descripcion}) =>
+      state = state.copyWith(descripcion: descripcion);
 
   /// M06-03 y M06-03b. Reenviar usa el mismo `idSolicitud`: no duplica la
   /// asistencia ni pide otra vez los datos.
@@ -148,6 +151,10 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
     final s = state;
     if (!s.listoParaEnviar || s.envio is Enviando) return;
     state = s.copyWith(envio: const Enviando());
+    if (!_permisoPedido) {
+      _permisoPedido = true;
+      unawaited(ref.read(notificacionesAsistenciaProvider).pedirPermiso());
+    }
     final espera = Future<void>.delayed(ref.read(duracionMinimaEnvioProvider));
     final r = await ref
         .read(asistenciaRepositoryProvider)
@@ -156,13 +163,18 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
             idSolicitud: s.idSolicitud,
             prestador: s.prestador!,
             tipo: s.tipo!,
-            ubicacion: s.origen,
+            ubicacion: s.origen!,
+            origen: s.direccionEscrita == null
+                ? OrigenUbicacion.gps
+                : OrigenUbicacion.direccion,
             descripcion: s.descripcion,
-            direccion: s.direccion,
+            direccion: s.direccionEscrita ?? '',
           ),
         );
     await espera;
     if (!ref.mounted) return;
+    // 4.5: confirmada, se programa la notificación de llegada.
+    if (r case Exito(:final valor)) unawaited(programarLlegada(ref, valor));
     state = state.copyWith(
       intentos: s.intentos + 1,
       envio: switch (r) {
@@ -178,6 +190,8 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
     if (actual == null || state.cancelando) return false;
     if (actual.estado == EstadoAsistencia.cancelada) return true;
     state = state.copyWith(cancelando: true, limpiarFalloCancelar: true);
+    // 4.6: la notificación se cancela antes de responder; si falla, vuelve.
+    await ref.read(notificacionesAsistenciaProvider).cancelar(actual.id);
     final r = await ref.read(asistenciaRepositoryProvider).cancelar(actual.id);
     if (!ref.mounted) return false;
     switch (r) {
@@ -185,6 +199,7 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
         state = state.copyWith(cancelando: false, envio: Respondida(valor));
         return true;
       case Fracaso(:final falla):
+        unawaited(programarLlegada(ref, actual));
         state = state.copyWith(cancelando: false, falloCancelar: falla);
         return false;
     }

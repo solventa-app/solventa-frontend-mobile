@@ -11,6 +11,8 @@ import '../core/push/pending_destination.dart';
 import '../core/push/push_service.dart';
 import '../core/sesion/gestor_sesion.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
+import '../features/assistance/presentation/asistencia_routes.dart';
+import '../features/assistance/presentation/providers.dart';
 import '../features/profile/presentation/sol_preferencias_sheet.dart';
 import 'router.dart';
 
@@ -56,6 +58,20 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
     );
     // HU-M04 Fase 6 (KAN-259): nunca lanza, aun sin `google-services.json`.
     unawaited(ref.read(pushServiceProvider).init());
+    // HU-M06 (4.5): tocar la notificación de llegada abre el detalle; sin
+    // sesión, el guard la guarda como destino pendiente hasta el login.
+    unawaited(_iniciarNotificacionesAsistencia());
+  }
+
+  Future<void> _iniciarNotificacionesAsistencia() async {
+    final avisos = ref.read(notificacionesAsistenciaProvider);
+    await avisos.iniciar(
+      alTocar: (id) => _router.go(AsistenciaRoutes.detalleCon(id)),
+    );
+    final arranque = await avisos.idDeArranque();
+    if (arranque != null && mounted) {
+      _router.go(AsistenciaRoutes.detalleCon(arranque));
+    }
   }
 
   @override

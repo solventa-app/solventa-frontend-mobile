@@ -128,53 +128,55 @@ void main() {
     await abrir(tester);
     expect(find.text('Prestador asignado'), findsOneWidget);
     expect(find.text('Clínica Norte'), findsOneWidget);
-    expect(find.text('Elige una opción'), findsOneWidget);
     expect(find.textContaining('4.6760, -74.0480'), findsOneWidget);
     expect(find.textContaining('Tiempo estimado de llegada'), findsOneWidget);
   });
 
   testWidgets(
-    'CA-M06-02: sin ubicación la dirección es obligatoria y no hay tiempo estimado',
+    '2.0: con la dirección escrita M06-02 la muestra y viaja con origen DIRECCION',
     (tester) async {
       await abrir(tester);
-      contenedor.read(solicitudProvider.notifier).iniciarConDireccion(clinica);
+      contenedor
+          .read(solicitudProvider.notifier)
+          .iniciar(
+            PrestadorCercano(
+              prestador: clinica,
+              distanciaKm: 0.9,
+              minutosEstimados: 5,
+            ),
+            const Coordenada(4.6729, -74.0512),
+            direccionEscrita: 'Cra 45 # 22-18',
+          );
       await tester.pumpAndSettle();
-      expect(find.textContaining('Tiempo estimado de llegada'), findsNothing);
+      // S1: ya no se escribe aquí; solo se muestra.
+      expect(find.text('Dirección o punto de referencia'), findsNothing);
+      expect(
+        find.textContaining('Cra 45 # 22-18 (la dirección que escribiste)'),
+        findsOneWidget,
+      );
       expect(find.textContaining('Ubicación detectada'), findsNothing);
 
-      await elegirTipo(tester, 'Médica');
-      await enviar(tester);
-      expect(
-        find.text('Escribe la dirección a la que debe llegar el prestador.'),
-        findsOneWidget,
-      );
-      expect(bff.solicitudes, isEmpty);
-
       bff.confirmarSiempre = true;
-      await tester.enterText(find.byType(TextField).last, 'Cra 45 # 22-18');
-      await tester.pumpAndSettle();
       await enviar(tester);
-
       final entrada = bff.solicitudes.single;
+      expect(entrada['origenUbicacion'], 'DIRECCION');
       expect(entrada['direccion'], 'Cra 45 # 22-18');
-      expect(entrada.containsKey('latitud'), isFalse);
-      expect(
-        find.textContaining('en camino a la dirección que indicaste'),
-        findsOneWidget,
-      );
-      expect(find.textContaining('minutos'), findsNothing);
+      expect(entrada['latitud'], 4.6729);
     },
   );
 
-  testWidgets(
-    'sin tipo de asistencia no envía y el error queda bajo el campo',
-    (tester) async {
-      await abrir(tester);
-      await enviar(tester);
-      expect(find.text('Elige el tipo de asistencia.'), findsOneWidget);
-      expect(bff.solicitudes, isEmpty);
-    },
-  );
+  testWidgets('S2 y S3: banner «Atención inmediata» y el tipo prellenado', (
+    tester,
+  ) async {
+    await abrir(tester);
+    expect(find.text('Atención inmediata'), findsOneWidget);
+    expect(find.text('Médica'), findsOneWidget);
+    expect(find.text('Elige una opción'), findsNothing);
+    bff.confirmarSiempre = true;
+    await enviar(tester);
+    expect(bff.solicitudes.single['tipoAsistencia'], 'MEDICO');
+    expect(bff.solicitudes.single['origenUbicacion'], 'GPS');
+  });
 
   testWidgets('un tipo que el prestador no atiende no se envía', (
     tester,
@@ -198,7 +200,6 @@ void main() {
       await abrir(tester);
       await elegirTipo(tester, 'Médica');
       await tester.enterText(find.byType(TextField).at(1), 'Dolor en el pecho');
-      await tester.enterText(find.byType(TextField).at(2), 'Cra 45 # 22-18');
       await enviar(tester);
 
       // M06-04b: la causa y las dos salidas.
@@ -210,7 +211,9 @@ void main() {
       expect(find.text('Elegir otro prestador'), findsOneWidget);
       final primera = bff.solicitudes.single;
       expect(primera['descripcion'], 'Dolor en el pecho');
-      expect(primera['direccion'], 'Cra 45 # 22-18');
+      // Con GPS no viaja una dirección (S1): solo las coordenadas.
+      expect(primera['direccion'], isNull);
+      expect(primera['origenUbicacion'], 'GPS');
       expect(primera['tipoAsistencia'], 'MEDICO');
       expect(primera['latitud'], 4.6760);
 

@@ -55,38 +55,44 @@ class SolPhotoBanner extends StatelessWidget {
       ),
     );
     final url = photoUrl;
+    final fondo = url == null
+        ? placeholder
+        : Image.network(
+            url,
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => placeholder,
+          );
+    final velo = ColoredBox(
+      color: colors.surface.withValues(alpha: strongVeil ? 0.78 : 0.25),
+    );
+    final title = this.title;
     return ExcludeSemantics(
       excluding: title == null,
       child: ClipRRect(
         borderRadius: SolRadius.cardAll,
-        child: SizedBox(
-          height: height,
-          width: double.infinity,
+        // Con texto, el alto es un mínimo: crece si el texto no cabe (texto
+        // grande o pantallas angostas).
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: height,
+            maxHeight: title == null ? height : double.infinity,
+            minWidth: double.infinity,
+          ),
           child: Stack(
-            fit: StackFit.expand,
             children: [
-              if (url == null)
-                placeholder
+              Positioned.fill(child: fondo),
+              Positioned.fill(child: velo),
+              if (title == null)
+                SizedBox(height: height)
               else
-                Image.network(
-                  url,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => placeholder,
-                ),
-              ColoredBox(
-                color: colors.surface.withValues(
-                  alpha: strongVeil ? 0.78 : 0.25,
-                ),
-              ),
-              if (title != null)
                 Padding(
                   padding: const EdgeInsets.all(SolSpacing.lg),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title!,
+                        title,
                         style: context.solText.title.copyWith(
                           color: colors.primary,
                         ),
