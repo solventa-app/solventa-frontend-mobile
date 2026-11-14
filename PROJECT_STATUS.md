@@ -80,7 +80,8 @@ KAN-280). Plan, diseños, decisiones (M04-D1 a D5) y pendientes en [`docs/hu-m04
   `ResumenCobertura` (sin dato equivalente del backend); rutas `/m04-02/:id`, `/m04-03/:id` y `/m04-04` en
   `router.dart`, con un guardia nuevo que, sin sesión abierta, guarda el destino (`lib/core/push/
   pending_destination.dart`) y lo reanuda tras el login («el push como puerta de entrada»); `lib/core/push/
-  push_service.dart` (`firebase_messaging` 16.x, `getToken`/`onTokenRefresh`) e `instalacion_id.dart`;
+  push_service.dart` (`firebase_messaging` 17.x, `getToken`/`onTokenRefresh`, deprecados desde la 17.0 pero a propósito:
+  el backend espera un token de FCM y su reemplazo entrega el FID) e `instalacion_id.dart`;
   `registrarTokenPush`/`actualizarPreferenciaPush` en AUTH vía el onboarding repository, con su interruptor en «Mi
   perfil»; entrada «Mi cobertura» nueva en el Home.
 - **Sin `google-services.json` real** (regla del repo: nunca un secreto en el repo): `Firebase.initializeApp()`

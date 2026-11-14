@@ -11,8 +11,18 @@ import '../network/network_providers.dart';
 import 'instalacion_id.dart';
 
 /// Recepción de push (HU-M04 Fase 6, KAN-259): token de FCM (`getToken`/
-/// `onTokenRefresh`, `firebase_messaging` 16.x) y navegación al tocar la
+/// `onTokenRefresh`, `firebase_messaging` 17.x) y navegación al tocar la
 /// notificación. Solo Android (decisión del equipo, sin iOS).
+///
+/// **`getToken` y `onTokenRefresh` están marcados `@Deprecated` desde la 17.0**
+/// (su reemplazo, `register()`/`onRegistered`, entrega el Firebase Installation
+/// ID, no el token de FCM) y aquí se siguen usando a propósito: el backend
+/// guarda y envía a un token de FCM (`registrarTokenPush(tokenFcm)`; la función
+/// `enviar-push` reacciona a `UNREGISTERED`/`INVALID_ARGUMENT`). Pasar al FID
+/// cambia el contrato y el envío, no es solo una actualización de la
+/// dependencia: se decide aparte, con el backend. Hasta entonces los dos `ignore`
+/// de abajo evitan que `flutter analyze` (que falla con cualquier hallazgo)
+/// falle por estos avisos.
 ///
 /// **Sin `google-services.json` real** (paso manual pendiente del usuario,
 /// nunca se sube al repo — regla del CLAUDE.md del repo): `Firebase.
@@ -51,6 +61,7 @@ class PushService {
     // `onTokenRefresh` puede disparar en cualquier momento de la vida de la
     // app, con o sin sesión activa; `_registrar` se queda calladamente sin
     // hacer nada si no hay sesión.
+    // ignore: deprecated_member_use
     FirebaseMessaging.instance.onTokenRefresh.listen(
       (String token) => unawaited(_registrar(token)),
     );
@@ -73,6 +84,7 @@ class PushService {
   Future<void> registrarTokenActual() async {
     if (!_firebaseListo) return;
     try {
+      // ignore: deprecated_member_use
       final token = await FirebaseMessaging.instance.getToken();
       if (token != null) await _registrar(token);
     } catch (e) {
