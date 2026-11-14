@@ -1,0 +1,208 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
+import 'package:solventa_mobile/core/l10n/l10n.dart';
+import 'package:solventa_mobile/features/home/presentation/home_page.dart';
+import 'package:solventa_mobile/features/onboarding/domain/entities/verificacion_identidad.dart';
+
+/// T15: lo que el Home dice del acceso a la app y a la web según la
+/// verificación de identidad.
+void main() {
+  const avisoWeb =
+      'Tu verificación fue exitosa. Ya puedes entrar también a la web de '
+      'Solventa con el mismo correo y clave.';
+  const avisoSoloApp =
+      'Mientras tu identidad no esté verificada solo puedes entrar a esta '
+      'app. La web no te dejará entrar hasta que termines la verificación '
+      'aquí.';
+
+  Future<void> abrir(
+    WidgetTester tester, {
+    EstadoVerificacion? verificacion,
+    Locale locale = AppLocales.es,
+    VoidCallback? onActivarBiometria,
+    VoidCallback? onCerrarPistaBiometria,
+  }) async {
+    tester.view.physicalSize = const Size(390, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: SolTheme.light(),
+        locale: locale,
+        supportedLocales: AppLocales.supported,
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          ...SolLocalizations.delegates,
+        ],
+        home: Scaffold(
+          body: HomePage(
+            userName: 'María',
+            verificacion: verificacion,
+            onCompleteRegistration: () {},
+            onRequestAssistance: () {},
+            onActivarBiometria: onActivarBiometria,
+            onCerrarPistaBiometria: onCerrarPistaBiometria,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+  }
+
+  testWidgets('verificada: avisa que ya puede entrar también a la web', (
+    tester,
+  ) async {
+    await abrir(tester, verificacion: EstadoVerificacion.verificada);
+
+    expect(find.text('Identidad verificada'), findsOneWidget);
+    expect(find.text(avisoWeb), findsOneWidget);
+    expect(find.text(avisoSoloApp), findsNothing);
+  });
+
+  testWidgets('en revisión: solo entra a la app mientras no verifique', (
+    tester,
+  ) async {
+    await abrir(tester, verificacion: EstadoVerificacion.enRevision);
+
+    expect(find.text(avisoSoloApp), findsOneWidget);
+    expect(find.text(avisoWeb), findsNothing);
+  });
+
+  testWidgets('rechazada: solo entra a la app mientras no verifique', (
+    tester,
+  ) async {
+    await abrir(tester, verificacion: EstadoVerificacion.rechazada);
+
+    expect(find.text(avisoSoloApp), findsOneWidget);
+    expect(find.text(avisoWeb), findsNothing);
+  });
+
+  testWidgets('sin verificar (Completa tu registro) no cambia', (tester) async {
+    await abrir(tester);
+
+    expect(find.text('Completar registro'), findsOneWidget);
+    expect(find.text(avisoSoloApp), findsNothing);
+    expect(find.text(avisoWeb), findsNothing);
+  });
+
+  testWidgets('el aviso sale en inglés con el idioma en inglés', (
+    tester,
+  ) async {
+    await abrir(
+      tester,
+      verificacion: EstadoVerificacion.verificada,
+      locale: AppLocales.en,
+    );
+
+    expect(
+      find.textContaining('Your verification was successful'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('sin la pista de biometría no muestra nada de huella', (
+    tester,
+  ) async {
+    await abrir(tester, verificacion: EstadoVerificacion.verificada);
+
+    expect(find.textContaining('huella o rostro'), findsNothing);
+  });
+
+  testWidgets('la pista de biometría activa o se cierra', (tester) async {
+    var activada = 0;
+    var cerrada = 0;
+    await abrir(
+      tester,
+      verificacion: EstadoVerificacion.verificada,
+      onActivarBiometria: () => activada++,
+      onCerrarPistaBiometria: () => cerrada++,
+    );
+
+    expect(
+      find.text('Activa tu huella o rostro para entrar más rápido.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Activar'));
+    await tester.tap(find.byTooltip('Cerrar aviso'));
+
+    expect(activada, 1);
+    expect(cerrada, 1);
+  });
+
+  testWidgets('la pista de biometría sale en inglés', (tester) async {
+    await abrir(
+      tester,
+      verificacion: EstadoVerificacion.verificada,
+      locale: AppLocales.en,
+      onActivarBiometria: () {},
+    );
+
+    expect(
+      find.text('Turn on your fingerprint or face unlock to sign in faster.'),
+      findsOneWidget,
+    );
+    expect(find.text('Turn on'), findsOneWidget);
+  });
+
+  group('cuenta aún sin cargar (desbloqueo con la huella)', () {
+    Future<void> abrirSinCargar(
+      WidgetTester tester, {
+      required bool cargando,
+      VoidCallback? onReintentar,
+    }) async {
+      tester.view.physicalSize = const Size(390, 1800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: SolTheme.light(),
+          locale: AppLocales.es,
+          supportedLocales: AppLocales.supported,
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            ...SolLocalizations.delegates,
+          ],
+          home: Scaffold(
+            body: HomePage(
+              userName: '',
+              onCompleteRegistration: () {},
+              onRequestAssistance: () {},
+              cargandoCuenta: cargando,
+              cuentaSinCargar: !cargando,
+              onReintentarCuenta: onReintentar,
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+    }
+
+    testWidgets('mientras carga no dice «Completa tu registro»', (
+      tester,
+    ) async {
+      await abrirSinCargar(tester, cargando: true);
+      expect(find.byType(SolSkeletonGroup), findsOneWidget);
+      expect(find.text('Completa tu registro'), findsNothing);
+      expect(find.text('Bienvenido a Solventa'), findsNothing);
+    });
+
+    testWidgets('si no cargó ofrece «Reintentar» en vez de un estado falso', (
+      tester,
+    ) async {
+      var reintentos = 0;
+      await abrirSinCargar(
+        tester,
+        cargando: false,
+        onReintentar: () => reintentos++,
+      );
+      expect(
+        find.textContaining('No pudimos cargar la información'),
+        findsOneWidget,
+      );
+      expect(find.text('Completa tu registro'), findsNothing);
+      await tester.tap(find.text('Reintentar'));
+      expect(reintentos, 1);
+    });
+  });
+}

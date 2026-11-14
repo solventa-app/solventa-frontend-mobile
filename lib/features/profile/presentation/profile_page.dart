@@ -3,14 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/design_system/solventa_ui.dart';
+import '../../../core/errors/resultado.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/network/network_providers.dart';
 import '../../onboarding/domain/entities/onboarding.dart';
 import '../../onboarding/presentation/onboarding_notifier.dart';
+import '../../onboarding/presentation/onboarding_routes.dart';
 import '../../onboarding/presentation/providers.dart';
 
 /// G-05 · Mi perfil (equivalente móvil de `MiPerfil.vue` en `solventa-frontend-web`).
 ///
-/// Muestra los datos reales del usuario (`yo`): nombre, correo/usuario, rol,
+/// Muestra los datos reales del usuario (`yo`): nombre, correo, rol,
 /// documento enmascarado, estado de la cuenta, fecha de registro y preferencias
 /// de idioma (`ES`/`EN`) y moneda (`COP`, `MXN`, `BRL`, `CLP`, `PEN`, `USD`, `EUR`).
 /// Incluye el botón para cerrar sesión con modal de confirmación (`G-04`).
@@ -28,6 +31,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   bool _cargando = false;
   bool _guardandoPreferencias = false;
   bool _preferenciasGuardadas = false;
+  bool _guardandoPush = false;
 
   @override
   void initState() {
@@ -40,6 +44,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     setState(() => _cargando = true);
     await ref.read(onboardingProvider.notifier).cargarPerfilYEstado();
     if (mounted) setState(() => _cargando = false);
+  }
+
+  /// HU-M04 Fase 6 (KAN-259): preferencia de push del propio cliente.
+  Future<void> _cambiarNotificacionesPush(bool habilitado) async {
+    setState(() => _guardandoPush = true);
+    final r = await ref
+        .read(onboardingRepositoryProvider)
+        .actualizarPreferenciaPush(habilitado: habilitado);
+    await ref.read(onboardingProvider.notifier).cargarPerfilYEstado();
+    if (!mounted) return;
+    setState(() => _guardandoPush = false);
+    if (r case Fracaso()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.perfilNotificacionesPushError)),
+      );
+    }
   }
 
   Future<void> _guardarPreferencias(String idioma, String moneda) async {
@@ -56,6 +76,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       _guardandoPreferencias = false;
       _preferenciasGuardadas = true;
     });
+  }
+
+  /// Abre M01-08 y, al volver, relee si quedó activada.
+  Future<void> _abrirBiometria() async {
+    await context.push(OnboardingRoutes.biometria);
+    if (mounted) setState(() {});
   }
 
   String _iniciales(String nombre) {
@@ -81,7 +107,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final nombreMostrado = (perfil?.nombre?.trim().isNotEmpty ?? false)
         ? perfil!.nombre!.trim()
         : l10n.perfilNombrePendiente;
-    final correoMostrado = perfil?.usuario ?? estado.correoPendiente ?? '—';
+    // T24: el correo es `Usuario.correo` (v0.24). `perfil.usuario` es el alias
+    // de acceso, que es opaco y nunca se muestra: sin correo se ve «—».
+    final correoMostrado = (perfil?.correo?.trim().isNotEmpty ?? false)
+        ? perfil!.correo!.trim()
+        : (estado.correoPendiente ?? '—');
     final verificado =
         (perfil?.verificado ?? false) ||
         estado.onboarding?.estado == EstadoOnboarding.verificada;
@@ -90,6 +120,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         ? perfil!.documentoEnmascarado!.trim()
         : '—';
     final fechaRegistro = (perfil?.creadoEn ?? '—').split('T').first;
+    // Con el refresh cifrado en el teléfono, M02 ya pide huella o rostro.
+    final biometriaActiva = ref.read(gestorSesionProvider).refreshPersistido;
 
     final contenido = SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(
@@ -366,13 +398,96 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               ),
             ),
             const SizedBox(height: SolSpacing.lg),
+            // HU-M04 Fase 6 (KAN-259): preferencia de push del propio cliente.
+            SolCard.outlined(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.perfilNotificacionesPush,
+                          style: context.solText.titleSmall.copyWith(
+                            color: colors.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: SolSpacing.xxs),
+                        Text(
+                          l10n.perfilNotificacionesPushTexto,
+                          style: context.solText.note.copyWith(
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: SolSpacing.sm),
+                  Switch(
+                    value: perfil?.notificacionesPush ?? true,
+                    onChanged: _guardandoPush
+                        ? null
+                        : (v) => _cambiarNotificacionesPush(v),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: SolSpacing.lg),
             SolInlineNote(
               icon: SolIcons.info,
               text: l10n.perfilNotaLegal,
               iconColor: colors.primary,
             ),
+            const SizedBox(height: SolSpacing.xl),
+            // La biometría es opcional (M01-08): desde aquí se activa luego.
+            SolCard(
+              onTap: _abrirBiometria,
+              semanticLabel: l10n.perfilBiometria,
+              child: Row(
+                children: [
+                  ExcludeSemantics(
+                    child: Icon(
+                      SolIcons.fingerprint,
+                      size: SolSizes.icon,
+                      color: biometriaActiva
+                          ? context.solColors.success
+                          : colors.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(width: SolSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.perfilBiometria,
+                          style: context.solText.titleSmall.copyWith(
+                            color: colors.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: SolSpacing.xxs),
+                        Text(
+                          biometriaActiva
+                              ? l10n.perfilBiometriaActiva
+                              : l10n.perfilBiometriaInactiva,
+                          style: context.solText.body.copyWith(
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ExcludeSemantics(
+                    child: Icon(
+                      SolIcons.chevronRight,
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             if (widget.onLogout != null) ...[
-              const SizedBox(height: SolSpacing.xl),
+              const SizedBox(height: SolSpacing.lg),
               SolButton.outlined(
                 label: l10n.navCerrarSesion,
                 icon: SolIcons.logout,
@@ -404,6 +519,16 @@ class _DatoLectura extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    // El lector de pantalla dice que el dato es de solo lectura (T24).
+    return Semantics(
+      container: true,
+      label: '$etiqueta, $valor, ${context.l10n.perfilSoloLectura}',
+      excludeSemantics: true,
+      child: _contenido(context, colors),
+    );
+  }
+
+  Widget _contenido(BuildContext context, ColorScheme colors) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

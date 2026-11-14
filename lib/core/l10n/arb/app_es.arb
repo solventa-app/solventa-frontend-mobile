@@ -104,9 +104,9 @@
   "@m0105Titulo": {
     "description": "M01-05 barra superior"
   },
-  "m0105Instruccion": "Gira tu rostro lentamente dentro del marco (cámara frontal)",
+  "m0105Instruccion": "Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.",
   "@m0105Instruccion": {
-    "description": "M01-05 instrucción"
+    "description": "M01-05 instrucción antes de grabar"
   },
   "verificacionTitulo": "Verificación",
   "@verificacionTitulo": {
@@ -120,7 +120,7 @@
   "@m0107aMensaje": {
     "description": "M01-07a"
   },
-  "m0107aAccion": "Ir a mi cuenta",
+  "m0107aAccion": "Activar huella o rostro",
   "@m0107aAccion": {
     "description": "M01-07a botón"
   },
@@ -144,13 +144,23 @@
   "@m0108Titulo": {
     "description": "M01-08 barra superior"
   },
-  "m0108Encabezado": "Necesitamos activar tu huella o rostro",
+  "m0108Encabezado": "{tipo, select, huella{Activa tu huella} rostro{Activa tu rostro} bloqueo{Activa el bloqueo del teléfono} other{Activa la seguridad de tu teléfono}}",
   "@m0108Encabezado": {
-    "description": "M01-08 título"
+    "description": "M01-08 título según el método del teléfono",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      }
+    }
   },
-  "m0108Explicacion": "Solventa protege tu cuenta con la seguridad de tu propio teléfono: para continuar, tu celular debe tener huella dactilar o reconocimiento facial activado. Es lo mismo que usas para desbloquear el teléfono — Solventa nunca ve ni guarda ese dato.",
+  "m0108Explicacion": "{tipo, select, huella{Entra más rápido sin escribir tu contraseña. Te pediremos tu huella una sola vez.} rostro{Entra más rápido sin escribir tu contraseña. Te pediremos tu rostro una sola vez.} bloqueo{Entra más rápido sin escribir tu contraseña. Te pediremos el bloqueo de tu teléfono una sola vez.} other{Entra más rápido sin escribir tu contraseña. Te pediremos la seguridad de tu teléfono una sola vez.}}",
   "@m0108Explicacion": {
-    "description": "M01-08 explicación"
+    "description": "M01-08 explicación según el método del teléfono",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      }
+    }
   },
   "m0108Sello": "Validación biométrica encriptada localmente",
   "@m0108Sello": {
@@ -164,13 +174,20 @@
   "@m0108Continuar": {
     "description": "M01-08 botón principal"
   },
-  "m0108Requisito": "Sin huella o rostro activado en el equipo, la app no puede usarse — es un requisito, no una opción.",
+  "m0108Activar": "{tipo, select, huella{Activar huella} rostro{Activar rostro} bloqueo{Activar bloqueo} other{Activar seguridad}}",
+  "@m0108Activar": {
+    "description": "M01-08 botón principal cuando el teléfono ya tiene biometría registrada",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0108AhoraNo": "Ahora no, ir al inicio",
+  "m0108AvisoLuego": "Puedes activar tu huella o rostro cuando quieras en Mi perfil.",
+  "m0108Requisito": "Puedes activarla después en los ajustes del teléfono: Solventa la usará apenas esté lista. Mientras tanto entrarás con tu correo y clave.",
   "@m0108Requisito": {
     "description": "M01-08 nota"
-  },
-  "m0108NoActivada": "Aún no detectamos huella o rostro en tu teléfono.",
-  "@m0108NoActivada": {
-    "description": "M01-08 aviso si no está activada"
   },
   "fallaSinConexion": "No tienes conexión. Revisa tu internet e intenta de nuevo.",
   "@fallaSinConexion": {
@@ -209,9 +226,13 @@
     "description": "M01-05b: campo confirmación"
   },
   "m0105bRequisitoCumplido": "cumplido",
-  "@m0105bRequisitoCumplido": {"description": "M01-05b: requisito de la clave cumplido (lector de pantalla)"},
+  "@m0105bRequisitoCumplido": {
+    "description": "M01-05b: requisito de la clave cumplido (lector de pantalla)"
+  },
   "m0105bRequisitoPendiente": "pendiente",
-  "@m0105bRequisitoPendiente": {"description": "M01-05b: requisito de la clave pendiente (lector de pantalla)"},
+  "@m0105bRequisitoPendiente": {
+    "description": "M01-05b: requisito de la clave pendiente (lector de pantalla)"
+  },
   "m0105bAyudaContrasena": "Entre 8 y 128 caracteres.",
   "@m0105bAyudaContrasena": {
     "description": "M01-05b: ayuda de la clave"
@@ -276,6 +297,10 @@
   "@fallaRegistroVencido": {
     "description": "Onboarding: TOKEN_INVALIDO"
   },
+  "fallaEmpezarDeNuevo": "Empezar de nuevo",
+  "@fallaEmpezarDeNuevo": {
+    "description": "Onboarding: acción del aviso cuando el registro venció (TOKEN_INVALIDO)"
+  },
   "fallaAlmacenamiento": "El servicio de almacenamiento de documentos no está disponible en este momento. Intenta de nuevo.",
   "fallaObjetoNoSubido": "No pudimos recibir tu archivo completo. Revisa tu conexión y toca Reintentar envío.",
   "fallaTamanoNoAdmitido": "El archivo supera el peso máximo permitido (5 MB foto de documento, 2 MB selfie, 15 MB video).",
@@ -288,6 +313,10 @@
   "fallaIntentosAgotados": "Agotaste los intentos de este código o verificación. Solicita uno nuevo.",
   "fallaCredencialesInvalidas": "El correo o la clave no son correctos. Revísalos e intenta de nuevo.",
   "fallaSesionVencida": "Tu sesión venció. Inicia sesión nuevamente.",
+  "fallaSeguridadTelefono": "Cambió la huella, el rostro o el bloqueo de tu teléfono. Por tu seguridad, inicia sesión con tu correo y clave.",
+  "@fallaSeguridadTelefono": {
+    "description": "HU-M02 (D4): Android invalidó la llave de la sesión guardada"
+  },
   "fallaSinPermiso": "No tienes permiso para realizar esta operación.",
   "cuentaModoCrear": "Crear cuenta",
   "cuentaModoIngresar": "Iniciar sesión",
@@ -330,6 +359,9 @@
   "m0105bReqMayuscula": "Una letra mayúscula",
   "m0105bReqMinuscula": "Una letra minúscula",
   "m0105bReqEspecial": "Un carácter especial (por ejemplo ! ¿ @ # €)",
+  "m0105bReqTitulo": "Tu clave debe tener:",
+  "m0105bRequisitoIncumplido": "falta",
+  "m0105bClavesCoinciden": "Las claves coinciden.",
   "otpReenviado": "Te enviamos un código nuevo a tu correo.",
   "homeSaludoBienvenida": "Bienvenido a Solventa",
   "homeSaludoHola": "Hola, {nombre}",
@@ -349,6 +381,14 @@
   "homeRechazadaBoton": "Reintentar verificación",
   "homeVerificadaTitulo": "Identidad verificada",
   "homeVerificadaTexto": "Tu cuenta está activa y protegida con validación biométrica.",
+  "homeVerificadaWeb": "Tu verificación fue exitosa. Ya puedes entrar también a la web de Solventa con el mismo correo y clave.",
+  "@homeVerificadaWeb": {
+    "description": "Home verificado: aviso de verificación exitosa y acceso a la web (T15)"
+  },
+  "homeSoloAppAviso": "Mientras tu identidad no esté verificada solo puedes entrar a esta app. La web no te dejará entrar hasta que termines la verificación aquí.",
+  "@homeSoloAppAviso": {
+    "description": "Home en revisión o rechazado: mientras no verifique, solo entra a la app (T15)"
+  },
   "homeAsistenciaTile": "Solicitar asistencia en sitio",
   "homeBilleteraNota": "Billetera y estado de póliza — próximamente",
   "navInicio": "Inicio",
@@ -389,7 +429,25 @@
   "perfilPreferenciasTexto": "Idioma y moneda con los que se abre la app cada vez que inicias sesión.",
   "perfilGuardarPreferencias": "Guardar preferencias",
   "perfilPreferenciasGuardadas": "Preferencias guardadas.",
+  "perfilBiometria": "Huella o rostro del teléfono",
+  "homeBiometriaPista": "Activa tu huella o rostro para entrar más rápido.",
+  "homeBiometriaActivar": "Activar",
+  "homeBiometriaCerrar": "Cerrar aviso",
+  "perfilBiometriaActiva": "Activada",
+  "perfilBiometriaInactiva": "Sin activar · Toca para activar",
   "perfilNotaLegal": "Los datos de tu cuenta provienen de tu documento verificado y son de solo lectura. Tus datos personales se tratan conforme a la Ley 1581 de 2012 de Habeas Data.",
+  "perfilNotificacionesPush": "Notificaciones push",
+  "@perfilNotificacionesPush": {
+    "description": "Perfil: interruptor de preferencia de push (KAN-259)"
+  },
+  "perfilNotificacionesPushTexto": "Avisa cuando se liquide una indemnización, entre otros.",
+  "@perfilNotificacionesPushTexto": {
+    "description": "Perfil: texto de ayuda del interruptor de push"
+  },
+  "perfilNotificacionesPushError": "No se pudo guardar tu preferencia. Intenta de nuevo.",
+  "@perfilNotificacionesPushError": {
+    "description": "Perfil: error al cambiar la preferencia de push"
+  },
   "cerrarSesionTitulo": "¿Quieres cerrar sesión?",
   "cerrarSesionMensaje": "Tendrás que ingresar de nuevo para usar Solventa.",
   "cerrarSesionConfirmar": "Sí, cerrar sesión",
@@ -434,5 +492,1539 @@
   "fallaCamaraNoDisponible": "No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.",
   "@fallaCamaraNoDisponible": {
     "description": "Falla al capturar sin cámara activa"
+  },
+  "biometriaMotivo": "Confirma que eres tú para entrar a Solventa",
+  "@biometriaMotivo": {
+    "description": "Texto del diálogo del sistema al pedir huella, rostro o PIN del teléfono"
+  },
+  "m0108SoloPin": "Tu teléfono no tiene huella ni rostro registrados. Puedes continuar con el PIN del teléfono, aunque te recomendamos registrar tu huella.",
+  "@m0108SoloPin": {
+    "description": "M01-08: aviso cuando solo hay PIN del teléfono (decisión D1)"
+  },
+  "m0108SinBloqueo": "Tu teléfono no tiene bloqueo de pantalla. Activa un PIN, patrón o huella en los ajustes para proteger tu cuenta.",
+  "@m0108SinBloqueo": {
+    "description": "M01-08: aviso cuando el teléfono no tiene bloqueo de pantalla"
+  },
+  "m0108NoDisponible": "No pudimos consultar la seguridad de tu teléfono. Intenta de nuevo.",
+  "@m0108NoDisponible": {
+    "description": "M01-08: error al consultar la biometría del sistema"
+  },
+  "m0108NoReconocido": "No te reconocimos. Intenta de nuevo.",
+  "@m0108NoReconocido": {
+    "description": "M01-08: la huella o el rostro no coincidieron"
+  },
+  "m0108BloqueoTemporal": "Hiciste demasiados intentos. Espera unos segundos o usa el PIN del teléfono.",
+  "@m0108BloqueoTemporal": {
+    "description": "M01-08 y M02-01: sensor bloqueado temporalmente"
+  },
+  "m0201Titulo": "Desbloquea tu cuenta",
+  "@m0201Titulo": {
+    "description": "M02-01: título de la tarjeta"
+  },
+  "m0201Sensor": "Huella o rostro",
+  "@m0201Sensor": {
+    "description": "M02-01: bajo el botón del sensor (en Android no se dice «Face ID»)"
+  },
+  "m0201Escanear": "Desbloquear con huella o rostro",
+  "@m0201Escanear": {
+    "description": "M02-01: lectura de TalkBack del botón del sensor"
+  },
+  "m0201IngresaHuella": "Ingresa con tu huella",
+  "@m0201IngresaHuella": {
+    "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
+  },
+  "m0201IngresaRostro": "Ingresa con tu rostro",
+  "@m0201IngresaRostro": {
+    "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
+  },
+  "m0201IngresaSeguridad": "Ingresa con la seguridad de tu teléfono",
+  "@m0201IngresaSeguridad": {
+    "description": "M02-01: método biométrico desconocido (huella y rostro posibles a la vez, Android 8 o 9, o la consulta falló); ícono del escudo"
+  },
+  "m0201IngresaBloqueo": "Ingresa con el bloqueo de tu teléfono",
+  "@m0201IngresaBloqueo": {
+    "description": "M02-01: texto bajo el sensor según lo que tiene el teléfono"
+  },
+  "m0201Motivo": "Desbloquea tu cuenta de Solventa",
+  "m0201DialogoTitulo": "Desbloquea Solventa",
+  "@m0201DialogoTitulo": {
+    "description": "Título del diálogo del sistema al desbloquear (Android lo muestra tal cual)"
+  },
+  "m0201DialogoSubtitulo": "Confirma que eres tú",
+  "@m0201DialogoSubtitulo": {
+    "description": "Subtítulo del diálogo del sistema al desbloquear"
+  },
+  "m0201DialogoCancelar": "Cancelar",
+  "@m0201DialogoCancelar": {
+    "description": "Botón de abajo del diálogo del sistema cuando solo acepta biometría"
+  },
+  "@m0201Motivo": {
+    "description": "M02-01: texto del diálogo biométrico del sistema"
+  },
+  "m0201UsarBloqueo": "Usar el bloqueo del teléfono",
+  "@m0201UsarBloqueo": {
+    "description": "M02-01 y M02-01a: abre el diálogo del sistema con el PIN, patrón o contraseña del teléfono (D2)"
+  },
+  "m0201SimularNoReconoce": "Simular que no reconoce la biometría",
+  "@m0201SimularNoReconoce": {
+    "description": "M02-01: disparador de demo (solo debug)"
+  },
+  "m0201Reintentar": "Reintentar",
+  "@m0201Reintentar": {
+    "description": "M02-01 y M02-01a: reintentar"
+  },
+  "m0201SinRed": "No hay conexión. Tu sesión sigue guardada en este teléfono: reintenta cuando vuelva la señal.",
+  "@m0201SinRed": {
+    "description": "M02-01: sin red al renovar la sesión"
+  },
+  "m0201BloqueoTemporal": "Hiciste demasiados intentos. Espera unos segundos o usa el bloqueo de tu teléfono.",
+  "@m0201BloqueoTemporal": {
+    "description": "M02-01: sensor bloqueado temporalmente"
+  },
+  "m0201BloqueoPermanente": "Tu teléfono bloqueó la biometría. Desbloquéala con el PIN, patrón o contraseña del teléfono.",
+  "@m0201BloqueoPermanente": {
+    "description": "M02-01: biometría bloqueada hasta usar la credencial del teléfono"
+  },
+  "m0201FaltaAutenticacion": "Tu teléfono no pudo abrir tu huella o rostro. Usa el bloqueo de tu teléfono.",
+  "@m0201FaltaAutenticacion": {
+    "description": "M02-01: la llave del Keystore pidió una autenticación más fuerte"
+  },
+  "m0201SinBloqueo": "Tu teléfono ya no tiene bloqueo de pantalla. Actívalo en Ajustes o ingresa con tu correo y clave.",
+  "@m0201SinBloqueo": {
+    "description": "M02-01: el teléfono no tiene bloqueo de pantalla"
+  },
+  "m0201NoDisponible": "Tu teléfono no puede verificar tu identidad ahora. Revisa Ajustes o ingresa con tu correo y clave.",
+  "@m0201NoDisponible": {
+    "description": "M02-01: sin hardware o servicio de biometría"
+  },
+  "m0201IrAjustes": "Ir a ajustes",
+  "@m0201IrAjustes": {
+    "description": "M02-01: abre los ajustes de seguridad del teléfono"
+  },
+  "m0201UsarCorreo": "Usar correo y contraseña",
+  "@m0201UsarCorreo": {
+    "description": "M02-01: salida cuando el teléfono no puede autenticar"
+  },
+  "m0201aTitulo": "No te reconocimos",
+  "@m0201aTitulo": {
+    "description": "M02-01a: título"
+  },
+  "m0201aMensaje": "No pudimos verificar tu huella o rostro. Intenta de nuevo o usa el bloqueo de tu teléfono.",
+  "@m0201aMensaje": {
+    "description": "M02-01a: explicación"
+  },
+  "m0203Titulo": "Acceso concedido",
+  "@m0203Titulo": {
+    "description": "M02-03: título"
+  },
+  "m0203SaludoSinNombre": "Hola de nuevo.",
+  "@m0203SaludoSinNombre": {
+    "description": "M02-03: saludo cuando aún no llega el nombre"
+  },
+  "m0203Progreso": "Entrando a tu cuenta",
+  "@m0203Progreso": {
+    "description": "M02-03: lectura de TalkBack de la barra de progreso"
+  },
+  "m0203Saludo": "Hola de nuevo, {nombre}.",
+  "@m0203Saludo": {
+    "description": "M02-03: saludo con el nombre (neutro en género)",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601Titulo": "Prestadores cercanos",
+  "@m0601Titulo": {
+    "description": "M06-01 encabezado de la hoja"
+  },
+  "m0601Disponibles": "{cantidad} disponibles",
+  "@m0601Disponibles": {
+    "description": "M06-01 píldora del encabezado",
+    "placeholders": {
+      "cantidad": {
+        "type": "int"
+      }
+    }
+  },
+  "m0601Solicitar": "Solicitar",
+  "@m0601Solicitar": {
+    "description": "M06-01 botón de cada fila"
+  },
+  "m0601TipoMedico": "Médico",
+  "@m0601TipoMedico": {
+    "description": "M06-01 especialidad médica"
+  },
+  "m0601TipoMecanico": "Mecánico",
+  "@m0601TipoMecanico": {
+    "description": "M06-01 especialidad mecánica"
+  },
+  "m0601TipoGrua": "Grúa",
+  "@m0601TipoGrua": {
+    "description": "M06-01 tipo grúa (v0.49)"
+  },
+  "m0601Aliado": "Aliado Solventa",
+  "@m0601Aliado": {
+    "description": "M06-01 insignia del prestador aliado (v0.49)"
+  },
+  "m0601Buscando": "Buscando prestadores cerca de ti…",
+  "@m0601Buscando": {
+    "description": "M06-01 cargando"
+  },
+  "m0601SinPrestadores": "Aún no tenemos prestadores en tu zona.",
+  "@m0601SinPrestadores": {
+    "description": "M06-01 lista vacía"
+  },
+  "m0601Reintentar": "Reintentar",
+  "@m0601Reintentar": {
+    "description": "M06-01 reintentar"
+  },
+  "m0601TuUbicacion": "Tu ubicación",
+  "@m0601TuUbicacion": {
+    "description": "M06-01 lectura del pin del cliente"
+  },
+  "m0601RutaNoDisponible": "No encontramos una app de mapas para abrir la ruta.",
+  "@m0601RutaNoDisponible": {
+    "description": "M06-01 sin app de mapas"
+  },
+  "m0601PinSemantica": "{nombre}, {tipo}, {tiempo}",
+  "@m0601PinSemantica": {
+    "description": "M06-01 lectura del pin del mapa; abre el detalle",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      },
+      "tipo": {
+        "type": "String"
+      },
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601VerSatelite": "Ver satélite",
+  "@m0601VerSatelite": {
+    "description": "M06-01 botón de capas (M14) cuando está en calles"
+  },
+  "m0601VerCalles": "Ver calles",
+  "@m0601VerCalles": {
+    "description": "M06-01 botón de capas (M14) cuando está en satélite"
+  },
+  "m0601Recentrar": "Volver a centrar en mi ubicación",
+  "@m0601Recentrar": {
+    "description": "M06-01 botón «Volver a centrar» (M8)"
+  },
+  "m0601ExpandirLista": "Expandir lista",
+  "@m0601ExpandirLista": {
+    "description": "M06-01 acción de TalkBack del tirador de la hoja (M9)"
+  },
+  "m0601ContraerLista": "Contraer lista",
+  "@m0601ContraerLista": {
+    "description": "M06-01 acción de TalkBack del tirador de la hoja (M9)"
+  },
+  "m0601MasPrestadores": "Más prestadores en tu ciudad",
+  "@m0601MasPrestadores": {
+    "description": "M06-01 subtítulo de la hoja expandida (M9)"
+  },
+  "m0601Aproximado": "~{tiempo}",
+  "@m0601Aproximado": {
+    "description": "M06-01 tiempo aproximado de los que no son de los 3 (M9)",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DetalleTipo": "{tipo} · {especialidad}",
+  "@m0601DetalleTipo": {
+    "description": "Detalle del prestador (2.2): tipo y especialidad",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "especialidad": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DetalleLlegada": "{distancia} · llega en {tiempo}",
+  "@m0601DetalleLlegada": {
+    "description": "Detalle del prestador (2.2): distancia y llegada",
+    "placeholders": {
+      "distancia": {
+        "type": "String"
+      },
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601SolicitarAsistencia": "Solicitar asistencia",
+  "@m0601SolicitarAsistencia": {
+    "description": "Detalle del prestador (2.2): botón primario"
+  },
+  "m0601ComoLlegarBoton": "Cómo llegar",
+  "@m0601ComoLlegarBoton": {
+    "description": "Detalle del prestador (2.2): botón secundario (M13)"
+  },
+  "m0601DireccionCopiada": "Dirección copiada",
+  "@m0601DireccionCopiada": {
+    "description": "Aviso al copiar la dirección"
+  },
+  "m0601CopiarDireccion": "Mantén pulsado para copiar la dirección",
+  "@m0601CopiarDireccion": {
+    "description": "Pista de TalkBack de la dirección del prestador"
+  },
+  "m0601Copiar": "Copiar",
+  "@m0601Copiar": {
+    "description": "Aviso sin app de mapas (M13): copiar la dirección"
+  },
+  "m0601Cerrar": "Cerrar",
+  "@m0601Cerrar": {
+    "description": "Aviso sin app de mapas (M13)"
+  },
+  "ubicacionExplicaTitulo": "Necesitamos tu ubicación",
+  "@ubicacionExplicaTitulo": {
+    "description": "2.0 explicación antes del diálogo del sistema"
+  },
+  "ubicacionExplicaTexto": "Para mostrarte los prestadores más cercanos y cuánto tardan en llegar.",
+  "@ubicacionExplicaTexto": {
+    "description": "2.0 explicación"
+  },
+  "ubicacionPermitir": "Permitir ubicación",
+  "@ubicacionPermitir": {
+    "description": "2.0 botón principal"
+  },
+  "ubicacionNegadaTitulo": "No tenemos tu ubicación",
+  "@ubicacionNegadaTitulo": {
+    "description": "2.0 permiso negado"
+  },
+  "ubicacionNegadaTexto": "Puedes darnos el permiso o escribir dónde estás. Con la dirección te mostramos los mismos prestadores.",
+  "@ubicacionNegadaTexto": {
+    "description": "2.0 permiso negado"
+  },
+  "ubicacionAbrirAjustes": "Abrir Ajustes",
+  "@ubicacionAbrirAjustes": {
+    "description": "2.0 permiso negado para siempre"
+  },
+  "gpsApagadoTitulo": "Tu GPS está apagado",
+  "@gpsApagadoTitulo": {
+    "description": "2.0 GPS apagado"
+  },
+  "gpsApagadoTexto": "Enciende la ubicación del teléfono para encontrar los prestadores cerca de ti.",
+  "@gpsApagadoTexto": {
+    "description": "2.0 GPS apagado"
+  },
+  "gpsActivar": "Activar ubicación",
+  "@gpsActivar": {
+    "description": "2.0 GPS apagado: abre los ajustes de ubicación"
+  },
+  "direccionEscribir": "Escribir mi dirección",
+  "@direccionEscribir": {
+    "description": "2.0 botón secundario"
+  },
+  "direccionTitulo": "¿Dónde estás?",
+  "@direccionTitulo": {
+    "description": "2.0 hoja para escribir la dirección"
+  },
+  "direccionCampo": "Dirección, ciudad o punto de referencia",
+  "@direccionCampo": {
+    "description": "2.0 campo de la dirección"
+  },
+  "direccionBuscar": "Buscar esta dirección",
+  "@direccionBuscar": {
+    "description": "2.0 enviar el texto escrito sin elegir sugerencia"
+  },
+  "direccionNoEncontrada": "No pudimos ubicar esa dirección. Prueba con otra o con un punto de referencia",
+  "@direccionNoEncontrada": {
+    "description": "2.0 ubicarDireccion: DIRECCION_NO_ENCONTRADA"
+  },
+  "direccionServicioCaido": "No pudimos buscar direcciones ahora. Intenta de nuevo",
+  "@direccionServicioCaido": {
+    "description": "2.0 ubicarDireccion: SERVICIO_NO_DISPONIBLE o sin red"
+  },
+  "direccionUsando": "Usando: {direccion}",
+  "@direccionUsando": {
+    "description": "2.0 aviso sobre el mapa con la dirección escrita",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "direccionCambiar": "Cambiar",
+  "@direccionCambiar": {
+    "description": "2.0 aviso: volver a escribir la dirección"
+  },
+  "direccionUsarActual": "Usar mi ubicación actual",
+  "@direccionUsarActual": {
+    "description": "2.0 aviso: el permiso se dio al volver de Ajustes"
+  },
+  "direccionPinEtiqueta": "Dirección escrita",
+  "@direccionPinEtiqueta": {
+    "description": "2.0 etiqueta del pin del cliente"
+  },
+  "homeReportarTile": "Reportar un siniestro",
+  "@homeReportarTile": {
+    "description": "Inicio: entrada a HU-M05"
+  },
+  "m05Titulo": "Reportar siniestro",
+  "@m05Titulo": {
+    "description": "M05 título de la barra"
+  },
+  "m05Continuar": "Continuar",
+  "@m05Continuar": {
+    "description": "M05 botón continuar"
+  },
+  "m05Reintentar": "Reintentar",
+  "@m05Reintentar": {
+    "description": "M05 reintentar"
+  },
+  "m0501Poliza": "¿Sobre qué póliza?",
+  "@m0501Poliza": {
+    "description": "M05-01 sección póliza"
+  },
+  "m0501PolizaNumero": "Póliza {numero}",
+  "@m0501PolizaNumero": {
+    "description": "M05-01 fila de póliza",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Vigencia": "Vigente hasta el {fecha}",
+  "@m0501Vigencia": {
+    "description": "M05-01 vigencia de la póliza",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Cargando": "Buscando tus pólizas…",
+  "@m0501Cargando": {
+    "description": "M05-01 cargando"
+  },
+  "m0501SinPolizas": "No tienes pólizas de auto emitidas sobre las que reportar.",
+  "@m0501SinPolizas": {
+    "description": "M05-01 sin pólizas"
+  },
+  "m0501Fecha": "¿Cuándo pasó?",
+  "@m0501Fecha": {
+    "description": "M05-01 campo fecha"
+  },
+  "m0501FechaFuera": "Esa fecha está fuera de la vigencia de la póliza.",
+  "@m0501FechaFuera": {
+    "description": "M05-01 fecha fuera de vigencia"
+  },
+  "m0501FechaAntes": "Tu póliza empezó a cubrirte el {desde}. Elige una fecha y hora desde ese momento.",
+  "@m0501FechaAntes": {
+    "description": "M05-01 fecha anterior al inicio de la vigencia",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501FechaElegir": "Elige el día y la hora",
+  "@m0501FechaElegir": {
+    "description": "M05-01 valor del campo fecha sin elegir"
+  },
+  "m0501ElegirPoliza": "Primero elige la póliza afectada.",
+  "@m0501ElegirPoliza": {
+    "description": "M05-01 ayuda del campo fecha sin póliza elegida"
+  },
+  "m0501CubreDesde": "Tu póliza cubre desde el {desde}.",
+  "@m0501CubreDesde": {
+    "description": "M05-01 ayuda del campo fecha con el inicio de la vigencia",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      }
+    }
+  },
+  "m0502Titulo": "Fotos del daño",
+  "@m0502Titulo": {
+    "description": "M05-02 título"
+  },
+  "m0502Instruccion": "Toma de 1 a 3 fotos del daño. Cada foto guarda dónde la tomaste.",
+  "@m0502Instruccion": {
+    "description": "M05-02 instrucción"
+  },
+  "m0502Tomar": "Tomar foto",
+  "@m0502Tomar": {
+    "description": "M05-02 botón de captura"
+  },
+  "m0502Contador": "{cantidad} de 3 fotos",
+  "@m0502Contador": {
+    "description": "M05-02 contador de fotos",
+    "placeholders": {
+      "cantidad": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Quitar": "Quitar la foto {numero}",
+  "@m0502Quitar": {
+    "description": "M05-02 lectura del botón quitar",
+    "placeholders": {
+      "numero": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Ubicada": "Ubicación lista: tus fotos quedan geoetiquetadas.",
+  "@m0502Ubicada": {
+    "description": "M05-02 ubicación obtenida"
+  },
+  "m0502SinUbicacion": "Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.",
+  "@m0502SinUbicacion": {
+    "description": "M05-02 sin permiso de ubicación"
+  },
+  "m0502PermitirUbicacion": "Permitir ubicación",
+  "@m0502PermitirUbicacion": {
+    "description": "M05-02 reintentar permiso"
+  },
+  "m0502AbrirAjustes": "Abrir ajustes",
+  "@m0502AbrirAjustes": {
+    "description": "M05-02 abrir ajustes"
+  },
+  "m0502CamaraNoDisponible": "No pudimos usar la cámara. Revisa el permiso de cámara e inténtalo de nuevo.",
+  "@m0502CamaraNoDisponible": {
+    "description": "M05-02 sin cámara"
+  },
+  "m0502Visor": "Visor de la cámara",
+  "@m0502Visor": {
+    "description": "M05-02 lectura del visor"
+  },
+  "m0503Titulo": "¿Qué pasó?",
+  "@m0503Titulo": {
+    "description": "M05-03 título"
+  },
+  "m0503Relato": "Cuéntanos qué pasó",
+  "@m0503Relato": {
+    "description": "M05-03 campo relato"
+  },
+  "m0503RelatoAyuda": "De 10 a 1000 caracteres.",
+  "@m0503RelatoAyuda": {
+    "description": "M05-03 ayuda del relato"
+  },
+  "m0503Lugar": "¿Dónde pasó?",
+  "@m0503Lugar": {
+    "description": "M05-03 campo lugar"
+  },
+  "m0503LugarAyuda": "Dirección o punto de referencia.",
+  "@m0503LugarAyuda": {
+    "description": "M05-03 ayuda del lugar"
+  },
+  "m0503Ciudad": "Ciudad",
+  "@m0503Ciudad": {
+    "description": "M05-03 campo ciudad"
+  },
+  "m0503Requerido": "Completa este campo.",
+  "@m0503Requerido": {
+    "description": "M05-03 campo obligatorio"
+  },
+  "m0503Enviar": "Enviar reporte",
+  "@m0503Enviar": {
+    "description": "M05-03 botón enviar"
+  },
+  "m0504Titulo": "Enviando tu reporte",
+  "@m0504Titulo": {
+    "description": "M05-04 título"
+  },
+  "m0504Mensaje": "Estamos subiendo tus fotos y registrando tu caso…",
+  "@m0504Mensaje": {
+    "description": "M05-04 mensaje"
+  },
+  "m0505Exito": "Recibimos tu reporte",
+  "@m0505Exito": {
+    "description": "M05-05 título de éxito"
+  },
+  "m0505ExitoMensaje": "Tu caso {radicado} quedó pendiente de revisión. Te daremos una respuesta a más tardar el {fecha}.",
+  "@m0505ExitoMensaje": {
+    "description": "M05-05 mensaje de éxito",
+    "placeholders": {
+      "radicado": {
+        "type": "String"
+      },
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505Error": "No pudimos enviar tu reporte",
+  "@m0505Error": {
+    "description": "M05-05 título de error"
+  },
+  "m0505VolverInicio": "Volver al inicio",
+  "@m0505VolverInicio": {
+    "description": "M05-05 volver al inicio"
+  },
+  "m0505Revisar": "Revisar el reporte",
+  "@m0505Revisar": {
+    "description": "M05-05 volver a corregir"
+  },
+  "m0505FotoNoConfirmada": "Una de las fotos no se subió bien. Tómala de nuevo.",
+  "@m0505FotoNoConfirmada": {
+    "description": "M05-05 foto sin confirmar"
+  },
+  "homeMisSiniestrosTile": "Mis siniestros",
+  "@homeMisSiniestrosTile": {
+    "description": "Inicio: entrada a M05-06"
+  },
+  "homeMiCoberturaTile": "Mi cobertura",
+  "@homeMiCoberturaTile": {
+    "description": "Inicio: entrada a M04-04 (HU-M04)"
+  },
+  "m0505VerMisSiniestros": "Ver mis siniestros",
+  "@m0505VerMisSiniestros": {
+    "description": "M05-05 enlace a M05-06"
+  },
+  "m0506Titulo": "Mis siniestros",
+  "@m0506Titulo": {
+    "description": "M05-06 título"
+  },
+  "m0506Cargando": "Buscando tus reportes…",
+  "@m0506Cargando": {
+    "description": "M05-06 cargando"
+  },
+  "m0506Vacio": "Aún no has reportado siniestros.",
+  "@m0506Vacio": {
+    "description": "M05-06 lista vacía"
+  },
+  "m0506Reportado": "Reportado el {fecha} · {fotos, plural, =1{1 foto} other{{fotos} fotos}}",
+  "@m0506Reportado": {
+    "description": "M05-06 fecha y fotos del caso",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506Pendiente": "Pendiente",
+  "@m0506Pendiente": {
+    "description": "M05-06 estado PENDIENTE"
+  },
+  "m0506PendienteDetalle": "Lo revisaremos a más tardar el {fecha}.",
+  "@m0506PendienteDetalle": {
+    "description": "M05-06 detalle PENDIENTE",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506EnRevision": "En revisión",
+  "@m0506EnRevision": {
+    "description": "M05-06 estado EN_REVISION"
+  },
+  "m0506EnRevisionDetalle": "Un perito está evaluando tu caso.",
+  "@m0506EnRevisionDetalle": {
+    "description": "M05-06 detalle EN_REVISION"
+  },
+  "m0506Aprobado": "Aprobado",
+  "@m0506Aprobado": {
+    "description": "M05-06 estado APROBADO"
+  },
+  "m0506AprobadoDetalle": "Tu indemnización está en proceso de pago.",
+  "@m0506AprobadoDetalle": {
+    "description": "M05-06 detalle APROBADO"
+  },
+  "m0506Rechazado": "Rechazado",
+  "@m0506Rechazado": {
+    "description": "M05-06 estado RECHAZADO"
+  },
+  "m0506RechazadoDetalle": "Te enviamos el motivo y cómo presentar un recurso.",
+  "@m0506RechazadoDetalle": {
+    "description": "M05-06 detalle RECHAZADO"
+  },
+  "m0602Titulo": "Solicitar asistencia",
+  "@m0602Titulo": {
+    "description": "M06-02 título de la barra"
+  },
+  "m0602PrestadorAsignado": "Prestador asignado",
+  "@m0602PrestadorAsignado": {
+    "description": "M06-02 rótulo de la tarjeta del prestador"
+  },
+  "m0602Tipo": "Tipo de asistencia",
+  "@m0602Tipo": {
+    "description": "M06-02 etiqueta del selector"
+  },
+  "m0602TipoMedica": "Médica",
+  "@m0602TipoMedica": {
+    "description": "M06-02 opción del selector"
+  },
+  "m0602TipoMecanica": "Mecánica",
+  "@m0602TipoMecanica": {
+    "description": "M06-02 opción del selector"
+  },
+  "m0602TipoGrua": "Grúa",
+  "@m0602TipoGrua": {
+    "description": "M06-02 opción del selector (v0.49)"
+  },
+  "m0602TipoElegir": "Elige una opción",
+  "@m0602TipoElegir": {
+    "description": "M06-02 selector sin valor"
+  },
+  "m0602AtencionInmediata": "Atención inmediata",
+  "@m0602AtencionInmediata": {
+    "description": "M06-02 banner (S2)"
+  },
+  "m0602AtencionInmediataTexto": "Estamos coordinando tu solicitud en tiempo real",
+  "@m0602AtencionInmediataTexto": {
+    "description": "M06-02 banner (S2)"
+  },
+  "m0602UbicacionEscrita": "{direccion} (la dirección que escribiste)",
+  "@m0602UbicacionEscrita": {
+    "description": "M06-02 con la dirección escrita (S1)",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "m0602TipoRequerido": "Elige el tipo de asistencia.",
+  "@m0602TipoRequerido": {
+    "description": "M06-02 error del selector vacío"
+  },
+  "m0602TipoNoAtendido": "{nombre} no atiende este tipo de asistencia. Elige otro prestador en el mapa.",
+  "@m0602TipoNoAtendido": {
+    "description": "M06-02 y M06-04b: el prestador no atiende el tipo elegido",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0602Descripcion": "Describe brevemente qué pasó",
+  "@m0602Descripcion": {
+    "description": "M06-02 etiqueta de la descripción (opcional)"
+  },
+  "m0602DescripcionHint": "Ej. dolor en el pecho, mareo…",
+  "@m0602DescripcionHint": {
+    "description": "M06-02 ejemplo de la descripción"
+  },
+  "m0602TextoLargo": "Usa máximo {maximo} caracteres.",
+  "@m0602TextoLargo": {
+    "description": "M06-02 error de texto largo",
+    "placeholders": {
+      "maximo": {
+        "type": "int"
+      }
+    }
+  },
+  "m0602UbicacionDetectada": "Ubicación detectada automáticamente: {coordenadas}",
+  "@m0602UbicacionDetectada": {
+    "description": "M06-02 ubicación del GPS que se enviará",
+    "placeholders": {
+      "coordenadas": {
+        "type": "String"
+      }
+    }
+  },
+  "m0602TiempoLlegada": "Tiempo estimado de llegada: {tiempo}",
+  "@m0602TiempoLlegada": {
+    "description": "M06-02 tiempo del prestador elegido",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0602Enviar": "Enviar solicitud",
+  "@m0602Enviar": {
+    "description": "M06-02 botón principal"
+  },
+  "m0603Mensaje": "Confirmando disponibilidad con {nombre}…",
+  "@m0603Mensaje": {
+    "description": "M06-03 estado transitorio",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0603bMensaje": "Reenviando tu solicitud a {nombre}…",
+  "@m0603bMensaje": {
+    "description": "M06-03b estado transitorio del reintento",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0604aTitulo": "Solicitud confirmada",
+  "@m0604aTitulo": {
+    "description": "M06-04a título del éxito"
+  },
+  "m0604aMensajeSinTiempo": "{nombre} está en camino a la dirección que indicaste.",
+  "@m0604aMensajeSinTiempo": {
+    "description": "M06-04a pedida con la dirección a mano: sin coordenadas no hay tiempo estimado",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0604aMensaje": "{nombre} está en camino. Llegada estimada en {minutos} minutos.",
+  "@m0604aMensaje": {
+    "description": "M06-04a detalle; el tiempo se lee completo, sin abreviar",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      },
+      "minutos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0604aVerMapa": "Ver en el mapa",
+  "@m0604aVerMapa": {
+    "description": "M06-04a abre la ruta al prestador"
+  },
+  "m0604aCancelar": "Cancelar asistencia",
+  "@m0604aCancelar": {
+    "description": "M06-04a acción destructiva"
+  },
+  "m0604aCancelarFallo": "No pudimos cancelar la asistencia. Intenta de nuevo.",
+  "@m0604aCancelarFallo": {
+    "description": "M06-04a aviso si cancelar falla"
+  },
+  "m0604bTitulo": "No pudimos confirmar tu solicitud",
+  "@m0604bTitulo": {
+    "description": "M06-04b título del fallo"
+  },
+  "m0604bSinRespuesta": "{nombre} no respondió a tiempo. Puedes elegir otro prestador o intentar de nuevo.",
+  "@m0604bSinRespuesta": {
+    "description": "M06-04b causa PRESTADOR_SIN_RESPUESTA",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0604bNoDisponible": "{nombre} ya no está disponible. Elige otro prestador cercano.",
+  "@m0604bNoDisponible": {
+    "description": "M06-04b causa PRESTADOR_NO_DISPONIBLE",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0604bElegirOtro": "Elegir otro prestador",
+  "@m0604bElegirOtro": {
+    "description": "M06-04b vuelve al mapa"
+  },
+  "m0604bReintentar": "Reintentar",
+  "@m0604bReintentar": {
+    "description": "M06-04b reenvía los mismos datos (M06-03b)"
+  },
+  "m0605Titulo": "¿Seguro que quieres cancelar?",
+  "@m0605Titulo": {
+    "description": "M06-05 título del diálogo"
+  },
+  "m0605Mensaje": "{nombre} ya está en camino. Si cancelas ahora, tendrás que solicitar asistencia de nuevo desde cero.",
+  "@m0605Mensaje": {
+    "description": "M06-05 consecuencia de cancelar",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      }
+    }
+  },
+  "m0605Confirmar": "Sí, cancelar",
+  "@m0605Confirmar": {
+    "description": "M06-05 acción destructiva"
+  },
+  "m0605Mantener": "No, mantener solicitud",
+  "@m0605Mantener": {
+    "description": "M06-05 acción segura"
+  },
+  "m0606Titulo": "Cancelar asistencia",
+  "@m0606Titulo": {
+    "description": "M06-06 título de la barra"
+  },
+  "m0606Mensaje": "Tu solicitud fue cancelada. El servicio asignado quedó sin efecto y no se realizarán cobros asociados a esta solicitud.",
+  "@m0606Mensaje": {
+    "description": "M06-06 confirmación explícita de la cancelación"
+  },
+  "m0606VolverInicio": "Volver al inicio",
+  "@m0606VolverInicio": {
+    "description": "M06-06 acción principal"
+  },
+  "m0606SolicitarDeNuevo": "Solicitar de nuevo",
+  "@m0606SolicitarDeNuevo": {
+    "description": "M06-06 vuelve al mapa de prestadores"
+  },
+  "navMisAsistencias": "Mis asistencias",
+  "@navMisAsistencias": {
+    "description": "Barra inferior: destino «Mis asistencias» (HU-M06 4.1)"
+  },
+  "navMisAsistenciasEnCamino": "Mis asistencias, {cantidad} en camino",
+  "@navMisAsistenciasEnCamino": {
+    "description": "TalkBack del destino con badge (4.1)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasTitulo": "Mis asistencias",
+  "@misAsistenciasTitulo": {
+    "description": "4.1 título de la pestaña"
+  },
+  "misAsistenciasVacio": "Aún no has pedido asistencia",
+  "@misAsistenciasVacio": {
+    "description": "4.1 estado vacío"
+  },
+  "misAsistenciasSolicitar": "Solicitar asistencia en sitio",
+  "@misAsistenciasSolicitar": {
+    "description": "4.1 estado vacío: va a la pestaña Asistencia"
+  },
+  "misAsistenciasEnCamino": "En camino ({cantidad})",
+  "@misAsistenciasEnCamino": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasYaLlegaron": "Ya llegaron ({cantidad})",
+  "@misAsistenciasYaLlegaron": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasError": "No pudimos cargar tus asistencias.",
+  "@misAsistenciasError": {
+    "description": "4.1 error al cargar"
+  },
+  "misAsistenciasCargando": "Cargando tus asistencias…",
+  "@misAsistenciasCargando": {
+    "description": "4.1 cargando la lista o el detalle"
+  },
+  "asistenciaPedida": "{tipo} · pedida {hora}",
+  "@asistenciaPedida": {
+    "description": "4.2 subtítulo de la tarjeta",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaEn": "Llega en {minutos} min",
+  "@asistenciaLlegaEn": {
+    "description": "4.2 cuenta regresiva",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaMenosDeUno": "Llega en menos de 1 min",
+  "@asistenciaLlegaMenosDeUno": {
+    "description": "4.2 cuenta regresiva bajo 1 min"
+  },
+  "asistenciaHoraEstimada": "Hora estimada {hora}",
+  "@asistenciaHoraEstimada": {
+    "description": "4.2 hora estimada",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlego": "Llegó · {hora}",
+  "@asistenciaLlego": {
+    "description": "4.2 insignia ya llegó",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoConfirmada": "No pudimos confirmar",
+  "@asistenciaNoConfirmada": {
+    "description": "4.2 aviso de no confirmada"
+  },
+  "asistenciaReintentar": "Reintentar",
+  "@asistenciaReintentar": {
+    "description": "4.2 reintentar (reenvío de M06-03b)"
+  },
+  "asistenciaEnCaminoLlega": "En camino · llega en {minutos} min",
+  "@asistenciaEnCaminoLlega": {
+    "description": "4.4 estado en el detalle",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifTitulo": "Tu asistencia llegó",
+  "@asistenciaNotifTitulo": {
+    "description": "4.5 título de la notificación"
+  },
+  "asistenciaNotifCuerpo": "{prestador} ya debería estar en tu ubicación",
+  "@asistenciaNotifCuerpo": {
+    "description": "4.5 cuerpo de la notificación",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifNota": "Te avisaremos cuando llegue el prestador.",
+  "@asistenciaNotifNota": {
+    "description": "4.5 línea antes de pedir el permiso de notificaciones"
+  },
+  "asistenciaLlegoSnack": "{prestador} llegó",
+  "@asistenciaLlegoSnack": {
+    "description": "4.5 aviso con la app abierta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaVer": "Ver",
+  "@asistenciaVer": {
+    "description": "4.5 acción del aviso"
+  },
+  "asistenciaDetalleTitulo": "Tu asistencia",
+  "@asistenciaDetalleTitulo": {
+    "description": "4.4 título del detalle"
+  },
+  "asistenciaTeAlejaste": "Te alejaste del lugar donde pediste la asistencia. El prestador va a {direccion}",
+  "@asistenciaTeAlejaste": {
+    "description": "4.4b aviso",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLugarPedido": "el lugar donde la pediste",
+  "@asistenciaLugarPedido": {
+    "description": "4.4b sin dirección escrita"
+  },
+  "asistenciaCancelarYPedirOtra": "Cancelar y pedir otra",
+  "@asistenciaCancelarYPedirOtra": {
+    "description": "4.4b acción"
+  },
+  "asistenciaLectura": "{prestador}, {tipo}, {estado}",
+  "@asistenciaLectura": {
+    "description": "4.2 lectura de TalkBack de la tarjeta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      },
+      "tipo": {
+        "type": "String"
+      },
+      "estado": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoEncontrada": "No encontramos esa asistencia.",
+  "@asistenciaNoEncontrada": {
+    "description": "4.4 detalle: ajena o inexistente"
+  },
+  "m0402Titulo": "Indemnización",
+  "@m0402Titulo": {
+    "description": "M04-02: título de la barra"
+  },
+  "m0402Mensaje": "¡Tu indemnización ya está en camino!",
+  "@m0402Mensaje": {
+    "description": "M04-02: mensaje de celebración"
+  },
+  "m0402Monto": "{monto} depositados",
+  "@m0402Monto": {
+    "description": "M04-02: monto depositado",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0402Cuenta": "Pagado por {metodo}",
+  "@m0402Cuenta": {
+    "description": "M04-02: método de transferencia",
+    "placeholders": {
+      "metodo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0402VerDetalle": "Ver detalle",
+  "@m0402VerDetalle": {
+    "description": "M04-02: botón al detalle"
+  },
+  "m0402Cargando": "Consultando tu indemnización…",
+  "@m0402Cargando": {
+    "description": "M04-02 y M04-03: cargando"
+  },
+  "m0403Titulo": "Detalle de la indemnización",
+  "@m0403Titulo": {
+    "description": "M04-03: título de la barra"
+  },
+  "m0403EventoRetrasoVuelo": "Evento detectado: retraso de vuelo {ref} ({detalle})",
+  "@m0403EventoRetrasoVuelo": {
+    "description": "M04-03: cabecera para retraso de vuelo",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      },
+      "detalle": {
+        "type": "String"
+      }
+    }
+  },
+  "m0403EventoCancelacionVuelo": "Evento detectado: cancelación de vuelo {ref}",
+  "@m0403EventoCancelacionVuelo": {
+    "description": "M04-03: cabecera para cancelación de vuelo",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "m0403EventoLluvia": "Evento detectado: lluvia sobre el umbral en {ciudad} ({detalle})",
+  "@m0403EventoLluvia": {
+    "description": "M04-03: cabecera para lluvia",
+    "placeholders": {
+      "ciudad": {
+        "type": "String"
+      },
+      "detalle": {
+        "type": "String"
+      }
+    }
+  },
+  "m0403Indemnizacion": "Indemnización",
+  "@m0403Indemnizacion": {
+    "description": "M04-03: fila del monto"
+  },
+  "m0403FechaEvento": "Fecha del evento",
+  "@m0403FechaEvento": {
+    "description": "M04-03: fila"
+  },
+  "m0403FechaPago": "Fecha de pago",
+  "@m0403FechaPago": {
+    "description": "M04-03: fila"
+  },
+  "m0403Cuenta": "Método de pago",
+  "@m0403Cuenta": {
+    "description": "M04-03: fila"
+  },
+  "m0403Automatico": "Pago procesado automáticamente",
+  "@m0403Automatico": {
+    "description": "M04-03: insignia de éxito"
+  },
+  "m0403Cerrar": "Cerrar",
+  "@m0403Cerrar": {
+    "description": "M04-03: botón principal"
+  },
+  "m0404Titulo": "Mi cobertura",
+  "@m0404Titulo": {
+    "description": "M04-04: título de la barra"
+  },
+  "m0404Cargando": "Consultando tu cobertura…",
+  "@m0404Cargando": {
+    "description": "M04-04: cargando"
+  },
+  "m0404Producto": "{producto} · {estado}",
+  "@m0404Producto": {
+    "description": "M04-04: producto y estado de la póliza",
+    "placeholders": {
+      "producto": {
+        "type": "String"
+      },
+      "estado": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Vigente": "Vigente",
+  "@m0404Vigente": {
+    "description": "M04-04: estado de la póliza"
+  },
+  "m0404Vencida": "Vencida",
+  "@m0404Vencida": {
+    "description": "M04-04: estado de la póliza"
+  },
+  "m0404Poliza": "Póliza {numero} · hasta {fecha}",
+  "@m0404Poliza": {
+    "description": "M04-04: número y vigencia",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      },
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Tope": "Tope de cobertura",
+  "@m0404Tope": {
+    "description": "M04-04: etiqueta del tope"
+  },
+  "m0404PorcentajeUsado": "{porcentaje} % del tope usado",
+  "@m0404PorcentajeUsado": {
+    "description": "M04-04: porcentaje usado (también lectura de la barra)",
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "m0404Disponible": "Disponible",
+  "@m0404Disponible": {
+    "description": "M04-04: etiqueta del disponible"
+  },
+  "m0404TotalIndemnizado": "Total indemnizado",
+  "@m0404TotalIndemnizado": {
+    "description": "M04-04: etiqueta del total"
+  },
+  "m0404TotalDetalle": "Suma de {pagos, plural, =1{el pago que has recibido} other{los {pagos} pagos que has recibido}} desde {mes}, en todas tus pólizas.",
+  "@m0404TotalDetalle": {
+    "description": "M04-04: explicación del total",
+    "placeholders": {
+      "pagos": {
+        "type": "int"
+      },
+      "mes": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Depositado": "Pagado por {metodo}",
+  "@m0404Depositado": {
+    "description": "M04-04: método de transferencia del último pago",
+    "placeholders": {
+      "metodo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404SaldoFavor": "+ {monto} a tu favor",
+  "@m0404SaldoFavor": {
+    "description": "M04-04: saldo de prima a favor (el signo va en el texto, no solo el color)",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404SaldoFavorDetalle": "Ajuste de prima de {mes}. Se descuenta de tu próximo cobro.",
+  "@m0404SaldoFavorDetalle": {
+    "description": "M04-04: detalle del saldo a favor",
+    "placeholders": {
+      "mes": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404SaldoContra": "− {monto} pendiente",
+  "@m0404SaldoContra": {
+    "description": "M04-04: saldo de prima en contra (U+2212)",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404SaldoContraDetalle": "Diferencia de prima de {mes}. Se suma a tu próximo cobro.",
+  "@m0404SaldoContraDetalle": {
+    "description": "M04-04: detalle del saldo en contra",
+    "placeholders": {
+      "mes": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Movimientos": "Movimientos indemnizados",
+  "@m0404Movimientos": {
+    "description": "M04-04: encabezado de la lista"
+  },
+  "m0404Pagos": "{n, plural, =1{1 pago} other{{n} pagos}}",
+  "@m0404Pagos": {
+    "description": "M04-04: número de pagos",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0404Pagado": "Pagado",
+  "@m0404Pagado": {
+    "description": "M04-04: estado del pago"
+  },
+  "m0404EnProceso": "En proceso",
+  "@m0404EnProceso": {
+    "description": "M04-04: estado del pago"
+  },
+  "m0404PolizaAnterior": "póliza anterior",
+  "@m0404PolizaAnterior": {
+    "description": "M04-04: meta de un pago de una póliza vencida"
+  },
+  "m0404Meta": "{fecha} · {detalle}",
+  "@m0404Meta": {
+    "description": "M04-04: fecha y detalle de la fila",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "detalle": {
+        "type": "String"
+      }
+    }
+  },
+  "m0404Nota": "El tope se reinicia con cada renovación. Los pagos de pólizas anteriores no descuentan del cupo actual.",
+  "@m0404Nota": {
+    "description": "M04-04: nota al pie"
+  },
+  "m0404Vacio": "Aún no tienes pagos indemnizados.",
+  "@m0404Vacio": {
+    "description": "M04-04: sin movimientos"
+  },
+  "m04Reintentar": "Reintentar",
+  "@m04Reintentar": {
+    "description": "M04: reintentar tras un error"
+  },
+  "m04EventoRetrasoVuelo": "Retraso de vuelo {ref}",
+  "@m04EventoRetrasoVuelo": {
+    "description": "M04: título del evento",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "m04EventoCancelacionVuelo": "Cancelación de vuelo {ref}",
+  "@m04EventoCancelacionVuelo": {
+    "description": "M04: título del evento",
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "m04EventoLluvia": "Lluvia sobre el umbral",
+  "@m04EventoLluvia": {
+    "description": "M04: título del evento"
+  },
+  "m04DetalleLluvia": "{ciudad}, {detalle}",
+  "@m04DetalleLluvia": {
+    "description": "M04: ciudad y milímetros de lluvia",
+    "placeholders": {
+      "ciudad": {
+        "type": "String"
+      },
+      "detalle": {
+        "type": "String"
+      }
+    }
+  },
+  "m0402CuentaSemantica": "Pagado por {metodo}",
+  "@m0402CuentaSemantica": {
+    "description": "M04-02: lectura de TalkBack del método de transferencia",
+    "placeholders": {
+      "metodo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501PolizaAuto": "Auto {vehiculo}",
+  "@m0501PolizaAuto": {
+    "description": "M05-01 (KAN-290): una póliza de auto, con la marca y la placa enmascarada",
+    "placeholders": {
+      "vehiculo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501QuePaso": "¿Qué le pasó al vehículo?",
+  "m0501ElegirTipo": "Elige qué le pasó al vehículo para continuar.",
+  "m05TipoChoqueParcial": "Choque con daños que se pueden reparar",
+  "m05TipoPerdidaTotal": "Pérdida total por un choque",
+  "m05TipoHurtoTotal": "Me robaron el vehículo",
+  "m05TipoHurtoParcial": "Me robaron partes del vehículo",
+  "m05TipoResponsabilidadCivil": "Le causé daños a otra persona o vehículo",
+  "cuentaOlvideClave": "¿Olvidaste tu contraseña?",
+  "m0204Titulo": "Recupera tu contraseña",
+  "m0204Intro": "Escribe el correo de tu cuenta y, si existe, te enviaremos un enlace para elegir una contraseña nueva.",
+  "m0204Enviar": "Enviar enlace",
+  "m0204EnviadoTitulo": "Revisa tu correo",
+  "m0204EnviadoTexto": "Si hay una cuenta con ese correo, te enviamos un enlace. Ábrelo para elegir tu contraseña nueva; vence en 30 minutos y sirve una sola vez.",
+  "m0204Volver": "Volver a iniciar sesión",
+  "cuentaIngresarConHuella": "{tipo, select, huella{Ingresar con huella} rostro{Ingresar con rostro} bloqueo{Ingresar con el bloqueo del teléfono} other{Ingresar con la seguridad del teléfono}}",
+  "accesoBiometricoMotivo": "Confirma que eres tú para entrar a Solventa",
+  "accesoBiometricoActivarMotivo": "Confirma tu huella o rostro para entrar sin escribir la contraseña",
+  "fallaDispositivoNoValido": "No pudimos verificar este teléfono. Ingresa con tu correo y contraseña.",
+  "@cuentaIngresarConHuella": {
+    "description": "Botón de «Inicia sesión» para entrar con la llave del teléfono, según su método",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0105Grabar": "Grabar video",
+  "@m0105Grabar": {
+    "description": "M01-05 botón que toma la selfie y graba el video"
+  },
+  "m0105Grabando": "Grabando",
+  "@m0105Grabando": {
+    "description": "M01-05 etiqueta sobre el visor mientras graba"
+  },
+  "m0105GrabandoInstruccion": "Mueve la cabeza despacio de un lado a otro… {segundos}",
+  "@m0105GrabandoInstruccion": {
+    "description": "M01-05 instrucción mientras graba, con la cuenta regresiva",
+    "placeholders": {
+      "segundos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0105Capturado": "Listo, ya tenemos tu selfie y tu video.",
+  "@m0105Capturado": {
+    "description": "M01-05 capturas tomadas (la cámara ya se cerró)"
+  },
+  "m0105Verificando": "Estamos enviando tus fotos y verificando tu identidad con nuestro proveedor. Puede tardar unos segundos.",
+  "@m0105Verificando": {
+    "description": "M01-05 mientras sube y espera a Didit"
+  },
+  "homeCargandoCuenta": "Cargando tu cuenta…",
+  "@homeCargandoCuenta": {
+    "description": "Inicio: cargando perfil y verificación (TalkBack)"
+  },
+  "homeCuentaSinCargar": "No pudimos cargar la información de tu cuenta. Revisa tu conexión e inténtalo de nuevo.",
+  "@homeCuentaSinCargar": {
+    "description": "Inicio: no cargó el perfil ni la verificación"
+  },
+  "homeReintentarCuenta": "Reintentar",
+  "@homeReintentarCuenta": {
+    "description": "Inicio: reintentar la carga de la cuenta"
+  },
+  "m0507Titulo": "Detalle del siniestro",
+  "@m0507Titulo": {
+    "description": "M05-07 título"
+  },
+  "m0507NoEncontrado": "No encontramos este siniestro.",
+  "@m0507NoEncontrado": {
+    "description": "M05-07 caso no está en la lista"
+  },
+  "m0507Ocurrio": "Ocurrió el {fecha}",
+  "@m0507Ocurrio": {
+    "description": "M05-07 fecha del siniestro",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Resolucion": "Resolución",
+  "@m0507Resolucion": {
+    "description": "M05-07 título del bloque de resolución"
+  },
+  "m0507ResueltoEl": "Resuelto el {fecha}",
+  "@m0507ResueltoEl": {
+    "description": "M05-07 fecha de la resolución",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Indemnizacion": "Indemnización aprobada: {monto}",
+  "@m0507Indemnizacion": {
+    "description": "M05-07 monto aprobado",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507PlazoPago": "Plazo de pago: {plazo}",
+  "@m0507PlazoPago": {
+    "description": "M05-07 plazo de dispersión",
+    "placeholders": {
+      "plazo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Motivo": "Motivo: {motivo}",
+  "@m0507Motivo": {
+    "description": "M05-07 motivo del rechazo",
+    "placeholders": {
+      "motivo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507ViaRecurso": "Cómo pedir una revisión: {via}",
+  "@m0507ViaRecurso": {
+    "description": "M05-07 vía de recurso",
+    "placeholders": {
+      "via": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507MotivoEvidencia": "la evidencia no fue suficiente",
+  "@m0507MotivoEvidencia": {
+    "description": "M05-07 motivo EVIDENCIA_INSUFICIENTE"
+  },
+  "m0507MotivoCobertura": "el hecho está fuera de la cobertura",
+  "@m0507MotivoCobertura": {
+    "description": "M05-07 motivo FUERA_DE_COBERTURA"
+  },
+  "m0507MotivoPoliza": "la póliza no estaba vigente",
+  "@m0507MotivoPoliza": {
+    "description": "M05-07 motivo POLIZA_NO_VIGENTE"
+  },
+  "m0507MotivoRelato": "el relato no es consistente con la evidencia",
+  "@m0507MotivoRelato": {
+    "description": "M05-07 motivo INCONSISTENCIA_EN_RELATO"
+  },
+  "m0507MotivoOtro": "otro motivo",
+  "@m0507MotivoOtro": {
+    "description": "M05-07 motivo OTRO"
+  },
+  "m0507Restante": "Tiempo restante: {tiempo}",
+  "@m0507Restante": {
+    "description": "M05-07 tiempo que queda del plazo de revisión",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507PlazoVencido": "El plazo de revisión venció. Estamos procesando tu caso: verás el resultado aquí en unos minutos.",
+  "@m0507PlazoVencido": {
+    "description": "M05-07 plazo vencido, aprobación automática en curso"
+  },
+  "m0503CiudadElegir": "Elige la ciudad",
+  "@m0503CiudadElegir": {
+    "description": "M05-03 título de la lista de ciudades"
+  },
+  "m0503CiudadOtra": "Otra ciudad",
+  "@m0503CiudadOtra": {
+    "description": "M05-03 opción para escribir una ciudad que no está en la lista"
   }
 }

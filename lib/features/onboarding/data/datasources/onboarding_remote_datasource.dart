@@ -1,5 +1,6 @@
 import '../../../../core/contrato/schema.graphql.dart';
 import '../../../../core/network/graphql_client.dart';
+import '../../../../core/push/instalacion_id.dart';
 import '../graphql/onboarding.graphql.dart';
 
 /// Acceso al BFF para el onboarding y sesión de la app (contrato v0.21).
@@ -75,24 +76,64 @@ abstract interface class OnboardingRemoteDataSource {
     String clave,
   );
 
+  /// Pide el enlace para elegir una clave nueva (público; no revela si la
+  /// cuenta existe). El enlace llega por correo y se abre en la web.
+  Future<bool> solicitarRestablecimientoClave(String correo);
+
+  /// Con sesión: guarda la llave pública del teléfono. Devuelve el id.
+  Future<String> registrarDispositivo(String clavePublica);
+
+  /// Pública: el reto que el teléfono firma con su llave.
+  Future<String> desafioDispositivo(String dispositivoId);
+
+  /// Pública: entra con la firma del reto, sin clave.
+  Future<Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo>
+  iniciarSesionConDispositivo(String dispositivoId, String reto, String firma);
+
   /// Devuelve el usuario autenticado (`yo`).
   Future<Fragment$UsuarioCampos?> yo();
 
   /// Actualiza el idioma y moneda preferidos del usuario.
   Future<Mutation$ActualizarPreferencias$actualizarPreferencias>
   actualizarPreferencias(String idioma, String moneda);
+
+  /// HU-M04 Fase 6 (KAN-259): liga el token de FCM a esta instalación.
+  Future<bool> registrarTokenPush(String instalacionId, String tokenFcm);
+
+  /// Perfil, interruptor «Notificaciones push».
+  Future<bool> actualizarPreferenciaPush(bool habilitado);
 }
 
 /// Implementación real contra `POST /graphql/app`.
 final class GqlOnboardingRemoteDataSource
     implements OnboardingRemoteDataSource {
-  const GqlOnboardingRemoteDataSource(this._cliente);
+  const GqlOnboardingRemoteDataSource(this._cliente, {this._instalacion});
 
   static const cabeceraToken = 'X-Onboarding-Token';
 
+  /// La app móvil es solo del cliente: `iniciarSesion` lo manda siempre como
+  /// `CredencialesInput.rol` (contrato v0.29, T17). Si la cuenta tiene otro
+  /// rol, el backend responde igual que con una clave errada.
+  static const rolApp = Enum$RolUsuario.CLIENTE;
+
   final GraphqlClient _cliente;
 
+  /// KAN-259: con él, `iniciarSesion` manda `CredencialesInput.dispositivo` para que AUTH deje
+  /// activo el dispositivo de push de esta instalación. Sin eso, `registrarTokenPush` responde
+  /// error (no hay dispositivo con push activo) y el teléfono nunca recibe pushes.
+  final InstalacionIdStore? _instalacion;
+
   Map<String, String> _con(String token) => {cabeceraToken: token};
+
+  /// KAN-259: el dispositivo de push de esta instalación, para los dos ingresos (clave y huella).
+  Future<Input$DispositivoPushInput?> _dispositivoPush() async {
+    final instalacionId = await _instalacion?.obtener();
+    if (instalacionId == null) return null;
+    return Input$DispositivoPushInput(
+      instalacionId: instalacionId,
+      plataforma: Enum$PlataformaMovil.ANDROID,
+    );
+  }
 
   @override
   Future<Mutation$IniciarOnboarding$iniciarOnboarding> iniciar(
@@ -278,14 +319,75 @@ final class GqlOnboardingRemoteDataSource
   }
 
   @override
+  Future<String> registrarDispositivo(String clavePublica) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationRegistrarDispositivo,
+      variables: Variables$Mutation$RegistrarDispositivo(
+        clavePublica: clavePublica,
+      ).toJson(),
+    );
+    return Mutation$RegistrarDispositivo.fromJson(data).registrarDispositivo;
+  }
+
+  @override
+  Future<String> desafioDispositivo(String dispositivoId) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationDesafioDispositivo,
+      variables: Variables$Mutation$DesafioDispositivo(
+        dispositivoId: dispositivoId,
+      ).toJson(),
+    );
+    return Mutation$DesafioDispositivo.fromJson(data).desafioDispositivo.reto;
+  }
+
+  @override
+  Future<Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo>
+  iniciarSesionConDispositivo(
+    String dispositivoId,
+    String reto,
+    String firma,
+  ) async {
+    final dispositivo = await _dispositivoPush();
+    final data = await _cliente.ejecutar(
+      documentNodeMutationIniciarSesionConDispositivo,
+      variables: Variables$Mutation$IniciarSesionConDispositivo(
+        dispositivoId: dispositivoId,
+        reto: reto,
+        firma: firma,
+        dispositivo: dispositivo,
+      ).toJson(),
+    );
+    return Mutation$IniciarSesionConDispositivo.fromJson(data)
+        .iniciarSesionConDispositivo;
+  }
+
+  @override
+  Future<bool> solicitarRestablecimientoClave(String correo) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationSolicitarRestablecimientoClave,
+      variables: Variables$Mutation$SolicitarRestablecimientoClave(
+        correo: correo,
+      ).toJson(),
+    );
+    return Mutation$SolicitarRestablecimientoClave.fromJson(data)
+        .solicitarRestablecimientoClave;
+  }
+
+  @override
   Future<Mutation$IniciarSesion$iniciarSesion> iniciarSesion(
     String usuario,
     String clave,
   ) async {
+    final dispositivo = await _dispositivoPush();
     final data = await _cliente.ejecutar(
       documentNodeMutationIniciarSesion,
       variables: Variables$Mutation$IniciarSesion(
-        entrada: Input$CredencialesInput(usuario: usuario, clave: clave),
+        entrada: Input$CredencialesInput(
+          usuario: usuario,
+          clave: clave,
+          rol: rolApp,
+          dispositivo: dispositivo,
+        ),
       ).toJson(),
     );
     return Mutation$IniciarSesion.fromJson(data).iniciarSesion;
@@ -308,5 +410,29 @@ final class GqlOnboardingRemoteDataSource
     );
     return Mutation$ActualizarPreferencias.fromJson(data)
         .actualizarPreferencias;
+  }
+
+  @override
+  Future<bool> registrarTokenPush(String instalacionId, String tokenFcm) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationRegistrarTokenPush,
+      variables: Variables$Mutation$RegistrarTokenPush(
+        instalacionId: instalacionId,
+        tokenFcm: tokenFcm,
+      ).toJson(),
+    );
+    return Mutation$RegistrarTokenPush.fromJson(data).registrarTokenPush;
+  }
+
+  @override
+  Future<bool> actualizarPreferenciaPush(bool habilitado) async {
+    final data = await _cliente.ejecutar(
+      documentNodeMutationActualizarPreferenciaPush,
+      variables: Variables$Mutation$ActualizarPreferenciaPush(
+        habilitado: habilitado,
+      ).toJson(),
+    );
+    return Mutation$ActualizarPreferenciaPush.fromJson(data)
+        .actualizarPreferenciaPush;
   }
 }

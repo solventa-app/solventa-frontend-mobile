@@ -8,6 +8,8 @@ class Input$ConsentimientoInput {
     String? tipoDato,
     String? fuenteDatos,
     String? canal,
+    String? tipoDocumento,
+    String? pais,
   }) => Input$ConsentimientoInput._({
     r'finalidad': finalidad,
     r'versionTexto': versionTexto,
@@ -15,6 +17,8 @@ class Input$ConsentimientoInput {
     if (tipoDato != null) r'tipoDato': tipoDato,
     if (fuenteDatos != null) r'fuenteDatos': fuenteDatos,
     if (canal != null) r'canal': canal,
+    if (tipoDocumento != null) r'tipoDocumento': tipoDocumento,
+    if (pais != null) r'pais': pais,
   });
 
   Input$ConsentimientoInput._(this._$data);
@@ -41,6 +45,14 @@ class Input$ConsentimientoInput {
       final l$canal = data['canal'];
       result$data['canal'] = (l$canal as String?);
     }
+    if (data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = data['tipoDocumento'];
+      result$data['tipoDocumento'] = (l$tipoDocumento as String?);
+    }
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
     return Input$ConsentimientoInput._(result$data);
   }
 
@@ -57,6 +69,10 @@ class Input$ConsentimientoInput {
   String? get fuenteDatos => (_$data['fuenteDatos'] as String?);
 
   String? get canal => (_$data['canal'] as String?);
+
+  String? get tipoDocumento => (_$data['tipoDocumento'] as String?);
+
+  String? get pais => (_$data['pais'] as String?);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -79,6 +95,14 @@ class Input$ConsentimientoInput {
     if (_$data.containsKey('canal')) {
       final l$canal = canal;
       result$data['canal'] = l$canal;
+    }
+    if (_$data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = tipoDocumento;
+      result$data['tipoDocumento'] = l$tipoDocumento;
+    }
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
     }
     return result$data;
   }
@@ -137,6 +161,23 @@ class Input$ConsentimientoInput {
     if (l$canal != lOther$canal) {
       return false;
     }
+    final l$tipoDocumento = tipoDocumento;
+    final lOther$tipoDocumento = other.tipoDocumento;
+    if (_$data.containsKey('tipoDocumento') !=
+        other._$data.containsKey('tipoDocumento')) {
+      return false;
+    }
+    if (l$tipoDocumento != lOther$tipoDocumento) {
+      return false;
+    }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
     return true;
   }
 
@@ -148,6 +189,8 @@ class Input$ConsentimientoInput {
     final l$tipoDato = tipoDato;
     final l$fuenteDatos = fuenteDatos;
     final l$canal = canal;
+    final l$tipoDocumento = tipoDocumento;
+    final l$pais = pais;
     return Object.hashAll([
       l$finalidad,
       l$versionTexto,
@@ -157,6 +200,226 @@ class Input$ConsentimientoInput {
       _$data.containsKey('tipoDato') ? l$tipoDato : const {},
       _$data.containsKey('fuenteDatos') ? l$fuenteDatos : const {},
       _$data.containsKey('canal') ? l$canal : const {},
+      _$data.containsKey('tipoDocumento') ? l$tipoDocumento : const {},
+      _$data.containsKey('pais') ? l$pais : const {},
+    ]);
+  }
+}
+
+class Input$SolicitudOfertaAutoInput {
+  factory Input$SolicitudOfertaAutoInput({
+    required String consentimientoId,
+    String? documentoIdentidad,
+    String? tipoDocumento,
+    String? pais,
+    required String placa,
+    required int kilometrajeAnual,
+    required String ciudadCirculacion,
+    Enum$UsoVehiculo? uso,
+    Enum$DeducibleAuto? deducible,
+  }) => Input$SolicitudOfertaAutoInput._({
+    r'consentimientoId': consentimientoId,
+    if (documentoIdentidad != null) r'documentoIdentidad': documentoIdentidad,
+    if (tipoDocumento != null) r'tipoDocumento': tipoDocumento,
+    if (pais != null) r'pais': pais,
+    r'placa': placa,
+    r'kilometrajeAnual': kilometrajeAnual,
+    r'ciudadCirculacion': ciudadCirculacion,
+    if (uso != null) r'uso': uso,
+    if (deducible != null) r'deducible': deducible,
+  });
+
+  Input$SolicitudOfertaAutoInput._(this._$data);
+
+  factory Input$SolicitudOfertaAutoInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$consentimientoId = data['consentimientoId'];
+    result$data['consentimientoId'] = (l$consentimientoId as String);
+    if (data.containsKey('documentoIdentidad')) {
+      final l$documentoIdentidad = data['documentoIdentidad'];
+      result$data['documentoIdentidad'] = (l$documentoIdentidad as String?);
+    }
+    if (data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = data['tipoDocumento'];
+      result$data['tipoDocumento'] = (l$tipoDocumento as String?);
+    }
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
+    final l$placa = data['placa'];
+    result$data['placa'] = (l$placa as String);
+    final l$kilometrajeAnual = data['kilometrajeAnual'];
+    result$data['kilometrajeAnual'] = (l$kilometrajeAnual as int);
+    final l$ciudadCirculacion = data['ciudadCirculacion'];
+    result$data['ciudadCirculacion'] = (l$ciudadCirculacion as String);
+    if (data.containsKey('uso')) {
+      final l$uso = data['uso'];
+      result$data['uso'] = fromJson$Enum$UsoVehiculo((l$uso as String));
+    }
+    if (data.containsKey('deducible')) {
+      final l$deducible = data['deducible'];
+      result$data['deducible'] = fromJson$Enum$DeducibleAuto(
+        (l$deducible as String),
+      );
+    }
+    return Input$SolicitudOfertaAutoInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get consentimientoId => (_$data['consentimientoId'] as String);
+
+  String? get documentoIdentidad => (_$data['documentoIdentidad'] as String?);
+
+  String? get tipoDocumento => (_$data['tipoDocumento'] as String?);
+
+  String? get pais => (_$data['pais'] as String?);
+
+  String get placa => (_$data['placa'] as String);
+
+  int get kilometrajeAnual => (_$data['kilometrajeAnual'] as int);
+
+  String get ciudadCirculacion => (_$data['ciudadCirculacion'] as String);
+
+  Enum$UsoVehiculo? get uso => (_$data['uso'] as Enum$UsoVehiculo?);
+
+  Enum$DeducibleAuto? get deducible =>
+      (_$data['deducible'] as Enum$DeducibleAuto?);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$consentimientoId = consentimientoId;
+    result$data['consentimientoId'] = l$consentimientoId;
+    if (_$data.containsKey('documentoIdentidad')) {
+      final l$documentoIdentidad = documentoIdentidad;
+      result$data['documentoIdentidad'] = l$documentoIdentidad;
+    }
+    if (_$data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = tipoDocumento;
+      result$data['tipoDocumento'] = l$tipoDocumento;
+    }
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
+    }
+    final l$placa = placa;
+    result$data['placa'] = l$placa;
+    final l$kilometrajeAnual = kilometrajeAnual;
+    result$data['kilometrajeAnual'] = l$kilometrajeAnual;
+    final l$ciudadCirculacion = ciudadCirculacion;
+    result$data['ciudadCirculacion'] = l$ciudadCirculacion;
+    if (_$data.containsKey('uso')) {
+      final l$uso = uso;
+      result$data['uso'] = toJson$Enum$UsoVehiculo((l$uso as Enum$UsoVehiculo));
+    }
+    if (_$data.containsKey('deducible')) {
+      final l$deducible = deducible;
+      result$data['deducible'] = toJson$Enum$DeducibleAuto(
+        (l$deducible as Enum$DeducibleAuto),
+      );
+    }
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$SolicitudOfertaAutoInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$consentimientoId = consentimientoId;
+    final lOther$consentimientoId = other.consentimientoId;
+    if (l$consentimientoId != lOther$consentimientoId) {
+      return false;
+    }
+    final l$documentoIdentidad = documentoIdentidad;
+    final lOther$documentoIdentidad = other.documentoIdentidad;
+    if (_$data.containsKey('documentoIdentidad') !=
+        other._$data.containsKey('documentoIdentidad')) {
+      return false;
+    }
+    if (l$documentoIdentidad != lOther$documentoIdentidad) {
+      return false;
+    }
+    final l$tipoDocumento = tipoDocumento;
+    final lOther$tipoDocumento = other.tipoDocumento;
+    if (_$data.containsKey('tipoDocumento') !=
+        other._$data.containsKey('tipoDocumento')) {
+      return false;
+    }
+    if (l$tipoDocumento != lOther$tipoDocumento) {
+      return false;
+    }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
+    final l$placa = placa;
+    final lOther$placa = other.placa;
+    if (l$placa != lOther$placa) {
+      return false;
+    }
+    final l$kilometrajeAnual = kilometrajeAnual;
+    final lOther$kilometrajeAnual = other.kilometrajeAnual;
+    if (l$kilometrajeAnual != lOther$kilometrajeAnual) {
+      return false;
+    }
+    final l$ciudadCirculacion = ciudadCirculacion;
+    final lOther$ciudadCirculacion = other.ciudadCirculacion;
+    if (l$ciudadCirculacion != lOther$ciudadCirculacion) {
+      return false;
+    }
+    final l$uso = uso;
+    final lOther$uso = other.uso;
+    if (_$data.containsKey('uso') != other._$data.containsKey('uso')) {
+      return false;
+    }
+    if (l$uso != lOther$uso) {
+      return false;
+    }
+    final l$deducible = deducible;
+    final lOther$deducible = other.deducible;
+    if (_$data.containsKey('deducible') !=
+        other._$data.containsKey('deducible')) {
+      return false;
+    }
+    if (l$deducible != lOther$deducible) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$consentimientoId = consentimientoId;
+    final l$documentoIdentidad = documentoIdentidad;
+    final l$tipoDocumento = tipoDocumento;
+    final l$pais = pais;
+    final l$placa = placa;
+    final l$kilometrajeAnual = kilometrajeAnual;
+    final l$ciudadCirculacion = ciudadCirculacion;
+    final l$uso = uso;
+    final l$deducible = deducible;
+    return Object.hashAll([
+      l$consentimientoId,
+      _$data.containsKey('documentoIdentidad')
+          ? l$documentoIdentidad
+          : const {},
+      _$data.containsKey('tipoDocumento') ? l$tipoDocumento : const {},
+      _$data.containsKey('pais') ? l$pais : const {},
+      l$placa,
+      l$kilometrajeAnual,
+      l$ciudadCirculacion,
+      _$data.containsKey('uso') ? l$uso : const {},
+      _$data.containsKey('deducible') ? l$deducible : const {},
     ]);
   }
 }
@@ -165,12 +428,18 @@ class Input$SolicitudOfertaInput {
   factory Input$SolicitudOfertaInput({
     required String consentimientoId,
     String? documentoIdentidad,
+    String? tipoDocumento,
+    String? pais,
+    String? placeId,
     required String valorCredito,
     required int plazoMeses,
     required String direccionInmueble,
   }) => Input$SolicitudOfertaInput._({
     r'consentimientoId': consentimientoId,
     if (documentoIdentidad != null) r'documentoIdentidad': documentoIdentidad,
+    if (tipoDocumento != null) r'tipoDocumento': tipoDocumento,
+    if (pais != null) r'pais': pais,
+    if (placeId != null) r'placeId': placeId,
     r'valorCredito': valorCredito,
     r'plazoMeses': plazoMeses,
     r'direccionInmueble': direccionInmueble,
@@ -185,6 +454,18 @@ class Input$SolicitudOfertaInput {
     if (data.containsKey('documentoIdentidad')) {
       final l$documentoIdentidad = data['documentoIdentidad'];
       result$data['documentoIdentidad'] = (l$documentoIdentidad as String?);
+    }
+    if (data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = data['tipoDocumento'];
+      result$data['tipoDocumento'] = (l$tipoDocumento as String?);
+    }
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
+    if (data.containsKey('placeId')) {
+      final l$placeId = data['placeId'];
+      result$data['placeId'] = (l$placeId as String?);
     }
     final l$valorCredito = data['valorCredito'];
     result$data['valorCredito'] = (l$valorCredito as String);
@@ -201,6 +482,12 @@ class Input$SolicitudOfertaInput {
 
   String? get documentoIdentidad => (_$data['documentoIdentidad'] as String?);
 
+  String? get tipoDocumento => (_$data['tipoDocumento'] as String?);
+
+  String? get pais => (_$data['pais'] as String?);
+
+  String? get placeId => (_$data['placeId'] as String?);
+
   String get valorCredito => (_$data['valorCredito'] as String);
 
   int get plazoMeses => (_$data['plazoMeses'] as int);
@@ -214,6 +501,18 @@ class Input$SolicitudOfertaInput {
     if (_$data.containsKey('documentoIdentidad')) {
       final l$documentoIdentidad = documentoIdentidad;
       result$data['documentoIdentidad'] = l$documentoIdentidad;
+    }
+    if (_$data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = tipoDocumento;
+      result$data['tipoDocumento'] = l$tipoDocumento;
+    }
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
+    }
+    if (_$data.containsKey('placeId')) {
+      final l$placeId = placeId;
+      result$data['placeId'] = l$placeId;
     }
     final l$valorCredito = valorCredito;
     result$data['valorCredito'] = l$valorCredito;
@@ -247,6 +546,31 @@ class Input$SolicitudOfertaInput {
     if (l$documentoIdentidad != lOther$documentoIdentidad) {
       return false;
     }
+    final l$tipoDocumento = tipoDocumento;
+    final lOther$tipoDocumento = other.tipoDocumento;
+    if (_$data.containsKey('tipoDocumento') !=
+        other._$data.containsKey('tipoDocumento')) {
+      return false;
+    }
+    if (l$tipoDocumento != lOther$tipoDocumento) {
+      return false;
+    }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
+    final l$placeId = placeId;
+    final lOther$placeId = other.placeId;
+    if (_$data.containsKey('placeId') != other._$data.containsKey('placeId')) {
+      return false;
+    }
+    if (l$placeId != lOther$placeId) {
+      return false;
+    }
     final l$valorCredito = valorCredito;
     final lOther$valorCredito = other.valorCredito;
     if (l$valorCredito != lOther$valorCredito) {
@@ -269,6 +593,9 @@ class Input$SolicitudOfertaInput {
   int get hashCode {
     final l$consentimientoId = consentimientoId;
     final l$documentoIdentidad = documentoIdentidad;
+    final l$tipoDocumento = tipoDocumento;
+    final l$pais = pais;
+    final l$placeId = placeId;
     final l$valorCredito = valorCredito;
     final l$plazoMeses = plazoMeses;
     final l$direccionInmueble = direccionInmueble;
@@ -277,6 +604,9 @@ class Input$SolicitudOfertaInput {
       _$data.containsKey('documentoIdentidad')
           ? l$documentoIdentidad
           : const {},
+      _$data.containsKey('tipoDocumento') ? l$tipoDocumento : const {},
+      _$data.containsKey('pais') ? l$pais : const {},
+      _$data.containsKey('placeId') ? l$placeId : const {},
       l$valorCredito,
       l$plazoMeses,
       l$direccionInmueble,
@@ -773,11 +1103,86 @@ class Input$FirmarPorEnlaceInput {
   }
 }
 
+class Input$DispositivoPushInput {
+  factory Input$DispositivoPushInput({
+    required String instalacionId,
+    required Enum$PlataformaMovil plataforma,
+  }) => Input$DispositivoPushInput._({
+    r'instalacionId': instalacionId,
+    r'plataforma': plataforma,
+  });
+
+  Input$DispositivoPushInput._(this._$data);
+
+  factory Input$DispositivoPushInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$instalacionId = data['instalacionId'];
+    result$data['instalacionId'] = (l$instalacionId as String);
+    final l$plataforma = data['plataforma'];
+    result$data['plataforma'] = fromJson$Enum$PlataformaMovil(
+      (l$plataforma as String),
+    );
+    return Input$DispositivoPushInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get instalacionId => (_$data['instalacionId'] as String);
+
+  Enum$PlataformaMovil get plataforma =>
+      (_$data['plataforma'] as Enum$PlataformaMovil);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$instalacionId = instalacionId;
+    result$data['instalacionId'] = l$instalacionId;
+    final l$plataforma = plataforma;
+    result$data['plataforma'] = toJson$Enum$PlataformaMovil(l$plataforma);
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$DispositivoPushInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$instalacionId = instalacionId;
+    final lOther$instalacionId = other.instalacionId;
+    if (l$instalacionId != lOther$instalacionId) {
+      return false;
+    }
+    final l$plataforma = plataforma;
+    final lOther$plataforma = other.plataforma;
+    if (l$plataforma != lOther$plataforma) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$instalacionId = instalacionId;
+    final l$plataforma = plataforma;
+    return Object.hashAll([l$instalacionId, l$plataforma]);
+  }
+}
+
 class Input$CredencialesInput {
   factory Input$CredencialesInput({
     required String usuario,
     required String clave,
-  }) => Input$CredencialesInput._({r'usuario': usuario, r'clave': clave});
+    Enum$RolUsuario? rol,
+    Input$DispositivoPushInput? dispositivo,
+  }) => Input$CredencialesInput._({
+    r'usuario': usuario,
+    r'clave': clave,
+    if (rol != null) r'rol': rol,
+    if (dispositivo != null) r'dispositivo': dispositivo,
+  });
 
   Input$CredencialesInput._(this._$data);
 
@@ -787,6 +1192,20 @@ class Input$CredencialesInput {
     result$data['usuario'] = (l$usuario as String);
     final l$clave = data['clave'];
     result$data['clave'] = (l$clave as String);
+    if (data.containsKey('rol')) {
+      final l$rol = data['rol'];
+      result$data['rol'] = l$rol == null
+          ? null
+          : fromJson$Enum$RolUsuario((l$rol as String));
+    }
+    if (data.containsKey('dispositivo')) {
+      final l$dispositivo = data['dispositivo'];
+      result$data['dispositivo'] = l$dispositivo == null
+          ? null
+          : Input$DispositivoPushInput.fromJson(
+              (l$dispositivo as Map<String, dynamic>),
+            );
+    }
     return Input$CredencialesInput._(result$data);
   }
 
@@ -796,12 +1215,25 @@ class Input$CredencialesInput {
 
   String get clave => (_$data['clave'] as String);
 
+  Enum$RolUsuario? get rol => (_$data['rol'] as Enum$RolUsuario?);
+
+  Input$DispositivoPushInput? get dispositivo =>
+      (_$data['dispositivo'] as Input$DispositivoPushInput?);
+
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$usuario = usuario;
     result$data['usuario'] = l$usuario;
     final l$clave = clave;
     result$data['clave'] = l$clave;
+    if (_$data.containsKey('rol')) {
+      final l$rol = rol;
+      result$data['rol'] = l$rol == null ? null : toJson$Enum$RolUsuario(l$rol);
+    }
+    if (_$data.containsKey('dispositivo')) {
+      final l$dispositivo = dispositivo;
+      result$data['dispositivo'] = l$dispositivo?.toJson();
+    }
     return result$data;
   }
 
@@ -823,6 +1255,23 @@ class Input$CredencialesInput {
     if (l$clave != lOther$clave) {
       return false;
     }
+    final l$rol = rol;
+    final lOther$rol = other.rol;
+    if (_$data.containsKey('rol') != other._$data.containsKey('rol')) {
+      return false;
+    }
+    if (l$rol != lOther$rol) {
+      return false;
+    }
+    final l$dispositivo = dispositivo;
+    final lOther$dispositivo = other.dispositivo;
+    if (_$data.containsKey('dispositivo') !=
+        other._$data.containsKey('dispositivo')) {
+      return false;
+    }
+    if (l$dispositivo != lOther$dispositivo) {
+      return false;
+    }
     return true;
   }
 
@@ -830,7 +1279,14 @@ class Input$CredencialesInput {
   int get hashCode {
     final l$usuario = usuario;
     final l$clave = clave;
-    return Object.hashAll([l$usuario, l$clave]);
+    final l$rol = rol;
+    final l$dispositivo = dispositivo;
+    return Object.hashAll([
+      l$usuario,
+      l$clave,
+      _$data.containsKey('rol') ? l$rol : const {},
+      _$data.containsKey('dispositivo') ? l$dispositivo : const {},
+    ]);
   }
 }
 
@@ -843,6 +1299,8 @@ class Input$CrearUsuarioInput {
     String? correo,
     String? telefono,
     String? documentoIdentidad,
+    String? tipoDocumento,
+    String? pais,
   }) => Input$CrearUsuarioInput._({
     r'usuario': usuario,
     r'clave': clave,
@@ -851,6 +1309,8 @@ class Input$CrearUsuarioInput {
     if (correo != null) r'correo': correo,
     if (telefono != null) r'telefono': telefono,
     if (documentoIdentidad != null) r'documentoIdentidad': documentoIdentidad,
+    if (tipoDocumento != null) r'tipoDocumento': tipoDocumento,
+    if (pais != null) r'pais': pais,
   });
 
   Input$CrearUsuarioInput._(this._$data);
@@ -879,6 +1339,14 @@ class Input$CrearUsuarioInput {
       final l$documentoIdentidad = data['documentoIdentidad'];
       result$data['documentoIdentidad'] = (l$documentoIdentidad as String?);
     }
+    if (data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = data['tipoDocumento'];
+      result$data['tipoDocumento'] = (l$tipoDocumento as String?);
+    }
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
     return Input$CrearUsuarioInput._(result$data);
   }
 
@@ -897,6 +1365,10 @@ class Input$CrearUsuarioInput {
   String? get telefono => (_$data['telefono'] as String?);
 
   String? get documentoIdentidad => (_$data['documentoIdentidad'] as String?);
+
+  String? get tipoDocumento => (_$data['tipoDocumento'] as String?);
+
+  String? get pais => (_$data['pais'] as String?);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -921,6 +1393,14 @@ class Input$CrearUsuarioInput {
     if (_$data.containsKey('documentoIdentidad')) {
       final l$documentoIdentidad = documentoIdentidad;
       result$data['documentoIdentidad'] = l$documentoIdentidad;
+    }
+    if (_$data.containsKey('tipoDocumento')) {
+      final l$tipoDocumento = tipoDocumento;
+      result$data['tipoDocumento'] = l$tipoDocumento;
+    }
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
     }
     return result$data;
   }
@@ -982,6 +1462,23 @@ class Input$CrearUsuarioInput {
     if (l$documentoIdentidad != lOther$documentoIdentidad) {
       return false;
     }
+    final l$tipoDocumento = tipoDocumento;
+    final lOther$tipoDocumento = other.tipoDocumento;
+    if (_$data.containsKey('tipoDocumento') !=
+        other._$data.containsKey('tipoDocumento')) {
+      return false;
+    }
+    if (l$tipoDocumento != lOther$tipoDocumento) {
+      return false;
+    }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
     return true;
   }
 
@@ -994,6 +1491,8 @@ class Input$CrearUsuarioInput {
     final l$correo = correo;
     final l$telefono = telefono;
     final l$documentoIdentidad = documentoIdentidad;
+    final l$tipoDocumento = tipoDocumento;
+    final l$pais = pais;
     return Object.hashAll([
       l$usuario,
       l$clave,
@@ -1004,6 +1503,8 @@ class Input$CrearUsuarioInput {
       _$data.containsKey('documentoIdentidad')
           ? l$documentoIdentidad
           : const {},
+      _$data.containsKey('tipoDocumento') ? l$tipoDocumento : const {},
+      _$data.containsKey('pais') ? l$pais : const {},
     ]);
   }
 }
@@ -1012,7 +1513,12 @@ class Input$PreferenciasInput {
   factory Input$PreferenciasInput({
     required String idioma,
     required String moneda,
-  }) => Input$PreferenciasInput._({r'idioma': idioma, r'moneda': moneda});
+    String? pais,
+  }) => Input$PreferenciasInput._({
+    r'idioma': idioma,
+    r'moneda': moneda,
+    if (pais != null) r'pais': pais,
+  });
 
   Input$PreferenciasInput._(this._$data);
 
@@ -1022,6 +1528,10 @@ class Input$PreferenciasInput {
     result$data['idioma'] = (l$idioma as String);
     final l$moneda = data['moneda'];
     result$data['moneda'] = (l$moneda as String);
+    if (data.containsKey('pais')) {
+      final l$pais = data['pais'];
+      result$data['pais'] = (l$pais as String?);
+    }
     return Input$PreferenciasInput._(result$data);
   }
 
@@ -1031,12 +1541,18 @@ class Input$PreferenciasInput {
 
   String get moneda => (_$data['moneda'] as String);
 
+  String? get pais => (_$data['pais'] as String?);
+
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
     final l$idioma = idioma;
     result$data['idioma'] = l$idioma;
     final l$moneda = moneda;
     result$data['moneda'] = l$moneda;
+    if (_$data.containsKey('pais')) {
+      final l$pais = pais;
+      result$data['pais'] = l$pais;
+    }
     return result$data;
   }
 
@@ -1058,6 +1574,14 @@ class Input$PreferenciasInput {
     if (l$moneda != lOther$moneda) {
       return false;
     }
+    final l$pais = pais;
+    final lOther$pais = other.pais;
+    if (_$data.containsKey('pais') != other._$data.containsKey('pais')) {
+      return false;
+    }
+    if (l$pais != lOther$pais) {
+      return false;
+    }
     return true;
   }
 
@@ -1065,7 +1589,12 @@ class Input$PreferenciasInput {
   int get hashCode {
     final l$idioma = idioma;
     final l$moneda = moneda;
-    return Object.hashAll([l$idioma, l$moneda]);
+    final l$pais = pais;
+    return Object.hashAll([
+      l$idioma,
+      l$moneda,
+      _$data.containsKey('pais') ? l$pais : const {},
+    ]);
   }
 }
 
@@ -1423,6 +1952,698 @@ class Input$CuentaOnboardingInput {
   }
 }
 
+class Input$UbicacionReporteInput {
+  factory Input$UbicacionReporteInput({
+    required String descripcion,
+    required String ciudad,
+    required double latitud,
+    required double longitud,
+  }) => Input$UbicacionReporteInput._({
+    r'descripcion': descripcion,
+    r'ciudad': ciudad,
+    r'latitud': latitud,
+    r'longitud': longitud,
+  });
+
+  Input$UbicacionReporteInput._(this._$data);
+
+  factory Input$UbicacionReporteInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$descripcion = data['descripcion'];
+    result$data['descripcion'] = (l$descripcion as String);
+    final l$ciudad = data['ciudad'];
+    result$data['ciudad'] = (l$ciudad as String);
+    final l$latitud = data['latitud'];
+    result$data['latitud'] = (l$latitud as num).toDouble();
+    final l$longitud = data['longitud'];
+    result$data['longitud'] = (l$longitud as num).toDouble();
+    return Input$UbicacionReporteInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get descripcion => (_$data['descripcion'] as String);
+
+  String get ciudad => (_$data['ciudad'] as String);
+
+  double get latitud => (_$data['latitud'] as double);
+
+  double get longitud => (_$data['longitud'] as double);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$descripcion = descripcion;
+    result$data['descripcion'] = l$descripcion;
+    final l$ciudad = ciudad;
+    result$data['ciudad'] = l$ciudad;
+    final l$latitud = latitud;
+    result$data['latitud'] = l$latitud;
+    final l$longitud = longitud;
+    result$data['longitud'] = l$longitud;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$UbicacionReporteInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    final l$ciudad = ciudad;
+    final lOther$ciudad = other.ciudad;
+    if (l$ciudad != lOther$ciudad) {
+      return false;
+    }
+    final l$latitud = latitud;
+    final lOther$latitud = other.latitud;
+    if (l$latitud != lOther$latitud) {
+      return false;
+    }
+    final l$longitud = longitud;
+    final lOther$longitud = other.longitud;
+    if (l$longitud != lOther$longitud) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$descripcion = descripcion;
+    final l$ciudad = ciudad;
+    final l$latitud = latitud;
+    final l$longitud = longitud;
+    return Object.hashAll([l$descripcion, l$ciudad, l$latitud, l$longitud]);
+  }
+}
+
+class Input$FotoReporteInput {
+  factory Input$FotoReporteInput({
+    required String archivoId,
+    required DateTime tomadaEn,
+    double? latitud,
+    double? longitud,
+  }) => Input$FotoReporteInput._({
+    r'archivoId': archivoId,
+    r'tomadaEn': tomadaEn,
+    if (latitud != null) r'latitud': latitud,
+    if (longitud != null) r'longitud': longitud,
+  });
+
+  Input$FotoReporteInput._(this._$data);
+
+  factory Input$FotoReporteInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$archivoId = data['archivoId'];
+    result$data['archivoId'] = (l$archivoId as String);
+    final l$tomadaEn = data['tomadaEn'];
+    result$data['tomadaEn'] = DateTime.parse((l$tomadaEn as String));
+    if (data.containsKey('latitud')) {
+      final l$latitud = data['latitud'];
+      result$data['latitud'] = (l$latitud as num?)?.toDouble();
+    }
+    if (data.containsKey('longitud')) {
+      final l$longitud = data['longitud'];
+      result$data['longitud'] = (l$longitud as num?)?.toDouble();
+    }
+    return Input$FotoReporteInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get archivoId => (_$data['archivoId'] as String);
+
+  DateTime get tomadaEn => (_$data['tomadaEn'] as DateTime);
+
+  double? get latitud => (_$data['latitud'] as double?);
+
+  double? get longitud => (_$data['longitud'] as double?);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$archivoId = archivoId;
+    result$data['archivoId'] = l$archivoId;
+    final l$tomadaEn = tomadaEn;
+    result$data['tomadaEn'] = l$tomadaEn.toIso8601String();
+    if (_$data.containsKey('latitud')) {
+      final l$latitud = latitud;
+      result$data['latitud'] = l$latitud;
+    }
+    if (_$data.containsKey('longitud')) {
+      final l$longitud = longitud;
+      result$data['longitud'] = l$longitud;
+    }
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$FotoReporteInput || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$archivoId = archivoId;
+    final lOther$archivoId = other.archivoId;
+    if (l$archivoId != lOther$archivoId) {
+      return false;
+    }
+    final l$tomadaEn = tomadaEn;
+    final lOther$tomadaEn = other.tomadaEn;
+    if (l$tomadaEn != lOther$tomadaEn) {
+      return false;
+    }
+    final l$latitud = latitud;
+    final lOther$latitud = other.latitud;
+    if (_$data.containsKey('latitud') != other._$data.containsKey('latitud')) {
+      return false;
+    }
+    if (l$latitud != lOther$latitud) {
+      return false;
+    }
+    final l$longitud = longitud;
+    final lOther$longitud = other.longitud;
+    if (_$data.containsKey('longitud') !=
+        other._$data.containsKey('longitud')) {
+      return false;
+    }
+    if (l$longitud != lOther$longitud) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$archivoId = archivoId;
+    final l$tomadaEn = tomadaEn;
+    final l$latitud = latitud;
+    final l$longitud = longitud;
+    return Object.hashAll([
+      l$archivoId,
+      l$tomadaEn,
+      _$data.containsKey('latitud') ? l$latitud : const {},
+      _$data.containsKey('longitud') ? l$longitud : const {},
+    ]);
+  }
+}
+
+class Input$ReporteSiniestroInput {
+  factory Input$ReporteSiniestroInput({
+    required String idReporte,
+    required String polizaId,
+    Enum$TipoSiniestroAuto? tipoSiniestroAuto,
+    required DateTime ocurridoEn,
+    required String descripcion,
+    required Input$UbicacionReporteInput ubicacion,
+    required List<Input$FotoReporteInput> fotos,
+  }) => Input$ReporteSiniestroInput._({
+    r'idReporte': idReporte,
+    r'polizaId': polizaId,
+    if (tipoSiniestroAuto != null) r'tipoSiniestroAuto': tipoSiniestroAuto,
+    r'ocurridoEn': ocurridoEn,
+    r'descripcion': descripcion,
+    r'ubicacion': ubicacion,
+    r'fotos': fotos,
+  });
+
+  Input$ReporteSiniestroInput._(this._$data);
+
+  factory Input$ReporteSiniestroInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$idReporte = data['idReporte'];
+    result$data['idReporte'] = (l$idReporte as String);
+    final l$polizaId = data['polizaId'];
+    result$data['polizaId'] = (l$polizaId as String);
+    if (data.containsKey('tipoSiniestroAuto')) {
+      final l$tipoSiniestroAuto = data['tipoSiniestroAuto'];
+      result$data['tipoSiniestroAuto'] = l$tipoSiniestroAuto == null
+          ? null
+          : fromJson$Enum$TipoSiniestroAuto((l$tipoSiniestroAuto as String));
+    }
+    final l$ocurridoEn = data['ocurridoEn'];
+    result$data['ocurridoEn'] = DateTime.parse((l$ocurridoEn as String));
+    final l$descripcion = data['descripcion'];
+    result$data['descripcion'] = (l$descripcion as String);
+    final l$ubicacion = data['ubicacion'];
+    result$data['ubicacion'] = Input$UbicacionReporteInput.fromJson(
+      (l$ubicacion as Map<String, dynamic>),
+    );
+    final l$fotos = data['fotos'];
+    result$data['fotos'] = (l$fotos as List<dynamic>)
+        .map(
+          (e) => Input$FotoReporteInput.fromJson((e as Map<String, dynamic>)),
+        )
+        .toList();
+    return Input$ReporteSiniestroInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get idReporte => (_$data['idReporte'] as String);
+
+  String get polizaId => (_$data['polizaId'] as String);
+
+  Enum$TipoSiniestroAuto? get tipoSiniestroAuto =>
+      (_$data['tipoSiniestroAuto'] as Enum$TipoSiniestroAuto?);
+
+  DateTime get ocurridoEn => (_$data['ocurridoEn'] as DateTime);
+
+  String get descripcion => (_$data['descripcion'] as String);
+
+  Input$UbicacionReporteInput get ubicacion =>
+      (_$data['ubicacion'] as Input$UbicacionReporteInput);
+
+  List<Input$FotoReporteInput> get fotos =>
+      (_$data['fotos'] as List<Input$FotoReporteInput>);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$idReporte = idReporte;
+    result$data['idReporte'] = l$idReporte;
+    final l$polizaId = polizaId;
+    result$data['polizaId'] = l$polizaId;
+    if (_$data.containsKey('tipoSiniestroAuto')) {
+      final l$tipoSiniestroAuto = tipoSiniestroAuto;
+      result$data['tipoSiniestroAuto'] = l$tipoSiniestroAuto == null
+          ? null
+          : toJson$Enum$TipoSiniestroAuto(l$tipoSiniestroAuto);
+    }
+    final l$ocurridoEn = ocurridoEn;
+    result$data['ocurridoEn'] = l$ocurridoEn.toIso8601String();
+    final l$descripcion = descripcion;
+    result$data['descripcion'] = l$descripcion;
+    final l$ubicacion = ubicacion;
+    result$data['ubicacion'] = l$ubicacion.toJson();
+    final l$fotos = fotos;
+    result$data['fotos'] = l$fotos.map((e) => e.toJson()).toList();
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$ReporteSiniestroInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$idReporte = idReporte;
+    final lOther$idReporte = other.idReporte;
+    if (l$idReporte != lOther$idReporte) {
+      return false;
+    }
+    final l$polizaId = polizaId;
+    final lOther$polizaId = other.polizaId;
+    if (l$polizaId != lOther$polizaId) {
+      return false;
+    }
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    final lOther$tipoSiniestroAuto = other.tipoSiniestroAuto;
+    if (_$data.containsKey('tipoSiniestroAuto') !=
+        other._$data.containsKey('tipoSiniestroAuto')) {
+      return false;
+    }
+    if (l$tipoSiniestroAuto != lOther$tipoSiniestroAuto) {
+      return false;
+    }
+    final l$ocurridoEn = ocurridoEn;
+    final lOther$ocurridoEn = other.ocurridoEn;
+    if (l$ocurridoEn != lOther$ocurridoEn) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    final l$ubicacion = ubicacion;
+    final lOther$ubicacion = other.ubicacion;
+    if (l$ubicacion != lOther$ubicacion) {
+      return false;
+    }
+    final l$fotos = fotos;
+    final lOther$fotos = other.fotos;
+    if (l$fotos.length != lOther$fotos.length) {
+      return false;
+    }
+    for (int i = 0; i < l$fotos.length; i++) {
+      final l$fotos$entry = l$fotos[i];
+      final lOther$fotos$entry = lOther$fotos[i];
+      if (l$fotos$entry != lOther$fotos$entry) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$idReporte = idReporte;
+    final l$polizaId = polizaId;
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    final l$ocurridoEn = ocurridoEn;
+    final l$descripcion = descripcion;
+    final l$ubicacion = ubicacion;
+    final l$fotos = fotos;
+    return Object.hashAll([
+      l$idReporte,
+      l$polizaId,
+      _$data.containsKey('tipoSiniestroAuto') ? l$tipoSiniestroAuto : const {},
+      l$ocurridoEn,
+      l$descripcion,
+      l$ubicacion,
+      Object.hashAll(l$fotos.map((v) => v)),
+    ]);
+  }
+}
+
+class Input$SolicitudAsistenciaInput {
+  factory Input$SolicitudAsistenciaInput({
+    required String idSolicitud,
+    required String prestadorId,
+    required Enum$TipoPrestador tipoAsistencia,
+    String? descripcion,
+    String? direccion,
+    required double latitud,
+    required double longitud,
+    Enum$OrigenUbicacion? origenUbicacion,
+  }) => Input$SolicitudAsistenciaInput._({
+    r'idSolicitud': idSolicitud,
+    r'prestadorId': prestadorId,
+    r'tipoAsistencia': tipoAsistencia,
+    if (descripcion != null) r'descripcion': descripcion,
+    if (direccion != null) r'direccion': direccion,
+    r'latitud': latitud,
+    r'longitud': longitud,
+    if (origenUbicacion != null) r'origenUbicacion': origenUbicacion,
+  });
+
+  Input$SolicitudAsistenciaInput._(this._$data);
+
+  factory Input$SolicitudAsistenciaInput.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$idSolicitud = data['idSolicitud'];
+    result$data['idSolicitud'] = (l$idSolicitud as String);
+    final l$prestadorId = data['prestadorId'];
+    result$data['prestadorId'] = (l$prestadorId as String);
+    final l$tipoAsistencia = data['tipoAsistencia'];
+    result$data['tipoAsistencia'] = fromJson$Enum$TipoPrestador(
+      (l$tipoAsistencia as String),
+    );
+    if (data.containsKey('descripcion')) {
+      final l$descripcion = data['descripcion'];
+      result$data['descripcion'] = (l$descripcion as String?);
+    }
+    if (data.containsKey('direccion')) {
+      final l$direccion = data['direccion'];
+      result$data['direccion'] = (l$direccion as String?);
+    }
+    final l$latitud = data['latitud'];
+    result$data['latitud'] = (l$latitud as num).toDouble();
+    final l$longitud = data['longitud'];
+    result$data['longitud'] = (l$longitud as num).toDouble();
+    if (data.containsKey('origenUbicacion')) {
+      final l$origenUbicacion = data['origenUbicacion'];
+      result$data['origenUbicacion'] = fromJson$Enum$OrigenUbicacion(
+        (l$origenUbicacion as String),
+      );
+    }
+    return Input$SolicitudAsistenciaInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get idSolicitud => (_$data['idSolicitud'] as String);
+
+  String get prestadorId => (_$data['prestadorId'] as String);
+
+  Enum$TipoPrestador get tipoAsistencia =>
+      (_$data['tipoAsistencia'] as Enum$TipoPrestador);
+
+  String? get descripcion => (_$data['descripcion'] as String?);
+
+  String? get direccion => (_$data['direccion'] as String?);
+
+  double get latitud => (_$data['latitud'] as double);
+
+  double get longitud => (_$data['longitud'] as double);
+
+  Enum$OrigenUbicacion? get origenUbicacion =>
+      (_$data['origenUbicacion'] as Enum$OrigenUbicacion?);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$idSolicitud = idSolicitud;
+    result$data['idSolicitud'] = l$idSolicitud;
+    final l$prestadorId = prestadorId;
+    result$data['prestadorId'] = l$prestadorId;
+    final l$tipoAsistencia = tipoAsistencia;
+    result$data['tipoAsistencia'] = toJson$Enum$TipoPrestador(l$tipoAsistencia);
+    if (_$data.containsKey('descripcion')) {
+      final l$descripcion = descripcion;
+      result$data['descripcion'] = l$descripcion;
+    }
+    if (_$data.containsKey('direccion')) {
+      final l$direccion = direccion;
+      result$data['direccion'] = l$direccion;
+    }
+    final l$latitud = latitud;
+    result$data['latitud'] = l$latitud;
+    final l$longitud = longitud;
+    result$data['longitud'] = l$longitud;
+    if (_$data.containsKey('origenUbicacion')) {
+      final l$origenUbicacion = origenUbicacion;
+      result$data['origenUbicacion'] = toJson$Enum$OrigenUbicacion(
+        (l$origenUbicacion as Enum$OrigenUbicacion),
+      );
+    }
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$SolicitudAsistenciaInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$idSolicitud = idSolicitud;
+    final lOther$idSolicitud = other.idSolicitud;
+    if (l$idSolicitud != lOther$idSolicitud) {
+      return false;
+    }
+    final l$prestadorId = prestadorId;
+    final lOther$prestadorId = other.prestadorId;
+    if (l$prestadorId != lOther$prestadorId) {
+      return false;
+    }
+    final l$tipoAsistencia = tipoAsistencia;
+    final lOther$tipoAsistencia = other.tipoAsistencia;
+    if (l$tipoAsistencia != lOther$tipoAsistencia) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (_$data.containsKey('descripcion') !=
+        other._$data.containsKey('descripcion')) {
+      return false;
+    }
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    final l$direccion = direccion;
+    final lOther$direccion = other.direccion;
+    if (_$data.containsKey('direccion') !=
+        other._$data.containsKey('direccion')) {
+      return false;
+    }
+    if (l$direccion != lOther$direccion) {
+      return false;
+    }
+    final l$latitud = latitud;
+    final lOther$latitud = other.latitud;
+    if (l$latitud != lOther$latitud) {
+      return false;
+    }
+    final l$longitud = longitud;
+    final lOther$longitud = other.longitud;
+    if (l$longitud != lOther$longitud) {
+      return false;
+    }
+    final l$origenUbicacion = origenUbicacion;
+    final lOther$origenUbicacion = other.origenUbicacion;
+    if (_$data.containsKey('origenUbicacion') !=
+        other._$data.containsKey('origenUbicacion')) {
+      return false;
+    }
+    if (l$origenUbicacion != lOther$origenUbicacion) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$idSolicitud = idSolicitud;
+    final l$prestadorId = prestadorId;
+    final l$tipoAsistencia = tipoAsistencia;
+    final l$descripcion = descripcion;
+    final l$direccion = direccion;
+    final l$latitud = latitud;
+    final l$longitud = longitud;
+    final l$origenUbicacion = origenUbicacion;
+    return Object.hashAll([
+      l$idSolicitud,
+      l$prestadorId,
+      l$tipoAsistencia,
+      _$data.containsKey('descripcion') ? l$descripcion : const {},
+      _$data.containsKey('direccion') ? l$direccion : const {},
+      l$latitud,
+      l$longitud,
+      _$data.containsKey('origenUbicacion') ? l$origenUbicacion : const {},
+    ]);
+  }
+}
+
+class Input$SolicitudAsistenciaDireccionInput {
+  factory Input$SolicitudAsistenciaDireccionInput({
+    required String idSolicitud,
+    required String prestadorId,
+    required Enum$TipoPrestador tipoAsistencia,
+    required String direccion,
+    String? descripcion,
+  }) => Input$SolicitudAsistenciaDireccionInput._({
+    r'idSolicitud': idSolicitud,
+    r'prestadorId': prestadorId,
+    r'tipoAsistencia': tipoAsistencia,
+    r'direccion': direccion,
+    if (descripcion != null) r'descripcion': descripcion,
+  });
+
+  Input$SolicitudAsistenciaDireccionInput._(this._$data);
+
+  factory Input$SolicitudAsistenciaDireccionInput.fromJson(
+    Map<String, dynamic> data,
+  ) {
+    final result$data = <String, dynamic>{};
+    final l$idSolicitud = data['idSolicitud'];
+    result$data['idSolicitud'] = (l$idSolicitud as String);
+    final l$prestadorId = data['prestadorId'];
+    result$data['prestadorId'] = (l$prestadorId as String);
+    final l$tipoAsistencia = data['tipoAsistencia'];
+    result$data['tipoAsistencia'] = fromJson$Enum$TipoPrestador(
+      (l$tipoAsistencia as String),
+    );
+    final l$direccion = data['direccion'];
+    result$data['direccion'] = (l$direccion as String);
+    if (data.containsKey('descripcion')) {
+      final l$descripcion = data['descripcion'];
+      result$data['descripcion'] = (l$descripcion as String?);
+    }
+    return Input$SolicitudAsistenciaDireccionInput._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get idSolicitud => (_$data['idSolicitud'] as String);
+
+  String get prestadorId => (_$data['prestadorId'] as String);
+
+  Enum$TipoPrestador get tipoAsistencia =>
+      (_$data['tipoAsistencia'] as Enum$TipoPrestador);
+
+  String get direccion => (_$data['direccion'] as String);
+
+  String? get descripcion => (_$data['descripcion'] as String?);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$idSolicitud = idSolicitud;
+    result$data['idSolicitud'] = l$idSolicitud;
+    final l$prestadorId = prestadorId;
+    result$data['prestadorId'] = l$prestadorId;
+    final l$tipoAsistencia = tipoAsistencia;
+    result$data['tipoAsistencia'] = toJson$Enum$TipoPrestador(l$tipoAsistencia);
+    final l$direccion = direccion;
+    result$data['direccion'] = l$direccion;
+    if (_$data.containsKey('descripcion')) {
+      final l$descripcion = descripcion;
+      result$data['descripcion'] = l$descripcion;
+    }
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Input$SolicitudAsistenciaDireccionInput ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$idSolicitud = idSolicitud;
+    final lOther$idSolicitud = other.idSolicitud;
+    if (l$idSolicitud != lOther$idSolicitud) {
+      return false;
+    }
+    final l$prestadorId = prestadorId;
+    final lOther$prestadorId = other.prestadorId;
+    if (l$prestadorId != lOther$prestadorId) {
+      return false;
+    }
+    final l$tipoAsistencia = tipoAsistencia;
+    final lOther$tipoAsistencia = other.tipoAsistencia;
+    if (l$tipoAsistencia != lOther$tipoAsistencia) {
+      return false;
+    }
+    final l$direccion = direccion;
+    final lOther$direccion = other.direccion;
+    if (l$direccion != lOther$direccion) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (_$data.containsKey('descripcion') !=
+        other._$data.containsKey('descripcion')) {
+      return false;
+    }
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$idSolicitud = idSolicitud;
+    final l$prestadorId = prestadorId;
+    final l$tipoAsistencia = tipoAsistencia;
+    final l$direccion = direccion;
+    final l$descripcion = descripcion;
+    return Object.hashAll([
+      l$idSolicitud,
+      l$prestadorId,
+      l$tipoAsistencia,
+      l$direccion,
+      _$data.containsKey('descripcion') ? l$descripcion : const {},
+    ]);
+  }
+}
+
 enum Enum$EstadoConsentimiento {
   VIGENTE,
   REVOCADO,
@@ -1571,6 +2792,8 @@ Enum$NivelRiesgo fromJson$Enum$NivelRiesgo(String value) {
 }
 
 enum Enum$MotivoErrorOferta {
+  VEHICULO_NO_ENCONTRADO,
+  VEHICULO_NO_ASEGURABLE,
   CONSENTIMIENTO_NO_VIGENTE,
   DATOS_INSUFICIENTES,
   FUENTES_NO_DISPONIBLES,
@@ -1584,6 +2807,10 @@ enum Enum$MotivoErrorOferta {
 
 String toJson$Enum$MotivoErrorOferta(Enum$MotivoErrorOferta e) {
   switch (e) {
+    case Enum$MotivoErrorOferta.VEHICULO_NO_ENCONTRADO:
+      return r'VEHICULO_NO_ENCONTRADO';
+    case Enum$MotivoErrorOferta.VEHICULO_NO_ASEGURABLE:
+      return r'VEHICULO_NO_ASEGURABLE';
     case Enum$MotivoErrorOferta.CONSENTIMIENTO_NO_VIGENTE:
       return r'CONSENTIMIENTO_NO_VIGENTE';
     case Enum$MotivoErrorOferta.DATOS_INSUFICIENTES:
@@ -1597,6 +2824,10 @@ String toJson$Enum$MotivoErrorOferta(Enum$MotivoErrorOferta e) {
 
 Enum$MotivoErrorOferta fromJson$Enum$MotivoErrorOferta(String value) {
   switch (value) {
+    case r'VEHICULO_NO_ENCONTRADO':
+      return Enum$MotivoErrorOferta.VEHICULO_NO_ENCONTRADO;
+    case r'VEHICULO_NO_ASEGURABLE':
+      return Enum$MotivoErrorOferta.VEHICULO_NO_ASEGURABLE;
     case r'CONSENTIMIENTO_NO_VIGENTE':
       return Enum$MotivoErrorOferta.CONSENTIMIENTO_NO_VIGENTE;
     case r'DATOS_INSUFICIENTES':
@@ -1638,6 +2869,157 @@ Enum$OrigenFuente fromJson$Enum$OrigenFuente(String value) {
       return Enum$OrigenFuente.OPEN_DATA;
     default:
       return Enum$OrigenFuente.$unknown;
+  }
+}
+
+enum Enum$Producto {
+  VIDA_DEUDOR,
+  AUTO,
+  $unknown;
+
+  factory Enum$Producto.fromJson(String value) => fromJson$Enum$Producto(value);
+
+  String toJson() => toJson$Enum$Producto(this);
+}
+
+String toJson$Enum$Producto(Enum$Producto e) {
+  switch (e) {
+    case Enum$Producto.VIDA_DEUDOR:
+      return r'VIDA_DEUDOR';
+    case Enum$Producto.AUTO:
+      return r'AUTO';
+    case Enum$Producto.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$Producto fromJson$Enum$Producto(String value) {
+  switch (value) {
+    case r'VIDA_DEUDOR':
+      return Enum$Producto.VIDA_DEUDOR;
+    case r'AUTO':
+      return Enum$Producto.AUTO;
+    default:
+      return Enum$Producto.$unknown;
+  }
+}
+
+enum Enum$UsoVehiculo {
+  PARTICULAR,
+  COMERCIAL,
+  $unknown;
+
+  factory Enum$UsoVehiculo.fromJson(String value) =>
+      fromJson$Enum$UsoVehiculo(value);
+
+  String toJson() => toJson$Enum$UsoVehiculo(this);
+}
+
+String toJson$Enum$UsoVehiculo(Enum$UsoVehiculo e) {
+  switch (e) {
+    case Enum$UsoVehiculo.PARTICULAR:
+      return r'PARTICULAR';
+    case Enum$UsoVehiculo.COMERCIAL:
+      return r'COMERCIAL';
+    case Enum$UsoVehiculo.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$UsoVehiculo fromJson$Enum$UsoVehiculo(String value) {
+  switch (value) {
+    case r'PARTICULAR':
+      return Enum$UsoVehiculo.PARTICULAR;
+    case r'COMERCIAL':
+      return Enum$UsoVehiculo.COMERCIAL;
+    default:
+      return Enum$UsoVehiculo.$unknown;
+  }
+}
+
+enum Enum$DeducibleAuto {
+  DIEZ_POR_CIENTO,
+  SIN_DEDUCIBLE,
+  $unknown;
+
+  factory Enum$DeducibleAuto.fromJson(String value) =>
+      fromJson$Enum$DeducibleAuto(value);
+
+  String toJson() => toJson$Enum$DeducibleAuto(this);
+}
+
+String toJson$Enum$DeducibleAuto(Enum$DeducibleAuto e) {
+  switch (e) {
+    case Enum$DeducibleAuto.DIEZ_POR_CIENTO:
+      return r'DIEZ_POR_CIENTO';
+    case Enum$DeducibleAuto.SIN_DEDUCIBLE:
+      return r'SIN_DEDUCIBLE';
+    case Enum$DeducibleAuto.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$DeducibleAuto fromJson$Enum$DeducibleAuto(String value) {
+  switch (value) {
+    case r'DIEZ_POR_CIENTO':
+      return Enum$DeducibleAuto.DIEZ_POR_CIENTO;
+    case r'SIN_DEDUCIBLE':
+      return Enum$DeducibleAuto.SIN_DEDUCIBLE;
+    default:
+      return Enum$DeducibleAuto.$unknown;
+  }
+}
+
+enum Enum$TipoCobertura {
+  RESPONSABILIDAD_CIVIL,
+  PERDIDA_TOTAL_DANOS,
+  PERDIDA_PARCIAL_DANOS,
+  PERDIDA_TOTAL_HURTO,
+  PERDIDA_PARCIAL_HURTO,
+  ASISTENCIA,
+  $unknown;
+
+  factory Enum$TipoCobertura.fromJson(String value) =>
+      fromJson$Enum$TipoCobertura(value);
+
+  String toJson() => toJson$Enum$TipoCobertura(this);
+}
+
+String toJson$Enum$TipoCobertura(Enum$TipoCobertura e) {
+  switch (e) {
+    case Enum$TipoCobertura.RESPONSABILIDAD_CIVIL:
+      return r'RESPONSABILIDAD_CIVIL';
+    case Enum$TipoCobertura.PERDIDA_TOTAL_DANOS:
+      return r'PERDIDA_TOTAL_DANOS';
+    case Enum$TipoCobertura.PERDIDA_PARCIAL_DANOS:
+      return r'PERDIDA_PARCIAL_DANOS';
+    case Enum$TipoCobertura.PERDIDA_TOTAL_HURTO:
+      return r'PERDIDA_TOTAL_HURTO';
+    case Enum$TipoCobertura.PERDIDA_PARCIAL_HURTO:
+      return r'PERDIDA_PARCIAL_HURTO';
+    case Enum$TipoCobertura.ASISTENCIA:
+      return r'ASISTENCIA';
+    case Enum$TipoCobertura.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoCobertura fromJson$Enum$TipoCobertura(String value) {
+  switch (value) {
+    case r'RESPONSABILIDAD_CIVIL':
+      return Enum$TipoCobertura.RESPONSABILIDAD_CIVIL;
+    case r'PERDIDA_TOTAL_DANOS':
+      return Enum$TipoCobertura.PERDIDA_TOTAL_DANOS;
+    case r'PERDIDA_PARCIAL_DANOS':
+      return Enum$TipoCobertura.PERDIDA_PARCIAL_DANOS;
+    case r'PERDIDA_TOTAL_HURTO':
+      return Enum$TipoCobertura.PERDIDA_TOTAL_HURTO;
+    case r'PERDIDA_PARCIAL_HURTO':
+      return Enum$TipoCobertura.PERDIDA_PARCIAL_HURTO;
+    case r'ASISTENCIA':
+      return Enum$TipoCobertura.ASISTENCIA;
+    default:
+      return Enum$TipoCobertura.$unknown;
   }
 }
 
@@ -2329,6 +3711,39 @@ Enum$EstadoUsuario fromJson$Enum$EstadoUsuario(String value) {
   }
 }
 
+enum Enum$PlataformaMovil {
+  ANDROID,
+  IOS,
+  $unknown;
+
+  factory Enum$PlataformaMovil.fromJson(String value) =>
+      fromJson$Enum$PlataformaMovil(value);
+
+  String toJson() => toJson$Enum$PlataformaMovil(this);
+}
+
+String toJson$Enum$PlataformaMovil(Enum$PlataformaMovil e) {
+  switch (e) {
+    case Enum$PlataformaMovil.ANDROID:
+      return r'ANDROID';
+    case Enum$PlataformaMovil.IOS:
+      return r'IOS';
+    case Enum$PlataformaMovil.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$PlataformaMovil fromJson$Enum$PlataformaMovil(String value) {
+  switch (value) {
+    case r'ANDROID':
+      return Enum$PlataformaMovil.ANDROID;
+    case r'IOS':
+      return Enum$PlataformaMovil.IOS;
+    default:
+      return Enum$PlataformaMovil.$unknown;
+  }
+}
+
 enum Enum$EstadoArchivo {
   PENDIENTE,
   DISPONIBLE,
@@ -2718,6 +4133,125 @@ Enum$MotivoRechazo fromJson$Enum$MotivoRechazo(String value) {
   }
 }
 
+enum Enum$TipoEventoParametrico {
+  VUELO_RETRASO,
+  VUELO_CANCELADO,
+  CLIMA,
+  $unknown;
+
+  factory Enum$TipoEventoParametrico.fromJson(String value) =>
+      fromJson$Enum$TipoEventoParametrico(value);
+
+  String toJson() => toJson$Enum$TipoEventoParametrico(this);
+}
+
+String toJson$Enum$TipoEventoParametrico(Enum$TipoEventoParametrico e) {
+  switch (e) {
+    case Enum$TipoEventoParametrico.VUELO_RETRASO:
+      return r'VUELO_RETRASO';
+    case Enum$TipoEventoParametrico.VUELO_CANCELADO:
+      return r'VUELO_CANCELADO';
+    case Enum$TipoEventoParametrico.CLIMA:
+      return r'CLIMA';
+    case Enum$TipoEventoParametrico.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoEventoParametrico fromJson$Enum$TipoEventoParametrico(String value) {
+  switch (value) {
+    case r'VUELO_RETRASO':
+      return Enum$TipoEventoParametrico.VUELO_RETRASO;
+    case r'VUELO_CANCELADO':
+      return Enum$TipoEventoParametrico.VUELO_CANCELADO;
+    case r'CLIMA':
+      return Enum$TipoEventoParametrico.CLIMA;
+    default:
+      return Enum$TipoEventoParametrico.$unknown;
+  }
+}
+
+enum Enum$EstadoIndemnizacion {
+  EN_PROCESO,
+  PAGADA,
+  $unknown;
+
+  factory Enum$EstadoIndemnizacion.fromJson(String value) =>
+      fromJson$Enum$EstadoIndemnizacion(value);
+
+  String toJson() => toJson$Enum$EstadoIndemnizacion(this);
+}
+
+String toJson$Enum$EstadoIndemnizacion(Enum$EstadoIndemnizacion e) {
+  switch (e) {
+    case Enum$EstadoIndemnizacion.EN_PROCESO:
+      return r'EN_PROCESO';
+    case Enum$EstadoIndemnizacion.PAGADA:
+      return r'PAGADA';
+    case Enum$EstadoIndemnizacion.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$EstadoIndemnizacion fromJson$Enum$EstadoIndemnizacion(String value) {
+  switch (value) {
+    case r'EN_PROCESO':
+      return Enum$EstadoIndemnizacion.EN_PROCESO;
+    case r'PAGADA':
+      return Enum$EstadoIndemnizacion.PAGADA;
+    default:
+      return Enum$EstadoIndemnizacion.$unknown;
+  }
+}
+
+enum Enum$TipoSiniestroAuto {
+  CHOQUE_PARCIAL,
+  PERDIDA_TOTAL_DANOS,
+  HURTO_TOTAL,
+  HURTO_PARCIAL,
+  RESPONSABILIDAD_CIVIL,
+  $unknown;
+
+  factory Enum$TipoSiniestroAuto.fromJson(String value) =>
+      fromJson$Enum$TipoSiniestroAuto(value);
+
+  String toJson() => toJson$Enum$TipoSiniestroAuto(this);
+}
+
+String toJson$Enum$TipoSiniestroAuto(Enum$TipoSiniestroAuto e) {
+  switch (e) {
+    case Enum$TipoSiniestroAuto.CHOQUE_PARCIAL:
+      return r'CHOQUE_PARCIAL';
+    case Enum$TipoSiniestroAuto.PERDIDA_TOTAL_DANOS:
+      return r'PERDIDA_TOTAL_DANOS';
+    case Enum$TipoSiniestroAuto.HURTO_TOTAL:
+      return r'HURTO_TOTAL';
+    case Enum$TipoSiniestroAuto.HURTO_PARCIAL:
+      return r'HURTO_PARCIAL';
+    case Enum$TipoSiniestroAuto.RESPONSABILIDAD_CIVIL:
+      return r'RESPONSABILIDAD_CIVIL';
+    case Enum$TipoSiniestroAuto.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoSiniestroAuto fromJson$Enum$TipoSiniestroAuto(String value) {
+  switch (value) {
+    case r'CHOQUE_PARCIAL':
+      return Enum$TipoSiniestroAuto.CHOQUE_PARCIAL;
+    case r'PERDIDA_TOTAL_DANOS':
+      return Enum$TipoSiniestroAuto.PERDIDA_TOTAL_DANOS;
+    case r'HURTO_TOTAL':
+      return Enum$TipoSiniestroAuto.HURTO_TOTAL;
+    case r'HURTO_PARCIAL':
+      return Enum$TipoSiniestroAuto.HURTO_PARCIAL;
+    case r'RESPONSABILIDAD_CIVIL':
+      return Enum$TipoSiniestroAuto.RESPONSABILIDAD_CIVIL;
+    default:
+      return Enum$TipoSiniestroAuto.$unknown;
+  }
+}
+
 enum Enum$ColorSalud {
   VERDE,
   AMARILLO,
@@ -2796,6 +4330,224 @@ Enum$EstadoCircuito fromJson$Enum$EstadoCircuito(String value) {
       return Enum$EstadoCircuito.DESCONOCIDO;
     default:
       return Enum$EstadoCircuito.$unknown;
+  }
+}
+
+enum Enum$TipoPrestador {
+  MEDICO,
+  MECANICO,
+  GRUA,
+  $unknown;
+
+  factory Enum$TipoPrestador.fromJson(String value) =>
+      fromJson$Enum$TipoPrestador(value);
+
+  String toJson() => toJson$Enum$TipoPrestador(this);
+}
+
+String toJson$Enum$TipoPrestador(Enum$TipoPrestador e) {
+  switch (e) {
+    case Enum$TipoPrestador.MEDICO:
+      return r'MEDICO';
+    case Enum$TipoPrestador.MECANICO:
+      return r'MECANICO';
+    case Enum$TipoPrestador.GRUA:
+      return r'GRUA';
+    case Enum$TipoPrestador.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$TipoPrestador fromJson$Enum$TipoPrestador(String value) {
+  switch (value) {
+    case r'MEDICO':
+      return Enum$TipoPrestador.MEDICO;
+    case r'MECANICO':
+      return Enum$TipoPrestador.MECANICO;
+    case r'GRUA':
+      return Enum$TipoPrestador.GRUA;
+    default:
+      return Enum$TipoPrestador.$unknown;
+  }
+}
+
+enum Enum$EstadoAsistencia {
+  CONFIRMADA,
+  NO_CONFIRMADA,
+  CANCELADA,
+  LLEGO,
+  $unknown;
+
+  factory Enum$EstadoAsistencia.fromJson(String value) =>
+      fromJson$Enum$EstadoAsistencia(value);
+
+  String toJson() => toJson$Enum$EstadoAsistencia(this);
+}
+
+String toJson$Enum$EstadoAsistencia(Enum$EstadoAsistencia e) {
+  switch (e) {
+    case Enum$EstadoAsistencia.CONFIRMADA:
+      return r'CONFIRMADA';
+    case Enum$EstadoAsistencia.NO_CONFIRMADA:
+      return r'NO_CONFIRMADA';
+    case Enum$EstadoAsistencia.CANCELADA:
+      return r'CANCELADA';
+    case Enum$EstadoAsistencia.LLEGO:
+      return r'LLEGO';
+    case Enum$EstadoAsistencia.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$EstadoAsistencia fromJson$Enum$EstadoAsistencia(String value) {
+  switch (value) {
+    case r'CONFIRMADA':
+      return Enum$EstadoAsistencia.CONFIRMADA;
+    case r'NO_CONFIRMADA':
+      return Enum$EstadoAsistencia.NO_CONFIRMADA;
+    case r'CANCELADA':
+      return Enum$EstadoAsistencia.CANCELADA;
+    case r'LLEGO':
+      return Enum$EstadoAsistencia.LLEGO;
+    default:
+      return Enum$EstadoAsistencia.$unknown;
+  }
+}
+
+enum Enum$MotivoNoConfirmada {
+  PRESTADOR_SIN_RESPUESTA,
+  $unknown;
+
+  factory Enum$MotivoNoConfirmada.fromJson(String value) =>
+      fromJson$Enum$MotivoNoConfirmada(value);
+
+  String toJson() => toJson$Enum$MotivoNoConfirmada(this);
+}
+
+String toJson$Enum$MotivoNoConfirmada(Enum$MotivoNoConfirmada e) {
+  switch (e) {
+    case Enum$MotivoNoConfirmada.PRESTADOR_SIN_RESPUESTA:
+      return r'PRESTADOR_SIN_RESPUESTA';
+    case Enum$MotivoNoConfirmada.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$MotivoNoConfirmada fromJson$Enum$MotivoNoConfirmada(String value) {
+  switch (value) {
+    case r'PRESTADOR_SIN_RESPUESTA':
+      return Enum$MotivoNoConfirmada.PRESTADOR_SIN_RESPUESTA;
+    default:
+      return Enum$MotivoNoConfirmada.$unknown;
+  }
+}
+
+enum Enum$CodigoErrorAsistencia {
+  PRESTADOR_NO_DISPONIBLE,
+  TIPO_NO_ATENDIDO,
+  DATOS_INVALIDOS,
+  NO_ENCONTRADA,
+  $unknown;
+
+  factory Enum$CodigoErrorAsistencia.fromJson(String value) =>
+      fromJson$Enum$CodigoErrorAsistencia(value);
+
+  String toJson() => toJson$Enum$CodigoErrorAsistencia(this);
+}
+
+String toJson$Enum$CodigoErrorAsistencia(Enum$CodigoErrorAsistencia e) {
+  switch (e) {
+    case Enum$CodigoErrorAsistencia.PRESTADOR_NO_DISPONIBLE:
+      return r'PRESTADOR_NO_DISPONIBLE';
+    case Enum$CodigoErrorAsistencia.TIPO_NO_ATENDIDO:
+      return r'TIPO_NO_ATENDIDO';
+    case Enum$CodigoErrorAsistencia.DATOS_INVALIDOS:
+      return r'DATOS_INVALIDOS';
+    case Enum$CodigoErrorAsistencia.NO_ENCONTRADA:
+      return r'NO_ENCONTRADA';
+    case Enum$CodigoErrorAsistencia.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$CodigoErrorAsistencia fromJson$Enum$CodigoErrorAsistencia(String value) {
+  switch (value) {
+    case r'PRESTADOR_NO_DISPONIBLE':
+      return Enum$CodigoErrorAsistencia.PRESTADOR_NO_DISPONIBLE;
+    case r'TIPO_NO_ATENDIDO':
+      return Enum$CodigoErrorAsistencia.TIPO_NO_ATENDIDO;
+    case r'DATOS_INVALIDOS':
+      return Enum$CodigoErrorAsistencia.DATOS_INVALIDOS;
+    case r'NO_ENCONTRADA':
+      return Enum$CodigoErrorAsistencia.NO_ENCONTRADA;
+    default:
+      return Enum$CodigoErrorAsistencia.$unknown;
+  }
+}
+
+enum Enum$OrigenUbicacion {
+  GPS,
+  DIRECCION,
+  $unknown;
+
+  factory Enum$OrigenUbicacion.fromJson(String value) =>
+      fromJson$Enum$OrigenUbicacion(value);
+
+  String toJson() => toJson$Enum$OrigenUbicacion(this);
+}
+
+String toJson$Enum$OrigenUbicacion(Enum$OrigenUbicacion e) {
+  switch (e) {
+    case Enum$OrigenUbicacion.GPS:
+      return r'GPS';
+    case Enum$OrigenUbicacion.DIRECCION:
+      return r'DIRECCION';
+    case Enum$OrigenUbicacion.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$OrigenUbicacion fromJson$Enum$OrigenUbicacion(String value) {
+  switch (value) {
+    case r'GPS':
+      return Enum$OrigenUbicacion.GPS;
+    case r'DIRECCION':
+      return Enum$OrigenUbicacion.DIRECCION;
+    default:
+      return Enum$OrigenUbicacion.$unknown;
+  }
+}
+
+enum Enum$CodigoUbicacion {
+  DIRECCION_NO_ENCONTRADA,
+  SERVICIO_NO_DISPONIBLE,
+  $unknown;
+
+  factory Enum$CodigoUbicacion.fromJson(String value) =>
+      fromJson$Enum$CodigoUbicacion(value);
+
+  String toJson() => toJson$Enum$CodigoUbicacion(this);
+}
+
+String toJson$Enum$CodigoUbicacion(Enum$CodigoUbicacion e) {
+  switch (e) {
+    case Enum$CodigoUbicacion.DIRECCION_NO_ENCONTRADA:
+      return r'DIRECCION_NO_ENCONTRADA';
+    case Enum$CodigoUbicacion.SERVICIO_NO_DISPONIBLE:
+      return r'SERVICIO_NO_DISPONIBLE';
+    case Enum$CodigoUbicacion.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$CodigoUbicacion fromJson$Enum$CodigoUbicacion(String value) {
+  switch (value) {
+    case r'DIRECCION_NO_ENCONTRADA':
+      return Enum$CodigoUbicacion.DIRECCION_NO_ENCONTRADA;
+    case r'SERVICIO_NO_DISPONIBLE':
+      return Enum$CodigoUbicacion.SERVICIO_NO_DISPONIBLE;
+    default:
+      return Enum$CodigoUbicacion.$unknown;
   }
 }
 
@@ -2991,6 +4743,10 @@ const possibleTypesMap = <String, Set<String>>{
   'ResultadoInicioPago': {'SesionPago', 'ErrorPago'},
   'ResultadoPago': {'Poliza', 'ErrorPago'},
   'ResultadoSesion': {'Sesion', 'ErrorAutenticacion'},
+  'ResultadoRestablecimiento': {
+    'RestablecimientoExitoso',
+    'ErrorAutenticacion',
+  },
   'ResultadoUsuario': {'Usuario', 'ErrorUsuario'},
   'ResultadoSubidaArchivo': {'SubidaArchivo', 'ErrorArchivo'},
   'ResultadoArchivo': {'Archivo', 'ErrorArchivo'},
@@ -3001,4 +4757,6 @@ const possibleTypesMap = <String, Set<String>>{
   'ResultadoCuentaOnboarding': {'CuentaOnboarding', 'ErrorOnboarding'},
   'ResultadoCodigoOnboarding': {'CodigoOnboardingEnviado', 'ErrorOnboarding'},
   'ResultadoResolucion': {'Siniestro', 'ErrorSiniestro'},
+  'ResultadoReporteSiniestro': {'SiniestroReportado', 'ErrorSiniestro'},
+  'ResultadoAsistencia': {'Asistencia', 'ErrorAsistencia'},
 };

@@ -1,13 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/network_providers.dart';
-import '../data/datasources/biometria_service.dart';
+import '../../../core/network/subida_archivo_service.dart';
+import '../../../core/push/instalacion_id.dart';
 import '../data/datasources/captura_service.dart';
 import '../data/datasources/fake_onboarding_remote_datasource.dart';
 import '../data/datasources/onboarding_remote_datasource.dart';
-import '../data/datasources/subida_archivo_service.dart';
 import '../data/repositories/onboarding_repository_impl.dart';
 import '../domain/repositories/onboarding_repository.dart';
+
+export '../../../core/biometria/biometria_providers.dart'
+    show biometriaServiceProvider;
 
 /// Con `API_ENV=mock` el fake del BFF; si no, el real (contrato v0.21).
 final fakeOnboardingProvider = Provider<FakeOnboardingRemoteDataSource>(
@@ -17,7 +20,10 @@ final fakeOnboardingProvider = Provider<FakeOnboardingRemoteDataSource>(
 final onboardingRemoteDataSourceProvider = Provider<OnboardingRemoteDataSource>(
   (ref) => ref.watch(usarFakesProvider)
       ? ref.watch(fakeOnboardingProvider)
-      : GqlOnboardingRemoteDataSource(ref.watch(graphqlClientProvider)),
+      : GqlOnboardingRemoteDataSource(
+          ref.watch(graphqlClientProvider),
+          instalacion: ref.watch(instalacionIdStoreProvider),
+        ),
 );
 
 final subidaArchivoServiceProvider = Provider<SubidaArchivoService>(
@@ -31,7 +37,7 @@ final onboardingRepositoryProvider = Provider<OnboardingRepository>(
   (ref) => OnboardingRepositoryImpl(
     ref.watch(onboardingRemoteDataSourceProvider),
     ref.watch(subidaArchivoServiceProvider),
-    ref.watch(sesionStoreProvider),
+    ref.watch(gestorSesionProvider),
   ),
 );
 
@@ -70,6 +76,14 @@ enum EstadoCamara {
 /// Solo para pruebas y goldens: fija el estado del visor sin abrir la cámara.
 final estadoCamaraForzadoProvider = Provider<EstadoCamara?>((ref) => null);
 
+/// Esperas entre intentos al cargar el perfil y el estado de la cuenta (al
+/// abrir la app o al desbloquear con la huella). Una falla de red o del
+/// servicio se reintenta; si no carga, el inicio ofrece «Reintentar» en vez de
+/// mostrar la cuenta como sin verificar.
+final esperasCargaPerfilProvider = Provider<List<Duration>>(
+  (ref) => const [Duration.zero, Duration(seconds: 1), Duration(seconds: 3)],
+);
+
 /// Cuándo consulta M01-06 el resultado: a los 3, 8 y 20 s (Didit tarda de 2 a
 /// 5 s). Después para y ofrece «Actualizar»: no sondea sin fin.
 final esperasVerificacionProvider = Provider<List<Duration>>(
@@ -78,10 +92,4 @@ final esperasVerificacionProvider = Provider<List<Duration>>(
     Duration(seconds: 5),
     Duration(seconds: 12),
   ],
-);
-
-final biometriaServiceProvider = Provider<BiometriaService>(
-  (ref) => ref.watch(usarFakesProvider)
-      ? FakeBiometriaService()
-      : LocalAuthBiometriaService(),
 );

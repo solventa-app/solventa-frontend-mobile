@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/biometria/biometria_providers.dart';
+import '../../../../core/biometria/biometria_service.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/l10n/l10n.dart';
@@ -11,8 +13,13 @@ import '../onboarding_routes.dart';
 
 /// M01-05b · Crea tu cuenta o Inicia sesión (plan de HU-M01).
 ///
+/// Es la entrada de la app y abre en **Iniciar sesión**; «¿No tienes cuenta?
+/// Crear cuenta» va debajo (QA 2026-11-10).
+///
 /// Permite:
-/// - **Crear cuenta**: correo + clave + confirmación. Si se activa desde el
+/// - **Crear cuenta**: correo + clave + confirmación. Los requisitos de la
+///   clave se ven desde el principio en un recuadro: cada uno se marca en verde
+///   al cumplirse y, si se intenta crear la cuenta sin cumplirlo, en rojo. Si se activa desde el
 ///   inicio o con el enlace de verificación por correo, envía un código OTP de
 ///   6 dígitos a `M0105cCodigoPage`; en el flujo continuo tras la prueba de
 ///   vida crea la cuenta directamente y sigue a `M01-06`.
@@ -32,6 +39,7 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
 
   final _correo = TextEditingController();
   final _clave = TextEditingController();
+  final _confirmacion = TextEditingController();
   bool _validar = false;
   late bool _modoLogin = widget.modoInicialLogin;
 
@@ -39,6 +47,7 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
   void dispose() {
     _correo.dispose();
     _clave.dispose();
+    _confirmacion.dispose();
     super.dispose();
   }
 
@@ -59,9 +68,29 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
     return _regla.cumple ? null : l10n.m0105bErrorContrasena;
   }
 
+  /// Se avisa en cuanto lo escrito deja de coincidir, sin esperar a enviar:
+  /// mientras la confirmación sea el comienzo de la clave, todavía va bien.
+  String? _errorConfirmacion(AppLocalizations l10n) {
+    if (_modoLogin) return null;
+    final confirmacion = _confirmacion.text;
+    if (confirmacion == _clave.text) return null;
+    final divergio =
+        confirmacion.isNotEmpty && !_clave.text.startsWith(confirmacion);
+    return _validar || divergio ? l10n.m0105bErrorConfirmar : null;
+  }
+
+  Future<void> _entrarConHuella(AppLocalizations l10n) async {
+    final ok = await ref
+        .read(onboardingProvider.notifier)
+        .iniciarSesionConHuella(motivo: l10n.accesoBiometricoMotivo);
+    if (ok && mounted) context.go('/');
+  }
+
   Future<void> _enviar(AppLocalizations l10n) async {
     setState(() => _validar = true);
-    if (_errorCorreo(l10n) != null || _errorClave(l10n) != null) {
+    if (_errorCorreo(l10n) != null ||
+        _errorClave(l10n) != null ||
+        _errorConfirmacion(l10n) != null) {
       return;
     }
     final notifier = ref.read(onboardingProvider.notifier);
@@ -90,6 +119,7 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
     // Crear cuenta e iniciar sesión no comparten lo escrito ni sus errores.
     _correo.clear();
     _clave.clear();
+    _confirmacion.clear();
     setState(() {
       _modoLogin = !_modoLogin;
       _validar = false;
@@ -117,7 +147,7 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              _modoLogin ? l10n.cuentaIntroIngresar : l10n.m0105bIntro,
+              _modoLogin ? l10n.cuentaIntroIngresar : l10n.cuentaIntroCrear,
               style: context.solText.body.copyWith(
                 color: context.colors.onSurface,
               ),
@@ -141,42 +171,45 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
               label: l10n.m0105bContrasena,
               controller: _clave,
               obscureText: true,
-              textInputAction: TextInputAction.done,
+              textInputAction: _modoLogin
+                  ? TextInputAction.done
+                  : TextInputAction.next,
               autofillHints: [
                 _modoLogin ? AutofillHints.password : AutofillHints.newPassword,
               ],
               onChanged: (_) => setState(() {}),
-              errorText: _validar ? _errorClave(l10n) : null,
+              // Al crear, el recuadro de requisitos ya dice qué falta.
+              errorText: _validar && _modoLogin ? _errorClave(l10n) : null,
             ),
             if (!_modoLogin) ...[
+              const SizedBox(height: SolSpacing.sm),
+              _RequisitosClave(regla: _regla, marcarFaltantes: _validar),
+              const SizedBox(height: SolSpacing.lg),
+              SolTextField(
+                label: l10n.m0105bConfirmar,
+                controller: _confirmacion,
+                obscureText: true,
+                textInputAction: TextInputAction.done,
+                autofillHints: const [AutofillHints.newPassword],
+                onChanged: (_) => setState(() {}),
+                errorText: _errorConfirmacion(l10n),
+                helperText:
+                    _confirmacion.text.isNotEmpty &&
+                        _confirmacion.text == _clave.text
+                    ? l10n.m0105bClavesCoinciden
+                    : null,
+              ),
+            ],
+            if (_modoLogin) ...[
               const SizedBox(height: SolSpacing.xs),
-              _RequisitoClave(
-                texto: l10n.m0105bReqLargo,
-                estado: _regla.largo
-                    ? l10n.m0105bRequisitoCumplido
-                    : l10n.m0105bRequisitoPendiente,
-                cumplido: _regla.largo,
-              ),
-              _RequisitoClave(
-                texto: l10n.m0105bReqMayuscula,
-                estado: _regla.mayuscula
-                    ? l10n.m0105bRequisitoCumplido
-                    : l10n.m0105bRequisitoPendiente,
-                cumplido: _regla.mayuscula,
-              ),
-              _RequisitoClave(
-                texto: l10n.m0105bReqMinuscula,
-                estado: _regla.minuscula
-                    ? l10n.m0105bRequisitoCumplido
-                    : l10n.m0105bRequisitoPendiente,
-                cumplido: _regla.minuscula,
-              ),
-              _RequisitoClave(
-                texto: l10n.m0105bReqEspecial,
-                estado: _regla.especial
-                    ? l10n.m0105bRequisitoCumplido
-                    : l10n.m0105bRequisitoPendiente,
-                cumplido: _regla.especial,
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: SolLinkButton(
+                  label: l10n.cuentaOlvideClave,
+                  onPressed: estado.ocupado
+                      ? null
+                      : () => context.push(OnboardingRoutes.recuperarClave),
+                ),
               ),
             ],
             if (falla != null && !correoRegistrado) ...[
@@ -193,8 +226,21 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
         SolButton.primary(
           label: _modoLogin ? l10n.cuentaBotonIngresar : l10n.m0105bCrear,
           loading: estado.ocupado,
-          onPressed: _modoLogin || _regla.cumple ? () => _enviar(l10n) : null,
+          // Siempre activo: un botón apagado no explica qué falta; al tocarlo
+          // se marcan en rojo los requisitos pendientes.
+          onPressed: () => _enviar(l10n),
         ),
+        if (_modoLogin &&
+            (ref.watch(accesoBiometricoDisponibleProvider).value ?? false)) ...[
+          const SizedBox(height: SolSpacing.sm),
+          SolButton.tonal(
+            label: l10n.cuentaIngresarConHuella(
+              (ref.watch(tipoBiometriaProvider).value ?? TipoBiometria.huella)
+                  .clave,
+            ),
+            onPressed: estado.ocupado ? null : () => _entrarConHuella(l10n),
+          ),
+        ],
         const SizedBox(height: SolSpacing.sm),
         Center(
           child: SolLinkButton(
@@ -209,38 +255,100 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
   }
 }
 
-/// Requisito de la clave con ✓ cuando se cumple (no solo color: ícono y texto).
-class _RequisitoClave extends StatelessWidget {
-  const _RequisitoClave({
-    required this.texto,
-    required this.estado,
-    required this.cumplido,
-  });
+/// Los requisitos de la clave en un recuadro, visibles desde el principio.
+///
+/// Tres estados por requisito, siempre con ícono y texto (no solo color):
+/// pendiente (círculo vacío, gris), cumplido (✓ verde) y, tras intentar crear
+/// la cuenta sin cumplirlo, faltante (✕ rojo).
+class _RequisitosClave extends StatelessWidget {
+  const _RequisitosClave({required this.regla, required this.marcarFaltantes});
 
-  final String texto;
-
-  /// Lo que lee el lector de pantalla junto al requisito («cumplido» / «pendiente»).
-  final String estado;
-  final bool cumplido;
+  final ReglaClave regla;
+  final bool marcarFaltantes;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colors = context.colors;
-    final color = cumplido ? colors.primary : colors.onSurfaceVariant;
+    final incompleto = marcarFaltantes && !regla.cumple;
+    return Container(
+      padding: const EdgeInsets.all(SolSpacing.md),
+      decoration: BoxDecoration(
+        color: incompleto ? colors.errorContainer : colors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(SolRadius.field),
+        border: Border.all(
+          color: incompleto ? colors.error : colors.outlineVariant,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l10n.m0105bReqTitulo,
+            style: context.solText.note.copyWith(
+              color: colors.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: SolSpacing.xs),
+          for (final (texto, cumplido) in [
+            (l10n.m0105bReqLargo, regla.largo),
+            (l10n.m0105bReqMayuscula, regla.mayuscula),
+            (l10n.m0105bReqMinuscula, regla.minuscula),
+            (l10n.m0105bReqEspecial, regla.especial),
+          ])
+            _RequisitoClave(
+              texto: texto,
+              estado: cumplido
+                  ? _EstadoRequisito.cumplido
+                  : marcarFaltantes
+                  ? _EstadoRequisito.faltante
+                  : _EstadoRequisito.pendiente,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+enum _EstadoRequisito { pendiente, cumplido, faltante }
+
+/// Un requisito: ícono, texto y lo que lee el lector de pantalla.
+class _RequisitoClave extends StatelessWidget {
+  const _RequisitoClave({required this.texto, required this.estado});
+
+  final String texto;
+  final _EstadoRequisito estado;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.colors;
+    final (icono, color, lectura) = switch (estado) {
+      _EstadoRequisito.cumplido => (
+        SolIcons.success,
+        context.solColors.success,
+        l10n.m0105bRequisitoCumplido,
+      ),
+      _EstadoRequisito.faltante => (
+        SolIcons.failure,
+        colors.error,
+        l10n.m0105bRequisitoIncumplido,
+      ),
+      _EstadoRequisito.pendiente => (
+        SolIcons.requisitoPendiente,
+        colors.onSurfaceVariant,
+        l10n.m0105bRequisitoPendiente,
+      ),
+    };
     return Semantics(
-      label: '$texto, $estado',
+      label: '$texto, $lectura',
       excludeSemantics: true,
       child: Padding(
-        padding: const EdgeInsets.only(left: SolSpacing.xs),
+        padding: const EdgeInsets.symmetric(vertical: SolSpacing.xxs),
         child: Row(
           children: [
-            ExcludeSemantics(
-              child: Icon(
-                cumplido ? SolIcons.success : SolIcons.pendingRegistration,
-                size: 16,
-                color: color,
-              ),
-            ),
+            Icon(icono, size: 18, color: color),
             const SizedBox(width: SolSpacing.xs),
             Expanded(
               child: Text(

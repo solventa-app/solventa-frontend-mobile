@@ -38,10 +38,12 @@ abstract final class OnboardingFixtures {
     String rol = 'CLIENTE',
     String estado = 'ACTIVO',
     String? documentoEnmascarado = '••••••4050',
+    String? correo = 'maria@ejemplo.co',
     String creadoEn = '2026-10-28T15:00:00.000Z',
     String idioma = 'ES',
     String moneda = 'COP',
     bool tieneContacto = true,
+    bool notificacionesPush = true,
   }) => {
     '__typename': 'Usuario',
     'id': id,
@@ -50,10 +52,12 @@ abstract final class OnboardingFixtures {
     'rol': rol,
     'estado': estado,
     'documentoEnmascarado': documentoEnmascarado,
+    'correo': correo,
     'creadoEn': creadoEn,
     'idioma': idioma,
     'moneda': moneda,
     'tieneContacto': tieneContacto,
+    'notificacionesPush': notificacionesPush,
   };
 
   static final iniciar = <String, dynamic>{
@@ -88,6 +92,15 @@ abstract final class OnboardingFixtures {
     },
   };
 
+  /// El token del recorrido (30 min) ya venció.
+  static final subidaTokenInvalido = <String, dynamic>{
+    '__typename': 'Mutation',
+    'solicitarSubidaOnboarding': {
+      '__typename': 'ErrorOnboarding',
+      'codigo': 'TOKEN_INVALIDO',
+    },
+  };
+
   static final confirmar = <String, dynamic>{
     '__typename': 'Mutation',
     'confirmarSubidaOnboarding': onboarding(),
@@ -101,6 +114,8 @@ abstract final class OnboardingFixtures {
         '__typename': 'Sesion',
         'token': 'jwt-demo-verificacion-pendiente',
         'expiraEn': '2026-10-28T16:00:00.000Z',
+        'refreshToken': 'refresh-demo-cuenta',
+        'refreshExpiraEn': '2099-12-31T00:00:00.000Z',
       },
       'onboarding': onboarding(estado: 'EN_VERIFICACION'),
     },
@@ -111,6 +126,7 @@ abstract final class OnboardingFixtures {
     'crearCuentaOnboarding': {
       '__typename': 'ErrorOnboarding',
       'codigo': 'CORREO_YA_REGISTRADO',
+      'segundosRestantes': null,
     },
   };
 
@@ -148,6 +164,17 @@ abstract final class OnboardingFixtures {
     'enviarCodigoOnboarding': codigoEnviado(),
   };
 
+  /// `enviarCodigoOnboarding` rechazado con `ESPERA_REQUERIDA` y los segundos
+  /// que faltan (contrato v0.31).
+  static Map<String, dynamic> enviarCodigoEspera(int segundosRestantes) => {
+    '__typename': 'Mutation',
+    'enviarCodigoOnboarding': {
+      '__typename': 'ErrorOnboarding',
+      'codigo': 'ESPERA_REQUERIDA',
+      'segundosRestantes': segundosRestantes,
+    },
+  };
+
   static final verificarCodigo = <String, dynamic>{
     '__typename': 'Mutation',
     'verificarCodigoOnboarding': codigoEnviado(),
@@ -158,18 +185,23 @@ abstract final class OnboardingFixtures {
     'verificarCodigoOnboarding': {
       '__typename': 'ErrorOnboarding',
       'codigo': 'CODIGO_INVALIDO',
+      'segundosRestantes': null,
     },
   };
 
-  static final iniciarSesion = <String, dynamic>{
+  static Map<String, dynamic> iniciarSesionConRol(String rol) => {
     '__typename': 'Mutation',
     'iniciarSesion': {
       '__typename': 'Sesion',
       'token': 'jwt-demo-completo',
       'expiraEn': '2026-10-28T16:00:00.000Z',
-      'usuario': usuario(),
+      'refreshToken': 'refresh-demo-login',
+      'refreshExpiraEn': '2099-12-31T00:00:00.000Z',
+      'usuario': usuario(rol: rol),
     },
   };
+
+  static final iniciarSesion = iniciarSesionConRol('CLIENTE');
 
   static Map<String, dynamic> yo([Map<String, dynamic>? u]) => {
     '__typename': 'Query',

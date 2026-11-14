@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sentry_dio/sentry_dio.dart';
 
 import '../config/app_config.dart';
+import '../l10n/l10n.dart';
+import '../sesion/gestor_sesion.dart';
+import '../sesion/llavero_sesion.dart';
+import '../sesion/sesion_remota.dart';
 import '../sesion/sesion_store.dart';
 import 'graphql_client.dart';
 
@@ -35,22 +39,66 @@ final dioProvider = Provider<Dio>((ref) {
   return dio;
 });
 
-/// Dónde se guarda el JWT: almacenamiento seguro del dispositivo; con
-/// `API_ENV=mock`, solo memoria (sin backend no hay sesión real).
-final sesionStoreProvider = Provider<SesionStore>(
-  (ref) =>
-      ref.watch(usarFakesProvider) ? MemoriaSesionStore() : SecureSesionStore(),
+/// Par RSA del Keystore que protege el refresh (HU-M02). Una llave por
+/// ambiente; con `API_ENV=mock`, un llavero en memoria.
+final llaveroSesionProvider = Provider<LlaveroSesion>(
+  (ref) => ref.watch(usarFakesProvider)
+      ? LlaveroSesionMemoria()
+      : LlaveroSesionNativo(
+          alias: '${ref.watch(apiEnvProvider)}.solventa.sesion.llave',
+        ),
 );
 
-/// Lector del JWT de la sesión guardada (o `null` sin sesión).
-final lectorTokenProvider = Provider<LectorToken>((ref) {
-  final store = ref.watch(sesionStoreProvider);
-  return store.leer;
-});
+/// Dónde se guarda el refresh cifrado: almacenamiento seguro del dispositivo
+/// con prefijo de ambiente; con `API_ENV=mock`, solo memoria.
+final sesionStoreProvider = Provider<SesionStore>(
+  (ref) => ref.watch(usarFakesProvider)
+      ? MemoriaSesionStore()
+      : SecureSesionStore(
+          ref.watch(llaveroSesionProvider),
+          ambiente: ref.watch(apiEnvProvider),
+        ),
+);
 
-final graphqlClientProvider = Provider<GraphqlClient>(
+/// Cliente para `renovarSesion` y `cerrarSesion`: sin token ni renovación
+/// automática (si renovar falla por sesión, no se vuelve a renovar).
+final graphqlClientSesionProvider = Provider<GraphqlClient>(
   (ref) => GraphqlClient(
     ref.watch(dioProvider),
-    leerToken: ref.watch(lectorTokenProvider),
+    leerIdioma: () => ref.read(localeProvider).languageCode,
   ),
 );
+
+final sesionRemotaProvider = Provider<SesionRemota>(
+  (ref) => ref.watch(usarFakesProvider)
+      ? FakeSesionRemota()
+      : GqlSesionRemota(ref.watch(graphqlClientSesionProvider)),
+);
+
+/// Dueño de la sesión: JWT y refresh en memoria, refresh cifrado en disco,
+/// renovación con candado y período de gracia.
+final gestorSesionProvider = Provider<GestorSesion>((ref) {
+  final gestor = GestorSesion(
+    store: ref.watch(sesionStoreProvider),
+    remota: ref.watch(sesionRemotaProvider),
+  );
+  ref.onDispose(gestor.dispose);
+  return gestor;
+});
+
+/// Lector del JWT de la sesión abierta (o `null` sin sesión).
+final lectorTokenProvider = Provider<LectorToken>((ref) {
+  final gestor = ref.watch(gestorSesionProvider);
+  return () async => gestor.token;
+});
+
+final graphqlClientProvider = Provider<GraphqlClient>((ref) {
+  final gestor = ref.watch(gestorSesionProvider);
+  return GraphqlClient(
+    ref.watch(dioProvider),
+    leerIdioma: () => ref.read(localeProvider).languageCode,
+    leerToken: ref.watch(lectorTokenProvider),
+    renovarSesion: () async =>
+        await gestor.renovar() == ResultadoRenovar.renovada,
+  );
+});

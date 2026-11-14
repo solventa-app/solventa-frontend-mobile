@@ -121,9 +121,9 @@ extension FallaTextoX on AppLocalizations {
     SinConexion() => fallaSinConexion,
     ServicioNoDisponible() => fallaServicio,
     SesionVencida() => fallaSesionVencida,
+    SeguridadTelefonoCambio() => fallaSeguridadTelefono,
     SinPermiso() => fallaSinPermiso,
-    FallaNegocio(motivo: 'TOKEN_INVALIDO' || 'SIN_ONBOARDING') =>
-      fallaRegistroVencido,
+    FallaNegocio(registroVencido: true) => fallaRegistroVencido,
     FallaNegocio(motivo: 'ALMACENAMIENTO_NO_DISPONIBLE' || 'NO_DISPONIBLE') =>
       fallaAlmacenamiento,
     FallaNegocio(motivo: 'OBJETO_NO_SUBIDO') => fallaObjetoNoSubido,
@@ -141,6 +141,7 @@ extension FallaTextoX on AppLocalizations {
     FallaNegocio(motivo: 'CLAVE_DEBIL') => m0105bErrorContrasena,
     FallaNegocio(motivo: 'CREDENCIALES_INVALIDAS') =>
       fallaCredencialesInvalidas,
+    FallaNegocio(motivo: 'DISPOSITIVO_NO_VALIDO') => fallaDispositivoNoValido,
     FallaNegocio(motivo: 'CAMARA_NO_DISPONIBLE') => fallaCamaraNoDisponible,
     FallaNegocio(motivo: 'ROSTRO_NO_COINCIDE') => m0107cRostro,
     FallaNegocio(motivo: 'SUPLANTACION') => m0107cSuplantacion,

@@ -24,23 +24,25 @@
   "m0104Consejo": "Avoid direct glare and strong shadows over the barcode and fingerprint.",
   "m0104Calidad": "Good focus and lighting",
   "m0105Titulo": "Liveness check",
-  "m0105Instruccion": "Slowly turn your face inside the frame (front camera)",
+  "m0105Instruccion": "Place your face inside the circle. When you tap “Record video” we'll record 3 seconds: slowly move your head from side to side.",
   "verificacionTitulo": "Verification",
   "m0106Validando": "Checking with the KYC/AML provider...",
   "m0107aMensaje": "Identity verified! Welcome to Solventa.",
-  "m0107aAccion": "Go to my account",
+  "m0107aAccion": "Turn on fingerprint or face unlock",
   "m0107bMensaje": "We're reviewing your identity, we'll let you know.",
   "m0107bAccion": "Got it",
   "m0107cMensaje": "We couldn't verify your document (unreadable image)",
   "reintentar": "Try again",
   "m0108Titulo": "Activation",
-  "m0108Encabezado": "We need to turn on your fingerprint or face unlock",
-  "m0108Explicacion": "Solventa protects your account with your phone's own security: to continue, your phone must have fingerprint or face unlock turned on. It's the same one you use to unlock your phone — Solventa never sees or stores that data.",
+  "m0108Encabezado": "{tipo, select, huella{Turn on your fingerprint} rostro{Turn on your face} bloqueo{Turn on your phone lock} other{Turn on your phone's security}}",
+  "m0108Explicacion": "{tipo, select, huella{Get in faster without typing your password. We'll ask for your fingerprint just once.} rostro{Get in faster without typing your password. We'll ask for your face just once.} bloqueo{Get in faster without typing your password. We'll ask for your phone lock just once.} other{Get in faster without typing your password. We'll ask for your phone's security just once.}}",
   "m0108Sello": "Biometric check encrypted on your device",
   "m0108Ajustes": "Open phone settings",
   "m0108Continuar": "I turned it on, continue",
-  "m0108Requisito": "Without fingerprint or face unlock on the device the app can't be used — it's a requirement, not an option.",
-  "m0108NoActivada": "We still can't find fingerprint or face unlock on your phone.",
+  "m0108Activar": "{tipo, select, huella{Turn on fingerprint} rostro{Turn on face unlock} bloqueo{Turn on phone lock} other{Turn on phone security}}",
+  "m0108AhoraNo": "Not now, go to home",
+  "m0108AvisoLuego": "You can turn on your fingerprint or face unlock any time in My profile.",
+  "m0108Requisito": "You can turn it on later in your phone settings: Solventa will use it as soon as it is ready. Until then you will sign in with your email and password.",
   "fallaSinConexion": "You're offline. Check your connection and try again.",
   "fallaServicio": "The service took longer than expected. Please try again.",
   "fallaGenerica": "Something went wrong. Please try again.",
@@ -68,6 +70,10 @@
   "m0107cDocumentoRegistrado": "This document already has a Solventa account.",
   "m0107cSinIntentos": "There are no attempts left. Contact support so we can review your case.",
   "fallaRegistroVencido": "Your sign-up expired. Please start again.",
+  "fallaEmpezarDeNuevo": "Start over",
+  "@fallaEmpezarDeNuevo": {
+    "description": "Onboarding: acción del aviso cuando el registro venció (TOKEN_INVALIDO)"
+  },
   "fallaAlmacenamiento": "The document storage service is unavailable right now. Please try again.",
   "fallaObjetoNoSubido": "We couldn't receive your complete file. Check your connection and tap Retry upload.",
   "fallaTamanoNoAdmitido": "The file exceeds the maximum allowed size (5 MB ID photo, 2 MB selfie, 15 MB video).",
@@ -80,6 +86,7 @@
   "fallaIntentosAgotados": "You have no attempts left for this code or verification. Request a new one.",
   "fallaCredencialesInvalidas": "Incorrect email or password. Check them and try again.",
   "fallaSesionVencida": "Your session expired. Please sign in again.",
+  "fallaSeguridadTelefono": "Your phone's fingerprint, face or screen lock changed. For your security, sign in with your email and password.",
   "fallaSinPermiso": "You do not have permission to perform this operation.",
   "cuentaModoCrear": "Create account",
   "cuentaModoIngresar": "Sign in",
@@ -108,6 +115,9 @@
   "m0105bReqMayuscula": "One uppercase letter",
   "m0105bReqMinuscula": "One lowercase letter",
   "m0105bReqEspecial": "One special character (for example ! ? @ # €)",
+  "m0105bReqTitulo": "Your password needs:",
+  "m0105bRequisitoIncumplido": "missing",
+  "m0105bClavesCoinciden": "The passwords match.",
   "otpReenviado": "We sent a new code to your email.",
   "homeSaludoBienvenida": "Welcome to Solventa",
   "homeSaludoHola": "Hello, {nombre}",
@@ -120,6 +130,14 @@
   "homeRechazadaBoton": "Retry verification",
   "homeVerificadaTitulo": "Identity verified",
   "homeVerificadaTexto": "Your account is active and protected with biometric validation.",
+  "homeVerificadaWeb": "Your verification was successful. You can now also sign in to the Solventa website with the same email and password.",
+  "@homeVerificadaWeb": {
+    "description": "Home verificado: aviso de verificación exitosa y acceso a la web (T15)"
+  },
+  "homeSoloAppAviso": "Until your identity is verified you can only sign in to this app. The website will not let you in until you finish the verification here.",
+  "@homeSoloAppAviso": {
+    "description": "Home en revisión o rechazado: mientras no verifique, solo entra a la app (T15)"
+  },
   "homeAsistenciaTile": "Request on-site assistance",
   "homeBilleteraNota": "Wallet and policy status — coming soon",
   "navInicio": "Home",
@@ -160,7 +178,16 @@
   "perfilPreferenciasTexto": "Language and currency the app opens with every time you sign in.",
   "perfilGuardarPreferencias": "Save preferences",
   "perfilPreferenciasGuardadas": "Preferences saved.",
+  "perfilBiometria": "Phone fingerprint or face unlock",
+  "homeBiometriaPista": "Turn on your fingerprint or face unlock to sign in faster.",
+  "homeBiometriaActivar": "Turn on",
+  "homeBiometriaCerrar": "Dismiss",
+  "perfilBiometriaActiva": "On",
+  "perfilBiometriaInactiva": "Off · Tap to turn on",
   "perfilNotaLegal": "Your account details come from your verified ID document and are read only. Your personal data is processed under Colombian Law 1581 of 2012 (Habeas Data).",
+  "perfilNotificacionesPush": "Push notifications",
+  "perfilNotificacionesPushTexto": "Get notified when a payout is settled, among other things.",
+  "perfilNotificacionesPushError": "We couldn't save your preference. Try again.",
   "cerrarSesionTitulo": "Do you want to sign out?",
   "cerrarSesionMensaje": "You will need to sign in again to use Solventa.",
   "cerrarSesionConfirmar": "Yes, sign out",
@@ -184,5 +211,850 @@
   "camaraPermisoBloqueado": "You blocked camera access. Turn it on in Settings → Permissions → Camera and come back.",
   "camaraAbrirAjustes": "Open settings",
   "camaraNoDisponible": "We couldn't find an available camera on this device.",
-  "fallaCamaraNoDisponible": "We couldn't use the camera. Check the camera permission and try again."
+  "fallaCamaraNoDisponible": "We couldn't use the camera. Check the camera permission and try again.",
+  "biometriaMotivo": "Confirm it's you to open Solventa",
+  "m0108SoloPin": "Your phone has no fingerprint or face registered. You can continue with your phone PIN, but we recommend adding a fingerprint.",
+  "m0108SinBloqueo": "Your phone has no screen lock. Turn on a PIN, pattern or fingerprint in settings to protect your account.",
+  "m0108NoDisponible": "We couldn't check your phone's security. Please try again.",
+  "m0108NoReconocido": "We didn't recognize you. Please try again.",
+  "m0108BloqueoTemporal": "Too many attempts. Wait a few seconds or use your phone PIN.",
+  "m0201Titulo": "Unlock your account",
+  "m0201Sensor": "Fingerprint or face",
+  "m0201Escanear": "Unlock with fingerprint or face",
+  "m0201IngresaHuella": "Sign in with your fingerprint",
+  "m0201IngresaRostro": "Sign in with your face",
+  "m0201IngresaSeguridad": "Sign in with your phone's security",
+  "m0201IngresaBloqueo": "Sign in with your phone's screen lock",
+  "m0201Motivo": "Unlock your Solventa account",
+  "m0201DialogoTitulo": "Unlock Solventa",
+  "m0201DialogoSubtitulo": "Confirm it's you",
+  "m0201DialogoCancelar": "Cancel",
+  "m0201UsarBloqueo": "Use your phone lock",
+  "m0201SimularNoReconoce": "Simulate biometrics not recognized",
+  "m0201Reintentar": "Try again",
+  "m0201SinRed": "No connection. Your session is still saved on this phone: try again when you're back online.",
+  "m0201BloqueoTemporal": "Too many attempts. Wait a few seconds or use your phone lock.",
+  "m0201BloqueoPermanente": "Your phone locked biometrics. Unlock it with your phone PIN, pattern or password.",
+  "m0201FaltaAutenticacion": "Your phone couldn't open your fingerprint or face. Use your phone lock.",
+  "m0201SinBloqueo": "Your phone no longer has a screen lock. Turn it on in settings or sign in with your email and password.",
+  "m0201NoDisponible": "Your phone can't verify your identity right now. Check settings or sign in with your email and password.",
+  "m0201IrAjustes": "Go to settings",
+  "m0201UsarCorreo": "Use email and password",
+  "m0201aTitulo": "We couldn't recognize you",
+  "m0201aMensaje": "We couldn't verify your fingerprint or face. Try again or use your phone lock.",
+  "m0203Titulo": "Access granted",
+  "m0203SaludoSinNombre": "Welcome back.",
+  "m0203Progreso": "Opening your account",
+  "m0203Saludo": "Welcome back, {nombre}.",
+  "m0601Titulo": "Nearby providers",
+  "@m0601Titulo": {
+    "description": "M06-01 encabezado de la hoja"
+  },
+  "m0601Disponibles": "{cantidad} available",
+  "@m0601Disponibles": {
+    "description": "M06-01 píldora del encabezado",
+    "placeholders": {
+      "cantidad": {
+        "type": "int"
+      }
+    }
+  },
+  "m0601Solicitar": "Request",
+  "@m0601Solicitar": {
+    "description": "M06-01 botón de cada fila"
+  },
+  "m0601TipoMedico": "Medical",
+  "@m0601TipoMedico": {
+    "description": "M06-01 especialidad médica"
+  },
+  "m0601TipoMecanico": "Mechanic",
+  "@m0601TipoMecanico": {
+    "description": "M06-01 especialidad mecánica"
+  },
+  "m0601TipoGrua": "Tow truck",
+  "@m0601TipoGrua": {
+    "description": "M06-01 tipo grúa (v0.49)"
+  },
+  "m0601Aliado": "Solventa partner",
+  "@m0601Aliado": {
+    "description": "M06-01 insignia del prestador aliado (v0.49)"
+  },
+  "m0601Buscando": "Looking for providers near you…",
+  "@m0601Buscando": {
+    "description": "M06-01 cargando"
+  },
+  "m0601SinPrestadores": "We don't have providers in your area yet.",
+  "@m0601SinPrestadores": {
+    "description": "M06-01 lista vacía"
+  },
+  "m0601Reintentar": "Try again",
+  "@m0601Reintentar": {
+    "description": "M06-01 reintentar"
+  },
+  "m0601TuUbicacion": "Your location",
+  "@m0601TuUbicacion": {
+    "description": "M06-01 lectura del pin del cliente"
+  },
+  "m0601RutaNoDisponible": "We couldn't find a maps app to open the route.",
+  "@m0601RutaNoDisponible": {
+    "description": "M06-01 sin app de mapas"
+  },
+  "m0601PinSemantica": "{nombre}, {tipo}, {tiempo}",
+  "@m0601PinSemantica": {
+    "description": "M06-01 lectura del pin del mapa; abre el detalle",
+    "placeholders": {
+      "nombre": {
+        "type": "String"
+      },
+      "tipo": {
+        "type": "String"
+      },
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601VerSatelite": "Show satellite",
+  "m0601VerCalles": "Show streets",
+  "m0601Recentrar": "Re-center on my location",
+  "m0601ExpandirLista": "Expand list",
+  "m0601ContraerLista": "Collapse list",
+  "m0601MasPrestadores": "More providers in your city",
+  "m0601Aproximado": "~{tiempo}",
+  "@m0601Aproximado": {
+    "description": "M06-01 tiempo aproximado de los que no son de los 3 (M9)",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DetalleTipo": "{tipo} · {especialidad}",
+  "@m0601DetalleTipo": {
+    "description": "Detalle del prestador (2.2): tipo y especialidad",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "especialidad": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DetalleLlegada": "{distancia} · arrives in {tiempo}",
+  "@m0601DetalleLlegada": {
+    "description": "Detalle del prestador (2.2): distancia y llegada",
+    "placeholders": {
+      "distancia": {
+        "type": "String"
+      },
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601SolicitarAsistencia": "Request assistance",
+  "m0601ComoLlegarBoton": "Get directions",
+  "m0601DireccionCopiada": "Address copied",
+  "m0601CopiarDireccion": "Long-press to copy the address",
+  "m0601Copiar": "Copy",
+  "m0601Cerrar": "Close",
+  "ubicacionExplicaTitulo": "We need your location",
+  "ubicacionExplicaTexto": "To show you the nearest providers and how long they take to arrive.",
+  "ubicacionPermitir": "Allow location",
+  "ubicacionNegadaTitulo": "We don't have your location",
+  "ubicacionNegadaTexto": "You can grant permission or type where you are. With the address we show you the same providers.",
+  "ubicacionAbrirAjustes": "Open Settings",
+  "gpsApagadoTitulo": "Your GPS is off",
+  "gpsApagadoTexto": "Turn on your phone's location to find providers near you.",
+  "gpsActivar": "Turn on location",
+  "direccionEscribir": "Type my address",
+  "direccionTitulo": "Where are you?",
+  "direccionCampo": "Address, city or landmark",
+  "direccionBuscar": "Search this address",
+  "direccionNoEncontrada": "We couldn't find that address. Try another one or a landmark",
+  "direccionServicioCaido": "We couldn't search addresses right now. Try again",
+  "direccionUsando": "Using: {direccion}",
+  "@direccionUsando": {
+    "description": "2.0 aviso sobre el mapa con la dirección escrita",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "direccionCambiar": "Change",
+  "direccionUsarActual": "Use my current location",
+  "direccionPinEtiqueta": "Typed address",
+  "homeReportarTile": "Report a claim",
+  "@homeReportarTile": {
+    "description": "Inicio: entrada a HU-M05"
+  },
+  "m05Titulo": "Report a claim",
+  "@m05Titulo": {
+    "description": "M05 título de la barra"
+  },
+  "m05Continuar": "Continue",
+  "@m05Continuar": {
+    "description": "M05 botón continuar"
+  },
+  "m05Reintentar": "Try again",
+  "@m05Reintentar": {
+    "description": "M05 reintentar"
+  },
+  "m0501Poliza": "Which policy?",
+  "@m0501Poliza": {
+    "description": "M05-01 sección póliza"
+  },
+  "m0501PolizaNumero": "Policy {numero}",
+  "@m0501PolizaNumero": {
+    "description": "M05-01 fila de póliza",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Vigencia": "Valid until {fecha}",
+  "@m0501Vigencia": {
+    "description": "M05-01 vigencia de la póliza",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501Cargando": "Looking for your policies…",
+  "@m0501Cargando": {
+    "description": "M05-01 cargando"
+  },
+  "m0501SinPolizas": "You have no issued car policies to report on.",
+  "@m0501SinPolizas": {
+    "description": "M05-01 sin pólizas"
+  },
+  "m0501Fecha": "When did it happen?",
+  "@m0501Fecha": {
+    "description": "M05-01 campo fecha"
+  },
+  "m0501FechaFuera": "That date is outside the policy's coverage period.",
+  "@m0501FechaFuera": {
+    "description": "M05-01 fecha fuera de vigencia"
+  },
+  "m0501FechaAntes": "Your policy started covering you on {desde}. Choose a date and time from then on.",
+  "@m0501FechaAntes": {
+    "description": "M05-01 fecha anterior al inicio de la vigencia",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501FechaElegir": "Choose the day and time",
+  "@m0501FechaElegir": {
+    "description": "M05-01 valor del campo fecha sin elegir"
+  },
+  "m0501ElegirPoliza": "First choose the affected policy.",
+  "@m0501ElegirPoliza": {
+    "description": "M05-01 ayuda del campo fecha sin póliza elegida"
+  },
+  "m0501CubreDesde": "Your policy covers from {desde}.",
+  "@m0501CubreDesde": {
+    "description": "M05-01 ayuda del campo fecha con el inicio de la vigencia",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      }
+    }
+  },
+  "m0502Titulo": "Photos of the damage",
+  "@m0502Titulo": {
+    "description": "M05-02 título"
+  },
+  "m0502Instruccion": "Take 1 to 3 photos of the damage. Each photo records where you took it.",
+  "@m0502Instruccion": {
+    "description": "M05-02 instrucción"
+  },
+  "m0502Tomar": "Take photo",
+  "@m0502Tomar": {
+    "description": "M05-02 botón de captura"
+  },
+  "m0502Contador": "{cantidad} of 3 photos",
+  "@m0502Contador": {
+    "description": "M05-02 contador de fotos",
+    "placeholders": {
+      "cantidad": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Quitar": "Remove photo {numero}",
+  "@m0502Quitar": {
+    "description": "M05-02 lectura del botón quitar",
+    "placeholders": {
+      "numero": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502Ubicada": "Location ready: your photos are geotagged.",
+  "@m0502Ubicada": {
+    "description": "M05-02 ubicación obtenida"
+  },
+  "m0502SinUbicacion": "We need your location to place the claim. Turn it on to continue.",
+  "@m0502SinUbicacion": {
+    "description": "M05-02 sin permiso de ubicación"
+  },
+  "m0502PermitirUbicacion": "Allow location",
+  "@m0502PermitirUbicacion": {
+    "description": "M05-02 reintentar permiso"
+  },
+  "m0502AbrirAjustes": "Open settings",
+  "@m0502AbrirAjustes": {
+    "description": "M05-02 abrir ajustes"
+  },
+  "m0502CamaraNoDisponible": "We couldn't use the camera. Check the camera permission and try again.",
+  "@m0502CamaraNoDisponible": {
+    "description": "M05-02 sin cámara"
+  },
+  "m0502Visor": "Camera viewfinder",
+  "@m0502Visor": {
+    "description": "M05-02 lectura del visor"
+  },
+  "m0503Titulo": "What happened?",
+  "@m0503Titulo": {
+    "description": "M05-03 título"
+  },
+  "m0503Relato": "Tell us what happened",
+  "@m0503Relato": {
+    "description": "M05-03 campo relato"
+  },
+  "m0503RelatoAyuda": "10 to 1000 characters.",
+  "@m0503RelatoAyuda": {
+    "description": "M05-03 ayuda del relato"
+  },
+  "m0503Lugar": "Where did it happen?",
+  "@m0503Lugar": {
+    "description": "M05-03 campo lugar"
+  },
+  "m0503LugarAyuda": "Address or landmark.",
+  "@m0503LugarAyuda": {
+    "description": "M05-03 ayuda del lugar"
+  },
+  "m0503Ciudad": "City",
+  "@m0503Ciudad": {
+    "description": "M05-03 campo ciudad"
+  },
+  "m0503Requerido": "Fill in this field.",
+  "@m0503Requerido": {
+    "description": "M05-03 campo obligatorio"
+  },
+  "m0503Enviar": "Send report",
+  "@m0503Enviar": {
+    "description": "M05-03 botón enviar"
+  },
+  "m0504Titulo": "Sending your report",
+  "@m0504Titulo": {
+    "description": "M05-04 título"
+  },
+  "m0504Mensaje": "We're uploading your photos and registering your case…",
+  "@m0504Mensaje": {
+    "description": "M05-04 mensaje"
+  },
+  "m0505Exito": "We received your report",
+  "@m0505Exito": {
+    "description": "M05-05 título de éxito"
+  },
+  "m0505ExitoMensaje": "Your case {radicado} is pending review. We'll get back to you by {fecha}.",
+  "@m0505ExitoMensaje": {
+    "description": "M05-05 mensaje de éxito",
+    "placeholders": {
+      "radicado": {
+        "type": "String"
+      },
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505Error": "We couldn't send your report",
+  "@m0505Error": {
+    "description": "M05-05 título de error"
+  },
+  "m0505VolverInicio": "Back to home",
+  "@m0505VolverInicio": {
+    "description": "M05-05 volver al inicio"
+  },
+  "m0505Revisar": "Review the report",
+  "@m0505Revisar": {
+    "description": "M05-05 volver a corregir"
+  },
+  "m0505FotoNoConfirmada": "One of the photos didn't upload correctly. Please take it again.",
+  "@m0505FotoNoConfirmada": {
+    "description": "M05-05 foto sin confirmar"
+  },
+  "homeMisSiniestrosTile": "My claims",
+  "@homeMisSiniestrosTile": {
+    "description": "Inicio: entrada a M05-06"
+  },
+  "homeMiCoberturaTile": "My coverage",
+  "@homeMiCoberturaTile": {
+    "description": "Inicio: entrada a M04-04 (HU-M04)"
+  },
+  "m0505VerMisSiniestros": "See my claims",
+  "@m0505VerMisSiniestros": {
+    "description": "M05-05 enlace a M05-06"
+  },
+  "m0506Titulo": "My claims",
+  "@m0506Titulo": {
+    "description": "M05-06 título"
+  },
+  "m0506Cargando": "Looking for your reports…",
+  "@m0506Cargando": {
+    "description": "M05-06 cargando"
+  },
+  "m0506Vacio": "You haven't reported any claims yet.",
+  "@m0506Vacio": {
+    "description": "M05-06 lista vacía"
+  },
+  "m0506Reportado": "Reported on {fecha} · {fotos, plural, =1{1 photo} other{{fotos} photos}}",
+  "@m0506Reportado": {
+    "description": "M05-06 fecha y fotos del caso",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506Pendiente": "Pending",
+  "@m0506Pendiente": {
+    "description": "M05-06 estado PENDIENTE"
+  },
+  "m0506PendienteDetalle": "We'll review it by {fecha}.",
+  "@m0506PendienteDetalle": {
+    "description": "M05-06 detalle PENDIENTE",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506EnRevision": "Under review",
+  "@m0506EnRevision": {
+    "description": "M05-06 estado EN_REVISION"
+  },
+  "m0506EnRevisionDetalle": "An adjuster is evaluating your case.",
+  "@m0506EnRevisionDetalle": {
+    "description": "M05-06 detalle EN_REVISION"
+  },
+  "m0506Aprobado": "Approved",
+  "@m0506Aprobado": {
+    "description": "M05-06 estado APROBADO"
+  },
+  "m0506AprobadoDetalle": "Your payout is being processed.",
+  "@m0506AprobadoDetalle": {
+    "description": "M05-06 detalle APROBADO"
+  },
+  "m0506Rechazado": "Rejected",
+  "@m0506Rechazado": {
+    "description": "M05-06 estado RECHAZADO"
+  },
+  "m0506RechazadoDetalle": "We sent you the reason and how to appeal.",
+  "@m0506RechazadoDetalle": {
+    "description": "M05-06 detalle RECHAZADO"
+  },
+  "m0602Titulo": "Request assistance",
+  "m0602PrestadorAsignado": "Assigned provider",
+  "m0602Tipo": "Type of assistance",
+  "m0602TipoMedica": "Medical",
+  "m0602TipoMecanica": "Mechanical",
+  "m0602TipoGrua": "Tow truck",
+  "m0602TipoElegir": "Choose an option",
+  "m0602AtencionInmediata": "Immediate attention",
+  "m0602AtencionInmediataTexto": "We are coordinating your request in real time",
+  "m0602UbicacionEscrita": "{direccion} (the address you typed)",
+  "@m0602UbicacionEscrita": {
+    "description": "M06-02 con la dirección escrita (S1)",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "m0602TipoRequerido": "Choose the type of assistance.",
+  "m0602TipoNoAtendido": "{nombre} doesn't handle this type of assistance. Choose another provider on the map.",
+  "m0602Descripcion": "Briefly describe what happened",
+  "m0602DescripcionHint": "E.g. chest pain, dizziness…",
+  "m0602TextoLargo": "Use {maximo} characters at most.",
+  "m0602UbicacionDetectada": "Location detected automatically: {coordenadas}",
+  "m0602TiempoLlegada": "Estimated arrival time: {tiempo}",
+  "m0602Enviar": "Send request",
+  "m0603Mensaje": "Confirming availability with {nombre}…",
+  "m0603bMensaje": "Resending your request to {nombre}…",
+  "m0604aTitulo": "Request confirmed",
+  "m0604aMensajeSinTiempo": "{nombre} is on the way to the address you entered.",
+  "m0604aMensaje": "{nombre} is on the way. Estimated arrival in {minutos} minutes.",
+  "m0604aVerMapa": "View on the map",
+  "m0604aCancelar": "Cancel assistance",
+  "m0604aCancelarFallo": "We couldn't cancel the assistance. Please try again.",
+  "m0604bTitulo": "We couldn't confirm your request",
+  "m0604bSinRespuesta": "{nombre} didn't respond in time. You can choose another provider or try again.",
+  "m0604bNoDisponible": "{nombre} is no longer available. Choose another nearby provider.",
+  "m0604bElegirOtro": "Choose another provider",
+  "m0604bReintentar": "Try again",
+  "m0605Titulo": "Are you sure you want to cancel?",
+  "m0605Mensaje": "{nombre} is already on the way. If you cancel now, you'll have to request assistance again from scratch.",
+  "m0605Confirmar": "Yes, cancel",
+  "m0605Mantener": "No, keep request",
+  "m0606Titulo": "Cancel assistance",
+  "m0606Mensaje": "Your request was cancelled. The assigned service no longer applies and there will be no charges for this request.",
+  "m0606VolverInicio": "Back to home",
+  "m0606SolicitarDeNuevo": "Request again",
+  "navMisAsistencias": "My requests",
+  "navMisAsistenciasEnCamino": "My requests, {cantidad} on the way",
+  "@navMisAsistenciasEnCamino": {
+    "description": "TalkBack del destino con badge (4.1)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasTitulo": "My requests",
+  "misAsistenciasVacio": "You haven't requested assistance yet",
+  "misAsistenciasSolicitar": "Request on-site assistance",
+  "misAsistenciasEnCamino": "On the way ({cantidad})",
+  "@misAsistenciasEnCamino": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasYaLlegaron": "Arrived ({cantidad})",
+  "@misAsistenciasYaLlegaron": {
+    "description": "4.1 acordeón (A7)",
+    "placeholders": {
+      "cantidad": {
+        "type": "String"
+      }
+    }
+  },
+  "misAsistenciasError": "We couldn't load your requests.",
+  "misAsistenciasCargando": "Loading your requests…",
+  "asistenciaPedida": "{tipo} · requested {hora}",
+  "@asistenciaPedida": {
+    "description": "4.2 subtítulo de la tarjeta",
+    "placeholders": {
+      "tipo": {
+        "type": "String"
+      },
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaEn": "Arrives in {minutos} min",
+  "@asistenciaLlegaEn": {
+    "description": "4.2 cuenta regresiva",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlegaMenosDeUno": "Arrives in less than 1 min",
+  "asistenciaHoraEstimada": "Estimated time {hora}",
+  "@asistenciaHoraEstimada": {
+    "description": "4.2 hora estimada",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLlego": "Arrived · {hora}",
+  "@asistenciaLlego": {
+    "description": "4.2 insignia ya llegó",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoConfirmada": "We couldn't confirm",
+  "asistenciaReintentar": "Try again",
+  "asistenciaEnCaminoLlega": "On the way · arrives in {minutos} min",
+  "@asistenciaEnCaminoLlega": {
+    "description": "4.4 estado en el detalle",
+    "placeholders": {
+      "minutos": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifTitulo": "Your assistance has arrived",
+  "asistenciaNotifCuerpo": "{prestador} should be at your location now",
+  "@asistenciaNotifCuerpo": {
+    "description": "4.5 cuerpo de la notificación",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNotifNota": "We'll let you know when the provider arrives.",
+  "asistenciaLlegoSnack": "{prestador} has arrived",
+  "@asistenciaLlegoSnack": {
+    "description": "4.5 aviso con la app abierta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaVer": "View",
+  "asistenciaDetalleTitulo": "Your assistance",
+  "asistenciaTeAlejaste": "You moved away from where you requested assistance. The provider is going to {direccion}",
+  "@asistenciaTeAlejaste": {
+    "description": "4.4b aviso",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaLugarPedido": "the place where you requested it",
+  "asistenciaCancelarYPedirOtra": "Cancel and request another",
+  "asistenciaLectura": "{prestador}, {tipo}, {estado}",
+  "@asistenciaLectura": {
+    "description": "4.2 lectura de TalkBack de la tarjeta",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      },
+      "tipo": {
+        "type": "String"
+      },
+      "estado": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaNoEncontrada": "We couldn't find that request.",
+  "m0402Titulo": "Payout",
+  "m0402Mensaje": "Your payout is on its way!",
+  "m0402Monto": "{monto} deposited",
+  "m0402Cuenta": "Paid via {metodo}",
+  "m0402VerDetalle": "See details",
+  "m0402Cargando": "Loading your payout…",
+  "m0403Titulo": "Payout details",
+  "m0403EventoRetrasoVuelo": "Event detected: flight {ref} delayed ({detalle})",
+  "m0403EventoCancelacionVuelo": "Event detected: flight {ref} cancelled",
+  "m0403EventoLluvia": "Event detected: rainfall over the threshold in {ciudad} ({detalle})",
+  "m0403Indemnizacion": "Payout",
+  "m0403FechaEvento": "Event date",
+  "m0403FechaPago": "Payment date",
+  "m0403Cuenta": "Payment method",
+  "m0403Automatico": "Payment processed automatically",
+  "m0403Cerrar": "Close",
+  "m0404Titulo": "My coverage",
+  "m0404Cargando": "Loading your coverage…",
+  "m0404Producto": "{producto} · {estado}",
+  "m0404Vigente": "Active",
+  "m0404Vencida": "Expired",
+  "m0404Poliza": "Policy {numero} · until {fecha}",
+  "m0404Tope": "Coverage limit",
+  "m0404PorcentajeUsado": "{porcentaje}% of the limit used",
+  "m0404Disponible": "Available",
+  "m0404TotalIndemnizado": "Total paid out",
+  "m0404TotalDetalle": "Sum of {pagos, plural, =1{the payment you've received} other{the {pagos} payments you've received}} since {mes}, across all your policies.",
+  "m0404Depositado": "Paid via {metodo}",
+  "m0404SaldoFavor": "+ {monto} in your favor",
+  "m0404SaldoFavorDetalle": "Premium adjustment for {mes}. It will be deducted from your next charge.",
+  "m0404SaldoContra": "− {monto} pending",
+  "m0404SaldoContraDetalle": "Premium difference for {mes}. It will be added to your next charge.",
+  "m0404Movimientos": "Payouts",
+  "m0404Pagos": "{n, plural, =1{1 payment} other{{n} payments}}",
+  "m0404Pagado": "Paid",
+  "m0404EnProceso": "Processing",
+  "m0404PolizaAnterior": "previous policy",
+  "m0404Meta": "{fecha} · {detalle}",
+  "m0404Nota": "The limit resets with each renewal. Payouts from previous policies don't count against the current limit.",
+  "m0404Vacio": "You don't have any payouts yet.",
+  "m04Reintentar": "Try again",
+  "m04EventoRetrasoVuelo": "Flight {ref} delayed",
+  "m04EventoCancelacionVuelo": "Flight {ref} cancelled",
+  "m04EventoLluvia": "Rainfall over the threshold",
+  "m04DetalleLluvia": "{ciudad}, {detalle}",
+  "m0402CuentaSemantica": "Paid via {metodo}",
+  "m0501PolizaAuto": "Car {vehiculo}",
+  "m0501QuePaso": "What happened to the vehicle?",
+  "m0501ElegirTipo": "Choose what happened to the vehicle to continue.",
+  "m05TipoChoqueParcial": "Crash with repairable damage",
+  "m05TipoPerdidaTotal": "Total loss from a crash",
+  "m05TipoHurtoTotal": "My vehicle was stolen",
+  "m05TipoHurtoParcial": "Parts of my vehicle were stolen",
+  "m05TipoResponsabilidadCivil": "I damaged another person or vehicle",
+  "cuentaOlvideClave": "Forgot your password?",
+  "m0204Titulo": "Recover your password",
+  "m0204Intro": "Enter your account email and, if it exists, we will send you a link to choose a new password.",
+  "m0204Enviar": "Send link",
+  "m0204EnviadoTitulo": "Check your email",
+  "m0204EnviadoTexto": "If there is an account with that email, we sent you a link. Open it to choose your new password; it expires in 30 minutes and works only once.",
+  "m0204Volver": "Back to sign in",
+  "cuentaIngresarConHuella": "{tipo, select, huella{Sign in with fingerprint} rostro{Sign in with face} bloqueo{Sign in with your phone lock} other{Sign in with your phone's security}}",
+  "accesoBiometricoMotivo": "Confirm it's you to sign in to Solventa",
+  "accesoBiometricoActivarMotivo": "Confirm your fingerprint or face to sign in without typing your password",
+  "fallaDispositivoNoValido": "We could not verify this phone. Sign in with your email and password.",
+  "@m0105Instruccion": {
+    "description": "M01-05 instrucción antes de grabar"
+  },
+  "m0105Grabar": "Record video",
+  "@m0105Grabar": {
+    "description": "M01-05 botón que toma la selfie y graba el video"
+  },
+  "m0105Grabando": "Recording",
+  "@m0105Grabando": {
+    "description": "M01-05 etiqueta sobre el visor mientras graba"
+  },
+  "m0105GrabandoInstruccion": "Slowly move your head from side to side… {segundos}",
+  "@m0105GrabandoInstruccion": {
+    "description": "M01-05 instrucción mientras graba, con la cuenta regresiva",
+    "placeholders": {
+      "segundos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0105Capturado": "Done, we have your selfie and your video.",
+  "@m0105Capturado": {
+    "description": "M01-05 capturas tomadas (la cámara ya se cerró)"
+  },
+  "m0105Verificando": "We're sending your photos and verifying your identity with our provider. It may take a few seconds.",
+  "@m0105Verificando": {
+    "description": "M01-05 mientras sube y espera a Didit"
+  },
+  "homeCargandoCuenta": "Loading your account…",
+  "@homeCargandoCuenta": {
+    "description": "Inicio: cargando perfil y verificación (TalkBack)"
+  },
+  "homeCuentaSinCargar": "We couldn't load your account information. Check your connection and try again.",
+  "@homeCuentaSinCargar": {
+    "description": "Inicio: no cargó el perfil ni la verificación"
+  },
+  "homeReintentarCuenta": "Try again",
+  "@homeReintentarCuenta": {
+    "description": "Inicio: reintentar la carga de la cuenta"
+  },
+  "m0507Titulo": "Claim details",
+  "@m0507Titulo": {
+    "description": "M05-07 title"
+  },
+  "m0507NoEncontrado": "We couldn't find this claim.",
+  "@m0507NoEncontrado": {
+    "description": "M05-07 claim not in the list"
+  },
+  "m0507Ocurrio": "Happened on {fecha}",
+  "@m0507Ocurrio": {
+    "description": "M05-07 claim date",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Resolucion": "Resolution",
+  "@m0507Resolucion": {
+    "description": "M05-07 resolution block title"
+  },
+  "m0507ResueltoEl": "Resolved on {fecha}",
+  "@m0507ResueltoEl": {
+    "description": "M05-07 resolution date",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Indemnizacion": "Approved compensation: {monto}",
+  "@m0507Indemnizacion": {
+    "description": "M05-07 approved amount",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507PlazoPago": "Payment deadline: {plazo}",
+  "@m0507PlazoPago": {
+    "description": "M05-07 payout deadline",
+    "placeholders": {
+      "plazo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507Motivo": "Reason: {motivo}",
+  "@m0507Motivo": {
+    "description": "M05-07 rejection reason",
+    "placeholders": {
+      "motivo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507ViaRecurso": "How to ask for a review: {via}",
+  "@m0507ViaRecurso": {
+    "description": "M05-07 appeal route",
+    "placeholders": {
+      "via": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507MotivoEvidencia": "the evidence was not enough",
+  "@m0507MotivoEvidencia": {
+    "description": "M05-07 reason EVIDENCIA_INSUFICIENTE"
+  },
+  "m0507MotivoCobertura": "the event is outside the coverage",
+  "@m0507MotivoCobertura": {
+    "description": "M05-07 reason FUERA_DE_COBERTURA"
+  },
+  "m0507MotivoPoliza": "the policy was not in force",
+  "@m0507MotivoPoliza": {
+    "description": "M05-07 reason POLIZA_NO_VIGENTE"
+  },
+  "m0507MotivoRelato": "the account does not match the evidence",
+  "@m0507MotivoRelato": {
+    "description": "M05-07 reason INCONSISTENCIA_EN_RELATO"
+  },
+  "m0507MotivoOtro": "another reason",
+  "@m0507MotivoOtro": {
+    "description": "M05-07 reason OTRO"
+  },
+  "m0507Restante": "Time left: {tiempo}",
+  "@m0507Restante": {
+    "description": "M05-07 time left in the review period",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507PlazoVencido": "The review period has ended. We are processing your claim: you will see the result here in a few minutes.",
+  "@m0507PlazoVencido": {
+    "description": "M05-07 deadline passed, automatic approval in progress"
+  },
+  "m0503CiudadElegir": "Choose the city",
+  "@m0503CiudadElegir": {
+    "description": "M05-03 city list title"
+  },
+  "m0503CiudadOtra": "Another city",
+  "@m0503CiudadOtra": {
+    "description": "M05-03 option to type a city that is not in the list"
+  }
 }

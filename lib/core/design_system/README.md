@@ -36,7 +36,7 @@ lib/core/design_system/
     buttons/            SolButton, SolButtonPair, SolLinkButton
     navigation/         SolTopBar, SolBottomNav, SolLocaleChip
     lists/              SolProviderRow, SolActionTile, SolSectionHeader
-    feedback/           SolStatusBadge/Banner, SolLoadingState, SolResultView,
+    feedback/           SolStatusBadge/Banner, SolLoadingState, SolSkeleton, SolResultView,
                         SolInlineNote, SolDemoTrigger
     inputs/             SolTextField, SolConsentCheckbox
     surfaces/           SolCard, SolBottomSheet(+Panel, SolSheetLayout), SolConfirmDialog(+Panel),
@@ -316,7 +316,31 @@ SolLoadingState(message: 'Validando con el proveedor KYC/AML...');
 SolResultView(status: SolStatus.success,
               message: '¡Identidad verificada! Bienvenido a Solventa.');
 ```
-Ambos se anuncian a TalkBack. Con «quitar animaciones» el indicador queda fijo.
+Ambos se anuncian a TalkBack. El indicador de carga (también el de `SolButton` en `loading`) es siempre
+indeterminado: con «quitar animaciones» no se congela en un arco fijo.
+
+### SolSkeleton
+Para cargar una **lista o una tarjeta** cuya forma ya se conoce (M05-01 y M05-06): bloques grises con la forma de lo que va a
+llegar, en lugar del círculo de `SolLoadingState`, que se queda para esperas sin forma (M01-06, una pantalla transitoria).
+```dart
+SolSkeletonGroup(
+  message: 'Buscando tus reportes…',            // lo único que oye TalkBack (liveRegion)
+  child: SolCard.outlined(
+    child: Column(children: [
+      Row(children: [
+        Expanded(child: SolSkeleton(widthFactor: 0.45, height: 20)),   // título
+        SolSkeleton(width: 88, height: 24, radius: SolRadius.fullAll), // insignia
+      ]),
+      SolSkeleton(widthFactor: 0.8, height: 14),                       // línea de texto
+      SolSkeleton.circle(size: 24),                                    // ícono o avatar
+    ]),
+  ),
+);
+```
+El grupo hace latir todos sus bloques con **un solo** controlador, para que no queden desfasados. Con «quitar animaciones» los
+bloques quedan quietos (la forma ya dice que se está cargando). Dibuja cada skeleton con la misma estructura que la tarjeta
+real, para que la lista no salte cuando llegan los datos. Con un skeleton en pantalla `pumpAndSettle` no termina (el latido
+no para): en las pruebas usa `pump` con una duración.
 
 ### SolCameraFrame
 ```dart

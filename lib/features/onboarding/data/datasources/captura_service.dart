@@ -35,7 +35,7 @@ abstract interface class CapturaService {
 }
 
 /// Captura desde el visor embebido (`package:camera` dentro de
-/// `SolLiveCameraFrame` en `ResolutionPreset.medium` ~720p) sin abrir nunca la
+/// `SolLiveCameraFrame` en `ResolutionPreset.high`, 1280x720) sin abrir nunca la
 /// aplicación de cámara externa del sistema.
 ///
 /// [permitirRespaldo] solo es `true` con `API_ENV=mock`: sin cámara (emulador
@@ -47,6 +47,10 @@ abstract interface class CapturaService {
 /// bytes y el archivo se borra en el acto (son datos biométricos, Ley 1581).
 final class CamaraCapturaService implements CapturaService {
   CamaraCapturaService({this.permitirRespaldo = false});
+
+  /// Lo que dura el video de la prueba de vida. M01-05 lo muestra como cuenta
+  /// regresiva mientras pide mover la cabeza.
+  static const duracionVideo = Duration(seconds: 3);
 
   final bool permitirRespaldo;
 
@@ -77,7 +81,7 @@ final class CamaraCapturaService implements CapturaService {
     try {
       if (!ctrl.value.isRecordingVideo) {
         await ctrl.startVideoRecording();
-        await Future<void>.delayed(const Duration(seconds: 2));
+        await Future<void>.delayed(duracionVideo);
       }
       final archivo = await ctrl.stopVideoRecording();
       final bytes = await archivo.readAsBytes();

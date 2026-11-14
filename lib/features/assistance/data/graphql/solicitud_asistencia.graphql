@@ -1,0 +1,70 @@
+# HU-M06 (KAN-265 y KAN-266): solicitar y cancelar la asistencia en sitio, contrato v0.40 (v0.50: `origenUbicacion`;
+# `solicitarAsistenciaConDireccion` se dejó de usar, está deprecada). Idempotentes: reenviar con
+# el mismo `idSolicitud` no crea otra asistencia (si quedó NO_CONFIRMADA, reintenta confirmarla).
+mutation SolicitarAsistencia($entrada: SolicitudAsistenciaInput!) {
+  solicitarAsistencia(entrada: $entrada) {
+    ... on Asistencia {
+      id
+      estado
+      tipoAsistencia
+      minutosEstimados
+      motivo
+      solicitadaEn
+      canceladaEn
+      confirmadaEn
+      llegadaEstimada
+      prestador {
+        id
+        nombre
+        tipo
+        ciudad
+        latitud
+        longitud
+        activo
+        aliado
+        especialidad
+        direccion
+        horario
+        fotoUrl
+      }
+    }
+    ... on ErrorAsistencia {
+      codigo
+      mensaje
+    }
+  }
+}
+
+mutation CancelarAsistencia($id: ID!) {
+  cancelarAsistencia(id: $id) {
+    ... on Asistencia {
+      id
+      estado
+      tipoAsistencia
+      minutosEstimados
+      motivo
+      solicitadaEn
+      canceladaEn
+      confirmadaEn
+      llegadaEstimada
+      prestador {
+        id
+        nombre
+        tipo
+        ciudad
+        latitud
+        longitud
+        activo
+        aliado
+        especialidad
+        direccion
+        horario
+        fotoUrl
+      }
+    }
+    ... on ErrorAsistencia {
+      codigo
+      mensaje
+    }
+  }
+}

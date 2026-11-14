@@ -9,8 +9,10 @@ fragment OnboardingCampos on Onboarding {
   intentosRestantes
 }
 
+# `segundosRestantes` (v0.31): solo con ESPERA_REQUERIDA; es lo que falta para poder reenviar el código.
 fragment ErrorOnboardingCampos on ErrorOnboarding {
   codigo
+  segundosRestantes
 }
 
 # M01-02: al entrar a la autorización.
@@ -82,6 +84,8 @@ mutation CrearCuentaOnboarding($onboardingId: ID!, $entrada: CuentaOnboardingInp
       sesion {
         token
         expiraEn
+        refreshToken
+        refreshExpiraEn
       }
       onboarding {
         ...OnboardingCampos
@@ -147,6 +151,8 @@ fragment UsuarioCampos on Usuario {
   moneda
   tieneContacto
   documentoEnmascarado
+  correo
+  notificacionesPush
 }
 
 fragment CodigoOnboardingCampos on CodigoOnboardingEnviado {
@@ -176,6 +182,8 @@ mutation RegistrarCuenta($correo: String!, $clave: String!, $codigo: String!) {
     ... on Sesion {
       token
       expiraEn
+      refreshToken
+      refreshExpiraEn
       usuario {
         ...UsuarioCampos
       }
@@ -193,6 +201,8 @@ mutation IniciarSesion($entrada: CredencialesInput!) {
     ... on Sesion {
       token
       expiraEn
+      refreshToken
+      refreshExpiraEn
       usuario {
         ...UsuarioCampos
       }
@@ -220,4 +230,60 @@ mutation ActualizarPreferencias($entrada: PreferenciasInput!) {
       mensaje
     }
   }
+}
+
+# «Olvidé mi contraseña» (v0.43): siempre responde `true`, exista o no la cuenta.
+mutation SolicitarRestablecimientoClave($correo: String!) {
+  solicitarRestablecimientoClave(correo: $correo)
+}
+
+# Acceso con huella o rostro tras cerrar sesión (v0.44): la llave privada vive en el Keystore del teléfono.
+mutation RegistrarDispositivo($clavePublica: String!) {
+  registrarDispositivo(clavePublica: $clavePublica)
+}
+
+mutation DesafioDispositivo($dispositivoId: ID!) {
+  desafioDispositivo(dispositivoId: $dispositivoId) {
+    reto
+    venceEn
+  }
+}
+
+mutation IniciarSesionConDispositivo(
+  $dispositivoId: ID!
+  $reto: String!
+  $firma: String!
+  $dispositivo: DispositivoPushInput
+) {
+  iniciarSesionConDispositivo(
+    dispositivoId: $dispositivoId
+    reto: $reto
+    firma: $firma
+    dispositivo: $dispositivo
+  ) {
+    __typename
+    ... on Sesion {
+      token
+      expiraEn
+      refreshToken
+      refreshExpiraEn
+      usuario {
+        ...UsuarioCampos
+      }
+    }
+    ... on ErrorAutenticacion {
+      mensaje
+      codigo
+    }
+  }
+}
+
+# HU-M04 Fase 6 (KAN-259): liga el token de FCM a esta instalación de la app.
+mutation RegistrarTokenPush($instalacionId: String!, $tokenFcm: String!) {
+  registrarTokenPush(instalacionId: $instalacionId, tokenFcm: $tokenFcm)
+}
+
+# Perfil, interruptor «Notificaciones push».
+mutation ActualizarPreferenciaPush($habilitado: Boolean!) {
+  actualizarPreferenciaPush(habilitado: $habilitado)
 }

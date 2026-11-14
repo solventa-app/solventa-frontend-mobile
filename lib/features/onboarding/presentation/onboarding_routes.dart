@@ -7,6 +7,7 @@ abstract final class OnboardingRoutes {
   static const pruebaVida = '/onboarding/prueba-de-vida';
   static const cuenta = '/onboarding/cuenta';
   static const codigoCorreo = '/onboarding/codigo-correo';
+  static const recuperarClave = '/onboarding/recuperar-clave';
   static const verificando = '/onboarding/verificando';
   static const resultado = '/onboarding/resultado';
   static const biometria = '/onboarding/biometria';

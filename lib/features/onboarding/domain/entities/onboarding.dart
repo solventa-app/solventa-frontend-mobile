@@ -70,6 +70,8 @@ final class PerfilUsuario {
     required this.moneda,
     this.nombre,
     this.documentoEnmascarado,
+    this.correo,
+    this.notificacionesPush = true,
   });
 
   final String id;
@@ -78,9 +80,17 @@ final class PerfilUsuario {
   final String rol;
   final String estado;
   final String? documentoEnmascarado;
+
+  /// El correo del propio usuario (`Usuario.correo`, v0.24). Es distinto de
+  /// [usuario], que es un alias de acceso opaco y nunca un correo.
+  final String? correo;
   final String creadoEn;
   final String idioma;
   final String moneda;
+
+  /// Preferencia del cliente para el push (KAN-259, v0.45). Enciende por
+  /// defecto.
+  final bool notificacionesPush;
 
   bool get verificado => estado == 'ACTIVO';
 }

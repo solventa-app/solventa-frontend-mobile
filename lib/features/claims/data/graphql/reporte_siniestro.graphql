@@ -1,0 +1,98 @@
+# HU-M05 (KAN-35): reporte de siniestro del CLIENTE, contrato v0.35. Por cada foto:
+# SolicitarSubidaEvidenciaSiniestro + PUT directo + ConfirmarSubidaEvidencia; luego ReportarSiniestro.
+
+# M05-01: pólizas del cliente sobre las que puede reportar (las emitidas de su titular).
+query PolizasParaReporte {
+  propuestas(estado: EMITIDA, pagina: 1, tamano: 20) {
+    propuestas {
+      poliza {
+        id
+        numero
+        vigenciaDesde
+        vigenciaHasta
+        # KAN-290 (v0.42): en una póliza de auto el reporte pide qué le pasó al vehículo.
+        producto
+        vehiculo {
+          marca
+          placaEnmascarada
+        }
+      }
+    }
+  }
+}
+
+# M05-02: URL firmada para una foto; queda a nombre del caso (`idReporte`).
+mutation SolicitarSubidaEvidenciaSiniestro($idReporte: ID!, $tipoContenido: String!, $tamanoBytes: Int!) {
+  solicitarSubidaEvidenciaSiniestro(idReporte: $idReporte, tipoContenido: $tipoContenido, tamanoBytes: $tamanoBytes) {
+    __typename
+    ... on SubidaArchivo {
+      url
+      metodo
+      encabezados {
+        nombre
+        valor
+      }
+      archivo {
+        id
+      }
+    }
+    ... on ErrorArchivo {
+      codigo
+    }
+  }
+}
+
+mutation ConfirmarSubidaEvidencia($id: ID!) {
+  confirmarSubidaArchivo(id: $id) {
+    __typename
+    ... on Archivo {
+      id
+      estado
+    }
+    ... on ErrorArchivo {
+      codigo
+    }
+  }
+}
+
+# M05-04: crea el caso PENDIENTE en la mesa de siniestros. Reenviar con el mismo idReporte devuelve el mismo caso.
+mutation ReportarSiniestro($entrada: ReporteSiniestroInput!) {
+  reportarSiniestro(entrada: $entrada) {
+    __typename
+    ... on SiniestroReportado {
+      ...SiniestroReportadoCampos
+    }
+    ... on ErrorSiniestro {
+      mensaje
+    }
+  }
+}
+
+query MisSiniestros {
+  misSiniestros {
+    ...SiniestroReportadoCampos
+  }
+}
+
+fragment SiniestroReportadoCampos on SiniestroReportado {
+  id
+  radicado
+  estado
+  polizaId
+  ocurridoEn
+  notificadoEn
+  venceDictamenEn
+  fotos
+  tipoSiniestroAuto
+  resolucion {
+    tipo
+    resueltaEn
+    motivo
+    viaRecurso
+    indemnizacion {
+      valor
+      moneda
+    }
+    plazoDispersion
+  }
+}

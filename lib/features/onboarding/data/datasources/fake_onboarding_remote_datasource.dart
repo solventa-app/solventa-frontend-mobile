@@ -1,4 +1,5 @@
 import '../../../../core/contrato/schema.graphql.dart';
+import '../../../../core/network/network_exceptions.dart';
 import '../fixtures/onboarding_fixtures.dart';
 import '../graphql/onboarding.graphql.dart';
 import 'onboarding_remote_datasource.dart';
@@ -33,13 +34,29 @@ final class FakeOnboardingRemoteDataSource
   Map<String, dynamic> respuestaVerificarCodigo =
       OnboardingFixtures.verificarCodigo;
 
+  /// Respuesta de `solicitarSubidaOnboarding` (p. ej. `TOKEN_INVALIDO` cuando
+  /// el recorrido venció). `null`: la subida normal.
+  Map<String, dynamic>? respuestaSubida;
+
+  /// Respuesta de `iniciarSesion` (p. ej. otro rol en las pruebas).
+  Map<String, dynamic> respuestaIniciarSesion =
+      OnboardingFixtures.iniciarSesion;
+
   /// Código OTP válido esperado en modo fake (`123456` por defecto).
   String codigoEsperado = '123456';
 
   /// Usuario actual devuelto por `yo`.
   Map<String, dynamic> usuarioActual = OnboardingFixtures.usuario();
 
+  /// Respuestas de `registrarConsentimientoOnboarding` que se usan en orden
+  /// antes de la de siempre (p. ej. un `ESTADO_INVALIDO` del recorrido viejo).
+  final respuestasConsentimiento = <Map<String, dynamic>>[];
+
   final operaciones = <String>[];
+
+  /// Para pruebas: cuántas veces seguidas falla por red cada operación
+  /// (p. ej. `{'yo': 1}`), como un corte justo al desbloquear con la huella.
+  final Map<String, int> fallasDeRed = {};
 
   Future<Map<String, dynamic>> _responder(
     String operacion,
@@ -47,6 +64,11 @@ final class FakeOnboardingRemoteDataSource
   ) async {
     operaciones.add(operacion);
     await Future<void>.delayed(latencia);
+    final pendientes = fallasDeRed[operacion] ?? 0;
+    if (pendientes > 0) {
+      fallasDeRed[operacion] = pendientes - 1;
+      throw const ErrorRed();
+    }
     return json;
   }
 
@@ -63,7 +85,12 @@ final class FakeOnboardingRemoteDataSource
   >
   registrarConsentimiento(String token, String id, String versionTexto) async =>
       Mutation$RegistrarConsentimientoOnboarding.fromJson(
-        await _responder('consentimiento', OnboardingFixtures.consentimiento),
+        await _responder(
+          'consentimiento',
+          respuestasConsentimiento.isEmpty
+              ? OnboardingFixtures.consentimiento
+              : respuestasConsentimiento.removeAt(0),
+        ),
       ).registrarConsentimientoOnboarding;
 
   @override
@@ -75,7 +102,10 @@ final class FakeOnboardingRemoteDataSource
     String tipoContenido,
     int tamanoBytes,
   ) async => Mutation$SolicitarSubidaOnboarding.fromJson(
-    await _responder('subida:${paso.name}', OnboardingFixtures.subida),
+    await _responder(
+      'subida:${paso.name}',
+      respuestaSubida ?? OnboardingFixtures.subida,
+    ),
   ).solicitarSubidaOnboarding;
 
   @override
@@ -94,6 +124,7 @@ final class FakeOnboardingRemoteDataSource
   ) async {
     usuarioActual = OnboardingFixtures.usuario(
       usuario: correo,
+      correo: correo,
       nombre: null,
       estado: 'PENDIENTE_VERIFICACION',
     );
@@ -125,12 +156,15 @@ final class FakeOnboardingRemoteDataSource
     }
     usuarioActual = OnboardingFixtures.usuario(
       usuario: correo,
+      correo: correo,
       nombre: null,
       estado: 'PENDIENTE_VERIFICACION',
     );
     return Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
       token: 'fake-jwt-token-onboarding',
       expiraEn: DateTime.now().add(const Duration(hours: 1)),
+      refreshToken: 'fake-refresh-onboarding',
+      refreshExpiraEn: DateTime.now().add(const Duration(days: 8)),
       usuario: Fragment$UsuarioCampos.fromJson(usuarioActual),
     );
   }
@@ -181,6 +215,7 @@ final class FakeOnboardingRemoteDataSource
   Future<Mutation$ActualizarSesion$actualizarSesion> actualizarSesion() async {
     usuarioActual = OnboardingFixtures.usuario(
       usuario: (usuarioActual['usuario'] as String?) ?? 'maria@ejemplo.co',
+      correo: usuarioActual['correo'] as String?,
       nombre: 'María',
       estado: 'ACTIVO',
     );
@@ -190,6 +225,56 @@ final class FakeOnboardingRemoteDataSource
         OnboardingFixtures.sesionActualizada,
       ),
     ).actualizarSesion;
+  }
+
+  /// Llave pública que el fake «registró» y si la firma del reto debe fallar.
+  String? clavePublicaRegistrada;
+  bool rechazarDispositivo = false;
+
+  @override
+  Future<String> registrarDispositivo(String clavePublica) async {
+    await _responder('registrarDispositivo', const {});
+    clavePublicaRegistrada = clavePublica;
+    return 'dispositivo-demo';
+  }
+
+  @override
+  Future<String> desafioDispositivo(String dispositivoId) async {
+    await _responder('desafioDispositivo', const {});
+    return '$dispositivoId.nonce-demo';
+  }
+
+  @override
+  Future<Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo>
+  iniciarSesionConDispositivo(
+    String dispositivoId,
+    String reto,
+    String firma,
+  ) async {
+    final json = rechazarDispositivo
+        ? {
+            '__typename': 'Mutation',
+            'iniciarSesionConDispositivo': {
+              '__typename': 'ErrorAutenticacion',
+              'mensaje': 'No pudimos verificar este teléfono.',
+              'codigo': 'DISPOSITIVO_NO_VALIDO',
+            },
+          }
+        : {
+            '__typename': 'Mutation',
+            'iniciarSesionConDispositivo':
+                (respuestaIniciarSesion['iniciarSesion']! as Map)
+                    .cast<String, dynamic>(),
+          };
+    return Mutation$IniciarSesionConDispositivo.fromJson(
+      await _responder('iniciarSesionConDispositivo', json),
+    ).iniciarSesionConDispositivo;
+  }
+
+  @override
+  Future<bool> solicitarRestablecimientoClave(String correo) async {
+    await _responder('solicitarRestablecimientoClave', const {});
+    return true;
   }
 
   @override
@@ -216,9 +301,12 @@ final class FakeOnboardingRemoteDataSource
     String usuario,
     String clave,
   ) async {
-    usuarioActual = OnboardingFixtures.usuario(usuario: usuario);
+    usuarioActual = OnboardingFixtures.usuario(
+      usuario: usuario,
+      correo: usuario,
+    );
     return Mutation$IniciarSesion.fromJson(
-      await _responder('iniciarSesion', OnboardingFixtures.iniciarSesion),
+      await _responder('iniciarSesion', respuestaIniciarSesion),
     ).iniciarSesion;
   }
 
@@ -240,5 +328,26 @@ final class FakeOnboardingRemoteDataSource
         ),
       ),
     ).actualizarPreferencias;
+  }
+
+  /// Para pruebas: instalaciones registradas (`instalacionId` → `tokenFcm`).
+  final Map<String, String> tokensPush = {};
+
+  @override
+  Future<bool> registrarTokenPush(String instalacionId, String tokenFcm) async {
+    tokensPush[instalacionId] = tokenFcm;
+    return (await _responder('registrarTokenPush', {
+          'registrarTokenPush': true,
+        }))['registrarTokenPush']
+        as bool;
+  }
+
+  @override
+  Future<bool> actualizarPreferenciaPush(bool habilitado) async {
+    usuarioActual = {...usuarioActual, 'notificacionesPush': habilitado};
+    return (await _responder('actualizarPreferenciaPush', {
+          'actualizarPreferenciaPush': habilitado,
+        }))['actualizarPreferenciaPush']
+        as bool;
   }
 }

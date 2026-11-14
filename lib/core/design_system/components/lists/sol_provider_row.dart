@@ -6,10 +6,11 @@ import '../../tokens/sol_radius.dart';
 import '../../tokens/sol_sizes.dart';
 import '../../tokens/sol_spacing.dart';
 
-/// Tipo de prestador (Figma 2018:103).
+/// Tipo de prestador (Figma 2018:103). `grua` desde HU-M06 v0.49.
 enum SolProviderType {
   medico('Médico'),
-  mecanico('Mecánico');
+  mecanico('Mecánico'),
+  grua('Grúa');
 
   const SolProviderType(this.label);
 
@@ -18,25 +19,50 @@ enum SolProviderType {
 
 /// Fila de la lista de prestadores (M06-01): ícono por tipo, nombre,
 /// «tipo · distancia · tiempo» y botón tonal «Solicitar».
+///
+/// HU-M06 (M3): **el ícono dice el tipo y el color dice si es aliado**.
+/// Aliado: ícono `primary` sobre `primaryContainer`, `verified` junto al nombre
+/// y [partnerLabel] en la semántica. No aliado: `onSurfaceVariant` sobre
+/// `surfaceContainer`. Cambia el Figma, donde el color iba por tipo.
 class SolProviderRow extends StatelessWidget {
   const SolProviderRow({
     super.key,
     required this.name,
     required this.type,
     required this.distance,
-    required this.eta,
     required this.onRequest,
+    this.eta,
     this.requestLabel = 'Solicitar',
+    this.typeLabel,
+    this.isPartner = false,
+    this.partnerLabel = 'Aliado Solventa',
+    this.onTap,
+    this.selected = false,
   });
+
+  /// Tocar la fila fuera del botón (HU-M06, M5: enfoca el pin en el mapa).
+  final VoidCallback? onTap;
+
+  /// La fila del prestador elegido en el mapa queda marcada.
+  final bool selected;
+
+  /// Aliado Solventa: cambia el color del ícono y muestra `verified` (M3).
+  final bool isPartner;
+
+  /// Texto de la insignia para TalkBack, ya traducido.
+  final String partnerLabel;
 
   final String name;
   final SolProviderType type;
 
+  /// Especialidad ya traducida (catálogo de la app). Por defecto, [type.label].
+  final String? typeLabel;
+
   /// Texto ya formateado, p. ej. `1.2 km` o `SolFormat.distanceKm(1.2)`.
   final String distance;
 
-  /// Texto ya formateado, p. ej. `6 min`.
-  final String eta;
+  /// Texto ya formateado, p. ej. `6 min`. Sin ubicación del cliente no hay.
+  final String? eta;
   final VoidCallback? onRequest;
   final String requestLabel;
 
@@ -44,26 +70,13 @@ class SolProviderRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final sol = context.solColors;
-    final (
-      Color iconBg,
-      Color iconFg,
-      IconData icon,
-      double iconSize,
-    ) = switch (type) {
-      SolProviderType.medico => (
-        sol.successContainer,
-        sol.success,
-        SolIcons.medical,
-        22.0, // 2018:80
-      ),
-      SolProviderType.mecanico => (
-        sol.navIndicator,
-        colors.primary,
-        SolIcons.mechanic,
-        20.0,
-      ),
+    final (IconData icon, double iconSize) = switch (type) {
+      SolProviderType.medico => (SolIcons.medical, 22.0), // 2018:80
+      SolProviderType.mecanico => (SolIcons.mechanic, 20.0),
+      SolProviderType.grua => (SolIcons.towTruck, 22.0),
     };
-    final meta = '${type.label} · $distance · $eta';
+    final (Color iconBg, Color iconFg) = solProviderColors(context, isPartner);
+    final meta = [typeLabel ?? type.label, distance, ?eta].join(' · ');
 
     final iconBadge = ExcludeSemantics(
       child: Container(
@@ -79,12 +92,31 @@ class SolProviderRow extends StatelessWidget {
         ),
       ),
     );
-    final texts = MergeSemantics(
+    final textsColumn = MergeSemantics(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            name,
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: name),
+                if (isPartner) ...[
+                  const TextSpan(text: ' '),
+                  WidgetSpan(
+                    alignment: PlaceholderAlignment.middle,
+                    child: Semantics(
+                      label: partnerLabel,
+                      child: Icon(
+                        SolIcons.verifiedProvider,
+                        size: 16,
+                        fill: 1,
+                        color: colors.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
             style: context.solText.title.copyWith(color: colors.onSurface),
           ),
           Text(
@@ -96,6 +128,14 @@ class SolProviderRow extends StatelessWidget {
         ],
       ),
     );
+    final texts = onTap == null
+        ? textsColumn
+        : Semantics(
+            button: true,
+            selected: selected,
+            onTap: onTap,
+            child: textsColumn,
+          );
     final button = Semantics(
       button: true,
       label: '$requestLabel $name',
@@ -124,7 +164,7 @@ class SolProviderRow extends StatelessWidget {
     // el nombre no se corte.
     final stacked = MediaQuery.textScalerOf(context).scale(16) >= 24;
 
-    return ConstrainedBox(
+    final row = ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 56),
       child: Padding(
         // 10 + 48 (área táctil) + 10 = 68 dp, igual al Figma (12 + 44 + 12).
@@ -158,5 +198,25 @@ class SolProviderRow extends StatelessWidget {
               ),
       ),
     );
+    if (onTap == null && !selected) return row;
+    return Material(
+      color: selected
+          ? colors.primaryContainer.withValues(alpha: 0.45)
+          : Colors.transparent,
+      borderRadius: SolRadius.cardAll,
+      child: InkWell(onTap: onTap, borderRadius: SolRadius.cardAll, child: row),
+    );
   }
+}
+
+/// Colores del círculo del prestador (M3): aliado o no. Los usan la fila, el
+/// pin del mapa y el detalle, para que digan lo mismo.
+(Color background, Color foreground) solProviderColors(
+  BuildContext context,
+  bool isPartner,
+) {
+  final colors = context.colors;
+  return isPartner
+      ? (colors.primaryContainer, colors.primary)
+      : (colors.surfaceContainer, colors.onSurfaceVariant);
 }

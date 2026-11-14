@@ -29,6 +29,16 @@ abstract final class AppConfig {
   /// envía nada (pruebas, mock, local).
   static const String sentryDsn = String.fromEnvironment('SENTRY_DSN');
 
+  /// Token **público** de Mapbox (`pk.…`) para el mapa de M06-01 (HU-M06,
+  /// M0). No va en `config/<flavor>.json` ni en el repositorio: llega por
+  /// `--dart-define=MAPBOX_ACCESS_TOKEN` desde el secreto
+  /// `MAPBOX_PUBLIC_TOKEN` (CI) o desde la consola de cada desarrollador.
+  /// Vacío = sin Mapbox: con `API_ENV=mock` se usa el mapa falso y, si no, la
+  /// lista sin mapa (como cuando el mapa falla, CA-M06-04).
+  static const String mapboxAccessToken = String.fromEnvironment(
+    'MAPBOX_ACCESS_TOKEN',
+  );
+
   static bool get isDev => flavor == 'dev';
   static bool get isProd => flavor == 'prod';
 }

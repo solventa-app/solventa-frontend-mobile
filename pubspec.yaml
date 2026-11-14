@@ -42,19 +42,37 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   dio: ^5.11.1
-  flutter_riverpod: ^3.4.3
+  flutter_riverpod: ^3.5.0
   gql: ^1.0.1
-  go_router: ^18.1.2
+  go_router: ^18.1.4
   flutter_secure_storage: ^11.2.0
   image_picker: ^1.2.4
   camera: ^0.12.2
   permission_handler: ^12.0.1
   path_provider: ^2.1.6
   local_auth: ^3.0.2
+  # Título y subtítulo del diálogo del sistema en el idioma de la app (`AndroidAuthMessages`); `local_auth` no los reexporta.
+  local_auth_android: ^2.3.0
   shared_preferences: ^2.5.6
-  sentry_flutter: ^10.2.0
+  sentry_flutter: ^10.3.0
   sentry_dio: ^10.2.0
   logging: ^1.3.0
+  # HU-M06: mapa de Mapbox con su librería oficial (reemplaza a flutter_map y
+  # OpenStreetMap, plan de pendientes M0). Token público por
+  # --dart-define=MAPBOX_ACCESS_TOKEN, nunca en el repositorio.
+  mapbox_maps_flutter: 3.34.2
+  geolocator: ^14.0.2
+  url_launcher: ^6.3.2
+  biometric_signature: ^13.3.0
+  # HU-M04 Fase 6 (KAN-259): push de indemnización liquidada. Sin
+  # `google-services.json` real en el repo (regla del CLAUDE.md): el
+  # servicio de push queda apagado hasta que exista (ver `lib/core/push/`).
+  firebase_core: ^5.1.0
+  firebase_messaging: ^17.0.1
+  # HU-M06 (4.5): notificación local programada para la llegada de la
+  # asistencia (convive con FCM en su propio canal, ajuste A2).
+  flutter_local_notifications: 22.3.3
+  timezone: 0.11.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

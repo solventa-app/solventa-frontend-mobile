@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart'
+    show MapboxOptions;
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'app/router.dart';
@@ -14,6 +16,10 @@ import 'core/log/limpiar.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SolLocalizations.init();
+  // HU-M06 (M0): el token público de Mapbox, antes de crear cualquier mapa.
+  if (AppConfig.mapboxAccessToken.isNotEmpty) {
+    MapboxOptions.setAccessToken(AppConfig.mapboxAccessToken);
+  }
   // Edge-to-edge (Android 15): las barras del sistema son transparentes y
   // los layouts aplican SafeArea.
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

@@ -2,19 +2,25 @@ import '../../../../core/contrato/schema.graphql.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/guardar_fallas.dart';
 import '../../../../core/errors/resultado.dart';
-import '../../../../core/sesion/sesion_store.dart';
+import '../../../../core/network/subida_archivo_service.dart';
+import '../../../../core/sesion/gestor_sesion.dart';
 import '../../domain/entities/onboarding.dart';
 import '../../domain/repositories/onboarding_repository.dart';
 import '../datasources/onboarding_remote_datasource.dart';
-import '../datasources/subida_archivo_service.dart';
 import '../graphql/onboarding.graphql.dart';
 import '../mappers/onboarding_mapper.dart';
 
-/// `ErrorOnboarding` del contrato, convertido en `FallaNegocio` con su código.
-final class _Rechazo implements Exception {
-  const _Rechazo(this.codigo);
-  final String codigo;
-}
+/// `ErrorOnboarding` del contrato: `guardarFallas` lo convierte en
+/// `FallaNegocio` con su código.
+typedef _Rechazo = RechazoNegocio;
+
+/// Códigos con los que el backend dice que el recorrido en memoria ya no sirve
+/// para empezar de nuevo (M01-02 abre entonces un recorrido nuevo).
+const _recorridoAgotado = {
+  'ESTADO_INVALIDO',
+  'TOKEN_INVALIDO',
+  'SESION_NO_ENCONTRADA',
+};
 
 /// Códigos de `ErrorOnboarding` que tiene sentido reintentar tal cual.
 const _reintentables = {
@@ -34,7 +40,7 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
 
   final OnboardingRemoteDataSource _remoto;
   final SubidaArchivoService _subidas;
-  final SesionStore _sesion;
+  final GestorSesion _sesion;
 
   /// Hoy solo cédula de ciudadanía (CO); CE queda en el contrato para después.
   final Enum$TipoDocumentoOnboarding tipoDocumento;
@@ -45,10 +51,9 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
 
   Future<Resultado<T>> _guardar<T>(Future<T> Function() op) async {
     final r = await guardarFallas(op);
-    if (r case Fracaso(falla: Inesperada(causa: _Rechazo(:final codigo)))) {
-      return Fracaso(
-        FallaNegocio(codigo, reintentable: _reintentables.contains(codigo)),
-      );
+    if (r case Fracaso(falla: FallaNegocio(:final motivo))
+        when _reintentables.contains(motivo)) {
+      return Fracaso(FallaNegocio(motivo, reintentable: true));
     }
     return r;
   }
@@ -59,9 +64,13 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     _ => throw const _Rechazo('RESPUESTA_DESCONOCIDA'),
   };
 
+  /// El error del código OTP conserva `segundosRestantes` (ESPERA_REQUERIDA).
+  Never _rechazar(Fragment$ErrorOnboardingCampos e) =>
+      throw _Rechazo(e.codigo, segundosRestantes: e.segundosRestantes);
+
   CodigoOnboarding _resultadoCodigo(Object r) => switch (r) {
     Fragment$CodigoOnboardingCampos() => codigoOnboardingDesdeGql(r),
-    Fragment$ErrorOnboardingCampos(:final codigo) => throw _Rechazo(codigo),
+    Fragment$ErrorOnboardingCampos() => _rechazar(r),
     _ => throw const _Rechazo('RESPUESTA_DESCONOCIDA'),
   };
 
@@ -90,11 +99,25 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     required String versionTexto,
   }) => _guardar(() async {
     await _asegurarRecorrido();
+    try {
+      return await _registrarConsentimiento(versionTexto);
+    } on _Rechazo catch (e) {
+      // El recorrido en memoria ya no admite un intento nuevo: quedó RECHAZADA
+      // sin intentos, EN_REVISION, EN_VERIFICACION o su token de 30 min venció.
+      // El backend sí deja abrir otro, así que se descarta y se empieza uno.
+      if (!_recorridoAgotado.contains(e.codigo)) rethrow;
+      descartarRecorrido();
+      await _asegurarRecorrido();
+      return _registrarConsentimiento(versionTexto);
+    }
+  });
+
+  Future<Onboarding> _registrarConsentimiento(String versionTexto) async {
     final r = _recorrido;
     return _resultado(
       await _remoto.registrarConsentimiento(r.token, r.id, versionTexto),
     );
-  });
+  }
 
   @override
   Future<Resultado<Onboarding>> subir(
@@ -140,6 +163,61 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
       });
 
   @override
+  Future<Resultado<String>> registrarDispositivo({
+    required String clavePublica,
+  }) => _guardar(() => _remoto.registrarDispositivo(clavePublica));
+
+  @override
+  Future<Resultado<String>> desafioDispositivo({
+    required String dispositivoId,
+  }) => _guardar(() => _remoto.desafioDispositivo(dispositivoId));
+
+  @override
+  Future<Resultado<PerfilUsuario>> iniciarSesionConDispositivo({
+    required String dispositivoId,
+    required String reto,
+    required String firma,
+  }) => _guardar(() async {
+    final r = await _remoto.iniciarSesionConDispositivo(
+      dispositivoId,
+      reto,
+      firma,
+    );
+    switch (r) {
+      case Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo$$Sesion(
+        :final token,
+        :final expiraEn,
+        :final refreshToken,
+        :final refreshExpiraEn,
+        :final usuario,
+      ):
+        if (usuario.rol != Enum$RolUsuario.CLIENTE) {
+          throw const _Rechazo('DISPOSITIVO_NO_VALIDO');
+        }
+        await _sesion.abrir(
+          token: token,
+          expiraEn: expiraEn,
+          refresh: refreshToken,
+          refreshVenceEn: refreshExpiraEn,
+        );
+        return perfilUsuarioDesdeGql(usuario);
+      case Mutation$IniciarSesionConDispositivo$iniciarSesionConDispositivo$$ErrorAutenticacion(
+        :final codigo,
+      ):
+        throw _Rechazo(codigo ?? 'DISPOSITIVO_NO_VALIDO');
+      default:
+        throw const _Rechazo('DISPOSITIVO_NO_VALIDO');
+    }
+  });
+
+  @override
+  Future<Resultado<void>> solicitarRestablecimientoClave({
+    required String correo,
+  }) => _guardar(() async {
+    await _remoto.solicitarRestablecimientoClave(correo);
+  });
+
+  @override
   Future<Resultado<CodigoOnboarding>> verificarCodigo({
     required String correo,
     required String codigo,
@@ -160,9 +238,17 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     switch (r) {
       case Mutation$RegistrarCuenta$registrarCuenta$$Sesion(
         :final token,
+        :final expiraEn,
+        :final refreshToken,
+        :final refreshExpiraEn,
         :final usuario,
       ):
-        await _sesion.guardar(token);
+        await _sesion.abrir(
+          token: token,
+          expiraEn: expiraEn,
+          refresh: refreshToken,
+          refreshVenceEn: refreshExpiraEn,
+        );
         return perfilUsuarioDesdeGql(usuario);
       case Mutation$RegistrarCuenta$registrarCuenta$$ErrorAutenticacion(
         :final codigo,
@@ -183,7 +269,13 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
       final cuenta = await _remoto.crearCuenta(r.token, r.id, correo, clave);
       switch (cuenta) {
         case Mutation$CrearCuentaOnboarding$crearCuentaOnboarding$$CuentaOnboarding():
-          await _sesion.guardar(cuenta.sesion.token);
+          final sesion = cuenta.sesion;
+          await _sesion.abrir(
+            token: sesion.token,
+            expiraEn: sesion.expiraEn,
+            refresh: sesion.refreshToken,
+            refreshVenceEn: sesion.refreshExpiraEn,
+          );
           return onboardingDesdeGql(cuenta.onboarding);
         case Fragment$ErrorOnboardingCampos(:final codigo):
           throw _Rechazo(codigo);
@@ -205,9 +297,23 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
     switch (r) {
       case Mutation$IniciarSesion$iniciarSesion$$Sesion(
         :final token,
+        :final expiraEn,
+        :final refreshToken,
+        :final refreshExpiraEn,
         :final usuario,
       ):
-        await _sesion.guardar(token);
+        // La app es solo del cliente (el backend ya lo exige, v0.29). Si
+        // llegara otro rol no se abre sesión y se responde como con una clave
+        // errada: el rol de la cuenta no se revela.
+        if (usuario.rol != Enum$RolUsuario.CLIENTE) {
+          throw const _Rechazo('CREDENCIALES_INVALIDAS');
+        }
+        await _sesion.abrir(
+          token: token,
+          expiraEn: expiraEn,
+          refresh: refreshToken,
+          refreshVenceEn: refreshExpiraEn,
+        );
         return perfilUsuarioDesdeGql(usuario);
       case Mutation$IniciarSesion$iniciarSesion$$ErrorAutenticacion(
         :final codigo,
@@ -253,8 +359,12 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
   Future<Resultado<void>> actualizarSesion() => _guardar(() async {
     final r = await _remoto.actualizarSesion();
     switch (r) {
-      case Mutation$ActualizarSesion$actualizarSesion$$Sesion(:final token):
-        await _sesion.guardar(token);
+      case Mutation$ActualizarSesion$actualizarSesion$$Sesion(
+        :final token,
+        :final expiraEn,
+      ):
+        // El refresh no cambia: renovarSesion revalida el estado verificado.
+        _sesion.actualizarToken(token, expiraEn);
       case Mutation$ActualizarSesion$actualizarSesion$$ErrorAutenticacion(
         :final codigo,
       ):
@@ -271,9 +381,27 @@ final class OnboardingRepositoryImpl implements OnboardingRepository {
   });
 
   @override
+  void descartarRecorrido() {
+    _id = null;
+    _token = null;
+  }
+
+  @override
   Future<void> cerrarSesion() async {
     _id = null;
     _token = null;
-    await _sesion.borrar();
+    // Revoca el refresh en el backend (si falla la red, igual borra local).
+    await _sesion.cerrar();
   }
+
+  @override
+  Future<Resultado<bool>> registrarTokenPush({
+    required String instalacionId,
+    required String tokenFcm,
+  }) => _guardar(() => _remoto.registrarTokenPush(instalacionId, tokenFcm));
+
+  @override
+  Future<Resultado<bool>> actualizarPreferenciaPush({
+    required bool habilitado,
+  }) => _guardar(() => _remoto.actualizarPreferenciaPush(habilitado));
 }

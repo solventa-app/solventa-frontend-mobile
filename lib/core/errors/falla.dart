@@ -33,6 +33,16 @@ final class SesionVencida extends Falla {
   bool get reintentable => false;
 }
 
+/// Android invalidó la llave de la sesión guardada: se registró una huella o
+/// un rostro nuevos, o se quitó el bloqueo de pantalla (HU-M02, D4). Hay que
+/// volver a iniciar sesión con correo y clave.
+final class SeguridadTelefonoCambio extends Falla {
+  const SeguridadTelefonoCambio();
+
+  @override
+  bool get reintentable => false;
+}
+
 /// El rol del usuario no tiene acceso a la operación.
 final class SinPermiso extends Falla {
   const SinPermiso();
@@ -43,14 +53,33 @@ final class SinPermiso extends Falla {
 
 /// Respuesta de negocio del contrato (uniones `Error*`, p. ej. `ErrorOferta.motivo`).
 final class FallaNegocio extends Falla {
-  const FallaNegocio(this.motivo, {this.reintentable = false});
+  const FallaNegocio(
+    this.motivo, {
+    this.reintentable = false,
+    this.segundosRestantes,
+  });
 
   /// Valor del enum de motivo del contrato, tal cual (p. ej. `CONSENTIMIENTO_NO_VIGENTE`).
   final String motivo;
 
+  /// Solo con `ESPERA_REQUERIDA` (contrato v0.31): segundos que faltan para
+  /// poder pedir otro código. Lo manda el backend; el cliente no lo inventa.
+  final int? segundosRestantes;
+
   @override
   final bool reintentable;
+
+  /// El backend dice que el recorrido de onboarding ya no sirve (su token dura
+  /// 30 min o la sesión no existe): hay que empezar de nuevo (T16).
+  bool get registroVencido => _codigosRegistroVencido.contains(motivo);
 }
+
+/// Códigos de `ErrorOnboarding` con los que el recorrido ya no sirve.
+const _codigosRegistroVencido = {
+  'TOKEN_INVALIDO',
+  'SESION_NO_ENCONTRADA',
+  'SIN_ONBOARDING',
+};
 
 /// Cualquier otra cosa: 4xx/5xx restante, `errors` inesperado o JSON que no
 /// cumple el contrato. Se reporta; el usuario ve un mensaje genérico.

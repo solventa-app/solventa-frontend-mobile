@@ -46,7 +46,7 @@ Título del PR (`pr-titulo.yml`): `tipo(alcance): KAN-N descripción`. Tipos: `f
 | `seguridad.yml` | Todo PR, push a `develop`, cada lunes, manual | Jobs `Secretos (gitleaks)`, `Dependencias (osv-scanner)` (informativo), `Workflows (actionlint)` con revisión de acciones por SHA |
 | `pr-titulo.yml`, `pr-rama.yml` | PR abierto o editado | Título y rama |
 | `develop.yml` | Push a `develop`, manual | `apk-dev` (firmado con la llave de dev, versión `X.Y.Z-dev.N`, artifact 14 días), `App Distribution`, `MobSF` (informativo, reporte como artifact `mobsf`) |
-| `emuladores.yml` | Push a `develop`, manual | `integration_test` en emuladores: teléfono pequeño API 28 (Nexus 5, 360 dp, el mínimo soportado), teléfono grande API 34, tablet API 34. Corre en el runner (necesita KVM) con la versión de Flutter de `pubspec.yaml` |
+| `emuladores.yml` | Push a `develop`, manual | `integration_test` en emuladores: teléfono pequeño API 28 (Nexus 5, 360 dp, el mínimo soportado), teléfono grande API 34, tablet API 34. Corre en el runner (necesita KVM) con la versión de Flutter de `pubspec.yaml`. El job `Reporte` deja el artifact `reporte-emuladores` (ver abajo) |
 | `test-lab.yml` | Manual (cada `release/sprint-N`) | Robo test e `integration_test` en teléfonos reales de Firebase Test Lab |
 | `cd.yml` | Push a `main`, manual | Build prod y GitHub Release con APK, AAB, mapping y símbolos. Desde otra rama compila sin tag ni Release |
 | `rollback.yml` | Manual | Vuelve a publicar un tag anterior con un build nuevo |
@@ -83,9 +83,11 @@ Comparado con el web: ESLint ↔ `flutter analyze`, Prettier ↔ `dart format`, 
 |---|---|---|---|
 | Unitarias y de widget | `flutter_test` | Devcontainer, en cada PR | Hoy |
 | Goldens de componentes | alchemist | Devcontainer, en cada PR | Llega con el PR del sistema de diseño (KAN-239): 360 y 390 dp, texto al 100 % y 200 % |
-| Goldens de pantallas | alchemist | Devcontainer, en cada PR | Hoy (HU-M01): 360 y 390 dp con texto al 100 % y 200 % en español, 390 dp en inglés y 600 dp. Pendiente: variante horizontal de 640 × 360. Se regeneran con `tool/goldens.sh` |
+| Goldens de pantallas | alchemist | Devcontainer, en cada PR | Hoy (HU-M01, HU-M02 y HU-M04): 360 y 390 dp con texto al 100 % y 200 % en español, 390 dp en inglés y 600 dp. Pendiente: variante horizontal de 640 × 360. Se regeneran con `tool/goldens.sh` |
 | Accesibilidad (contraste, tap targets) | `meetsGuideline` | Cada PR | Llega con KAN-239 |
 | Integración en emuladores | `integration_test` | `emuladores.yml`, cada merge a `develop` | Hoy (prueba de humo; cada HU con recorrido agrega la suya en `integration_test/`) |
+
+**Reporte de emuladores.** Cada corrida de `emuladores.yml`, pase o falle, deja el artifact `reporte-emuladores`: un HTML con cada prueba en los tres emuladores, el error de las que fallaron y capturas de pantalla. Revisarlo después de cada merge a `develop`. No bloquea merges: los emuladores corren después del merge, no en el PR. Para sumar capturas a una prueba se llama `capturar(tester, 'M05-03 · relato')` (`integration_test/soporte/capturas.dart`). Toda prueba que falla deja además una captura de cómo quedó la pantalla (`integration_test/flutter_test_config.dart`). Las capturas solo se toman con `--dart-define=CAPTURAS=true`, y el HTML lo arma `tool/reporte-emuladores.py`.
 | Integración y exploración en teléfonos reales | `integration_test` y Robo test | `test-lab.yml`, cada release | Listo, falta cuenta |
 | Exploratoria manual | Guía y plantilla | Una sesión por sprint | Hoy |
 | Resiliencia sin conexión, biometría, cámara, GPS, push, Wallet | Dobles de los plugins en `flutter_test`; dispositivo real en Test Lab | Con cada HU |
@@ -114,7 +116,7 @@ Dispositivos por defecto de `test-lab.yml`: Pixel 6 (API 33) y Pixel 5 (API 30).
 | actionlint | Valida sintaxis, expresiones y scripts de los workflows | Job `Workflows (actionlint)`, bloquea | Hoy |
 | Acciones fijadas por SHA | `uses: accion@<sha> # vX`, para que nadie cambie una acción por debajo | El mismo job falla si una acción no tiene SHA | Hoy |
 | osv-scanner | Revisa `pubspec.lock` contra la base OSV de Google | Job `Dependencias (osv-scanner)`, informativo hasta confirmar cero hallazgos | Hoy |
-| MobSF | Análisis estático del APK: permisos, manifest, cifrado, llaves embebidas, librerías inseguras | `develop.yml`, sobre el APK de dev. Puntaje en el resumen del job, reporte PDF y JSON como artifact. Informativo | Hoy |
+| MobSF | Análisis estático del APK: permisos, manifest, cifrado, llaves embebidas, librerías inseguras | `develop.yml`, sobre el APK de dev. Puntaje en el resumen del job, reporte PDF y JSON como artifact. Los falsos positivos de librerías se suprimen con `tool/mobsf-suprimir.txt`. Informativo | Hoy |
 | Trivy | Vulnerabilidades de la imagen del devcontainer | `imagen-devcontainer.yml`, informativo | Hoy |
 | Dependabot | PRs con versiones nuevas o vulnerables de pub, acciones e imagen base | `.github/dependabot.yml`, hacia `develop` | Hoy |
 | Endurecimiento del APK | R8, Dart ofuscado en prod, sin copia de seguridad (`allowBackup="false"` y `data_extraction_rules.xml`), sin tráfico en claro en prod | Ver la sección siguiente | Hoy |
@@ -170,7 +172,7 @@ Flavors de Android + `--dart-define-from-file`:
 | Versión visible | `1.3.0-dev.214` | `1.3.0` |
 | Configuración de Dart | `config/dev.json` | `config/prod.json` |
 | Firmado | Llave de dev (environment `dev`) | Llave de subida (environment `production`) |
-| Tráfico `http` | Permitido (backend local) | Bloqueado |
+| Tráfico `http` | Bloqueado; solo los builds debug (`flutter run`) lo permiten hacia `10.0.2.2` y `localhost` (backend local) | Bloqueado |
 | Dart ofuscado | No | Sí |
 | Se entrega por | Artifact `apk-dev` y App Distribution (testers del grupo `qa`) | APK firmado en el GitHub Release (sin tienda por ahora) |
 
@@ -178,7 +180,7 @@ Flavors de Android + `--dart-define-from-file`:
 - `flutter run` sin `--flavor` usa dev (`default-flavor: dev` en `pubspec.yaml`). Prod en local: `flutter run --flavor prod --dart-define-from-file=config/prod.json`.
 - Claves de `config/*.json`: `FLAVOR`, `API_ENV` (`mock`, `local`, `dev`, `prod`) y `API_BASE_URL`, leídas en `lib/core/config/app_config.dart`. Archivos: `mock.json` (fakes, sin red), `local.json` (backend en tu máquina), `dev.json` (staging) y `prod.json`; detalle en [`integracion-backend.md`](integracion-backend.md). `dev.json` y `prod.json` apuntan al gateway de staging (`gateway_url` del backend), y los APKs de dev (App Distribution) y prod (GitHub Releases) hablan con ese backend. Las pruebas del CI, los emuladores y Test Lab siguen con `config/mock.json`, sin red, para no depender de staging encendido.
 - En tu máquina no hay llaves: el build de release se firma con la de debug. En el CI, `tool/firma.sh` escribe `android/key.properties` (prod) o `android/key-dev.properties` (dev) desde los secretos.
-- FCM (`google-services.json`) y Google Maps (llave restringida por paquete) se configurarán por flavor con sus HU.
+- FCM: `develop.yml` y `cd.yml` escriben `android/app/google-services.json` desde el secreto `GOOGLE_SERVICES_JSON_BASE64` (`tool/google-services.sh`, proyecto Firebase `solventa-ec254`, un solo archivo con los paquetes de prod y `.dev`). Sin el secreto el APK compila igual con el push apagado; el plugin `com.google.gms.google-services` solo se aplica si el archivo existe. Google Maps (llave restringida por paquete) se configurará con su HU.
 
 ## Secretos y variables
 
@@ -189,6 +191,7 @@ Flavors de Android + `--dart-define-from-file`:
 | `FIREBASE_SERVICE_ACCOUNT` (secreto), `FIREBASE_APP_ID_DEV`, `FIREBASE_PROJECT_ID` (variables) | Environment `dev` | App Distribution y Test Lab | Falta cuenta |
 | `SONAR_TOKEN` | Repo | SonarCloud | Hoy |
 | `SENTRY_AUTH_TOKEN` | Environment `production` | Subir símbolos a Sentry (`uniandes-xm`) | Listo en `cd.yml` y `rollback.yml`, falta secreto |
+| `MAPBOX_PUBLIC_TOKEN` | Repo (o environments `dev` y `production`) | Token **público** de Mapbox (`pk.…`) para el mapa de M06-01 (HU-M06, M0). `develop.yml` y `cd.yml` lo pasan a `tool/build-*.sh` como `--dart-define=MAPBOX_ACCESS_TOKEN`. Sin él la app compila igual y muestra la lista sin mapa (Emuladores y Test Lab usan `mock`, con el mapa falso, y no lo necesitan). **No hace falta token de descargas**: el plugin baja el SDK del Maven de Mapbox sin credenciales (verificado al compilar el APK en el devcontainer) | Listo, falta secreto |
 
 ## Versionado
 

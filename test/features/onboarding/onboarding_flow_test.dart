@@ -2,29 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/app/solventa_app.dart';
+import 'package:solventa_mobile/core/biometria/biometria_service.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
-import 'package:solventa_mobile/features/onboarding/data/datasources/biometria_service.dart';
 import 'package:solventa_mobile/features/onboarding/data/datasources/fake_onboarding_remote_datasource.dart';
 import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/providers.dart';
+import 'package:solventa_mobile/features/onboarding/presentation/widgets/onboarding_widgets.dart';
 
 import '../../helpers/sol_test_app.dart';
 
 void main() {
   late FakeOnboardingRemoteDataSource bff;
 
-  /// M01-05b: correo y clave (cumple la regla de T17), luego el código real
-  /// de M01-05c (el fake espera 123456), y sigue al inicio.
+  /// M01-05b: la entrada abre en «Inicia sesión»; desde ahí «Crear cuenta»,
+  /// correo, clave (cumple la regla de T17) y su confirmación, luego el código
+  /// real de M01-05c (el fake espera 123456), y sigue al inicio.
   Future<void> crearCuenta(
     WidgetTester tester, {
     String correo = 'maria@ejemplo.co',
     bool conCodigo = true,
   }) async {
+    if (find.text('Crea tu cuenta').evaluate().isEmpty) {
+      await tester.tap(find.text('¿No tienes cuenta? Crear cuenta'));
+      await tester.pumpAndSettle();
+    }
     expect(find.text('Crea tu cuenta'), findsOneWidget);
     final campos = find.byType(TextField);
     await tester.enterText(campos.at(0), correo);
     await tester.enterText(campos.at(1), 'Clave-segura-1');
+    await tester.enterText(campos.at(2), 'Clave-segura-1');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Crear cuenta'));
     await tester.pumpAndSettle();
@@ -52,14 +59,18 @@ void main() {
             Duration.zero,
           ]),
           biometriaServiceProvider.overrideWithValue(
-            FakeBiometriaService(activada: biometria),
+            FakeBiometriaService(
+              estadoActual: biometria
+                  ? EstadoBiometria.biometriaRegistrada
+                  : EstadoBiometria.sinBloqueoPantalla,
+            ),
           ),
         ],
         child: const SolventaApp(),
       ),
     );
     await tester.pumpAndSettle();
-    if (find.text('Crea tu cuenta').evaluate().isNotEmpty) {
+    if (find.text('¿No tienes cuenta? Crear cuenta').evaluate().isNotEmpty) {
       await crearCuenta(tester);
     }
     await tester.tap(find.text('Completar registro'));
@@ -116,31 +127,47 @@ void main() {
   ) async {
     await abrir(tester);
     await hastaPruebaDeVida(tester);
-    await tester.tap(find.text('Continuar'));
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
     expect(
       find.text('¡Identidad verificada! Bienvenido a Solventa.'),
       findsOneWidget,
     );
-    await tester.tap(find.text('Ir a mi cuenta'));
+    await tester.tap(find.text('Activar huella o rostro'));
     await tester.pumpAndSettle();
-    expect(find.text('Necesitamos activar tu huella o rostro'), findsOneWidget);
-    await tester.tap(find.text('Ya lo activé, continuar'));
+    expect(find.text('Activa tu huella'), findsOneWidget);
+    await tester.tap(find.text('Activar huella'));
     await tester.pumpAndSettle();
     expect(find.text('Hola, María'), findsOneWidget);
   });
 
-  testWidgets('M01-08 no deja seguir sin biometría activada', (tester) async {
+  testWidgets('M01-07a deja ir al inicio sin activar la biometría', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await hastaPruebaDeVida(tester);
+    await tester.tap(find.text('Grabar video'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ir al inicio'));
+    await tester.pumpAndSettle();
+    expect(find.text('Hola, María'), findsOneWidget);
+    expect(find.text('Activa tu huella'), findsNothing);
+  });
+
+  testWidgets('M01-08 no deja seguir sin bloqueo de pantalla', (tester) async {
     await abrir(tester, biometria: false);
     await hastaPruebaDeVida(tester);
-    await tester.tap(find.text('Continuar'));
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Ir a mi cuenta'));
+    await tester.tap(find.text('Activar huella o rostro'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Ya lo activé, continuar'));
     await tester.pumpAndSettle();
     expect(
-      find.text('Aún no detectamos huella o rostro en tu teléfono.'),
+      find.text(
+        'Tu teléfono no tiene bloqueo de pantalla. Activa un PIN, patrón o '
+        'huella en los ajustes para proteger tu cuenta.',
+      ),
       findsOneWidget,
     );
     expect(find.text('Hola, María'), findsNothing);
@@ -150,7 +177,7 @@ void main() {
     await abrir(tester);
     await hastaPruebaDeVida(tester);
     bff.resultado = OnboardingFixtures.onboarding(estado: 'EN_REVISION');
-    await tester.tap(find.text('Continuar'));
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
     expect(
       find.text('Estamos revisando tu identidad, te avisamos.'),
@@ -169,7 +196,7 @@ void main() {
         intento: 1,
         intentosRestantes: 2,
       );
-      await tester.tap(find.text('Continuar'));
+      await tester.tap(find.text('Grabar video'));
       await tester.pumpAndSettle();
       expect(
         find.textContaining('No pudimos verificar tu documento'),
@@ -249,6 +276,79 @@ void main() {
     expect(tester.widget<TextField>(campos.at(1)).obscureText, isFalse);
   });
 
+  /// Abre «Crear cuenta» desde la entrada, sin llenar nada.
+  Future<void> abrirCrearCuenta(WidgetTester tester) async {
+    bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [fakeOnboardingProvider.overrideWithValue(bff)],
+        child: const SolventaApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('¿No tienes cuenta? Crear cuenta'));
+    await tester.pumpAndSettle();
+  }
+
+  // QA 2026-11-10: crear la cuenta vuelve a pedir la confirmación de la clave.
+  testWidgets('M01-05b: la confirmación distinta no deja crear la cuenta', (
+    tester,
+  ) async {
+    await abrirCrearCuenta(tester);
+    final campos = find.byType(TextField);
+    expect(campos, findsNWidgets(3));
+    await tester.enterText(campos.at(0), 'maria@ejemplo.co');
+    await tester.enterText(campos.at(1), 'Clave-segura-1');
+    // Mientras sea el comienzo de la clave no hay error.
+    await tester.enterText(campos.at(2), 'Clave-');
+    await tester.pumpAndSettle();
+    expect(find.text('Las claves no coinciden.'), findsNothing);
+    // En cuanto diverge, se avisa sin esperar a enviar.
+    await tester.enterText(campos.at(2), 'Clave-otra');
+    await tester.pumpAndSettle();
+    expect(find.text('Las claves no coinciden.'), findsOneWidget);
+    await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
+    expect(find.text('Verifica tu correo'), findsNothing);
+
+    await tester.enterText(campos.at(2), 'Clave-segura-1');
+    await tester.pumpAndSettle();
+    expect(find.text('Las claves no coinciden.'), findsNothing);
+    expect(find.text('Las claves coinciden.'), findsOneWidget);
+    await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
+    expect(find.text('Verifica tu correo'), findsOneWidget);
+  });
+
+  // QA 2026-11-10: los requisitos se ven desde el principio, en verde al
+  // cumplirse y en rojo los que faltan al intentar crear la cuenta.
+  testWidgets('M01-05b: los requisitos de la clave dicen qué falta', (
+    tester,
+  ) async {
+    await abrirCrearCuenta(tester);
+    expect(find.text('Tu clave debe tener:'), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp(r', pendiente$')), findsNWidgets(4));
+
+    final campos = find.byType(TextField);
+    await tester.enterText(campos.at(0), 'maria@ejemplo.co');
+    await tester.enterText(campos.at(1), 'clave');
+    await tester.pumpAndSettle();
+    expect(
+      find.bySemanticsLabel('Una letra minúscula, cumplido'),
+      findsOneWidget,
+    );
+
+    // El botón está activo: al tocarlo marca en rojo lo que falta.
+    await tester.tap(find.text('Crear cuenta'));
+    await tester.pumpAndSettle();
+    expect(find.text('Verifica tu correo'), findsNothing);
+    expect(find.bySemanticsLabel(RegExp(r', falta$')), findsNWidgets(3));
+    expect(find.bySemanticsLabel('Una letra mayúscula, falta'), findsOneWidget);
+  });
+
   testWidgets('M01-05c: verifica código OTP de 6 dígitos enviado al correo', (
     tester,
   ) async {
@@ -282,6 +382,64 @@ void main() {
     expect(find.text('Completar registro'), findsOneWidget);
   });
 
+  testWidgets('un registro vencido ofrece Empezar de nuevo', (tester) async {
+    await abrir(tester);
+    // El token del recorrido (30 min) ya no sirve: toda subida falla.
+    bff.respuestaSubida = OnboardingFixtures.subidaTokenInvalido;
+    await hastaPruebaDeVida(tester);
+    // M01-05: antes de grabar explica el video y pide mover la cabeza.
+    expect(find.textContaining('grabaremos 3 segundos'), findsOneWidget);
+    await tester.tap(find.text('Grabar video'));
+    await tester.pumpAndSettle();
+    // Con la selfie y el video tomados la cámara se cierra.
+    expect(find.byType(SolLiveCameraFrame), findsNothing);
+    expect(
+      find.text('Listo, ya tenemos tu selfie y tu video.'),
+      findsOneWidget,
+    );
+    expect(find.text('Tu registro venció. Empieza de nuevo.'), findsOneWidget);
+    await tester.tap(find.text('Empezar de nuevo'));
+    await tester.pumpAndSettle();
+    // Vuelve a la bienvenida con el recorrido y las capturas descartadas.
+    expect(find.text('Empezar'), findsOneWidget);
+    final contenedor = ProviderScope.containerOf(
+      tester.element(find.byType(SolventaApp)),
+    );
+    final estado = contenedor.read(onboardingProvider);
+    expect(estado.frenteCapturado, isFalse);
+    expect(estado.onboarding, isNull);
+    expect(estado.falla, isNull);
+  });
+
+  testWidgets('M01-05c: reenvío con segundos del backend', (tester) async {
+    bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          fakeOnboardingProvider.overrideWithValue(bff),
+          esperasVerificacionProvider.overrideWithValue(const [
+            Duration.zero,
+            Duration.zero,
+            Duration.zero,
+          ]),
+        ],
+        child: const SolventaApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await crearCuenta(tester, conCodigo: false);
+    expect(find.text('Reenviar en 1:00'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 61));
+    // El backend dice que aún faltan 42 s (v0.31): el botón se bloquea con ese
+    // valor y no con los 60 s de partida.
+    bff.respuestaEnviarCodigo = OnboardingFixtures.enviarCodigoEspera(42);
+    await tester.tap(find.text('Enviar otro código'));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('Reenviar en 0:42'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('Reenviar en 0:41'), findsOneWidget);
+  });
+
   testWidgets('M01-07c sin intentos manda a soporte, no a capturar', (
     tester,
   ) async {
@@ -293,7 +451,7 @@ void main() {
       intento: 3,
       intentosRestantes: 0,
     );
-    await tester.tap(find.text('Continuar'));
+    await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Ya no quedan intentos'), findsOneWidget);
     expect(find.text('Reintentar'), findsNothing);

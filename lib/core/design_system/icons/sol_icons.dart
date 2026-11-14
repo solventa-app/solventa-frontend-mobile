@@ -27,6 +27,13 @@ abstract final class SolIcons {
   // Prestadores.
   static const IconData medical = Symbols.medical_services;
   static const IconData mechanic = Symbols.build;
+  static const IconData towTruck = Symbols.auto_towing; // HU-M06 v0.49
+  static const IconData myLocation = Symbols.my_location; // HU-M06 M8
+  static const IconData layers = Symbols.layers; // HU-M06 M14
+  static const IconData misAsistencias = Symbols.assignment; // HU-M06 4.1
+  static const IconData notifications = Symbols.notifications; // HU-M06 4.5
+  static const IconData locationOff = Symbols.location_off; // HU-M06 2.0
+  static const IconData gpsOff = Symbols.location_disabled; // HU-M06 2.0
   static const IconData verifiedProvider = Symbols.verified;
   static const IconData location = Symbols.location_on;
   static const IconData schedule = Symbols.schedule;
@@ -37,6 +44,9 @@ abstract final class SolIcons {
 
   // Estados (siempre con texto al lado).
   static const IconData success = Symbols.check_circle;
+
+  /// Requisito aún sin cumplir (lista de la clave de M01-05b).
+  static const IconData requisitoPendiente = Symbols.radio_button_unchecked;
   static const IconData inReview = Symbols.arrow_circle_right;
   static const IconData failure = Symbols.cancel;
   static const IconData warning = Symbols.warning;
@@ -47,6 +57,9 @@ abstract final class SolIcons {
 
   // Captura de documento y prueba de vida.
   static const IconData camera = Symbols.photo_camera;
+
+  /// Grabando video (M01-05).
+  static const IconData recording = Symbols.radio_button_checked;
   static const IconData retry = Symbols.refresh;
   static const IconData idCard = Symbols.id_card;
   static const IconData lighting = Symbols.light_mode;
@@ -58,4 +71,11 @@ abstract final class SolIcons {
   static const IconData fingerprint = Symbols.fingerprint;
   static const IconData settings = Symbols.settings;
   static const IconData shield = Symbols.verified_user;
+
+  // Siniestro paramétrico (HU-M04).
+  static const IconData flight = Symbols.flight;
+  static const IconData thunderstorm = Symbols.thunderstorm;
+  static const IconData payments = Symbols.payments;
+  static const IconData bank = Symbols.account_balance;
+  static const IconData celebration = Symbols.celebration;
 }

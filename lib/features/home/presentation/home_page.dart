@@ -23,19 +23,48 @@ class HomePage extends StatelessWidget {
     required this.userName,
     required this.onCompleteRegistration,
     required this.onRequestAssistance,
+    this.onReportClaim,
+    this.onMyClaims,
+    this.onMyCoverage,
     this.verificacion,
+    this.cargandoCuenta = false,
+    this.cuentaSinCargar = false,
+    this.onReintentarCuenta,
     this.motivoRechazo,
     this.onCheckStatus,
     this.onOpenProfile,
+    this.onActivarBiometria,
+    this.onCerrarPistaBiometria,
   });
 
   final String userName;
   final VoidCallback onCompleteRegistration;
   final VoidCallback onRequestAssistance;
+
+  /// HU-M05: entrada al reporte de siniestro. Sin ella no se muestra.
+  final VoidCallback? onReportClaim;
+
+  /// HU-M05: los siniestros que reportó y su estado (M05-06).
+  final VoidCallback? onMyClaims;
+
+  /// HU-M04: cupo, movimientos y pagos de la cobertura paramétrica (M04-04).
+  final VoidCallback? onMyCoverage;
   final EstadoVerificacion? verificacion;
+
+  /// Cargando el perfil y la verificación: skeleton en vez de «sin verificar».
+  final bool cargandoCuenta;
+
+  /// No se pudo cargar: aviso con «Reintentar» ([onReintentarCuenta]).
+  final bool cuentaSinCargar;
+  final VoidCallback? onReintentarCuenta;
   final String? motivoRechazo;
   final VoidCallback? onCheckStatus;
   final VoidCallback? onOpenProfile;
+
+  /// Pista para activar la huella o el rostro (M01-08 es opcional). Sin ella
+  /// (o con la biometría ya activa) no se muestra.
+  final VoidCallback? onActivarBiometria;
+  final VoidCallback? onCerrarPistaBiometria;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +76,16 @@ class HomePage extends StatelessWidget {
     final saludo = tieneNombre
         ? (l10n?.homeSaludoHola(userName.trim()) ?? 'Hola, ${userName.trim()}')
         : (l10n?.homeSaludoBienvenida ?? 'Bienvenido a Solventa');
+
+    // Sin saber todavía el estado de la cuenta no se afirma que falte
+    // verificarla: se espera o se ofrece reintentar.
+    final desconocida = verificacion == null && !tieneNombre;
+    if (desconocida && (cargandoCuenta || cuentaSinCargar)) {
+      return _CuentaPorCargar(
+        cargando: cargandoCuenta,
+        onReintentar: onReintentarCuenta,
+      );
+    }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(
@@ -69,6 +108,13 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
+          if (onActivarBiometria != null) ...[
+            const SizedBox(height: SolSpacing.sm),
+            _PistaBiometria(
+              onActivar: onActivarBiometria!,
+              onCerrar: onCerrarPistaBiometria,
+            ),
+          ],
           const SizedBox(height: SolSpacing.lg),
           switch (verificacion) {
             EstadoVerificacion.enRevision => SolCard(
@@ -103,6 +149,7 @@ class HomePage extends StatelessWidget {
                       color: colors.onSurfaceVariant,
                     ),
                   ),
+                  const _AvisoAcceso(verificada: false),
                   const SizedBox(height: SolSpacing.lg),
                   SolButton.tonal(
                     label: l10n?.homeEnRevisionBoton ?? 'Consultar estado',
@@ -145,6 +192,7 @@ class HomePage extends StatelessWidget {
                       color: colors.onSurfaceVariant,
                     ),
                   ),
+                  const _AvisoAcceso(verificada: false),
                   const SizedBox(height: SolSpacing.lg),
                   SolButton.primary(
                     label:
@@ -185,6 +233,7 @@ class HomePage extends StatelessWidget {
                       color: colors.onSurfaceVariant,
                     ),
                   ),
+                  const _AvisoAcceso(verificada: true),
                   if (onOpenProfile != null) ...[
                     const SizedBox(height: SolSpacing.md),
                     SolButton.tonal(
@@ -236,6 +285,30 @@ class HomePage extends StatelessWidget {
             title: l10n?.homeAsistenciaTile ?? 'Solicitar asistencia en sitio',
             onTap: onRequestAssistance,
           ),
+          if (onReportClaim case final reportar?) ...[
+            const SizedBox(height: SolSpacing.sm),
+            SolActionTile(
+              icon: SolIcons.camera,
+              title: l10n?.homeReportarTile ?? 'Reportar un siniestro',
+              onTap: reportar,
+            ),
+          ],
+          if (onMyClaims case final misSiniestros?) ...[
+            const SizedBox(height: SolSpacing.sm),
+            SolActionTile(
+              icon: SolIcons.success,
+              title: l10n?.homeMisSiniestrosTile ?? 'Mis siniestros',
+              onTap: misSiniestros,
+            ),
+          ],
+          if (onMyCoverage case final miCobertura?) ...[
+            const SizedBox(height: SolSpacing.sm),
+            SolActionTile(
+              icon: SolIcons.wallet,
+              title: l10n?.homeMiCoberturaTile ?? 'Mi cobertura',
+              onTap: miCobertura,
+            ),
+          ],
           const SizedBox(height: SolSpacing.xl),
           SolInlineNote(
             icon: SolIcons.wallet,
@@ -243,6 +316,133 @@ class HomePage extends StatelessWidget {
                 l10n?.homeBilleteraNota ??
                 'Billetera y estado de póliza — próximamente',
             center: true,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Aviso de acceso (T15): una cuenta creada en la app entra a la app mientras
+/// no verifique su identidad; al verificar, entra también a la web con el
+/// mismo correo y clave. Sin los textos del idioma activo no muestra nada.
+class _AvisoAcceso extends StatelessWidget {
+  const _AvisoAcceso({required this.verificada});
+
+  final bool verificada;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = Localizations.of<AppLocalizations>(context, AppLocalizations);
+    if (l10n == null) return const SizedBox.shrink();
+    return SolInlineNote(
+      icon: SolIcons.info,
+      text: verificada ? l10n.homeVerificadaWeb : l10n.homeSoloAppAviso,
+    );
+  }
+}
+
+/// Línea discreta bajo el saludo: activa la huella o el rostro; se cierra.
+class _PistaBiometria extends StatelessWidget {
+  const _PistaBiometria({required this.onActivar, this.onCerrar});
+
+  final VoidCallback onActivar;
+  final VoidCallback? onCerrar;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = Localizations.of<AppLocalizations>(context, AppLocalizations);
+    if (l10n == null) return const SizedBox.shrink();
+    final colors = context.colors;
+    return Row(
+      children: [
+        ExcludeSemantics(
+          child: Icon(
+            SolIcons.fingerprint,
+            size: 20,
+            color: colors.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(width: SolSpacing.sm),
+        Expanded(
+          child: Text(
+            l10n.homeBiometriaPista,
+            style: context.solText.note.copyWith(
+              color: colors.onSurfaceVariant,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: onActivar,
+          child: Text(l10n.homeBiometriaActivar),
+        ),
+        if (onCerrar != null)
+          IconButton(
+            tooltip: l10n.homeBiometriaCerrar,
+            onPressed: onCerrar,
+            icon: const Icon(SolIcons.close, size: 20),
+          ),
+      ],
+    );
+  }
+}
+
+/// Mientras se carga el perfil y la verificación (o si no se pudo), en lugar
+/// de la tarjeta «Completa tu registro», que sería falsa para una cuenta ya
+/// verificada.
+class _CuentaPorCargar extends StatelessWidget {
+  const _CuentaPorCargar({required this.cargando, this.onReintentar});
+
+  final bool cargando;
+  final VoidCallback? onReintentar;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = Localizations.of<AppLocalizations>(context, AppLocalizations);
+    final padding = const EdgeInsets.fromLTRB(
+      SolSpacing.screen,
+      SolSpacing.xl,
+      SolSpacing.screen,
+      SolSpacing.xxl,
+    );
+    if (cargando) {
+      return Padding(
+        padding: padding,
+        child: SolSkeletonGroup(
+          message: l10n?.homeCargandoCuenta ?? 'Cargando tu cuenta…',
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SolSkeleton(widthFactor: 0.6, height: 28),
+              SizedBox(height: SolSpacing.lg),
+              SolSkeleton(height: 120, radius: SolRadius.cardAll),
+              SizedBox(height: SolSpacing.lg),
+              SolSkeleton(height: 56, radius: SolRadius.cardAll),
+              SizedBox(height: SolSpacing.sm),
+              SolSkeleton(height: 56, radius: SolRadius.cardAll),
+            ],
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: padding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Semantics(
+            liveRegion: true,
+            child: SolInlineNote(
+              icon: SolIcons.info,
+              text:
+                  l10n?.homeCuentaSinCargar ??
+                  'No pudimos cargar la información de tu cuenta.',
+            ),
+          ),
+          const SizedBox(height: SolSpacing.md),
+          SolButton.tonal(
+            label: l10n?.homeReintentarCuenta ?? 'Reintentar',
+            onPressed: onReintentar,
           ),
         ],
       ),

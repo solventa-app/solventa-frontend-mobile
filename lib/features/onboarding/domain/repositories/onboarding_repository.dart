@@ -22,6 +22,28 @@ abstract interface class OnboardingRepository {
   /// Envía un código OTP de 6 dígitos al correo (inicia recorrido si no existe).
   Future<Resultado<CodigoOnboarding>> enviarCodigo({required String correo});
 
+  /// «Olvidé mi contraseña»: pide el enlace al correo. Siempre sale bien si el
+  /// BFF respondió: no se dice si la cuenta existe.
+  Future<Resultado<void>> solicitarRestablecimientoClave({
+    required String correo,
+  });
+
+  /// Con sesión: registra la llave pública del teléfono. Devuelve su id.
+  Future<Resultado<String>> registrarDispositivo({
+    required String clavePublica,
+  });
+
+  /// Pública: el reto que el teléfono firma con su llave.
+  Future<Resultado<String>> desafioDispositivo({required String dispositivoId});
+
+  /// Pública: abre la sesión con la firma del reto (sin clave). Si AUTH no
+  /// reconoce el dispositivo falla con el motivo `DISPOSITIVO_NO_VALIDO`.
+  Future<Resultado<PerfilUsuario>> iniciarSesionConDispositivo({
+    required String dispositivoId,
+    required String reto,
+    required String firma,
+  });
+
   /// Verifica el código OTP de 6 dígitos enviado al correo.
   Future<Resultado<CodigoOnboarding>> verificarCodigo({
     required String correo,
@@ -65,6 +87,19 @@ abstract interface class OnboardingRepository {
   /// M01-07c «Intentar de nuevo»: vuelve a INICIADO y pide las cuatro piezas.
   Future<Resultado<Onboarding>> reintentar();
 
+  /// Descarta el recorrido guardado (id y token): el siguiente consentimiento
+  /// crea uno nuevo. Para «Empezar de nuevo» cuando el token venció (T16).
+  void descartarRecorrido();
+
   /// Cierra la sesión actual borrando el token y el recorrido en memoria.
   Future<void> cerrarSesion();
+
+  /// HU-M04 Fase 6 (KAN-259): liga el token de FCM a esta instalación.
+  Future<Resultado<bool>> registrarTokenPush({
+    required String instalacionId,
+    required String tokenFcm,
+  });
+
+  /// Perfil, interruptor «Notificaciones push».
+  Future<Resultado<bool>> actualizarPreferenciaPush({required bool habilitado});
 }
