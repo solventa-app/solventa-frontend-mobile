@@ -1048,5 +1048,13 @@
   "m0507PlazoVencido": "The review period has ended. We are processing your claim: you will see the result here in a few minutes.",
   "@m0507PlazoVencido": {
     "description": "M05-07 deadline passed, automatic approval in progress"
+  },
+  "m0503CiudadElegir": "Choose the city",
+  "@m0503CiudadElegir": {
+    "description": "M05-03 city list title"
+  },
+  "m0503CiudadOtra": "Another city",
+  "@m0503CiudadOtra": {
+    "description": "M05-03 option to type a city that is not in the list"
   }
 }

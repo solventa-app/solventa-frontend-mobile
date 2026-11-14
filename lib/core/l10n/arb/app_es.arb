@@ -2018,5 +2018,13 @@
   "m0507PlazoVencido": "El plazo de revisión venció. Estamos procesando tu caso: verás el resultado aquí en unos minutos.",
   "@m0507PlazoVencido": {
     "description": "M05-07 plazo vencido, aprobación automática en curso"
+  },
+  "m0503CiudadElegir": "Elige la ciudad",
+  "@m0503CiudadElegir": {
+    "description": "M05-03 título de la lista de ciudades"
+  },
+  "m0503CiudadOtra": "Otra ciudad",
+  "@m0503CiudadOtra": {
+    "description": "M05-03 opción para escribir una ciudad que no está en la lista"
   }
 }

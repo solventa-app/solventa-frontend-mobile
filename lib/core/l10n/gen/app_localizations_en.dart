@@ -1754,4 +1754,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get m0507PlazoVencido =>
       'The review period has ended. We are processing your claim: you will see the result here in a few minutes.';
+
+  @override
+  String get m0503CiudadElegir => 'Choose the city';
+
+  @override
+  String get m0503CiudadOtra => 'Another city';
 }

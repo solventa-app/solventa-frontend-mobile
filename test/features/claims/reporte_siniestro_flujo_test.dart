@@ -87,6 +87,22 @@ void main() {
     gps = FakeUbicacionService();
   });
 
+  /// Abre la lista de ciudades del relato y toca [nombre].
+  Future<void> elegirCiudad(WidgetTester tester, String nombre) async {
+    await tester.ensureVisible(find.byType(TextField).at(2));
+    await tester.tap(find.byType(TextField).at(2));
+    await tester.pumpAndSettle();
+    // «Otra ciudad» queda al final de una lista que se desplaza (la hoja es lo último en pantalla).
+    await tester.scrollUntilVisible(
+      find.text(nombre),
+      300,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(nombre));
+    await tester.pumpAndSettle();
+  }
+
   Future<void> hastaElRelato(WidgetTester tester) async {
     // M05-01: póliza y fecha (la fecha se fija por el notifier: el selector
     // nativo de fecha no es parte de lo que se prueba).
@@ -122,9 +138,49 @@ void main() {
       'Me chocaron por detrás en un semáforo.',
     );
     await tester.enterText(campos.at(1), 'Cra 15 con Calle 93');
-    await tester.enterText(campos.at(2), 'Bogotá');
-    await tester.pumpAndSettle();
+    // La ciudad es una lista desplegable (catálogo de ciudades), no texto libre.
+    await elegirCiudad(tester, 'Bogotá');
   }
+
+  testWidgets('la ciudad se elige de una lista y viaja con su nombre', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await hastaElRelato(tester);
+    await elegirCiudad(tester, 'Medellín');
+    expect(find.text('Antioquia'), findsNothing); // la hoja ya se cerró
+    await tester.tap(find.text('Enviar reporte'));
+    await tester.pumpAndSettle();
+
+    expect(bff.reportes.single.ubicacion.ciudad, 'Medellín');
+  });
+
+  testWidgets('«Otra ciudad» deja escribir una que no está en la lista', (
+    tester,
+  ) async {
+    await abrir(tester);
+    await hastaElRelato(tester);
+    await elegirCiudad(tester, 'Otra ciudad');
+    await tester.enterText(find.byType(TextField).at(2), 'Silvania');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Enviar reporte'));
+    await tester.pumpAndSettle();
+
+    expect(bff.reportes.single.ubicacion.ciudad, 'Silvania');
+  });
+
+  testWidgets('sin elegir ciudad no deja enviar y la pide', (tester) async {
+    await abrir(tester);
+    await hastaElRelato(tester);
+    await elegirCiudad(tester, 'Otra ciudad');
+    await tester.enterText(find.byType(TextField).at(2), '');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Enviar reporte'));
+    await tester.pumpAndSettle();
+
+    expect(bff.reportes, isEmpty);
+    expect(find.text('Completa este campo.'), findsWidgets);
+  });
 
   testWidgets('CA-M05-01: reporta y muestra el radicado y el plazo', (
     tester,
