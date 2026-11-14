@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
 import 'package:solventa_mobile/core/ubicacion/ubicacion_service.dart';
@@ -9,6 +10,7 @@ import 'package:solventa_mobile/features/assistance/data/datasources/catalogo_lo
 import 'package:solventa_mobile/features/assistance/data/datasources/permiso_pedido_store.dart';
 import 'package:solventa_mobile/features/assistance/data/datasources/ruta_externa_service.dart';
 import 'package:solventa_mobile/features/assistance/domain/entities/prestador.dart';
+import 'package:solventa_mobile/features/assistance/presentation/estilo_mapa_notifier.dart';
 import 'package:solventa_mobile/features/assistance/presentation/pages/m06_01_prestadores_page.dart';
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
 import 'package:solventa_mobile/features/assistance/presentation/widgets/detalle_prestador.dart';
@@ -64,6 +66,8 @@ void main() {
     solicitados = [];
     direcciones = [];
     permisoPedido = MemoriaPermisoPedidoStore(pedido: true);
+    // El estilo del mapa se recuerda: cada prueba parte sin nada guardado.
+    SharedPreferences.setMockInitialValues({});
   });
 
   List<String> nombresDeFilas(WidgetTester tester) => tester
@@ -200,6 +204,54 @@ void main() {
     await tester.pumpAndSettle();
     expect(estilo(), EstiloMapa.satelite);
     expect(find.bySemanticsLabel('Ver calles'), findsOneWidget);
+  });
+
+  testWidgets('M14: si el satélite no carga vuelve a calles y el mapa sigue', (
+    tester,
+  ) async {
+    await abrir(tester);
+    EstiloMapa estilo() => tester
+        .widget<MapaPrestadores>(find.byType(MapaPrestadores))
+        .datos
+        .estilo;
+    await tester.tap(find.bySemanticsLabel('Ver satélite'));
+    await tester.pumpAndSettle();
+    expect(estilo(), EstiloMapa.satelite);
+
+    // Mapbox rechazó las teselas del satélite: no se esconde el mapa.
+    tester
+        .widget<MapaPrestadores>(find.byType(MapaPrestadores))
+        .onSateliteFallo();
+    await tester.pumpAndSettle();
+
+    expect(estilo(), EstiloMapa.calles);
+    expect(find.byType(MapaPrestadores), findsOneWidget);
+    // El botón de capas sigue ahí para volver a intentar.
+    expect(find.bySemanticsLabel('Ver satélite'), findsOneWidget);
+  });
+
+  testWidgets('M14: el satélite guardado que falla se corrige y se recuerda', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      EstiloMapaNotifier.clave: EstiloMapa.satelite.name,
+    });
+    await abrir(tester);
+    EstiloMapa estilo() => tester
+        .widget<MapaPrestadores>(find.byType(MapaPrestadores))
+        .datos
+        .estilo;
+    expect(estilo(), EstiloMapa.satelite);
+
+    tester
+        .widget<MapaPrestadores>(find.byType(MapaPrestadores))
+        .onSateliteFallo();
+    await tester.pumpAndSettle();
+
+    expect(estilo(), EstiloMapa.calles);
+    // Reabrir la app ya no arranca en el estilo que falla.
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString(EstiloMapaNotifier.clave), EstiloMapa.calles.name);
   });
 
   testWidgets('M13: sin app de mapas, aviso con la dirección y «Copiar»', (

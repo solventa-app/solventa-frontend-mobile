@@ -21,6 +21,7 @@ class MapaPrestadores extends ConsumerWidget {
     required this.onTapVacio,
     required this.onGesto,
     required this.onFallo,
+    required this.onSateliteFallo,
   });
 
   final DatosMapa datos;
@@ -32,6 +33,10 @@ class MapaPrestadores extends ConsumerWidget {
   /// El mapa no pudo cargar: la página muestra solo la lista (CA-M06-04).
   final VoidCallback onFallo;
 
+  /// El satélite no cargó (p. ej. Mapbox rechaza sus teselas): la página vuelve
+  /// a calles y el mapa sigue, en vez de esconderlo.
+  final VoidCallback onSateliteFallo;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
       switch (ref.watch(motorMapaProvider)) {
@@ -42,6 +47,7 @@ class MapaPrestadores extends ConsumerWidget {
           onTapVacio: onTapVacio,
           onGesto: onGesto,
           onFallo: onFallo,
+          onSateliteFallo: onSateliteFallo,
         ),
         MotorMapa.falso => MapaFalso(
           datos: datos,

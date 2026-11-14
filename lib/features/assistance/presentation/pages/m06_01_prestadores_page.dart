@@ -376,6 +376,15 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                       if (_hoja.isAttached) _hoja.jumpTo(1);
                     });
                   },
+                  // El satélite no cargó (p. ej. Mapbox rechaza sus teselas): se
+                  // vuelve a calles y se recuerda; el mapa y el botón de capas
+                  // siguen. Sin esto el mapa se escondía y, como el estilo se
+                  // guarda, tampoco volvía al reabrir la app.
+                  onSateliteFallo: () => unawaited(
+                    ref
+                        .read(estiloMapaProvider.notifier)
+                        .usar(EstiloMapa.calles),
+                  ),
                 ),
               ),
               PositionedDirectional(
