@@ -43,10 +43,16 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
   void initState() {
     super.initState();
     enrutadorActivo = _router;
-    ref.listenManual(
-      accesoProvider.select((s) => s.fase),
-      (_, _) => _cambioFase.avisar(),
-    );
+    ref.listenManual(accesoProvider.select((s) => s.fase), (antes, ahora) {
+      _cambioFase.avisar();
+      // HU-M04 (KAN-259): si el push se tocó con la sesión guardada pero sin
+      // desbloquear (app cerrada o bloqueada tras 15 min), la ruta quedó
+      // pendiente; al terminar el desbloqueo se continúa hacia ella. El login
+      // con clave lo reanuda `_RootShell` en `router.dart`.
+      if (ahora == FaseAcceso.normal && antes != FaseAcceso.normal) {
+        _reanudarPendiente();
+      }
+    });
     // Sesión vencida con pantallas apiladas (perfil, verificación…): `go`
     // las descarta y deja solo `/`, que muestra «Inicia sesión».
     _eventos = ref.read(gestorSesionProvider).eventos.listen((evento) {
@@ -73,6 +79,15 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
     if (arranque != null && mounted) {
       _router.go(AsistenciaRoutes.detalleCon(arranque));
     }
+  }
+
+  void _reanudarPendiente() {
+    final pendiente = ref.read(pendingDestinationProvider);
+    if (pendiente == null || !ref.read(gestorSesionProvider).abierta) return;
+    ref.read(pendingDestinationProvider.notifier).limpiar();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _router.go(pendiente);
+    });
   }
 
   @override
