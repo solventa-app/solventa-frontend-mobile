@@ -11,6 +11,26 @@ import '../../../../../core/log/sol_log.dart';
 import '../../../domain/entities/prestador.dart';
 import 'mapa_datos.dart';
 
+/// Fuente raster del estilo de satélite de Mapbox (`satellite-streets-v12`): el
+/// `sourceId` con el que llegan los errores de sus teselas.
+const fuenteSateliteMapbox = 'mapbox-satellite';
+
+/// ¿Se avisa de este error de carga? Mapbox manda uno por cada tesela que falla,
+/// así que se avisa una sola vez por estilo ([yaAvisado]); y los que llegan
+/// tarde de la fuente del satélite ([fuente]) cuando ya se volvió a calles no
+/// son de este mapa: avisarlos escondería un mapa de calles que sí carga.
+@visibleForTesting
+bool avisarErrorDeCarga({
+  required EstiloMapa estilo,
+  required EstiloMapa? yaAvisado,
+  required String? fuente,
+}) {
+  if (estilo == EstiloMapa.calles && fuente == fuenteSateliteMapbox) {
+    return false;
+  }
+  return yaAvisado != estilo;
+}
+
 /// Mapa de M06-01 con `mapbox_maps_flutter` (HU-M06, M0).
 ///
 /// - Pines como anotaciones con imágenes de [SolMapPin] (M1, M3, M4).
@@ -21,6 +41,9 @@ import 'mapa_datos.dart';
 ///   si el sistema pide quitarlas (M6).
 /// - Estilos calles y satélite (M14): al cambiar se conservan cámara, pines y
 ///   selección.
+/// - Si el satélite no carga (p. ej. Mapbox rechaza sus teselas con 429) se
+///   avisa con `onSateliteFallo` y la página vuelve a calles; solo si fallan
+///   las calles, o el mapa no inicia, se avisa con `onFallo` (CA-M06-04).
 ///
 /// La vista nativa no se pinta en `flutter test`: las pruebas usan
 /// `MapaFalso`. Verificar en un teléfono (ajuste A9).
@@ -33,6 +56,7 @@ class MapaMapbox extends StatefulWidget {
     required this.onTapVacio,
     required this.onGesto,
     required this.onFallo,
+    required this.onSateliteFallo,
   });
 
   final DatosMapa datos;
@@ -41,6 +65,7 @@ class MapaMapbox extends StatefulWidget {
   final VoidCallback onTapVacio;
   final VoidCallback onGesto;
   final VoidCallback onFallo;
+  final VoidCallback onSateliteFallo;
 
   static String estiloUri(EstiloMapa e) => switch (e) {
     EstiloMapa.calles => MapboxStyles.MAPBOX_STREETS,
@@ -63,9 +88,14 @@ class _MapaMapboxState extends State<MapaMapbox> {
   int _pintado = 0;
   int? _ordenAplicada;
 
+  /// Estilo del que ya se avisó una falla de carga (ver [avisarErrorDeCarga]).
+  EstiloMapa? _estiloAvisado;
+
   @override
   void didUpdateWidget(MapaMapbox old) {
     super.didUpdateWidget(old);
+    // Con otro estilo, sus fallas vuelven a contar.
+    if (old.datos.estilo != widget.datos.estilo) _estiloAvisado = null;
     final mapa = _mapa;
     if (mapa == null) return;
     if (old.datos.estilo != widget.datos.estilo) {
@@ -354,14 +384,36 @@ class _MapaMapboxState extends State<MapaMapbox> {
     return bytes!.buffer.asUint8List();
   }
 
+  /// Un error de carga del estilo que se ve (estilo, fuentes, teselas...).
+  void _errorDeCarga(MapLoadingErrorEventData e) {
+    final estilo = widget.datos.estilo;
+    if (!avisarErrorDeCarga(
+      estilo: estilo,
+      yaAvisado: _estiloAvisado,
+      fuente: e.sourceId,
+    )) {
+      return;
+    }
+    _estiloAvisado = estilo;
+    // Sin datos del cliente: solo el estilo y el tipo de error (el mensaje de
+    // Mapbox puede traer la URL con el token).
+    SolLog.warning(
+      'Mapbox no cargó el mapa',
+      codigo: '${estilo.name}:${e.type.name}',
+    );
+    if (!mounted) return;
+    if (estilo == EstiloMapa.satelite) {
+      widget.onSateliteFallo();
+    } else {
+      widget.onFallo();
+    }
+  }
+
   @override
   Widget build(BuildContext context) => MapWidget(
     key: const ValueKey('mapbox-m06-01'),
     styleUri: MapaMapbox.estiloUri(widget.datos.estilo),
     onMapCreated: (m) => unawaited(_creado(m)),
-    onMapLoadErrorListener: (_) {
-      SolLog.warning('Mapbox no cargó el estilo');
-      if (mounted) widget.onFallo();
-    },
+    onMapLoadErrorListener: _errorDeCarga,
   );
 }

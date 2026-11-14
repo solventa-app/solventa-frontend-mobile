@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solventa_mobile/core/ubicacion/ubicacion_service.dart';
 import 'package:solventa_mobile/features/assistance/data/datasources/asistencia_remote_datasource.dart';
 import 'package:solventa_mobile/features/assistance/data/datasources/catalogo_local_datasource.dart';
 import 'package:solventa_mobile/features/assistance/domain/entities/prestador.dart';
+import 'package:solventa_mobile/features/assistance/presentation/estilo_mapa_notifier.dart';
 import 'package:solventa_mobile/features/assistance/presentation/prestadores_state.dart';
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
 import 'package:solventa_mobile/features/assistance/presentation/widgets/mapa/mapa_datos.dart';
@@ -15,6 +17,8 @@ void main() {
   late ProviderContainer c;
 
   setUp(() {
+    // El estilo del mapa se recuerda: cada prueba parte sin nada guardado.
+    SharedPreferences.setMockInitialValues({});
     gps = FakeUbicacionService();
     c = ProviderContainer(
       overrides: [
@@ -67,4 +71,23 @@ void main() {
     await c.read(estiloMapaProvider.notifier).alternar();
     expect(c.read(estiloMapaProvider), EstiloMapa.calles);
   });
+
+  test(
+    'M14: `usar` fija el estilo y lo recuerda (satélite que falla)',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        EstiloMapaNotifier.clave: EstiloMapa.satelite.name,
+      });
+      // Arranca en calles y, apenas lee lo guardado, queda en satélite.
+      expect(c.read(estiloMapaProvider), EstiloMapa.calles);
+      await pumpEventQueue();
+      expect(c.read(estiloMapaProvider), EstiloMapa.satelite);
+
+      await c.read(estiloMapaProvider.notifier).usar(EstiloMapa.calles);
+
+      expect(c.read(estiloMapaProvider), EstiloMapa.calles);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getString(EstiloMapaNotifier.clave), EstiloMapa.calles.name);
+    },
+  );
 }

@@ -27,10 +27,15 @@ final class EstiloMapaNotifier extends Notifier<EstiloMapa> {
     }
   }
 
-  Future<void> alternar() async {
-    state = state == EstiloMapa.calles
-        ? EstiloMapa.satelite
-        : EstiloMapa.calles;
+  Future<void> alternar() => usar(
+    state == EstiloMapa.calles ? EstiloMapa.satelite : EstiloMapa.calles,
+  );
+
+  /// Fija el estilo y lo recuerda. También lo usa el mapa cuando el satélite no
+  /// carga: vuelve a calles y queda guardado, para no reabrir en un estilo que
+  /// falla (sin esto el mapa se escondía en cada apertura).
+  Future<void> usar(EstiloMapa estilo) async {
+    state = estilo;
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(clave, state.name);
