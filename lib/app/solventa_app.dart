@@ -66,14 +66,17 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
 
   Future<void> _iniciarNotificacionesAsistencia() async {
     final avisos = ref.read(notificacionesAsistenciaProvider);
-    await avisos.iniciar(
-      alTocar: (id) => _router.go(AsistenciaRoutes.detalleCon(id)),
-    );
+    await avisos.iniciar(alTocar: (p) => _router.go(_destinoDeAviso(p)));
     final arranque = await avisos.idDeArranque();
     if (arranque != null && mounted) {
-      _router.go(AsistenciaRoutes.detalleCon(arranque));
+      _router.go(_destinoDeAviso(arranque));
     }
   }
+
+  /// El mismo plugin pinta dos avisos: el de llegada de la asistencia (payload
+  /// = id) y el push en primer plano (payload = ruta, empieza por `/`).
+  String _destinoDeAviso(String payload) =>
+      payload.startsWith('/') ? payload : AsistenciaRoutes.detalleCon(payload);
 
   @override
   void dispose() {

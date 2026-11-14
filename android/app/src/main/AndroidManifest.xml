@@ -56,6 +56,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- HU-M04 (KAN-259): canal de importancia alta para el push de FCM (lo crea
+             `push_service.dart`). Sin él FCM usa su canal genérico de respaldo. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="avisos_push" />
         <!-- HU-M06 (4.5): notificación local programada para la llegada de la asistencia
              (flutter_local_notifications). Sin alarmas exactas: inexactAllowWhileIdle. -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
