@@ -13,6 +13,7 @@ import '../core/sesion/gestor_sesion.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/assistance/presentation/asistencia_routes.dart';
 import '../features/assistance/presentation/providers.dart';
+import '../features/onboarding/presentation/preferencias_de_la_cuenta.dart';
 import '../features/profile/presentation/sol_preferencias_sheet.dart';
 import 'router.dart';
 
@@ -88,6 +89,8 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
   Widget build(BuildContext context) {
     final locale = ref.watch(localeProvider);
     final moneda = ref.watch(monedaProvider);
+    // Lo guardado en la cuenta manda al abrir la sesión (HU-M02): idioma y moneda del perfil pasan a la app.
+    ref.watch(preferenciasDeLaCuentaProvider);
     final codigoIdioma = locale.languageCode.toUpperCase();
     final etiquetaChip = '$codigoIdioma · $moneda';
 

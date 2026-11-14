@@ -89,7 +89,34 @@ final class ReporteSiniestro {
   final List<FotoSiniestro> fotos;
 }
 
-/// El caso como lo ve el cliente después de reportar (M05-05).
+/// Cómo terminó la revisión de un caso, lo que el cliente puede ver (M05-07).
+/// Sin el comentario del operador ni datos del perito: el contrato no los envía.
+final class ResolucionSiniestro {
+  const ResolucionSiniestro({
+    required this.tipo,
+    required this.resueltaEn,
+    this.motivo,
+    this.viaRecurso,
+    this.indemnizacion,
+    this.plazoDispersion,
+  });
+
+  /// `APROBACION`, `RECHAZO` o `DERIVACION` (en revisión con un perito).
+  final String tipo;
+  final DateTime resueltaEn;
+
+  /// Solo en un rechazo: `EVIDENCIA_INSUFICIENTE`, `FUERA_DE_COBERTURA`,
+  /// `POLIZA_NO_VIGENTE`, `INCONSISTENCIA_EN_RELATO` u `OTRO`.
+  final String? motivo;
+  final String? viaRecurso;
+
+  /// Solo en una aprobación, como pesos enteros.
+  final num? indemnizacion;
+  final String? plazoDispersion;
+}
+
+/// El caso como lo ve el cliente después de reportar (M05-05) y en su detalle
+/// (M05-07).
 final class SiniestroReportado {
   const SiniestroReportado({
     required this.id,
@@ -98,6 +125,8 @@ final class SiniestroReportado {
     required this.notificadoEn,
     required this.venceDictamenEn,
     required this.fotos,
+    this.ocurridoEn,
+    this.resolucion,
   });
 
   final String id;
@@ -110,6 +139,12 @@ final class SiniestroReportado {
   final DateTime notificadoEn;
   final DateTime venceDictamenEn;
   final int fotos;
+
+  /// Cuándo ocurrió el siniestro, según el reporte.
+  final DateTime? ocurridoEn;
+
+  /// `null` mientras el caso está `PENDIENTE`.
+  final ResolucionSiniestro? resolucion;
 }
 
 /// Motivo cuando el almacenamiento no confirmó una foto (la app pide tomarla

@@ -6,6 +6,7 @@ import '../../../core/biometria/biometria_providers.dart';
 import '../../../core/biometria/llave_dispositivo.dart';
 import '../../../core/errors/falla.dart';
 import '../../../core/errors/resultado.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/log/sol_log.dart';
 import '../../../core/network/network_providers.dart';
 import '../../../core/sesion/gestor_sesion.dart';
@@ -180,6 +181,43 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
   /// Sube al cerrar sesión: una consulta que vuelve después no revive la cuenta.
   int _epocaSesion = 0;
 
+  Timer? _temporizadorPreferencias;
+
+  /// Con sesión y un perfil cargado, lo que difiere de la cuenta se guarda tras una pausa (varios cambios
+  /// seguidos mandan uno solo). Los valores se leen al guardar, no al programar: si al aplicar el perfil de la
+  /// cuenta el idioma llega antes que la moneda, no queda un guardado pendiente con la moneda vieja.
+  void _programarSincronizacion() {
+    _temporizadorPreferencias?.cancel();
+    if (!_difiereDeLaCuenta()) return;
+    final epoca = _epocaSesion;
+    _temporizadorPreferencias = Timer(
+      const Duration(milliseconds: 700),
+      () async {
+        if (!ref.mounted || epoca != _epocaSesion || !_difiereDeLaCuenta()) {
+          return;
+        }
+        final r = await ref
+            .read(onboardingRepositoryProvider)
+            .actualizarPreferencias(
+              idioma: ref.read(localeProvider).languageCode.toUpperCase(),
+              moneda: ref.read(monedaProvider).toUpperCase(),
+            );
+        if (!ref.mounted || epoca != _epocaSesion) return;
+        if (r case Exito(:final valor)) {
+          state = state.copyWith(perfil: valor);
+        }
+      },
+    );
+  }
+
+  bool _difiereDeLaCuenta() {
+    final perfil = state.perfil;
+    if (perfil == null || !state.cuentaCreada) return false;
+    return ref.read(localeProvider).languageCode.toUpperCase() !=
+            perfil.idioma.toUpperCase() ||
+        ref.read(monedaProvider).toUpperCase() != perfil.moneda.toUpperCase();
+  }
+
   @override
   OnboardingState build() {
     // HU-M02: si la renovación devuelve SESION_VENCIDA (o la llave se
@@ -189,6 +227,13 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
       if (evento is SesionVencidaEvento) _alVencerSesion();
     });
     ref.onDispose(eventos.cancel);
+    // Idioma y moneda que se cambian con la píldora de la barra o la hoja de preferencias también se guardan en
+    // la cuenta (antes solo el botón «Guardar» del perfil lo hacía), para que sobrevivan a otro teléfono o a
+    // una reinstalación y coincidan con lo que se eligió en la web. Al revés, lo guardado en la cuenta se aplica
+    // al abrir la sesión (`SolventaApp`).
+    ref.listen(localeProvider, (_, _) => _programarSincronizacion());
+    ref.listen(monedaProvider, (_, _) => _programarSincronizacion());
+    ref.onDispose(() => _temporizadorPreferencias?.cancel());
     return const OnboardingState();
   }
 

@@ -1695,6 +1695,70 @@ class AppLocalizationsEs extends AppLocalizations {
   String get homeReintentarCuenta => 'Reintentar';
 
   @override
+  String get m0507Titulo => 'Detalle del siniestro';
+
+  @override
+  String get m0507NoEncontrado => 'No encontramos este siniestro.';
+
+  @override
+  String m0507Ocurrio(String fecha) {
+    return 'Ocurrió el $fecha';
+  }
+
+  @override
+  String get m0507Resolucion => 'Resolución';
+
+  @override
+  String m0507ResueltoEl(String fecha) {
+    return 'Resuelto el $fecha';
+  }
+
+  @override
+  String m0507Indemnizacion(String monto) {
+    return 'Indemnización aprobada: $monto';
+  }
+
+  @override
+  String m0507PlazoPago(String plazo) {
+    return 'Plazo de pago: $plazo';
+  }
+
+  @override
+  String m0507Motivo(String motivo) {
+    return 'Motivo: $motivo';
+  }
+
+  @override
+  String m0507ViaRecurso(String via) {
+    return 'Cómo pedir una revisión: $via';
+  }
+
+  @override
+  String get m0507MotivoEvidencia => 'la evidencia no fue suficiente';
+
+  @override
+  String get m0507MotivoCobertura => 'el hecho está fuera de la cobertura';
+
+  @override
+  String get m0507MotivoPoliza => 'la póliza no estaba vigente';
+
+  @override
+  String get m0507MotivoRelato =>
+      'el relato no es consistente con la evidencia';
+
+  @override
+  String get m0507MotivoOtro => 'otro motivo';
+
+  @override
+  String m0507Restante(String tiempo) {
+    return 'Tiempo restante: $tiempo';
+  }
+
+  @override
+  String get m0507PlazoVencido =>
+      'El plazo de revisión venció. Estamos procesando tu caso: verás el resultado aquí en unos minutos.';
+
+  @override
   String get m0503CiudadElegir => 'Elige la ciudad';
 
   @override
