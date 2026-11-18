@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/router.dart';
@@ -30,8 +31,20 @@ import 'instalacion_id.dart';
 /// ni hasta que ese archivo exista. [init] lo envuelve en `try/catch` para
 /// que ese fallo deje el push apagado en vez de tumbar el arranque de la
 /// app; se registra con [SolLog], nunca `print` (regla del repo).
+/// Id del canal: el mismo que el manifiesto (`default_notification_channel_id`)
+/// y el que manda `enviar-push` en `android.notification.channel_id`.
+const canalPush = AndroidNotificationChannel(
+  'avisos_push',
+  'Avisos de Solventa',
+  description: 'Indemnizaciones y otros avisos de tus pólizas',
+  importance: Importance.high,
+);
+
 class PushService {
-  PushService(this._ref);
+  PushService(this._ref, [FlutterLocalNotificationsPlugin? avisos])
+    : _avisos = avisos ?? FlutterLocalNotificationsPlugin();
+
+  final FlutterLocalNotificationsPlugin _avisos;
 
   final Ref _ref;
   bool _firebaseListo = false;
@@ -49,14 +62,30 @@ class PushService {
       return;
     }
 
+    await _crearCanal();
+
     try {
-      await FirebaseMessaging.instance.requestPermission();
+      final ajustes = await FirebaseMessaging.instance.requestPermission();
+      if (ajustes.authorizationStatus != AuthorizationStatus.authorized) {
+        // Sin permiso Android descarta el aviso sin decir nada: que quede
+        // rastro (sin datos personales) para diagnosticarlo.
+        SolLog.warning(
+          'Notificaciones push sin permiso',
+          codigo: ajustes.authorizationStatus.name,
+        );
+      }
     } catch (e) {
       SolLog.info(
         'No se pudo pedir el permiso de notificaciones',
         codigo: e.runtimeType.toString(),
       );
     }
+
+    // Con la app abierta FCM no pinta el aviso: lo pinta la app en el mismo
+    // canal, y al tocarlo abre la ruta (ver `solventa_app.dart`).
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage m) => unawaited(_mostrarEnPrimerPlano(m)),
+    );
 
     // `onTokenRefresh` puede disparar en cualquier momento de la vida de la
     // app, con o sin sesión activa; `_registrar` se queda calladamente sin
@@ -101,6 +130,51 @@ class PushService {
     await _ref
         .read(onboardingRepositoryProvider)
         .registrarTokenPush(instalacionId: instalacionId, tokenFcm: tokenFcm);
+  }
+
+  /// Canal propio de importancia alta para los avisos de push. El manifiesto
+  /// lo declara como canal por defecto de FCM, así que también lo usan los
+  /// avisos que llegan con la app en segundo plano o cerrada.
+  Future<void> _crearCanal() async {
+    try {
+      await _avisos
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.createNotificationChannel(canalPush);
+    } catch (e) {
+      SolLog.warning(
+        'No se creó el canal de push',
+        codigo: e.runtimeType.toString(),
+      );
+    }
+  }
+
+  Future<void> _mostrarEnPrimerPlano(RemoteMessage m) async {
+    final aviso = m.notification;
+    if (aviso == null) return;
+    try {
+      await _avisos.show(
+        id: m.messageId.hashCode & 0x7fffffff,
+        title: aviso.title,
+        body: aviso.body,
+        notificationDetails: NotificationDetails(
+          android: AndroidNotificationDetails(
+            canalPush.id,
+            canalPush.name,
+            channelDescription: canalPush.description,
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+        ),
+        payload: m.data['ruta'] as String?,
+      );
+    } catch (e) {
+      SolLog.warning(
+        'No se mostró el push en primer plano',
+        codigo: e.runtimeType.toString(),
+      );
+    }
   }
 
   /// Navega con el `GoRouter` activo (`router.dart`): pasa por el guard de
