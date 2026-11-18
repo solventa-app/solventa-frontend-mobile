@@ -1763,4 +1763,70 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0503CiudadOtra => 'Otra ciudad';
+
+  @override
+  String get asistenciaCanalNombre => 'Asistencias';
+
+  @override
+  String get asistenciaCanalDescripcion =>
+      'Aviso cuando llega el prestador de una asistencia';
+
+  @override
+  String get ubicacionPrivacidad =>
+      'Tu ubicación viaja cifrada a Solventa y a nuestro proveedor de mapas solo para calcular las rutas. Guardamos un registro cifrado durante 90 días para auditoría.';
+
+  @override
+  String get m0601EspecialidadUrgencias => 'Urgencias';
+
+  @override
+  String get m0601EspecialidadMedicinaGeneral => 'Medicina general';
+
+  @override
+  String get m0601EspecialidadMecanicaGeneral => 'Mecánica general';
+
+  @override
+  String get m0601EspecialidadLlantasYFrenos => 'Llantas y frenos';
+
+  @override
+  String get m0601EspecialidadGruaLiviana => 'Grúa liviana';
+
+  @override
+  String get m0601EspecialidadGruaYCarroTaller => 'Grúa y carro taller';
+
+  @override
+  String get m0601Abierto24h => 'Abierto 24 h';
+
+  @override
+  String get m0601TodosLosDias => 'Todos los días';
+
+  @override
+  String m0601RangoDias(String desde, String hasta) {
+    return '$desde a $hasta';
+  }
+
+  @override
+  String m0601Horario(String dias, String abre, String cierra) {
+    return '$dias, $abre a $cierra';
+  }
+
+  @override
+  String get m0601DiaLunes => 'lun';
+
+  @override
+  String get m0601DiaMartes => 'mar';
+
+  @override
+  String get m0601DiaMiercoles => 'mié';
+
+  @override
+  String get m0601DiaJueves => 'jue';
+
+  @override
+  String get m0601DiaViernes => 'vie';
+
+  @override
+  String get m0601DiaSabado => 'sáb';
+
+  @override
+  String get m0601DiaDomingo => 'dom';
 }

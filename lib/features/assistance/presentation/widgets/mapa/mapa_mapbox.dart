@@ -15,20 +15,34 @@ import 'mapa_datos.dart';
 /// `sourceId` con el que llegan los errores de sus teselas.
 const fuenteSateliteMapbox = 'mapbox-satellite';
 
-/// ¿Se avisa de este error de carga? Mapbox manda uno por cada tesela que falla,
-/// así que se avisa una sola vez por estilo ([yaAvisado]); y los que llegan
-/// tarde de la fuente del satélite ([fuente]) cuando ya se volvió a calles no
-/// son de este mapa: avisarlos escondería un mapa de calles que sí carga.
+/// Teselas fallidas del mismo estilo a partir de las cuales el mapa se da por
+/// caído (p. ej. la cuenta sin el producto de satélite: fallan todas).
+const teselasParaRendirse = 8;
+
+/// ¿Se avisa de este error de carga? Solo esconde el mapa lo que lo deja sin
+/// dibujar: el estilo o una fuente entera, o muchas teselas seguidas
+/// ([teselasFallidas]). Una tesela suelta, un sprite o una fuente tipográfica
+/// no: el mapa sigue sirviendo. Mapbox manda un error por cada tesela, así
+/// que se avisa una sola vez por estilo ([yaAvisado]); y los que llegan tarde
+/// de la fuente del satélite ([fuente]) cuando ya se volvió a calles no son de
+/// este mapa: avisarlos escondería un mapa de calles que sí carga.
 @visibleForTesting
 bool avisarErrorDeCarga({
   required EstiloMapa estilo,
   required EstiloMapa? yaAvisado,
   required String? fuente,
+  required MapLoadErrorType tipo,
+  int teselasFallidas = 0,
 }) {
   if (estilo == EstiloMapa.calles && fuente == fuenteSateliteMapbox) {
     return false;
   }
-  return yaAvisado != estilo;
+  if (yaAvisado == estilo) return false;
+  return switch (tipo) {
+    MapLoadErrorType.STYLE || MapLoadErrorType.SOURCE => true,
+    MapLoadErrorType.TILE => teselasFallidas >= teselasParaRendirse,
+    _ => false,
+  };
 }
 
 /// Mapa de M06-01 con `mapbox_maps_flutter` (HU-M06, M0).
@@ -91,11 +105,17 @@ class _MapaMapboxState extends State<MapaMapbox> {
   /// Estilo del que ya se avisó una falla de carga (ver [avisarErrorDeCarga]).
   EstiloMapa? _estiloAvisado;
 
+  /// Teselas que fallaron con el estilo actual (ver [avisarErrorDeCarga]).
+  int _teselasFallidas = 0;
+
   @override
   void didUpdateWidget(MapaMapbox old) {
     super.didUpdateWidget(old);
     // Con otro estilo, sus fallas vuelven a contar.
-    if (old.datos.estilo != widget.datos.estilo) _estiloAvisado = null;
+    if (old.datos.estilo != widget.datos.estilo) {
+      _estiloAvisado = null;
+      _teselasFallidas = 0;
+    }
     final mapa = _mapa;
     if (mapa == null) return;
     if (old.datos.estilo != widget.datos.estilo) {
@@ -384,13 +404,19 @@ class _MapaMapboxState extends State<MapaMapbox> {
     return bytes!.buffer.asUint8List();
   }
 
-  /// Un error de carga del estilo que se ve (estilo, fuentes, teselas...).
+  /// Un error de carga del estilo que se ve (estilo, fuentes, teselas...). Lo
+  /// que no es fatal no esconde el mapa (H3 de la revisión).
   void _errorDeCarga(MapLoadingErrorEventData e) {
     final estilo = widget.datos.estilo;
+    final deOtroEstilo =
+        estilo == EstiloMapa.calles && e.sourceId == fuenteSateliteMapbox;
+    if (e.type == MapLoadErrorType.TILE && !deOtroEstilo) _teselasFallidas++;
     if (!avisarErrorDeCarga(
       estilo: estilo,
       yaAvisado: _estiloAvisado,
       fuente: e.sourceId,
+      tipo: e.type,
+      teselasFallidas: _teselasFallidas,
     )) {
       return;
     }

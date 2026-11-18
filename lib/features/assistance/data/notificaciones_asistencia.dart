@@ -10,7 +10,9 @@ import '../../../core/log/sol_log.dart';
 /// `llegadaEstimada`: no necesita internet para mostrarse y se reprograma sola
 /// tras reiniciar el teléfono (receptor de arranque del plugin). Va en su
 /// propio canal «Asistencias», separado del push de FCM de HU-M04 (ajuste A2).
-/// El texto ya llega traducido; el payload es solo el id de la asistencia.
+/// El texto y el nombre del canal ya llegan traducidos al idioma de la app; al
+/// cambiar de idioma se reprograman con el texto nuevo y Android renombra el
+/// canal (mismo id). El payload es solo el id de la asistencia.
 abstract interface class NotificacionesAsistencia {
   /// Prepara el plugin. [alTocar] recibe el id de la asistencia tocada con la
   /// app abierta o en segundo plano.
@@ -24,15 +26,23 @@ abstract interface class NotificacionesAsistencia {
   Future<bool> pedirPermiso();
 
   /// Programa (o reprograma: mismo id) la notificación para [llegada].
+  /// [canal] es el nombre y la descripción del canal en Ajustes de Android.
   Future<void> programar({
     required String id,
     required DateTime llegada,
     required String titulo,
     required String cuerpo,
+    required CanalAsistencias canal,
   });
 
   Future<void> cancelar(String id);
 }
+
+/// Nombre y descripción del canal «Asistencias», en el idioma de la app.
+typedef CanalAsistencias = ({String nombre, String descripcion});
+
+/// Id del canal: fijo, así el cambio de idioma lo renombra en vez de crear otro.
+const idCanalAsistencias = 'asistencias';
 
 /// Id de la notificación derivado del id de la asistencia (FNV-1a de 31 bits):
 /// estable entre ejecuciones, así reprogramar reemplaza la anterior.
@@ -50,14 +60,6 @@ final class LocalNotificacionesAsistencia implements NotificacionesAsistencia {
 
   final FlutterLocalNotificationsPlugin _plugin;
   bool _listo = false;
-
-  static const _canal = AndroidNotificationDetails(
-    'asistencias',
-    'Asistencias',
-    channelDescription: 'Aviso cuando llega el prestador de una asistencia',
-    importance: Importance.high,
-    priority: Priority.high,
-  );
 
   @override
   Future<void> iniciar({required void Function(String id) alTocar}) async {
@@ -116,6 +118,7 @@ final class LocalNotificacionesAsistencia implements NotificacionesAsistencia {
     required DateTime llegada,
     required String titulo,
     required String cuerpo,
+    required CanalAsistencias canal,
   }) async {
     if (!_listo || !llegada.isAfter(DateTime.now())) return;
     try {
@@ -125,7 +128,15 @@ final class LocalNotificacionesAsistencia implements NotificacionesAsistencia {
         body: cuerpo,
         // Un instante absoluto: no depende de la zona horaria del teléfono.
         scheduledDate: tz.TZDateTime.from(llegada.toUtc(), tz.UTC),
-        notificationDetails: const NotificationDetails(android: _canal),
+        notificationDetails: NotificationDetails(
+          android: AndroidNotificationDetails(
+            idCanalAsistencias,
+            canal.nombre,
+            channelDescription: canal.descripcion,
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+        ),
         // Sin permiso de alarmas exactas: puede llegar un par de minutos
         // tarde, aceptable para un aviso de llegada.
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
@@ -156,6 +167,9 @@ final class FakeNotificacionesAsistencia implements NotificacionesAsistencia {
   final List<String> canceladas = [];
   bool permiso = true;
   int permisosPedidos = 0;
+
+  /// El canal de la última notificación programada.
+  CanalAsistencias? canal;
   void Function(String id)? alTocar;
   String? arranque;
 
@@ -181,7 +195,11 @@ final class FakeNotificacionesAsistencia implements NotificacionesAsistencia {
     required DateTime llegada,
     required String titulo,
     required String cuerpo,
-  }) async => programadas[id] = (llegada, titulo, cuerpo);
+    required CanalAsistencias canal,
+  }) async {
+    this.canal = canal;
+    programadas[id] = (llegada, titulo, cuerpo);
+  }
 
   @override
   Future<void> cancelar(String id) async {

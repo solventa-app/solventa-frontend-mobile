@@ -5,7 +5,7 @@
 /// Las respuestas de `solicitarAsistencia` y `cancelarAsistencia` (contrato
 /// v0.40) tienen la forma del BFF, con `__typename` de la union.
 abstract final class AsistenciaFixtures {
-  static const String version = '2026-11-12.1';
+  static const String version = '2026-11-18.1';
 
   static const List<Map<String, Object?>> prestadores = [
     {
@@ -18,8 +18,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': true,
       'especialidad': 'Urgencias',
+      'codigoEspecialidad': 'URGENCIAS',
       'direccion': 'Cl. 93 # 14-20, Bogotá D.C.',
       'horario': 'Abierto 24 h',
+      'horarioAtencion': {
+        'abierto24h': true,
+        'diaDesde': null,
+        'diaHasta': null,
+        'abre': null,
+        'cierra': null,
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -32,8 +41,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': true,
       'especialidad': 'Mecánica general',
+      'codigoEspecialidad': 'MECANICA_GENERAL',
       'direccion': 'Cra. 11 # 94-35, Bogotá D.C.',
       'horario': 'Lun a sáb, 7:00 a. m. a 7:00 p. m.',
+      'horarioAtencion': {
+        'abierto24h': false,
+        'diaDesde': 'LUNES',
+        'diaHasta': 'SABADO',
+        'abre': '07:00',
+        'cierra': '19:00',
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -46,8 +64,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': false,
       'especialidad': 'Urgencias',
+      'codigoEspecialidad': 'URGENCIAS',
       'direccion': 'Cra. 15 # 77-50, Bogotá D.C.',
       'horario': 'Abierto 24 h',
+      'horarioAtencion': {
+        'abierto24h': true,
+        'diaDesde': null,
+        'diaHasta': null,
+        'abre': null,
+        'cierra': null,
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -60,8 +87,10 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': false,
       'especialidad': 'Mecánica general',
+      'codigoEspecialidad': 'MECANICA_GENERAL',
       'direccion': 'Av. Cra. 68 # 80-22, Bogotá D.C.',
       'horario': null,
+      'horarioAtencion': null,
       'fotoUrl': null,
     },
     {
@@ -74,8 +103,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': true,
       'especialidad': 'Medicina general',
+      'codigoEspecialidad': 'MEDICINA_GENERAL',
       'direccion': 'Cl. 63 # 9-40, Bogotá D.C.',
       'horario': 'Lun a dom, 6:00 a. m. a 10:00 p. m.',
+      'horarioAtencion': {
+        'abierto24h': false,
+        'diaDesde': 'LUNES',
+        'diaHasta': 'DOMINGO',
+        'abre': '06:00',
+        'cierra': '22:00',
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -88,8 +126,10 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': false,
       'especialidad': 'Llantas y frenos',
+      'codigoEspecialidad': 'LLANTAS_Y_FRENOS',
       'direccion': 'Av. Américas # 68-10, Bogotá D.C.',
       'horario': null,
+      'horarioAtencion': null,
       'fotoUrl': null,
     },
     {
@@ -102,8 +142,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': true,
       'especialidad': 'Urgencias',
+      'codigoEspecialidad': 'URGENCIAS',
       'direccion': 'Cra. 43A # 10-50, Medellín',
       'horario': 'Abierto 24 h',
+      'horarioAtencion': {
+        'abierto24h': true,
+        'diaDesde': null,
+        'diaHasta': null,
+        'abre': null,
+        'cierra': null,
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -116,8 +165,10 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': false,
       'especialidad': 'Mecánica general',
+      'codigoEspecialidad': 'MECANICA_GENERAL',
       'direccion': 'Cl. 10 # 38-20, Medellín',
       'horario': null,
+      'horarioAtencion': null,
       'fotoUrl': null,
     },
     {
@@ -130,8 +181,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': true,
       'especialidad': 'Urgencias',
+      'codigoEspecialidad': 'URGENCIAS',
       'direccion': 'Av. 6N # 15-30, Cali',
       'horario': 'Abierto 24 h',
+      'horarioAtencion': {
+        'abierto24h': true,
+        'diaDesde': null,
+        'diaHasta': null,
+        'abre': null,
+        'cierra': null,
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -144,8 +204,10 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': false,
       'especialidad': 'Mecánica general',
+      'codigoEspecialidad': 'MECANICA_GENERAL',
       'direccion': 'Autopista Sur # 44-10, Cali',
       'horario': null,
+      'horarioAtencion': null,
       'fotoUrl': null,
     },
     {
@@ -158,8 +220,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': true,
       'especialidad': 'Urgencias',
+      'codigoEspecialidad': 'URGENCIAS',
       'direccion': 'Cra. 51B # 80-12, Barranquilla',
       'horario': 'Abierto 24 h',
+      'horarioAtencion': {
+        'abierto24h': true,
+        'diaDesde': null,
+        'diaHasta': null,
+        'abre': null,
+        'cierra': null,
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -172,8 +243,10 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': false,
       'especialidad': 'Mecánica general',
+      'codigoEspecialidad': 'MECANICA_GENERAL',
       'direccion': 'Vía 40 # 72-15, Barranquilla',
       'horario': null,
+      'horarioAtencion': null,
       'fotoUrl': null,
     },
     {
@@ -186,8 +259,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': true,
       'especialidad': 'Grúa liviana',
+      'codigoEspecialidad': 'GRUA_LIVIANA',
       'direccion': 'Cl. 100 # 19-61, Bogotá D.C.',
       'horario': 'Abierto 24 h',
+      'horarioAtencion': {
+        'abierto24h': true,
+        'diaDesde': null,
+        'diaHasta': null,
+        'abre': null,
+        'cierra': null,
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -200,8 +282,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': false,
       'especialidad': 'Grúa y carro taller',
+      'codigoEspecialidad': 'GRUA_Y_CARRO_TALLER',
       'direccion': 'Av. Cra. 30 # 63-18, Bogotá D.C.',
       'horario': 'Abierto 24 h',
+      'horarioAtencion': {
+        'abierto24h': true,
+        'diaDesde': null,
+        'diaHasta': null,
+        'abre': null,
+        'cierra': null,
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -214,8 +305,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': true,
       'especialidad': 'Grúa liviana',
+      'codigoEspecialidad': 'GRUA_LIVIANA',
       'direccion': 'Cra. 65 # 30-40, Medellín',
       'horario': 'Abierto 24 h',
+      'horarioAtencion': {
+        'abierto24h': true,
+        'diaDesde': null,
+        'diaHasta': null,
+        'abre': null,
+        'cierra': null,
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
     {
@@ -228,8 +328,10 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': false,
       'especialidad': 'Grúa liviana',
+      'codigoEspecialidad': 'GRUA_LIVIANA',
       'direccion': 'Cl. 5 # 50-12, Cali',
       'horario': null,
+      'horarioAtencion': null,
       'fotoUrl': null,
     },
     {
@@ -242,8 +344,17 @@ abstract final class AsistenciaFixtures {
       'activo': true,
       'aliado': true,
       'especialidad': 'Grúa liviana',
+      'codigoEspecialidad': 'GRUA_LIVIANA',
       'direccion': 'Cl. 30 # 25-90, Barranquilla',
       'horario': 'Abierto 24 h',
+      'horarioAtencion': {
+        'abierto24h': true,
+        'diaDesde': null,
+        'diaHasta': null,
+        'abre': null,
+        'cierra': null,
+        '__typename': 'HorarioAtencion',
+      },
       'fotoUrl': null,
     },
   ];

@@ -396,6 +396,10 @@ class _RootShell extends ConsumerWidget {
       return const M0105bCuentaPage(modoInicialLogin: true);
     }
 
+    // HU-M06 (H1): con sesión, «Mis asistencias» se carga al abrir la app (el
+    // badge y la reprogramación de las notificaciones) sin entrar a la pestaña.
+    ref.watch(cargaInicialAsistenciasProvider);
+
     final l10n = context.l10n;
     final notifier = ref.read(onboardingProvider.notifier);
 

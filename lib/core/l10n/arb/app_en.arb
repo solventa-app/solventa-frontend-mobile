@@ -1056,5 +1056,48 @@
   "m0503CiudadOtra": "Another city",
   "@m0503CiudadOtra": {
     "description": "M05-03 option to type a city that is not in the list"
-  }
+  },
+  "asistenciaCanalNombre": "Assistance",
+  "asistenciaCanalDescripcion": "Alert when the provider of an assistance arrives",
+  "ubicacionPrivacidad": "Your location travels encrypted to Solventa and our map provider only to calculate routes. We keep an encrypted record for 90 days for auditing.",
+  "m0601EspecialidadUrgencias": "Emergency care",
+  "m0601EspecialidadMedicinaGeneral": "General medicine",
+  "m0601EspecialidadMecanicaGeneral": "General mechanics",
+  "m0601EspecialidadLlantasYFrenos": "Tires and brakes",
+  "m0601EspecialidadGruaLiviana": "Light tow truck",
+  "m0601EspecialidadGruaYCarroTaller": "Tow truck and mobile workshop",
+  "m0601Abierto24h": "Open 24 hours",
+  "m0601TodosLosDias": "Every day",
+  "m0601RangoDias": "{desde}–{hasta}",
+  "@m0601RangoDias": {
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      },
+      "hasta": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601Horario": "{dias}, {abre} to {cierra}",
+  "@m0601Horario": {
+    "placeholders": {
+      "dias": {
+        "type": "String"
+      },
+      "abre": {
+        "type": "String"
+      },
+      "cierra": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DiaLunes": "Mon",
+  "m0601DiaMartes": "Tue",
+  "m0601DiaMiercoles": "Wed",
+  "m0601DiaJueves": "Thu",
+  "m0601DiaViernes": "Fri",
+  "m0601DiaSabado": "Sat",
+  "m0601DiaDomingo": "Sun"
 }

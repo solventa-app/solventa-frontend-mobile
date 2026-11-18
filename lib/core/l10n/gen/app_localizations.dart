@@ -3007,6 +3007,126 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Otra ciudad'**
   String get m0503CiudadOtra;
+
+  /// Nombre del canal de notificaciones en Ajustes de Android (H3)
+  ///
+  /// In es, this message translates to:
+  /// **'Asistencias'**
+  String get asistenciaCanalNombre;
+
+  /// Descripción del canal de notificaciones en Ajustes de Android (H3)
+  ///
+  /// In es, this message translates to:
+  /// **'Aviso cuando llega el prestador de una asistencia'**
+  String get asistenciaCanalDescripcion;
+
+  /// Aviso de privacidad de la ubicación en M06-01 (H5, contrato v0.51)
+  ///
+  /// In es, this message translates to:
+  /// **'Tu ubicación viaja cifrada a Solventa y a nuestro proveedor de mapas solo para calcular las rutas. Guardamos un registro cifrado durante 90 días para auditoría.'**
+  String get ubicacionPrivacidad;
+
+  /// Especialidad URGENCIAS (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Urgencias'**
+  String get m0601EspecialidadUrgencias;
+
+  /// Especialidad MEDICINA_GENERAL (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Medicina general'**
+  String get m0601EspecialidadMedicinaGeneral;
+
+  /// Especialidad MECANICA_GENERAL (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Mecánica general'**
+  String get m0601EspecialidadMecanicaGeneral;
+
+  /// Especialidad LLANTAS_Y_FRENOS (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Llantas y frenos'**
+  String get m0601EspecialidadLlantasYFrenos;
+
+  /// Especialidad GRUA_LIVIANA (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Grúa liviana'**
+  String get m0601EspecialidadGruaLiviana;
+
+  /// Especialidad GRUA_Y_CARRO_TALLER (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Grúa y carro taller'**
+  String get m0601EspecialidadGruaYCarroTaller;
+
+  /// Horario del prestador abierto 24 h (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Abierto 24 h'**
+  String get m0601Abierto24h;
+
+  /// Horario del prestador de lunes a domingo (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Todos los días'**
+  String get m0601TodosLosDias;
+
+  /// Rango de días del horario: «lun a sáb» (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'{desde} a {hasta}'**
+  String m0601RangoDias(String desde, String hasta);
+
+  /// Horario del prestador: «Lun a sáb, 7:00 a. m. a 7:00 p. m.» (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'{dias}, {abre} a {cierra}'**
+  String m0601Horario(String dias, String abre, String cierra);
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'lun'**
+  String get m0601DiaLunes;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'mar'**
+  String get m0601DiaMartes;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'mié'**
+  String get m0601DiaMiercoles;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'jue'**
+  String get m0601DiaJueves;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'vie'**
+  String get m0601DiaViernes;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'sáb'**
+  String get m0601DiaSabado;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'dom'**
+  String get m0601DiaDomingo;
 }
 
 class _AppLocalizationsDelegate
