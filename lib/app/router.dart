@@ -144,6 +144,29 @@ void _volverAPestana(BuildContext context, int indice) {
   context.go('/');
 }
 
+/// Redirección del router (separada para probarla sin montar la app).
+///
+/// Las rutas de M04 sin sesión abierta, o con la sesión guardada pero
+/// bloqueada, se guardan con [guardarPendiente] para seguir hacia ellas al
+/// abrir o desbloquear la sesión.
+String? redirigirRuta(
+  String ubicacion, {
+  FaseAcceso Function()? fase,
+  bool Function()? sesionAbierta,
+  void Function(String ruta)? guardarPendiente,
+}) {
+  if (ubicacion == SolGalleryPage.routeName) return null;
+  if (sesionAbierta != null && _esRutaM04(ubicacion) && !sesionAbierta()) {
+    guardarPendiente?.call(ubicacion);
+    return '/';
+  }
+  final destino = fase == null ? null : redirigirAcceso(fase(), ubicacion);
+  if (destino != null && _esRutaM04(ubicacion)) {
+    guardarPendiente?.call(ubicacion);
+  }
+  return destino;
+}
+
 /// Rutas de la app. El nombre de cada ruta es el id del plano de Figma.
 ///
 /// Con [fase] (HU-M02) el router redirige según la fase de acceso:
@@ -164,15 +187,12 @@ GoRouter crearRouter({
   initialLocation: kDebugMode && _openGallery ? SolGalleryPage.routeName : '/',
   observers: [_RutaActualObserver(), SentryNavigatorObserver()],
   refreshListenable: refrescar,
-  redirect: (_, state) {
-    final ubicacion = state.matchedLocation;
-    if (ubicacion == SolGalleryPage.routeName) return null;
-    if (sesionAbierta != null && _esRutaM04(ubicacion) && !sesionAbierta()) {
-      guardarPendiente?.call(ubicacion);
-      return '/';
-    }
-    return fase == null ? null : redirigirAcceso(fase(), ubicacion);
-  },
+  redirect: (_, state) => redirigirRuta(
+    state.matchedLocation,
+    fase: fase,
+    sesionAbierta: sesionAbierta,
+    guardarPendiente: guardarPendiente,
+  ),
   routes: [
     GoRoute(path: '/', name: 'g-03', builder: (_, _) => const _RootShell()),
     GoRoute(
@@ -465,6 +485,8 @@ class _RootShell extends ConsumerWidget {
         onMyClaims: verificado
             ? () => context.push(ReporteRoutes.misSiniestros)
             : null,
+        // HU-M04 (M04-04): la cobertura paramétrica y sus indemnizaciones.
+        onMyCoverage: () => context.push(ParametricRoutes.cobertura),
         // M01-08 es opcional: mientras no esté activa, el Home la sugiere.
         onActivarBiometria: verificado && !cerrada && !biometriaActiva
             ? () async {
