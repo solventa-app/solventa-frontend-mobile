@@ -26,16 +26,74 @@ Prestador? prestadorDesdeMapa(Map<String, Object?> m) {
     direccion: (m['direccion'] as String?) ?? '',
     horario: m['horario'] as String?,
     fotoUrl: m['fotoUrl'] as String?,
+    codigoEspecialidad: especialidadDesdeCodigo(m['codigoEspecialidad']),
+    horarioAtencion: horarioDesdeMapa(m['horarioAtencion']),
   );
 }
 
-/// La copia local es anterior al contrato v0.49 (sin `aliado`): se vuelve a
-/// pedir el catálogo aunque no hayan pasado los 7 días.
+/// v0.53: un código que la app no conoce queda `null` (se muestra el tipo).
+EspecialidadPrestador? especialidadDesdeCodigo(Object? codigo) =>
+    switch (codigo) {
+      'URGENCIAS' => EspecialidadPrestador.urgencias,
+      'MEDICINA_GENERAL' => EspecialidadPrestador.medicinaGeneral,
+      'MECANICA_GENERAL' => EspecialidadPrestador.mecanicaGeneral,
+      'LLANTAS_Y_FRENOS' => EspecialidadPrestador.llantasYFrenos,
+      'GRUA_LIVIANA' => EspecialidadPrestador.gruaLiviana,
+      'GRUA_Y_CARRO_TALLER' => EspecialidadPrestador.gruaYCarroTaller,
+      _ => null,
+    };
+
+DiaSemana? _dia(Object? codigo) => switch (codigo) {
+  'LUNES' => DiaSemana.lunes,
+  'MARTES' => DiaSemana.martes,
+  'MIERCOLES' => DiaSemana.miercoles,
+  'JUEVES' => DiaSemana.jueves,
+  'VIERNES' => DiaSemana.viernes,
+  'SABADO' => DiaSemana.sabado,
+  'DOMINGO' => DiaSemana.domingo,
+  _ => null,
+};
+
+final _hora = RegExp(r'^([01]\d|2[0-3]):[0-5]\d$');
+
+/// v0.53: `horarioAtencion` → [HorarioAtencion]. Uno incompleto o mal formado
+/// queda `null` (no se muestra horario) en vez de mostrar algo a medias.
+HorarioAtencion? horarioDesdeMapa(Object? m) {
+  if (m is! Map<String, Object?>) return null;
+  final abierto24h = m['abierto24h'];
+  if (abierto24h == true) return const HorarioAtencion(abierto24h: true);
+  if (abierto24h != false) return null;
+  final desde = _dia(m['diaDesde']);
+  final hasta = _dia(m['diaHasta']);
+  final abre = m['abre'];
+  final cierra = m['cierra'];
+  if (desde == null ||
+      hasta == null ||
+      abre is! String ||
+      cierra is! String ||
+      !_hora.hasMatch(abre) ||
+      !_hora.hasMatch(cierra)) {
+    return null;
+  }
+  return HorarioAtencion(
+    abierto24h: false,
+    diaDesde: desde,
+    diaHasta: hasta,
+    abre: abre,
+    cierra: cierra,
+  );
+}
+
+/// La copia local es anterior al contrato v0.49 (sin `aliado`) o a la v0.53
+/// (sin `codigoEspecialidad`): se vuelve a pedir el catálogo aunque no hayan
+/// pasado los 7 días.
 bool copiaSinDetalle(Map<String, Object?> catalogo) {
   final lista = catalogo['prestadores'];
   if (lista is! List<Object?> || lista.isEmpty) return false;
   final primero = lista.first;
-  return primero is Map<String, Object?> && !primero.containsKey('aliado');
+  return primero is Map<String, Object?> &&
+      (!primero.containsKey('aliado') ||
+          !primero.containsKey('codigoEspecialidad'));
 }
 
 /// `data.catalogoPrestadores` → [CatalogoPrestadores].

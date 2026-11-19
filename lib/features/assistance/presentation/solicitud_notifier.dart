@@ -174,7 +174,11 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
     await espera;
     if (!ref.mounted) return;
     // 4.5: confirmada, se programa la notificación de llegada.
-    if (r case Exito(:final valor)) unawaited(programarLlegada(ref, valor));
+    if (r case Exito(:final valor)) {
+      unawaited(programarLlegada(ref, valor));
+      // H1: el badge de «Mis asistencias» la cuenta sin abrir la pestaña.
+      unawaited(ref.read(misAsistenciasProvider.notifier).cargar());
+    }
     state = state.copyWith(
       intentos: s.intentos + 1,
       envio: switch (r) {

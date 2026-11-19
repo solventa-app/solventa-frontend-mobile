@@ -126,4 +126,20 @@ abstract final class SolFormat {
 
   /// `6 min` (espacio duro antes de la unidad).
   static String minutes(int minutes) => '$minutes${nbsp}min';
+
+  static final NumberFormat _decimal1En = NumberFormat('#,##0.0', 'en');
+
+  static bool _ingles(Locale locale) => locale.languageCode == 'en';
+
+  /// Como [time] en español; en inglés `11:02 AM` (con espacio duro).
+  static String timeFor(DateTime d, Locale locale) {
+    if (!_ingles(locale)) return time(d);
+    final hour12 = d.hour % 12 == 0 ? 12 : d.hour % 12;
+    final minutes = d.minute.toString().padLeft(2, '0');
+    return '$hour12:$minutes$nbsp${d.hour < 12 ? 'AM' : 'PM'}';
+  }
+
+  /// Como [distanceKm] en español (`1,5 km`); en inglés `1.5 km`.
+  static String distanceKmFor(double km, Locale locale) =>
+      _ingles(locale) ? '${_decimal1En.format(km)}${nbsp}km' : distanceKm(km);
 }

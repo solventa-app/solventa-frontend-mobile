@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../domain/entities/prestador.dart';
+import '../textos_prestador.dart';
 
 /// Ícono del tipo de prestador (el mismo del pin y de la fila).
 IconData iconoTipoPrestador(TipoPrestador t) => switch (t) {
@@ -45,10 +46,13 @@ class DetallePrestador extends StatelessWidget {
     final l10n = context.l10n;
     final colors = context.colors;
     final p = cercano.prestador;
+    final locale = Localizations.localeOf(context);
+    final especialidad = l10n.especialidadDe(p);
+    final horario = l10n.horarioDe(p, locale);
     final (Color fondo, Color frente) = solProviderColors(context, p.aliado);
     final haversine = SolFormat.minutes(cercano.minutosEstimados);
     final llegada = l10n.m0601DetalleLlegada(
-      SolFormat.distanceKm(cercano.distanciaKm),
+      SolFormat.distanceKmFor(cercano.distanciaKm, locale),
       tiempo ?? (destacado ? haversine : l10n.m0601Aproximado(haversine)),
     );
     final textoNota = context.solText.body.copyWith(
@@ -126,9 +130,9 @@ class DetallePrestador extends StatelessWidget {
               ),
               const SizedBox(height: SolSpacing.md),
               Text(
-                p.especialidad.isEmpty
+                especialidad.isEmpty
                     ? tipo
-                    : l10n.m0601DetalleTipo(tipo, p.especialidad),
+                    : l10n.m0601DetalleTipo(tipo, especialidad),
                 style: textoNota,
               ),
               const SizedBox(height: SolSpacing.xs),
@@ -198,9 +202,9 @@ class DetallePrestador extends StatelessWidget {
             ),
           ),
         ],
-        if (p.horario != null) ...[
+        if (horario != null) ...[
           const SizedBox(height: SolSpacing.sm),
-          Text(p.horario!, style: textoNota),
+          Text(horario, style: textoNota),
         ],
         const SizedBox(height: SolSpacing.lg),
         SolButton.primary(

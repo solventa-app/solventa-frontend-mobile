@@ -70,13 +70,59 @@ void main() {
         }),
         isTrue,
       );
+      // v0.53: con `aliado` pero sin `codigoEspecialidad` también se pide.
       expect(
         copiaSinDetalle({
           'prestadores': [
             {..._mapa('a'), 'aliado': false},
           ],
         }),
+        isTrue,
+      );
+      expect(
+        copiaSinDetalle({
+          'prestadores': [
+            {..._mapa('a'), 'aliado': false, 'codigoEspecialidad': null},
+          ],
+        }),
         isFalse,
+      );
+    });
+
+    test('v0.53: especialidad y horario como datos', () {
+      final p = prestadorDesdeMapa({
+        ..._mapa('t', tipo: 'MECANICO'),
+        'codigoEspecialidad': 'LLANTAS_Y_FRENOS',
+        'horarioAtencion': {
+          'abierto24h': false,
+          'diaDesde': 'LUNES',
+          'diaHasta': 'SABADO',
+          'abre': '07:00',
+          'cierra': '19:00',
+        },
+      })!;
+      expect(p.codigoEspecialidad, EspecialidadPrestador.llantasYFrenos);
+      final h = p.horarioAtencion!;
+      expect(
+        (h.abierto24h, h.diaDesde, h.diaHasta, h.abre, h.cierra),
+        (false, DiaSemana.lunes, DiaSemana.sabado, '07:00', '19:00'),
+      );
+      expect(horarioDesdeMapa({'abierto24h': true})!.abierto24h, isTrue);
+      // Un código nuevo o un horario a medias no rompen: quedan `null`.
+      expect(especialidadDesdeCodigo('BOMBEROS'), isNull);
+      expect(
+        horarioDesdeMapa({'abierto24h': false, 'diaDesde': 'LUNES'}),
+        isNull,
+      );
+      expect(
+        horarioDesdeMapa({
+          'abierto24h': false,
+          'diaDesde': 'LUNES',
+          'diaHasta': 'SABADO',
+          'abre': '7 a. m.',
+          'cierra': '19:00',
+        }),
+        isNull,
       );
     });
 

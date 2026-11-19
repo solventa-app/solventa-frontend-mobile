@@ -85,6 +85,34 @@ void main() {
       },
     );
 
+    test('H1: el badge cuenta la confirmada sin abrir la pestaña', () async {
+      c.listen(enCaminoCantidadProvider, (_, _) {});
+      final id = await confirmada();
+      // La recarga tras confirmar corre sin esperar: se deja terminar.
+      await pumpEventQueue();
+      expect(c.read(enCaminoCantidadProvider), 1);
+      expect(c.read(misAsistenciasProvider).enCamino.map((a) => a.id), [id]);
+    });
+
+    test(
+      'H3: al cambiar a inglés la notificación y el canal se reprograman',
+      () async {
+        c.listen(misAsistenciasProvider, (_, _) {});
+        final id = await confirmada();
+        await c.read(misAsistenciasProvider.notifier).cargar();
+        expect(avisos.canal, (
+          nombre: 'Asistencias',
+          descripcion: 'Aviso cuando llega el prestador de una asistencia',
+        ));
+        c.read(localeProvider.notifier).cambiar(AppLocales.en);
+        await pumpEventQueue();
+        final (_, titulo, cuerpo) = avisos.programadas[id]!;
+        expect(titulo, 'Your assistance has arrived');
+        expect(cuerpo, 'Clínica Norte should be at your location now');
+        expect(avisos.canal?.nombre, 'Assistance');
+      },
+    );
+
     test(
       '4.1: en camino y ya llegaron según la hora; el backend manda',
       () async {

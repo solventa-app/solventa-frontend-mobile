@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +26,11 @@ bool get _enPruebas => Platform.environment.containsKey('FLUTTER_TEST');
 /// BFF (contrato v0.36, KAN-263).
 final asistenciaRemoteDataSourceProvider = Provider<AsistenciaRemoteDataSource>(
   (ref) => ref.watch(usarFakesProvider)
-      ? FakeAsistenciaRemoteDataSource()
+      // En pruebas sin espera: «Mis asistencias» se carga al abrir la app (H1)
+      // y su latencia de demo quedaría pendiente al cerrar cada prueba.
+      ? (_enPruebas
+            ? FakeAsistenciaRemoteDataSource(latencia: Duration.zero)
+            : FakeAsistenciaRemoteDataSource())
       : GqlAsistenciaRemoteDataSource(ref.watch(graphqlClientProvider)),
 );
 
@@ -95,6 +100,17 @@ final misAsistenciasProvider =
     NotifierProvider<MisAsistenciasNotifier, MisAsistenciasState>(
       MisAsistenciasNotifier.new,
     );
+
+/// H1: carga «Mis asistencias» una vez al abrir la app con sesión, para el
+/// badge y para reprogramar las notificaciones sin entrar a la pestaña. Lo
+/// observa el inicio; al cerrar sesión se descarta y al volver carga de nuevo.
+final cargaInicialAsistenciasProvider = Provider.autoDispose<void>((ref) {
+  unawaited(
+    Future.microtask(() async {
+      if (ref.mounted) await ref.read(misAsistenciasProvider.notifier).cargar();
+    }),
+  );
+});
 
 /// Número del badge de «Mis asistencias»: las en camino (4.1).
 final enCaminoCantidadProvider = Provider<int>(

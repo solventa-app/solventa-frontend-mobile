@@ -61,6 +61,12 @@ Revisión del 2026-11-12 contra `develop` (mobile `8dac02f`, backend `fb3b4c6`).
 | 3 · Dirección ubicada (B4, B9, 2.0, S1) | PR #591 (v0.50, apilado sobre #590) | PR #85 (apilado sobre #84) |
 | 4 · Rutas y auditoría (B8, M15) | PR #614 (v0.51, CLAIMS `0008`) | PR #86 (apilado sobre #85) |
 | 5 · «Mis asistencias» y notificación (B5, B6, 4.x) | PR #615 (v0.52, CLAIMS `0009`) | PR #89 (apilado sobre #86) |
+| Ajustes de la revisión del 2026-11-14 (H1 a H3, H5, idiomas) | v0.53, CLAIMS `0010`: especialidad y horario como datos; la caché de rutas ya no entrega la ubicación de otro cliente | Badge y notificaciones al abrir la app y tras pedir; solo el estilo, una fuente o muchas teselas esconden el mapa; especialidad, horario, horas, distancias, notificación y canal en ES/EN (se reprograman al cambiar de idioma); aviso de privacidad en la explicación de ubicación |
+
+**Ajustes de la revisión (2026-11-18).** La app pide `codigoEspecialidad` y `horarioAtencion` (v0.53): necesita un backend
+con esa versión; contra uno anterior, el catálogo falla. Una copia guardada sin `codigoEspecialidad` se vuelve a pedir
+aunque no hayan pasado los 7 días. Probar en el teléfono: cambiar de idioma con una asistencia en camino y ver la
+notificación y el nombre del canal en Ajustes de Android en el idioma nuevo.
 
 ### Pendiente de verificar fuera de esta máquina (A9)
 

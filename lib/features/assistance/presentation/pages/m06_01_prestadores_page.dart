@@ -245,7 +245,10 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
       typeLabel: _tipo(c.prestador.tipo),
       isPartner: c.prestador.aliado,
       partnerLabel: l10n.m0601Aliado,
-      distance: SolFormat.distanceKm(c.distanciaKm),
+      distance: SolFormat.distanceKmFor(
+        c.distanciaKm,
+        Localizations.localeOf(context),
+      ),
       eta: tiempo,
       requestLabel: l10n.m0601Solicitar,
       selected: c.prestador.id == _seleccionado,
@@ -490,7 +493,8 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
         child: _Aviso(
           icono: SolIcons.location,
           titulo: l10n.ubicacionExplicaTitulo,
-          texto: l10n.ubicacionExplicaTexto,
+          // H5: la ubicación sale del teléfono (rutas, v0.51) y se audita.
+          texto: '${l10n.ubicacionExplicaTexto}\n\n${l10n.ubicacionPrivacidad}',
           accion: l10n.ubicacionPermitir,
           onAccion: notifier.permitir,
           accionSecundaria: l10n.direccionEscribir,

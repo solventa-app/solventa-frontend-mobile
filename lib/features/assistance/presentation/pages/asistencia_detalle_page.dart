@@ -111,7 +111,10 @@ class _AsistenciaDetallePageState extends ConsumerState<AsistenciaDetallePage> {
         final noConfirmada = a.estado == EstadoAsistencia.noConfirmada;
         final estado = llego
             ? l10n.asistenciaLlego(
-                SolFormat.time((a.llegadaEstimada ?? a.solicitadaEn).toLocal()),
+                SolFormat.timeFor(
+                  (a.llegadaEstimada ?? a.solicitadaEn).toLocal(),
+                  Localizations.localeOf(context),
+                ),
               )
             : enCamino
             ? l10n.asistenciaEnCaminoLlega(
@@ -193,7 +196,10 @@ class _AsistenciaDetallePageState extends ConsumerState<AsistenciaDetallePage> {
                   Text(
                     l10n.asistenciaPedida(
                       tipo,
-                      SolFormat.time(a.solicitadaEn.toLocal()),
+                      SolFormat.timeFor(
+                        a.solicitadaEn.toLocal(),
+                        Localizations.localeOf(context),
+                      ),
                     ),
                     style: context.solText.body.copyWith(
                       color: colors.onSurfaceVariant,

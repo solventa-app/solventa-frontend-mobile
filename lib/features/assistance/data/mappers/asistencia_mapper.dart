@@ -2,6 +2,7 @@ import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../domain/entities/asistencia.dart';
 import '../../domain/entities/prestador.dart';
+import 'prestador_mapper.dart';
 
 TipoPrestador _tipo(Object? valor) => switch (valor) {
   'MEDICO' => TipoPrestador.medico,
@@ -42,6 +43,8 @@ Resultado<Asistencia> asistenciaDesdeMapa(Map<String, Object?> m) {
         direccion: (p['direccion'] as String?) ?? '',
         horario: p['horario'] as String?,
         fotoUrl: p['fotoUrl'] as String?,
+        codigoEspecialidad: especialidadDesdeCodigo(p['codigoEspecialidad']),
+        horarioAtencion: horarioDesdeMapa(p['horarioAtencion']),
       ),
       minutosEstimados: (m['minutosEstimados'] as num?)?.toInt(),
       solicitadaEn: DateTime.parse(m['solicitadaEn']! as String),

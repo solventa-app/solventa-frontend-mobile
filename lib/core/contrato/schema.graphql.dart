@@ -4371,6 +4371,117 @@ Enum$TipoPrestador fromJson$Enum$TipoPrestador(String value) {
   }
 }
 
+enum Enum$EspecialidadPrestador {
+  URGENCIAS,
+  MEDICINA_GENERAL,
+  MECANICA_GENERAL,
+  LLANTAS_Y_FRENOS,
+  GRUA_LIVIANA,
+  GRUA_Y_CARRO_TALLER,
+  $unknown;
+
+  factory Enum$EspecialidadPrestador.fromJson(String value) =>
+      fromJson$Enum$EspecialidadPrestador(value);
+
+  String toJson() => toJson$Enum$EspecialidadPrestador(this);
+}
+
+String toJson$Enum$EspecialidadPrestador(Enum$EspecialidadPrestador e) {
+  switch (e) {
+    case Enum$EspecialidadPrestador.URGENCIAS:
+      return r'URGENCIAS';
+    case Enum$EspecialidadPrestador.MEDICINA_GENERAL:
+      return r'MEDICINA_GENERAL';
+    case Enum$EspecialidadPrestador.MECANICA_GENERAL:
+      return r'MECANICA_GENERAL';
+    case Enum$EspecialidadPrestador.LLANTAS_Y_FRENOS:
+      return r'LLANTAS_Y_FRENOS';
+    case Enum$EspecialidadPrestador.GRUA_LIVIANA:
+      return r'GRUA_LIVIANA';
+    case Enum$EspecialidadPrestador.GRUA_Y_CARRO_TALLER:
+      return r'GRUA_Y_CARRO_TALLER';
+    case Enum$EspecialidadPrestador.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$EspecialidadPrestador fromJson$Enum$EspecialidadPrestador(String value) {
+  switch (value) {
+    case r'URGENCIAS':
+      return Enum$EspecialidadPrestador.URGENCIAS;
+    case r'MEDICINA_GENERAL':
+      return Enum$EspecialidadPrestador.MEDICINA_GENERAL;
+    case r'MECANICA_GENERAL':
+      return Enum$EspecialidadPrestador.MECANICA_GENERAL;
+    case r'LLANTAS_Y_FRENOS':
+      return Enum$EspecialidadPrestador.LLANTAS_Y_FRENOS;
+    case r'GRUA_LIVIANA':
+      return Enum$EspecialidadPrestador.GRUA_LIVIANA;
+    case r'GRUA_Y_CARRO_TALLER':
+      return Enum$EspecialidadPrestador.GRUA_Y_CARRO_TALLER;
+    default:
+      return Enum$EspecialidadPrestador.$unknown;
+  }
+}
+
+enum Enum$DiaSemana {
+  LUNES,
+  MARTES,
+  MIERCOLES,
+  JUEVES,
+  VIERNES,
+  SABADO,
+  DOMINGO,
+  $unknown;
+
+  factory Enum$DiaSemana.fromJson(String value) =>
+      fromJson$Enum$DiaSemana(value);
+
+  String toJson() => toJson$Enum$DiaSemana(this);
+}
+
+String toJson$Enum$DiaSemana(Enum$DiaSemana e) {
+  switch (e) {
+    case Enum$DiaSemana.LUNES:
+      return r'LUNES';
+    case Enum$DiaSemana.MARTES:
+      return r'MARTES';
+    case Enum$DiaSemana.MIERCOLES:
+      return r'MIERCOLES';
+    case Enum$DiaSemana.JUEVES:
+      return r'JUEVES';
+    case Enum$DiaSemana.VIERNES:
+      return r'VIERNES';
+    case Enum$DiaSemana.SABADO:
+      return r'SABADO';
+    case Enum$DiaSemana.DOMINGO:
+      return r'DOMINGO';
+    case Enum$DiaSemana.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$DiaSemana fromJson$Enum$DiaSemana(String value) {
+  switch (value) {
+    case r'LUNES':
+      return Enum$DiaSemana.LUNES;
+    case r'MARTES':
+      return Enum$DiaSemana.MARTES;
+    case r'MIERCOLES':
+      return Enum$DiaSemana.MIERCOLES;
+    case r'JUEVES':
+      return Enum$DiaSemana.JUEVES;
+    case r'VIERNES':
+      return Enum$DiaSemana.VIERNES;
+    case r'SABADO':
+      return Enum$DiaSemana.SABADO;
+    case r'DOMINGO':
+      return Enum$DiaSemana.DOMINGO;
+    default:
+      return Enum$DiaSemana.$unknown;
+  }
+}
+
 enum Enum$EstadoAsistencia {
   CONFIRMADA,
   NO_CONFIRMADA,

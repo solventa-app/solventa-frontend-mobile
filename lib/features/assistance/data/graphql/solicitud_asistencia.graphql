@@ -26,6 +26,14 @@ mutation SolicitarAsistencia($entrada: SolicitudAsistenciaInput!) {
         direccion
         horario
         fotoUrl
+        codigoEspecialidad
+        horarioAtencion {
+          abierto24h
+          diaDesde
+          diaHasta
+          abre
+          cierra
+        }
       }
     }
     ... on ErrorAsistencia {
@@ -60,6 +68,14 @@ mutation CancelarAsistencia($id: ID!) {
         direccion
         horario
         fotoUrl
+        codigoEspecialidad
+        horarioAtencion {
+          abierto24h
+          diaDesde
+          diaHasta
+          abre
+          cierra
+        }
       }
     }
     ... on ErrorAsistencia {

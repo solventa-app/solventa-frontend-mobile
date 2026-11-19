@@ -15,17 +15,35 @@ void main() {
       File('docs/hu-m06/prestadores-semilla.json').readAsStringSync(),
     ) as Map<String, Object?>;
     expect(AsistenciaFixtures.version, semilla['version']);
-    // La semilla está en el formato de la base (`foto_url`); el BFF lo expone
-    // como `fotoUrl` (contrato v0.49), que es lo que guarda el fixture.
-    final comoBff = [
+    // La semilla está en el formato de la base (`foto_url`, v0.53
+    // `codigo_especialidad` y `horario_atencion`); el BFF lo expone en
+    // camelCase, que es lo que guarda el fixture.
+    // `horarioAtencion` lleva además su `__typename`, como lo responde el BFF.
+    Map<String, Object?> comoBff(Map<String, Object?> m) => {
+      for (final MapEntry(:key, :value) in m.entries)
+        _camel(key): value is Map<String, Object?>
+            ? {...comoBff(value), '__typename': 'HorarioAtencion'}
+            : value,
+    };
+    final prestadores = [
       for (final p in semilla['prestadores']! as List<Object?>)
-        {
-          for (final MapEntry(:key, :value)
-              in (p! as Map<String, Object?>).entries)
-            key == 'foto_url' ? 'fotoUrl' : key: value,
-        },
+        comoBff(p! as Map<String, Object?>),
     ];
-    expect(jsonEncode(AsistenciaFixtures.prestadores), jsonEncode(comoBff));
+    expect(jsonEncode(AsistenciaFixtures.prestadores), jsonEncode(prestadores));
+  });
+
+  test('v0.53: cada uno con código de especialidad y horario como datos', () {
+    final catalogo = catalogoDesdeMapa(AsistenciaFixtures.catalogo);
+    expect(
+      catalogo.prestadores.map((p) => p.codigoEspecialidad).toSet(),
+      EspecialidadPrestador.values.toSet(),
+    );
+    final horarios = catalogo.prestadores.map((p) => p.horarioAtencion);
+    expect(horarios, contains(isNull));
+    expect(horarios.whereType<HorarioAtencion>().map((h) => h.abierto24h), {
+      true,
+      false,
+    });
   });
 
   test('ids únicos, tipos válidos y coordenadas dentro de Colombia', () {
@@ -71,3 +89,9 @@ void main() {
     expect(catalogo.prestadores.map((p) => p.aliado).toSet(), {true, false});
   });
 }
+
+/// `foto_url` → `fotoUrl`, `abierto_24h` → `abierto24h`.
+String _camel(String clave) => clave.replaceAllMapped(
+  RegExp(r'_([a-z0-9])'),
+  (m) => m.group(1)!.toUpperCase(),
+);

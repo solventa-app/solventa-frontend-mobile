@@ -2026,5 +2026,104 @@
   "m0503CiudadOtra": "Otra ciudad",
   "@m0503CiudadOtra": {
     "description": "M05-03 opción para escribir una ciudad que no está en la lista"
+  },
+  "asistenciaCanalNombre": "Asistencias",
+  "@asistenciaCanalNombre": {
+    "description": "Nombre del canal de notificaciones en Ajustes de Android (H3)"
+  },
+  "asistenciaCanalDescripcion": "Aviso cuando llega el prestador de una asistencia",
+  "@asistenciaCanalDescripcion": {
+    "description": "Descripción del canal de notificaciones en Ajustes de Android (H3)"
+  },
+  "ubicacionPrivacidad": "Tu ubicación viaja cifrada a Solventa y a nuestro proveedor de mapas solo para calcular las rutas. Guardamos un registro cifrado durante 90 días para auditoría.",
+  "@ubicacionPrivacidad": {
+    "description": "Aviso de privacidad de la ubicación en M06-01 (H5, contrato v0.51)"
+  },
+  "m0601EspecialidadUrgencias": "Urgencias",
+  "@m0601EspecialidadUrgencias": {
+    "description": "Especialidad URGENCIAS (v0.53)"
+  },
+  "m0601EspecialidadMedicinaGeneral": "Medicina general",
+  "@m0601EspecialidadMedicinaGeneral": {
+    "description": "Especialidad MEDICINA_GENERAL (v0.53)"
+  },
+  "m0601EspecialidadMecanicaGeneral": "Mecánica general",
+  "@m0601EspecialidadMecanicaGeneral": {
+    "description": "Especialidad MECANICA_GENERAL (v0.53)"
+  },
+  "m0601EspecialidadLlantasYFrenos": "Llantas y frenos",
+  "@m0601EspecialidadLlantasYFrenos": {
+    "description": "Especialidad LLANTAS_Y_FRENOS (v0.53)"
+  },
+  "m0601EspecialidadGruaLiviana": "Grúa liviana",
+  "@m0601EspecialidadGruaLiviana": {
+    "description": "Especialidad GRUA_LIVIANA (v0.53)"
+  },
+  "m0601EspecialidadGruaYCarroTaller": "Grúa y carro taller",
+  "@m0601EspecialidadGruaYCarroTaller": {
+    "description": "Especialidad GRUA_Y_CARRO_TALLER (v0.53)"
+  },
+  "m0601Abierto24h": "Abierto 24 h",
+  "@m0601Abierto24h": {
+    "description": "Horario del prestador abierto 24 h (v0.53)"
+  },
+  "m0601TodosLosDias": "Todos los días",
+  "@m0601TodosLosDias": {
+    "description": "Horario del prestador de lunes a domingo (v0.53)"
+  },
+  "m0601RangoDias": "{desde} a {hasta}",
+  "@m0601RangoDias": {
+    "description": "Rango de días del horario: «lun a sáb» (v0.53)",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      },
+      "hasta": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601Horario": "{dias}, {abre} a {cierra}",
+  "@m0601Horario": {
+    "description": "Horario del prestador: «Lun a sáb, 7:00 a. m. a 7:00 p. m.» (v0.53)",
+    "placeholders": {
+      "dias": {
+        "type": "String"
+      },
+      "abre": {
+        "type": "String"
+      },
+      "cierra": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DiaLunes": "lun",
+  "@m0601DiaLunes": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaMartes": "mar",
+  "@m0601DiaMartes": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaMiercoles": "mié",
+  "@m0601DiaMiercoles": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaJueves": "jue",
+  "@m0601DiaJueves": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaViernes": "vie",
+  "@m0601DiaViernes": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaSabado": "sáb",
+  "@m0601DiaSabado": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaDomingo": "dom",
+  "@m0601DiaDomingo": {
+    "description": "Día abreviado del horario (v0.53)"
   }
 }
