@@ -143,6 +143,7 @@ extension FallaTextoX on AppLocalizations {
       fallaCredencialesInvalidas,
     FallaNegocio(motivo: 'DISPOSITIVO_NO_VALIDO') => fallaDispositivoNoValido,
     FallaNegocio(motivo: 'CAMARA_NO_DISPONIBLE') => fallaCamaraNoDisponible,
+    FallaNegocio(motivo: 'RECORRIDOS_AGOTADOS') => fallaRecorridosAgotados,
     FallaNegocio(motivo: 'ROSTRO_NO_COINCIDE') => m0107cRostro,
     FallaNegocio(motivo: 'SUPLANTACION') => m0107cSuplantacion,
     _ => fallaGenerica,

@@ -289,7 +289,7 @@
   "@m0107cDocumentoRegistrado": {
     "description": "M01-07c: DOCUMENTO_YA_REGISTRADO"
   },
-  "m0107cSinIntentos": "Ya no quedan intentos. Escríbenos a soporte para revisar tu caso.",
+  "m0107cSinIntentos": "Ya no quedan intentos en esta verificación. Desde el inicio puedes empezar una nueva.",
   "@m0107cSinIntentos": {
     "description": "M01-07c: sin intentos"
   },
@@ -2125,5 +2125,13 @@
   "m0601DiaDomingo": "dom",
   "@m0601DiaDomingo": {
     "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0105CambiarDocumento": "Cambiar fotos del documento",
+  "@m0105CambiarDocumento": {
+    "description": "M01-05 y M01-07c: tras un rechazo del rostro, vuelve a tomar la cédula (KAN-31)"
+  },
+  "fallaRecorridosAgotados": "Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.",
+  "@fallaRecorridosAgotados": {
+    "description": "RECORRIDOS_AGOTADOS: 3 verificaciones rechazadas en 24 h (contrato v0.56)"
   }
 }
