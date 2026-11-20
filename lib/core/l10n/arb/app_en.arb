@@ -32,6 +32,7 @@
   "m0107bMensaje": "We're reviewing your identity, we'll let you know.",
   "m0107bAccion": "Got it",
   "m0107cMensaje": "We couldn't verify your document (unreadable image)",
+  "m0107cFallaTecnica": "We couldn't finish your verification because of a technical problem. You didn't lose any attempts: try again.",
   "reintentar": "Try again",
   "m0108Titulo": "Activation",
   "m0108Encabezado": "{tipo, select, huella{Turn on your fingerprint} rostro{Turn on your face} bloqueo{Turn on your phone lock} other{Turn on your phone's security}}",

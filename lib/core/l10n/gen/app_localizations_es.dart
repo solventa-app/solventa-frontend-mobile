@@ -118,6 +118,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'No pudimos verificar tu documento (imagen ilegible)';
 
   @override
+  String get m0107cFallaTecnica =>
+      'No pudimos terminar tu verificación por un problema técnico. No perdiste ningún intento: inténtalo de nuevo.';
+
+  @override
   String get reintentar => 'Reintentar';
 
   @override

@@ -136,6 +136,10 @@
   "@m0107cMensaje": {
     "description": "M01-07c"
   },
+  "m0107cFallaTecnica": "No pudimos terminar tu verificación por un problema técnico. No perdiste ningún intento: inténtalo de nuevo.",
+  "@m0107cFallaTecnica": {
+    "description": "M01-07c y tarjeta del inicio: rechazo técnico (PROVEEDOR_NO_DISPONIBLE o IMAGEN_NO_DISPONIBLE, KAN-131), no gasta intento"
+  },
   "reintentar": "Reintentar",
   "@reintentar": {
     "description": "Botón reintentar"

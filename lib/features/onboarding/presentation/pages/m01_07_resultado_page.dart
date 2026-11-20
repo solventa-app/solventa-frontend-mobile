@@ -62,7 +62,7 @@ class M0107ResultadoPage extends ConsumerWidget {
         SolResultScreen(
           title: l10n.verificacionTitulo,
           status: SolStatus.error,
-          message: _mensajeRechazo(l10n, estado.onboarding?.motivo),
+          message: mensajeRechazo(l10n, estado.onboarding?.motivo),
           actionLabel: l10n.reintentar,
           onAction: () async {
             final soloRostro = estado.rechazoSoloRostro;
@@ -115,9 +115,13 @@ class M0107ResultadoPage extends ConsumerWidget {
 }
 
 /// Texto del motivo de rechazo del contrato; ILEGIBLE y los desconocidos
-/// usan el mensaje general.
-String _mensajeRechazo(AppLocalizations l10n, String? motivo) =>
+/// usan el mensaje general. Los rechazos técnicos (KAN-131: el proveedor
+/// siguió fallando o no se pudieron leer las fotos) no gastan intento y lo
+/// dicen. También lo usa la tarjeta «rechazada» del inicio.
+String mensajeRechazo(AppLocalizations l10n, String? motivo) =>
     switch (motivo) {
+      'PROVEEDOR_NO_DISPONIBLE' ||
+      'IMAGEN_NO_DISPONIBLE' => l10n.m0107cFallaTecnica,
       'ROSTRO_NO_COINCIDE' => l10n.m0107cRostro,
       'SUPLANTACION' => l10n.m0107cSuplantacion,
       'MENOR_DE_EDAD' => l10n.m0107cMenor,
