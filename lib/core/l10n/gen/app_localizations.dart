@@ -509,7 +509,7 @@ abstract class AppLocalizations {
   /// M01-07c: sin intentos
   ///
   /// In es, this message translates to:
-  /// **'Ya no quedan intentos. Escríbenos a soporte para revisar tu caso.'**
+  /// **'Ya no quedan intentos en esta verificación. Desde el inicio puedes empezar una nueva.'**
   String get m0107cSinIntentos;
 
   /// Onboarding: TOKEN_INVALIDO
@@ -3127,6 +3127,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'dom'**
   String get m0601DiaDomingo;
+
+  /// M01-05 y M01-07c: tras un rechazo del rostro, vuelve a tomar la cédula (KAN-31)
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar fotos del documento'**
+  String get m0105CambiarDocumento;
+
+  /// RECORRIDOS_AGOTADOS: 3 verificaciones rechazadas en 24 h (contrato v0.56)
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.'**
+  String get fallaRecorridosAgotados;
 }
 
 class _AppLocalizationsDelegate

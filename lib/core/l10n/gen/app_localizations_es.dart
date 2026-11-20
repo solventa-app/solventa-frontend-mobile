@@ -264,7 +264,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0107cSinIntentos =>
-      'Ya no quedan intentos. Escríbenos a soporte para revisar tu caso.';
+      'Ya no quedan intentos en esta verificación. Desde el inicio puedes empezar una nueva.';
 
   @override
   String get fallaRegistroVencido => 'Tu registro venció. Empieza de nuevo.';
@@ -1829,4 +1829,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0601DiaDomingo => 'dom';
+
+  @override
+  String get m0105CambiarDocumento => 'Cambiar fotos del documento';
+
+  @override
+  String get fallaRecorridosAgotados =>
+      'Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.';
 }

@@ -261,7 +261,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0107cSinIntentos =>
-      'There are no attempts left. Contact support so we can review your case.';
+      'There are no attempts left in this verification. You can start a new one from the home screen.';
 
   @override
   String get fallaRegistroVencido =>
@@ -1827,4 +1827,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0601DiaDomingo => 'Sun';
+
+  @override
+  String get m0105CambiarDocumento => 'Retake document photos';
+
+  @override
+  String get fallaRecorridosAgotados =>
+      'You can\'t try the verification again today. Please come back tomorrow.';
 }

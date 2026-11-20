@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
+import '../../../../core/errors/falla.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../data/datasources/captura_service.dart';
 import '../onboarding_notifier.dart';
@@ -132,11 +133,26 @@ class _M0105PruebaVidaPageState extends ConsumerState<M0105PruebaVidaPage> {
             loading: estado.ocupado || grabando,
             onPressed: _ir,
           ),
+          // KAN-31: tras un rechazo del rostro, muchas veces la foto mala es la
+          // de la cédula: se puede volver a tomar en vez de repetir el video.
+          if (_rechazoDelRostro(falla) && !estado.ocupado && !grabando)
+            SolButton.text(
+              label: l10n.m0105CambiarDocumento,
+              onPressed: () {
+                ref.read(onboardingProvider.notifier).cambiarFotosDocumento();
+                context.go(OnboardingRoutes.frente);
+              },
+            ),
         ],
       ),
     );
   }
 }
+
+bool _rechazoDelRostro(Falla? falla) => switch (falla) {
+  FallaNegocio(motivo: 'ROSTRO_NO_COINCIDE' || 'SUPLANTACION') => true,
+  _ => false,
+};
 
 /// La selfie y el video ya están tomados: sin cámara abierta, con la espera
 /// explicada mientras se envían y Didit responde.

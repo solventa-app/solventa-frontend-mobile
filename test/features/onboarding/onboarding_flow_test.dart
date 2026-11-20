@@ -458,6 +458,79 @@ void main() {
   });
 
   testWidgets(
+    'KAN-31: un rechazo del rostro con intentos deja cambiar las fotos de la '
+    'cédula',
+    (tester) async {
+      await abrir(tester);
+      await hastaPruebaDeVida(tester);
+      bff.resultado = OnboardingFixtures.onboarding(
+        estado: 'RECHAZADA',
+        motivo: 'ROSTRO_NO_COINCIDE',
+        intento: 1,
+        intentosRestantes: 2,
+      );
+      await tester.tap(find.text('Grabar video'));
+      await tester.pumpAndSettle();
+
+      final cambiar = find.text('Cambiar fotos del documento');
+      expect(cambiar, findsOneWidget);
+      await tester.ensureVisible(cambiar);
+      await tester.tap(cambiar);
+      await tester.pumpAndSettle();
+      expect(find.text('Captura del documento'), findsWidgets);
+    },
+  );
+
+  testWidgets(
+    'KAN-31: sin intentos, desde el inicio y el consentimiento se empieza un '
+    'recorrido nuevo y se vuelve a tomar la cédula',
+    (tester) async {
+      await abrir(tester);
+      await hastaPruebaDeVida(tester);
+      bff.resultado = OnboardingFixtures.onboarding(
+        estado: 'RECHAZADA',
+        motivo: 'ROSTRO_NO_COINCIDE',
+        intento: 3,
+        intentosRestantes: 0,
+      );
+      await tester.tap(find.text('Grabar video'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Ir al inicio'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Reintentar verificación'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Empezar'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(SolConsentCheckbox));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Continuar'));
+      await tester.pumpAndSettle();
+
+      // M01-02 ya no se queda con el recorrido rechazado: abre uno nuevo y
+      // llega a la foto de la cédula.
+      expect(find.text('Captura del documento'), findsWidgets);
+      expect(bff.operaciones.where((o) => o == 'iniciar'), hasLength(2));
+    },
+  );
+
+  testWidgets('M01-07c sin intentos ya no manda a soporte: invita a empezar '
+      'de nuevo desde el inicio', (tester) async {
+    await abrir(tester);
+    await hastaPruebaDeVida(tester);
+    bff.resultado = OnboardingFixtures.onboarding(
+      estado: 'RECHAZADA',
+      motivo: 'ROSTRO_NO_COINCIDE',
+      intento: 3,
+      intentosRestantes: 0,
+    );
+    await tester.tap(find.text('Grabar video'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('puedes empezar una nueva'), findsOneWidget);
+    expect(find.textContaining('soporte'), findsNothing);
+  });
+
+  testWidgets(
     'la píldora de idioma cambia la app a inglés y abre el selector de moneda',
     (tester) async {
       await abrir(tester);

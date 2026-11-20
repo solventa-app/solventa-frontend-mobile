@@ -75,6 +75,19 @@ class M0107ResultadoPage extends ConsumerWidget {
             }
           },
           onBack: inicio,
+          // KAN-31: si el rechazo fue del rostro, también se puede volver a
+          // tomar la cédula (a veces la foto mala es la del documento).
+          secondaryAction: estado.rechazoSoloRostro
+              ? SolButton.text(
+                  label: l10n.m0105CambiarDocumento,
+                  onPressed: () async {
+                    if (await notifier.reintentarCaptura() && context.mounted) {
+                      notifier.cambiarFotosDocumento();
+                      context.go(OnboardingRoutes.frente);
+                    }
+                  },
+                )
+              : null,
         ),
       EstadoVerificacion.rechazada => SolResultScreen(
         title: l10n.verificacionTitulo,

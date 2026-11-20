@@ -68,7 +68,7 @@
   "m0107cSuplantacion": "We couldn't confirm that you took the liveness check yourself, live.",
   "m0107cMenor": "You must be of legal age to have a Solventa account.",
   "m0107cDocumentoRegistrado": "This document already has a Solventa account.",
-  "m0107cSinIntentos": "There are no attempts left. Contact support so we can review your case.",
+  "m0107cSinIntentos": "There are no attempts left in this verification. You can start a new one from the home screen.",
   "fallaRegistroVencido": "Your sign-up expired. Please start again.",
   "fallaEmpezarDeNuevo": "Start over",
   "@fallaEmpezarDeNuevo": {
@@ -1099,5 +1099,7 @@
   "m0601DiaJueves": "Thu",
   "m0601DiaViernes": "Fri",
   "m0601DiaSabado": "Sat",
-  "m0601DiaDomingo": "Sun"
+  "m0601DiaDomingo": "Sun",
+  "m0105CambiarDocumento": "Retake document photos",
+  "fallaRecorridosAgotados": "You can't try the verification again today. Please come back tomorrow."
 }
