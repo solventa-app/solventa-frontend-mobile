@@ -120,6 +120,18 @@
   "@m0107aMensaje": {
     "description": "M01-07a"
   },
+  "m0107aDocumento": "Documento auténtico",
+  "@m0107aDocumento": {
+    "description": "M01-07a resumen: el documento pasó la verificación de autenticidad (KAN-130)"
+  },
+  "m0107aPruebaVida": "Prueba de vida superada",
+  "@m0107aPruebaVida": {
+    "description": "M01-07a resumen: la prueba de vida pasó (KAN-130)"
+  },
+  "m0107aRostro": "Tu rostro coincide con el documento",
+  "@m0107aRostro": {
+    "description": "M01-07a resumen: el rostro coincide con la foto del documento (KAN-130)"
+  },
   "m0107aAccion": "Activar huella o rostro",
   "@m0107aAccion": {
     "description": "M01-07a botón"

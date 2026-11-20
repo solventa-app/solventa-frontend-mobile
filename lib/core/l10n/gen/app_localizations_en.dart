@@ -101,6 +101,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0107aMensaje => 'Identity verified! Welcome to Solventa.';
 
   @override
+  String get m0107aDocumento => 'Authentic document';
+
+  @override
+  String get m0107aPruebaVida => 'Liveness check passed';
+
+  @override
+  String get m0107aRostro => 'Your face matches your document';
+
+  @override
   String get m0107aAccion => 'Turn on fingerprint or face unlock';
 
   @override

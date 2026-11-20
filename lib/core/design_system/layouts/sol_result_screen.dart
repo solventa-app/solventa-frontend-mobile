@@ -19,6 +19,7 @@ class SolResultScreen extends StatelessWidget {
     this.onBack,
     this.showBack = true,
     this.secondaryAction,
+    this.details = const [],
   });
 
   final String title;
@@ -34,12 +35,15 @@ class SolResultScreen extends StatelessWidget {
   /// Acción alterna opcional (tonal o texto).
   final Widget? secondaryAction;
 
+  /// Filas bajo el mensaje (ver [SolResultView.details]).
+  final List<String> details;
+
   @override
   Widget build(BuildContext context) {
     final frame = SolScreenFrame(
       topBar: SolTopBar.flow(title: title, onBack: onBack, showBack: showBack),
       centerBody: true,
-      body: SolResultView(status: status, message: message),
+      body: SolResultView(status: status, message: message, details: details),
       actions: [
         SolButton.primary(label: actionLabel, onPressed: onAction),
         ?secondaryAction,
