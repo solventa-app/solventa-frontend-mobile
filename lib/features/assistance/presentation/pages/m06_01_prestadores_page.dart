@@ -52,7 +52,10 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
   String? _seleccionado;
   OrdenCamara? _orden;
   int _generacionCamara = 0;
-  bool _verRecentrar = false;
+
+  /// El botón GPS centró la cámara en el cliente: el botón queda resaltado
+  /// hasta que el usuario mueva el mapa o enfoque un prestador.
+  bool _centradoEnUsuario = false;
 
   // M12: un solo detalle, un solo push a M06-02 y una sola ruta a la vez.
   bool _detalleAbierto = false;
@@ -160,7 +163,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
     setState(() {
       _seleccionado = null;
       _orden = EncuadrarInicio(++_generacionCamara);
-      _verRecentrar = false;
+      _centradoEnUsuario = false;
     });
     await ref.read(prestadoresProvider.notifier).usarDireccion(d);
   }
@@ -168,7 +171,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
   void _enfocar(PrestadorCercano c) => setState(() {
     _seleccionado = c.prestador.id;
     _orden = EnfocarPrestador(++_generacionCamara, c.prestador.ubicacion);
-    _verRecentrar = true;
+    _centradoEnUsuario = false;
   });
 
   /// M4: pin → vibración, selección, cámara y detalle.
@@ -369,8 +372,11 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                   ),
                   // Quitar la selección no mueve la cámara (M6).
                   onTapVacio: () => setState(() => _seleccionado = null),
+                  // Mover el mapa deja el botón GPS como estaba.
                   onGesto: () {
-                    if (!_verRecentrar) setState(() => _verRecentrar = true);
+                    if (_centradoEnUsuario) {
+                      setState(() => _centradoEnUsuario = false);
+                    }
                   },
                   onFallo: () {
                     setState(() => _mapaFallo = true);
@@ -445,7 +451,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                   ),
                 ),
               ),
-              if (_verRecentrar)
+              if (conMapa)
                 ListenableBuilder(
                   listenable: _hoja,
                   builder: (context, _) {
@@ -453,13 +459,27 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
                     return PositionedDirectional(
                       end: SolSpacing.sm,
                       bottom: fraccion * alto + SolSpacing.lg,
+                      // Botón GPS: centra en el cliente sin cambiar el zoom,
+                      // queda resaltado y, con GPS, vuelve a leer la posición.
                       child: SolMapFab(
                         icon: SolIcons.myLocation,
                         semanticLabel: l10n.m0601Recentrar,
-                        onPressed: () => setState(() {
-                          _orden = EncuadrarInicio(++_generacionCamara);
-                          _verRecentrar = false;
-                        }),
+                        seleccionado: _centradoEnUsuario,
+                        onPressed: () {
+                          unawaited(HapticFeedback.selectionClick());
+                          setState(() {
+                            _orden = CentrarEnUsuario(++_generacionCamara);
+                            _centradoEnUsuario = true;
+                          });
+                          // Con GPS (sin dirección escrita) el permiso ya está.
+                          if (direccionEscrita == null) {
+                            unawaited(
+                              ref
+                                  .read(prestadoresProvider.notifier)
+                                  .refrescarUbicacion(),
+                            );
+                          }
+                        },
                       ),
                     );
                   },

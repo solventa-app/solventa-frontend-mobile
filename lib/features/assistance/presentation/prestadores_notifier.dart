@@ -78,6 +78,11 @@ final class PrestadoresNotifier extends Notifier<PrestadoresState> {
   /// «Usar mi ubicación actual» desde el aviso de la dirección escrita.
   Future<void> usarUbicacionActual() => _conGps(++_generacion, null);
 
+  /// Botón GPS del mapa: vuelve a leer la posición sin pasar por «cargando».
+  /// Si el cliente no se movió no cambia nada; si se movió, recalcula la
+  /// cercanía desde el punto nuevo (y el mapa lo sigue).
+  Future<void> refrescarUbicacion() => _conGps(++_generacion, state);
+
   Future<void> _conGps(int generacion, PrestadoresState? anterior) async {
     if (anterior is! PrestadoresListos) state = const PrestadoresCargando();
     final catalogo = ref
