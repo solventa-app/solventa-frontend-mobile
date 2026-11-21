@@ -186,6 +186,21 @@ void main() {
       ),
     ),
   );
+  // KAN-131: rechazo técnico (Didit siguió fallando), sin gastar intento.
+  pantalla(
+    'm01_07c_falla_tecnica',
+    const M0107ResultadoPage(),
+    estado: const OnboardingState(
+      verificacion: EstadoVerificacion.rechazada,
+      onboarding: Onboarding(
+        id: 'o-1',
+        estado: EstadoOnboarding.rechazada,
+        motivo: 'PROVEEDOR_NO_DISPONIBLE',
+        intento: 3,
+        intentosRestantes: 1,
+      ),
+    ),
+  );
   pantalla(
     'm01_07c_sin_intentos',
     const M0107ResultadoPage(),

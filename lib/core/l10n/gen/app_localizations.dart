@@ -290,6 +290,12 @@ abstract class AppLocalizations {
   /// **'No pudimos verificar tu documento (imagen ilegible)'**
   String get m0107cMensaje;
 
+  /// M01-07c y tarjeta del inicio: rechazo técnico (PROVEEDOR_NO_DISPONIBLE o IMAGEN_NO_DISPONIBLE, KAN-131), no gasta intento
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos terminar tu verificación por un problema técnico. No perdiste ningún intento: inténtalo de nuevo.'**
+  String get m0107cFallaTecnica;
+
   /// Botón reintentar
   ///
   /// In es, this message translates to:

@@ -454,6 +454,11 @@ class _RootShell extends ConsumerWidget {
       home: HomePage(
         userName: nombre,
         verificacion: estado.verificacion,
+        // KAN-131: el inicio dice por qué se rechazó (p. ej. una falla técnica
+        // que no gastó intento), no siempre «imagen ilegible».
+        motivoRechazo: estado.intentosRestantes > 0
+            ? mensajeRechazo(l10n, estado.onboarding?.motivo)
+            : null,
         cargandoCuenta: estado.cargandoPerfil,
         cuentaSinCargar: estado.perfilSinCargar,
         onReintentarCuenta: () => unawaited(notifier.cargarPerfilYEstado()),
