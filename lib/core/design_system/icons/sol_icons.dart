@@ -78,4 +78,9 @@ abstract final class SolIcons {
   static const IconData payments = Symbols.payments;
   static const IconData bank = Symbols.account_balance;
   static const IconData celebration = Symbols.celebration;
+
+  // HU-M05 M05-07: detalle del siniestro.
+  static const IconData imageOff = Symbols.hide_image;
+  static const IconData car = Symbols.directions_car;
+  static const IconData description = Symbols.description;
 }

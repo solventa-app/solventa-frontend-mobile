@@ -97,6 +97,7 @@ abstract final class ReporteSiniestroFixtures {
     String estado,
     String notificadoEn, [
     Map<String, Object?>? resolucion,
+    String? tipoAuto,
   ]) => {
     '__typename': 'SiniestroReportado',
     'id': id,
@@ -107,9 +108,106 @@ abstract final class ReporteSiniestroFixtures {
     'notificadoEn': notificadoEn,
     'venceDictamenEn': '2026-11-06T22:00:00+00:00',
     'fotos': 2,
-    'tipoSiniestroAuto': null,
+    'tipoSiniestroAuto': tipoAuto,
     'resolucion': resolucion,
   };
+
+  static const _conValorDano = {
+    'CHOQUE_PARCIAL',
+    'HURTO_PARCIAL',
+    'RESPONSABILIDAD_CIVIL',
+  };
+
+  /// v0.54 `miSiniestro`: el [caso] de `misSiniestros` con lo que el cliente
+  /// reportó, su póliza, dos fotos (sin URL: el fake no tiene almacenamiento)
+  /// y la línea de tiempo. `null` si el caso no es del cliente. [estado]
+  /// fuerza el estado (p. ej. aprobado tras vencer el plazo).
+  static Map<String, Object?> detalle(
+    Map<String, Object?>? caso, {
+    String? estado,
+  }) {
+    if (caso == null) return {'__typename': 'Query', 'miSiniestro': null};
+    final final_ = estado ?? caso['estado']! as String;
+    final notificado = caso['notificadoEn']! as String;
+    final resolucion = caso['resolucion'] as Map<String, Object?>?;
+    final tipo = caso['tipoSiniestroAuto'] as String?;
+    return {
+      '__typename': 'Query',
+      'miSiniestro': {
+        '__typename': 'DetalleSiniestroCliente',
+        'id': caso['id'],
+        'radicado': caso['radicado'],
+        'estado': final_,
+        'ocurridoEn': caso['ocurridoEn'],
+        'notificadoEn': notificado,
+        'venceDictamenEn': caso['venceDictamenEn'],
+        'tipoSiniestroAuto': tipo,
+        'descripcion':
+            'Me chocaron por detrás en un semáforo de la Calle 93. El '
+            'parachoques y la tapa del baúl quedaron hundidos.',
+        'ubicacion': {
+          '__typename': 'Ubicacion',
+          'descripcion': 'Cra 15 con Calle 93',
+          'ciudad': 'Bogotá',
+        },
+        'poliza': {
+          '__typename': 'Poliza',
+          'numero': 'SOL-2026-000123',
+          'producto': 'AUTO',
+          'vehiculo': {
+            '__typename': 'VehiculoAsegurado',
+            'marca': 'Mazda',
+            'linea': '3 Touring',
+            'placaEnmascarada': 'ABC•••',
+          },
+        },
+        'fotos': [
+          for (var i = 1; i <= 2; i++)
+            {
+              '__typename': 'FotoSiniestro',
+              'id': '${caso['id']}-foto-$i',
+              'url': '',
+              'registradaEn': notificado,
+            },
+        ],
+        'historial': [
+          {
+            '__typename': 'HitoSiniestro',
+            'estado': 'PENDIENTE',
+            'en': notificado,
+          },
+          if (final_ == 'EN_REVISION')
+            {
+              '__typename': 'HitoSiniestro',
+              'estado': 'EN_REVISION',
+              'en': notificado,
+            },
+          if (final_ == 'APROBADO' || final_ == 'RECHAZADO')
+            {
+              '__typename': 'HitoSiniestro',
+              'estado': final_,
+              'en': resolucion?['resueltaEn'] ?? notificado,
+            },
+        ],
+        'resolucion': estado == 'APROBADO' && resolucion == null
+            ? {
+                '__typename': 'ResolucionCliente',
+                'tipo': 'APROBACION',
+                'resueltaEn': caso['venceDictamenEn'],
+                'motivo': null,
+                'viaRecurso': null,
+                'indemnizacion': {
+                  '__typename': 'Monto',
+                  'valor': '6576500.00',
+                  'moneda': 'COP',
+                },
+                'plazoDispersion': '5 días hábiles',
+              }
+            : resolucion,
+        'apruebaAlVencer': !_conValorDano.contains(tipo),
+      },
+    };
+  }
 
   /// `misSiniestros`: los que reportó en esta sesión del fake (PENDIENTE) y,
   /// con [conDemo], uno de cada estado de la mesa.
@@ -132,6 +230,8 @@ abstract final class ReporteSiniestroFixtures {
           'SIN-2026-0987',
           'EN_REVISION',
           '2026-10-28T15:00:00+00:00',
+          null,
+          'CHOQUE_PARCIAL',
         ),
         _caso(
           'demo-3',
@@ -151,6 +251,7 @@ abstract final class ReporteSiniestroFixtures {
             },
             'plazoDispersion': '5 días hábiles',
           },
+          'PERDIDA_TOTAL_DANOS',
         ),
         _caso(
           'demo-4',
@@ -166,6 +267,7 @@ abstract final class ReporteSiniestroFixtures {
             'indemnizacion': null,
             'plazoDispersion': null,
           },
+          'HURTO_PARCIAL',
         ),
       ],
     ],

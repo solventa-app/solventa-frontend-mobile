@@ -74,7 +74,14 @@ void main() {
     tester,
   ) async {
     await abrir(tester, '/siniestros/demo-3');
-    expect(find.text('Aprobado'), findsOneWidget);
+    // En la insignia y como último paso de la línea de tiempo.
+    expect(
+      find.descendant(
+        of: find.byType(SolStatusBadge),
+        matching: find.text('Aprobado'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Resolución'), findsOneWidget);
     expect(find.textContaining('Indemnización aprobada: \$'), findsOneWidget);
     expect(find.textContaining('4.500.000'), findsOneWidget);
@@ -85,7 +92,13 @@ void main() {
     tester,
   ) async {
     await abrir(tester, '/siniestros/demo-4');
-    expect(find.text('Rechazado'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(SolStatusBadge),
+        matching: find.text('Rechazado'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Motivo: la evidencia no fue suficiente'), findsOneWidget);
     expect(
       find.text('Cómo pedir una revisión: Escribe a soporte con tu radicado.'),
@@ -98,7 +111,8 @@ void main() {
   ) async {
     await abrir(tester, '/siniestros/demo-2');
     expect(find.text('En revisión'), findsOneWidget);
-    expect(find.text('Resolución'), findsNothing);
+    // «Resolución» solo como el paso por venir, sin la tarjeta del desenlace.
+    expect(find.textContaining('Resuelto el'), findsNothing);
     expect(find.text('Un perito está evaluando tu caso.'), findsOneWidget);
   });
 
@@ -159,24 +173,136 @@ void main() {
       await abrir(tester, '/siniestros/demo-3');
       expect(find.textContaining('Tiempo restante'), findsNothing);
     });
+
+    // QA 2026-11-18 (KAN-27): un auto parcial o de RC no se aprueba solo al
+    // vencer; la app no lo promete ni consulta en bucle.
+    testWidgets('vencido y con daño por valorar: lo dice y no consulta en '
+        'bucle', (tester) async {
+      bff.sinHistorial = true;
+      await bff.reportar(
+        _entradaMinima(tipo: Enum$TipoSiniestroAuto.CHOQUE_PARCIAL),
+      );
+      await abrir(
+        tester,
+        '/siniestros/rep-detalle-1',
+        ahora: () => DateTime.utc(2026, 11, 7),
+      );
+      expect(find.textContaining('hay que valorar el daño'), findsOneWidget);
+      expect(find.textContaining('Estamos procesando'), findsNothing);
+      final antes = bff.detallesPedidos['rep-detalle-1'];
+      await tester.pump(const Duration(seconds: 61));
+      expect(bff.detallesPedidos['rep-detalle-1'], antes);
+    });
+
+    testWidgets('vencido con aprobación automática: consulta hasta verlo '
+        'aprobado', (tester) async {
+      final id = await reportado();
+      await abrir(
+        tester,
+        '/siniestros/$id',
+        ahora: () => DateTime.utc(2026, 11, 7),
+      );
+      expect(find.textContaining('Estamos procesando'), findsOneWidget);
+      bff.estadoForzado[id] = 'APROBADO';
+      await tester.pump(const Duration(seconds: 30));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Indemnización aprobada'), findsOneWidget);
+      expect(find.textContaining('Estamos procesando'), findsNothing);
+    });
+  });
+
+  group('detalle completo (v0.54)', () {
+    testWidgets('fotos en carrusel con su contador y visor a pantalla '
+        'completa', (tester) async {
+      await abrir(tester, '/siniestros/demo-3');
+      expect(find.text('Fotos que enviaste'), findsOneWidget);
+      expect(find.byType(SolPhotoCarousel), findsOneWidget);
+      expect(find.text('1/2'), findsOneWidget);
+      // El fake no tiene almacenamiento: la foto dice que no está disponible.
+      expect(find.text('Imagen no disponible'), findsWidgets);
+
+      await tester.tap(
+        find.bySemanticsLabel(
+          'Foto 1 de 2. Toca para verla en pantalla completa.',
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(SolPhotoViewer), findsOneWidget);
+      expect(find.byType(InteractiveViewer), findsWidgets);
+      await tester.tap(find.byTooltip('Cerrar'));
+      await tester.pumpAndSettle();
+      expect(find.byType(SolPhotoViewer), findsNothing);
+    });
+
+    testWidgets('línea de tiempo: reportado, en revisión y la resolución por '
+        'venir', (tester) async {
+      await abrir(tester, '/siniestros/demo-2');
+      final linea = tester.widget<SolTimeline>(find.byType(SolTimeline));
+      expect(linea.steps.map((p) => p.title), [
+        'Reportado',
+        'En revisión con un perito',
+        'Resolución',
+      ]);
+      expect(linea.steps.map((p) => p.state), [
+        SolTimelineState.done,
+        SolTimelineState.current,
+        SolTimelineState.upcoming,
+      ]);
+    });
+
+    testWidgets('un caso aprobado termina la línea de tiempo en Aprobado', (
+      tester,
+    ) async {
+      await abrir(tester, '/siniestros/demo-3');
+      final linea = tester.widget<SolTimeline>(find.byType(SolTimeline));
+      expect(linea.steps.last.title, 'Aprobado');
+      expect(linea.steps.last.state, SolTimelineState.done);
+      expect(linea.steps.last.status, SolStatus.success);
+    });
+
+    testWidgets('muestra la póliza con el vehículo, qué pasó y el relato', (
+      tester,
+    ) async {
+      await abrir(tester, '/siniestros/demo-2');
+      expect(find.text('Mazda 3 Touring · ABC•••'), findsOneWidget);
+      expect(find.text('Póliza SOL-2026-000123'), findsOneWidget);
+      expect(
+        find.text('Choque con daños que se pueden reparar'),
+        findsOneWidget,
+      );
+      await tester.ensureVisible(find.text('Tu relato'));
+      expect(find.text('Cra 15 con Calle 93, Bogotá'), findsOneWidget);
+      expect(find.textContaining('Me chocaron por detrás'), findsOneWidget);
+    });
+
+    testWidgets('si el detalle falla ofrece reintentar', (tester) async {
+      bff.errorAlDetallar = Exception('red');
+      await abrir(tester, '/siniestros/demo-3');
+      expect(find.text('Reintentar'), findsOneWidget);
+      await tester.tap(find.text('Reintentar'));
+      await tester.pumpAndSettle();
+      expect(find.text('SIN-2026-0942'), findsOneWidget);
+    });
   });
 }
 
-Input$ReporteSiniestroInput _entradaMinima() => Input$ReporteSiniestroInput(
-  idReporte: 'rep-detalle-1',
-  polizaId: 'pol-demo-01',
-  ocurridoEn: DateTime.utc(2026, 11, 4, 13),
-  descripcion: 'Me chocaron por detrás en un semáforo.',
-  ubicacion: Input$UbicacionReporteInput(
-    descripcion: 'Cra 15 con Calle 93',
-    ciudad: 'Bogotá',
-    latitud: 4.6767,
-    longitud: -74.0483,
-  ),
-  fotos: [
-    Input$FotoReporteInput(
-      archivoId: 'a1',
-      tomadaEn: DateTime.utc(2026, 11, 4),
-    ),
-  ],
-);
+Input$ReporteSiniestroInput _entradaMinima({Enum$TipoSiniestroAuto? tipo}) =>
+    Input$ReporteSiniestroInput(
+      idReporte: 'rep-detalle-1',
+      tipoSiniestroAuto: tipo,
+      polizaId: 'pol-demo-01',
+      ocurridoEn: DateTime.utc(2026, 11, 4, 13),
+      descripcion: 'Me chocaron por detrás en un semáforo.',
+      ubicacion: Input$UbicacionReporteInput(
+        descripcion: 'Cra 15 con Calle 93',
+        ciudad: 'Bogotá',
+        latitud: 4.6767,
+        longitud: -74.0483,
+      ),
+      fotos: [
+        Input$FotoReporteInput(
+          archivoId: 'a1',
+          tomadaEn: DateTime.utc(2026, 11, 4),
+        ),
+      ],
+    );

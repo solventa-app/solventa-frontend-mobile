@@ -2149,5 +2149,145 @@
   "fallaRecorridosAgotados": "Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.",
   "@fallaRecorridosAgotados": {
     "description": "RECORRIDOS_AGOTADOS: 3 verificaciones rechazadas en 24 h (contrato v0.56)"
+  },
+  "m0507ValorandoDano": "El plazo de revisión venció. Como hay que valorar el daño, un operador revisará tu caso y verás el resultado aquí.",
+  "@m0507ValorandoDano": {
+    "description": "M05-07 plazo vencido sin aprobación automática (auto parcial o RC)"
+  },
+  "m0507Fotos": "Fotos que enviaste",
+  "@m0507Fotos": {
+    "description": "M05-07 título del carrusel de fotos"
+  },
+  "m0507Foto": "Foto {n} de {total}. Toca para verla en pantalla completa.",
+  "@m0507Foto": {
+    "description": "M05-07 lo que lee TalkBack en una foto del carrusel",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "m0507FotoNoDisponible": "Imagen no disponible",
+  "@m0507FotoNoDisponible": {
+    "description": "M05-07 foto que no carga"
+  },
+  "m0507CerrarFoto": "Cerrar",
+  "@m0507CerrarFoto": {
+    "description": "M05-07 cerrar el visor de fotos"
+  },
+  "m0507Seguimiento": "Seguimiento",
+  "@m0507Seguimiento": {
+    "description": "M05-07 título de la línea de tiempo"
+  },
+  "m0507HitoReportado": "Reportado",
+  "@m0507HitoReportado": {
+    "description": "M05-07 paso: reportado"
+  },
+  "m0507HitoRevision": "En revisión con un perito",
+  "@m0507HitoRevision": {
+    "description": "M05-07 paso: derivado a perito"
+  },
+  "m0507HitoAprobado": "Aprobado",
+  "@m0507HitoAprobado": {
+    "description": "M05-07 paso: aprobado"
+  },
+  "m0507HitoRechazado": "Rechazado",
+  "@m0507HitoRechazado": {
+    "description": "M05-07 paso: rechazado"
+  },
+  "m0507HitoResolucion": "Resolución",
+  "@m0507HitoResolucion": {
+    "description": "M05-07 paso por venir: la resolución"
+  },
+  "m0507HitoResolucionPlazo": "A más tardar el {fecha}",
+  "@m0507HitoResolucionPlazo": {
+    "description": "M05-07 subtítulo del paso por venir",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507EstadoCompletado": "completado",
+  "@m0507EstadoCompletado": {
+    "description": "M05-07 TalkBack: paso terminado"
+  },
+  "m0507EstadoActual": "paso actual",
+  "@m0507EstadoActual": {
+    "description": "M05-07 TalkBack: paso actual"
+  },
+  "m0507EstadoPendiente": "pendiente",
+  "@m0507EstadoPendiente": {
+    "description": "M05-07 TalkBack: paso por venir"
+  },
+  "m0507Poliza": "Tu póliza",
+  "@m0507Poliza": {
+    "description": "M05-07 título de la tarjeta de póliza"
+  },
+  "m0507PolizaNumero": "Póliza {numero}",
+  "@m0507PolizaNumero": {
+    "description": "M05-07 número de póliza",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507LoQueReportaste": "Lo que reportaste",
+  "@m0507LoQueReportaste": {
+    "description": "M05-07 sección plegable con el reporte"
+  },
+  "m0507QuePaso": "Qué pasó",
+  "@m0507QuePaso": {
+    "description": "M05-07 etiqueta del tipo de siniestro"
+  },
+  "m0507Lugar": "Dónde",
+  "@m0507Lugar": {
+    "description": "M05-07 etiqueta del lugar"
+  },
+  "m0507Relato": "Tu relato",
+  "@m0507Relato": {
+    "description": "M05-07 etiqueta del relato"
+  },
+  "m0506FiltroTodos": "Todos",
+  "@m0506FiltroTodos": {
+    "description": "M05-06 filtro: todos"
+  },
+  "m0506FiltroEnCurso": "En curso",
+  "@m0506FiltroEnCurso": {
+    "description": "M05-06 filtro: pendientes y en revisión"
+  },
+  "m0506FiltroResueltos": "Resueltos",
+  "@m0506FiltroResueltos": {
+    "description": "M05-06 filtro: aprobados y rechazados"
+  },
+  "m0506VacioFiltro": "No tienes siniestros en este grupo.",
+  "@m0506VacioFiltro": {
+    "description": "M05-06 filtro sin resultados"
+  },
+  "m0506Monto": "Indemnización: {monto}",
+  "@m0506Monto": {
+    "description": "M05-06 monto aprobado en la fila",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506Quedan": "Quedan {tiempo} para la revisión",
+  "@m0506Quedan": {
+    "description": "M05-06 tiempo restante en la fila",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506PorValorar": "Un operador está valorando el daño",
+  "@m0506PorValorar": {
+    "description": "M05-06 plazo vencido sin aprobación automática"
   }
 }

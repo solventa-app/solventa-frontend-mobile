@@ -8,30 +8,63 @@ import '../../../../core/l10n/l10n.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
+import 'm05_01_poliza_page.dart' show nombreTipoAuto;
+import 'm05_07_detalle_siniestro_page.dart' show estadoDelCaso, tiempoRestante;
+
+/// Grupos del filtro de M05-06.
+enum FiltroSiniestros { todos, enCurso, resueltos }
 
 /// M05-06 · Mis siniestros: los casos que reportó el cliente y su estado en la
 /// mesa de siniestros (HU-W04). Sin frame en Figma: sistema de diseño.
-class M0506MisSiniestrosPage extends ConsumerWidget {
-  const M0506MisSiniestrosPage({super.key});
+///
+/// Filtro Todos / En curso / Resueltos, y en cada tarjeta el vehículo, qué
+/// pasó, el estado y lo que importa de ese estado (tiempo que queda, monto
+/// aprobado o motivo). Tocar una tarjeta abre el detalle (M05-07).
+class M0506MisSiniestrosPage extends ConsumerStatefulWidget {
+  const M0506MisSiniestrosPage({super.key, this.ahora = DateTime.now});
+
+  /// El reloj; las pruebas lo fijan.
+  final DateTime Function() ahora;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<M0506MisSiniestrosPage> createState() =>
+      _M0506MisSiniestrosPageState();
+}
+
+class _M0506MisSiniestrosPageState
+    extends ConsumerState<M0506MisSiniestrosPage> {
+  FiltroSiniestros _filtro = FiltroSiniestros.todos;
+
+  static bool _enGrupo(SiniestroReportado c, FiltroSiniestros f) => switch (f) {
+    FiltroSiniestros.todos => true,
+    FiltroSiniestros.enCurso =>
+      c.estado == 'PENDIENTE' || c.estado == 'EN_REVISION',
+    FiltroSiniestros.resueltos =>
+      c.estado == 'APROBADO' || c.estado == 'RECHAZADO',
+  };
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final casos = ref.watch(misSiniestrosProvider);
+    // El vehículo de cada póliza (la misma consulta del reporte). Si falla, la
+    // tarjeta sale sin vehículo: no es motivo para esconder la lista.
+    final vehiculos = switch (ref.watch(polizasReportablesProvider).value) {
+      Exito(:final valor) => {for (final p in valor) p.id: ?p.vehiculo},
+      _ => const <String, String>{},
+    };
 
     final cuerpo = switch (casos) {
       AsyncData(value: Exito(:final valor)) when valor.isEmpty => SolInlineNote(
         text: l10n.m0506Vacio,
         center: true,
       ),
-      AsyncData(value: Exito(:final valor)) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          for (final c in valor) ...[
-            _FilaSiniestro(caso: c),
-            const SizedBox(height: SolSpacing.sm),
-          ],
-        ],
+      AsyncData(value: Exito(:final valor)) => _Lista(
+        casos: valor.where((c) => _enGrupo(c, _filtro)).toList(),
+        filtro: _filtro,
+        onFiltro: (f) => setState(() => _filtro = f),
+        vehiculos: vehiculos,
+        ahora: widget.ahora(),
       ),
       AsyncData(value: Fracaso(:final falla)) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -64,72 +97,192 @@ class M0506MisSiniestrosPage extends ConsumerWidget {
   }
 }
 
+class _Lista extends StatelessWidget {
+  const _Lista({
+    required this.casos,
+    required this.filtro,
+    required this.onFiltro,
+    required this.vehiculos,
+    required this.ahora,
+  });
+
+  final List<SiniestroReportado> casos;
+  final FiltroSiniestros filtro;
+  final ValueChanged<FiltroSiniestros> onFiltro;
+  final Map<String, String> vehiculos;
+  final DateTime ahora;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SolChoiceChips<FiltroSiniestros>(
+          semanticLabel: l10n.m0506Titulo,
+          selected: filtro,
+          onSelected: onFiltro,
+          choices: [
+            SolChoice(
+              value: FiltroSiniestros.todos,
+              label: l10n.m0506FiltroTodos,
+            ),
+            SolChoice(
+              value: FiltroSiniestros.enCurso,
+              label: l10n.m0506FiltroEnCurso,
+            ),
+            SolChoice(
+              value: FiltroSiniestros.resueltos,
+              label: l10n.m0506FiltroResueltos,
+            ),
+          ],
+        ),
+        const SizedBox(height: SolSpacing.md),
+        if (casos.isEmpty)
+          SolInlineNote(text: l10n.m0506VacioFiltro, center: true)
+        else
+          for (final c in casos) ...[
+            _FilaSiniestro(
+              caso: c,
+              vehiculo: c.polizaId == null ? null : vehiculos[c.polizaId],
+              ahora: ahora,
+            ),
+            const SizedBox(height: SolSpacing.sm),
+          ],
+      ],
+    );
+  }
+}
+
 class _FilaSiniestro extends StatelessWidget {
-  const _FilaSiniestro({required this.caso});
+  const _FilaSiniestro({
+    required this.caso,
+    required this.vehiculo,
+    required this.ahora,
+  });
 
   final SiniestroReportado caso;
+  final String? vehiculo;
+  final DateTime ahora;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = context.colors;
-    final (
-      SolStatus status,
-      String estado,
-      String detalle,
-    ) = switch (caso.estado) {
-      'EN_REVISION' => (
-        SolStatus.warning,
-        l10n.m0506EnRevision,
-        l10n.m0506EnRevisionDetalle,
+    final (status, estado) = estadoDelCaso(l10n, caso.estado);
+    final estilo = SolStatusStyle.of(context, status);
+    final tipo = caso.tipoAuto;
+    final monto = caso.resolucion?.indemnizacion;
+
+    // Lo que importa del estado, en una línea.
+    final (IconData icono, String detalle) = switch (caso.estado) {
+      'EN_REVISION' => (SolIcons.schedule, l10n.m0506EnRevisionDetalle),
+      'APROBADO' when monto != null => (
+        SolIcons.payments,
+        l10n.m0506Monto(SolFormat.currency(monto)),
       ),
-      'APROBADO' => (
-        SolStatus.success,
-        l10n.m0506Aprobado,
-        l10n.m0506AprobadoDetalle,
-      ),
-      'RECHAZADO' => (
-        SolStatus.error,
-        l10n.m0506Rechazado,
-        l10n.m0506RechazadoDetalle,
-      ),
-      _ => (
-        SolStatus.info,
-        l10n.m0506Pendiente,
-        l10n.m0506PendienteDetalle(
-          SolFormat.date(caso.venceDictamenEn.toLocal()),
+      'APROBADO' => (SolIcons.payments, l10n.m0506AprobadoDetalle),
+      'RECHAZADO' => (SolIcons.info, l10n.m0506RechazadoDetalle),
+      _ => switch (tiempoRestante(caso.venceDictamenEn, ahora)) {
+        final r? => (SolIcons.schedule, l10n.m0506Quedan(r)),
+        null when !caso.apruebaAlVencer => (
+          SolIcons.schedule,
+          l10n.m0506PorValorar,
         ),
-      ),
+        null => (
+          SolIcons.schedule,
+          l10n.m0506PendienteDetalle(
+            SolFormat.date(caso.venceDictamenEn.toLocal()),
+          ),
+        ),
+      },
     };
+
+    final suave = context.solText.body.copyWith(color: colors.onSurfaceVariant);
     return MergeSemantics(
-      child: InkWell(
-        borderRadius: SolRadius.cardAll,
-        onTap: () => context.push(ReporteRoutes.detalleDe(caso.id)),
-        child: SolCard.outlined(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: SolRadius.cardAll,
+          onTap: () => context.push(ReporteRoutes.detalleDe(caso.id)),
+          child: SolCard.outlined(
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: Text(caso.radicado, style: context.solText.title),
+                  // Franja del color del estado: se ve de un vistazo en la lista
+                  // (el texto de la insignia lo dice también).
+                  Container(
+                    width: 4,
+                    decoration: BoxDecoration(
+                      color: estilo.foreground,
+                      borderRadius: SolRadius.fullAll,
+                    ),
                   ),
-                  SolStatusBadge(status: status, label: estado),
+                  const SizedBox(width: SolSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Con texto grande la insignia baja de línea.
+                        Wrap(
+                          spacing: SolSpacing.sm,
+                          runSpacing: SolSpacing.xs,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(caso.radicado, style: context.solText.title),
+                            SolStatusBadge(status: status, label: estado),
+                          ],
+                        ),
+                        if (vehiculo != null || tipo != null) ...[
+                          const SizedBox(height: SolSpacing.xxs),
+                          Text(
+                            [
+                              ?vehiculo,
+                              if (tipo != null) nombreTipoAuto(l10n, tipo),
+                            ].join(' · '),
+                            style: context.solText.body,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                        const SizedBox(height: SolSpacing.xxs),
+                        Text(
+                          l10n.m0506Reportado(
+                            SolFormat.date(caso.notificadoEn.toLocal()),
+                            caso.fotos,
+                          ),
+                          style: suave,
+                        ),
+                        const SizedBox(height: SolSpacing.xs),
+                        Row(
+                          children: [
+                            Icon(icono, size: 16, color: estilo.foreground),
+                            const SizedBox(width: SolSpacing.xs),
+                            Expanded(
+                              child: Text(
+                                detalle,
+                                style: context.solText.body.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: SolSpacing.xs),
+                  Center(
+                    child: Icon(
+                      SolIcons.chevronRight,
+                      color: colors.onSurfaceVariant,
+                      size: 20,
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: SolSpacing.xs),
-              Text(
-                l10n.m0506Reportado(
-                  SolFormat.date(caso.notificadoEn.toLocal()),
-                  caso.fotos,
-                ),
-                style: context.solText.body.copyWith(
-                  color: colors.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: SolSpacing.xs),
-              Text(detalle, style: context.solText.body),
-            ],
+            ),
           ),
         ),
       ),

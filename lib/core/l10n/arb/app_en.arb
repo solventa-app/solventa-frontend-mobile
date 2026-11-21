@@ -1105,5 +1105,71 @@
   "m0601DiaSabado": "Sat",
   "m0601DiaDomingo": "Sun",
   "m0105CambiarDocumento": "Retake document photos",
-  "fallaRecorridosAgotados": "You can't try the verification again today. Please come back tomorrow."
+  "fallaRecorridosAgotados": "You can't try the verification again today. Please come back tomorrow.",
+  "m0507ValorandoDano": "The review period has ended. Because the damage must be assessed, an operator will review your claim and you will see the result here.",
+  "m0507Fotos": "Photos you sent",
+  "m0507Foto": "Photo {n} of {total}. Tap to view it full screen.",
+  "@m0507Foto": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "m0507FotoNoDisponible": "Image not available",
+  "m0507CerrarFoto": "Close",
+  "m0507Seguimiento": "Progress",
+  "m0507HitoReportado": "Reported",
+  "m0507HitoRevision": "Under review by an adjuster",
+  "m0507HitoAprobado": "Approved",
+  "m0507HitoRechazado": "Rejected",
+  "m0507HitoResolucion": "Decision",
+  "m0507HitoResolucionPlazo": "By {fecha}",
+  "@m0507HitoResolucionPlazo": {
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507EstadoCompletado": "completed",
+  "m0507EstadoActual": "current step",
+  "m0507EstadoPendiente": "pending",
+  "m0507Poliza": "Your policy",
+  "m0507PolizaNumero": "Policy {numero}",
+  "@m0507PolizaNumero": {
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507LoQueReportaste": "What you reported",
+  "m0507QuePaso": "What happened",
+  "m0507Lugar": "Where",
+  "m0507Relato": "Your description",
+  "m0506FiltroTodos": "All",
+  "m0506FiltroEnCurso": "In progress",
+  "m0506FiltroResueltos": "Resolved",
+  "m0506VacioFiltro": "You have no claims in this group.",
+  "m0506Monto": "Compensation: {monto}",
+  "@m0506Monto": {
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506Quedan": "{tiempo} left for the review",
+  "@m0506Quedan": {
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506PorValorar": "An operator is assessing the damage"
 }

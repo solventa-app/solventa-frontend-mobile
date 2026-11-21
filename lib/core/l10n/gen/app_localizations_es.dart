@@ -1849,4 +1849,99 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get fallaRecorridosAgotados =>
       'Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.';
+
+  @override
+  String get m0507ValorandoDano =>
+      'El plazo de revisión venció. Como hay que valorar el daño, un operador revisará tu caso y verás el resultado aquí.';
+
+  @override
+  String get m0507Fotos => 'Fotos que enviaste';
+
+  @override
+  String m0507Foto(int n, int total) {
+    return 'Foto $n de $total. Toca para verla en pantalla completa.';
+  }
+
+  @override
+  String get m0507FotoNoDisponible => 'Imagen no disponible';
+
+  @override
+  String get m0507CerrarFoto => 'Cerrar';
+
+  @override
+  String get m0507Seguimiento => 'Seguimiento';
+
+  @override
+  String get m0507HitoReportado => 'Reportado';
+
+  @override
+  String get m0507HitoRevision => 'En revisión con un perito';
+
+  @override
+  String get m0507HitoAprobado => 'Aprobado';
+
+  @override
+  String get m0507HitoRechazado => 'Rechazado';
+
+  @override
+  String get m0507HitoResolucion => 'Resolución';
+
+  @override
+  String m0507HitoResolucionPlazo(String fecha) {
+    return 'A más tardar el $fecha';
+  }
+
+  @override
+  String get m0507EstadoCompletado => 'completado';
+
+  @override
+  String get m0507EstadoActual => 'paso actual';
+
+  @override
+  String get m0507EstadoPendiente => 'pendiente';
+
+  @override
+  String get m0507Poliza => 'Tu póliza';
+
+  @override
+  String m0507PolizaNumero(String numero) {
+    return 'Póliza $numero';
+  }
+
+  @override
+  String get m0507LoQueReportaste => 'Lo que reportaste';
+
+  @override
+  String get m0507QuePaso => 'Qué pasó';
+
+  @override
+  String get m0507Lugar => 'Dónde';
+
+  @override
+  String get m0507Relato => 'Tu relato';
+
+  @override
+  String get m0506FiltroTodos => 'Todos';
+
+  @override
+  String get m0506FiltroEnCurso => 'En curso';
+
+  @override
+  String get m0506FiltroResueltos => 'Resueltos';
+
+  @override
+  String get m0506VacioFiltro => 'No tienes siniestros en este grupo.';
+
+  @override
+  String m0506Monto(String monto) {
+    return 'Indemnización: $monto';
+  }
+
+  @override
+  String m0506Quedan(String tiempo) {
+    return 'Quedan $tiempo para la revisión';
+  }
+
+  @override
+  String get m0506PorValorar => 'Un operador está valorando el daño';
 }
