@@ -64,6 +64,15 @@ final misSiniestrosProvider =
       (ref) => ref.watch(reporteSiniestroRepositoryProvider).misSiniestros(),
     );
 
+/// M05-07 (v0.54): el detalle de un caso. Se vuelve a pedir al tirar hacia
+/// abajo, cuando vence la URL de una foto o, vencido el plazo, hasta ver el
+/// cambio de estado.
+final miSiniestroProvider = FutureProvider.autoDispose
+    .family<Resultado<DetalleSiniestro?>, String>(
+      (ref, id) =>
+          ref.watch(reporteSiniestroRepositoryProvider).miSiniestro(id),
+    );
+
 final reporteProvider = NotifierProvider<ReporteNotifier, ReporteState>(
   ReporteNotifier.new,
 );

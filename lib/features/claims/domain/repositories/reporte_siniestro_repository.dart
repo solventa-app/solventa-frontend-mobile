@@ -14,4 +14,8 @@ abstract interface class ReporteSiniestroRepository {
   /// Los casos que reportó el cliente, del más reciente al más antiguo, con su
   /// estado en la mesa de siniestros (M05-06).
   Future<Resultado<List<SiniestroReportado>>> misSiniestros();
+
+  /// El detalle de un caso del cliente (M05-07). `Exito(null)` si no existe o
+  /// no es suyo.
+  Future<Resultado<DetalleSiniestro?>> miSiniestro(String id);
 }

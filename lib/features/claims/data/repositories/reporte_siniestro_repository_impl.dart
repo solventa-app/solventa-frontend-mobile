@@ -57,6 +57,10 @@ final class ReporteSiniestroRepositoryImpl
         .toList(),
   );
 
+  @override
+  Future<Resultado<DetalleSiniestro?>> miSiniestro(String id) =>
+      guardarFallas(() async => detalleDesdeGql(await _remote.miSiniestro(id)));
+
   Future<Resultado<List<String>>> _subirFotos(ReporteSiniestro reporte) async {
     final hechas = _subidas.putIfAbsent(reporte.idReporte, () => {});
     final ids = <String>[];

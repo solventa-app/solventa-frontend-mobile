@@ -1933,4 +1933,99 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0502CambiarDireccion => 'Change address';
+
+  @override
+  String get m0507ValorandoDano =>
+      'The review period has ended. Because the damage must be assessed, an operator will review your claim and you will see the result here.';
+
+  @override
+  String get m0507Fotos => 'Photos you sent';
+
+  @override
+  String m0507Foto(int n, int total) {
+    return 'Photo $n of $total. Tap to view it full screen.';
+  }
+
+  @override
+  String get m0507FotoNoDisponible => 'Image not available';
+
+  @override
+  String get m0507CerrarFoto => 'Close';
+
+  @override
+  String get m0507Seguimiento => 'Progress';
+
+  @override
+  String get m0507HitoReportado => 'Reported';
+
+  @override
+  String get m0507HitoRevision => 'Under review by an adjuster';
+
+  @override
+  String get m0507HitoAprobado => 'Approved';
+
+  @override
+  String get m0507HitoRechazado => 'Rejected';
+
+  @override
+  String get m0507HitoResolucion => 'Decision';
+
+  @override
+  String m0507HitoResolucionPlazo(String fecha) {
+    return 'By $fecha';
+  }
+
+  @override
+  String get m0507EstadoCompletado => 'completed';
+
+  @override
+  String get m0507EstadoActual => 'current step';
+
+  @override
+  String get m0507EstadoPendiente => 'pending';
+
+  @override
+  String get m0507Poliza => 'Your policy';
+
+  @override
+  String m0507PolizaNumero(String numero) {
+    return 'Policy $numero';
+  }
+
+  @override
+  String get m0507LoQueReportaste => 'What you reported';
+
+  @override
+  String get m0507QuePaso => 'What happened';
+
+  @override
+  String get m0507Lugar => 'Where';
+
+  @override
+  String get m0507Relato => 'Your description';
+
+  @override
+  String get m0506FiltroTodos => 'All';
+
+  @override
+  String get m0506FiltroEnCurso => 'In progress';
+
+  @override
+  String get m0506FiltroResueltos => 'Resolved';
+
+  @override
+  String get m0506VacioFiltro => 'You have no claims in this group.';
+
+  @override
+  String m0506Monto(String monto) {
+    return 'Compensation: $monto';
+  }
+
+  @override
+  String m0506Quedan(String tiempo) {
+    return '$tiempo left for the review';
+  }
+
+  @override
+  String get m0506PorValorar => 'An operator is assessing the damage';
 }

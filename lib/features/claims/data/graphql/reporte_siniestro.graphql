@@ -96,3 +96,51 @@ fragment SiniestroReportadoCampos on SiniestroReportado {
     plazoDispersion
   }
 }
+
+# v0.54 (M05-07): el detalle de un caso del cliente; null si no es suyo.
+query MiSiniestro($id: ID!) {
+  miSiniestro(id: $id) {
+    id
+    radicado
+    estado
+    ocurridoEn
+    notificadoEn
+    venceDictamenEn
+    tipoSiniestroAuto
+    descripcion
+    ubicacion {
+      descripcion
+      ciudad
+    }
+    poliza {
+      numero
+      producto
+      vehiculo {
+        marca
+        linea
+        placaEnmascarada
+      }
+    }
+    fotos {
+      id
+      url
+      registradaEn
+    }
+    historial {
+      estado
+      en
+    }
+    resolucion {
+      tipo
+      resueltaEn
+      motivo
+      viaRecurso
+      indemnizacion {
+        valor
+        moneda
+      }
+      plazoDispersion
+    }
+    apruebaAlVencer
+  }
+}

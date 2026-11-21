@@ -127,10 +127,26 @@ final class SiniestroReportado {
     required this.fotos,
     this.ocurridoEn,
     this.resolucion,
+    this.polizaId,
+    this.tipoAuto,
   });
 
   final String id;
   final String radicado;
+
+  /// La póliza del caso (para mostrar el vehículo en la lista).
+  final String? polizaId;
+
+  /// Qué le pasó al vehículo; `null` en pólizas que no son de auto.
+  final TipoSiniestroAuto? tipoAuto;
+
+  /// Vencido el plazo, ¿el sistema lo aprueba solo? No en auto parcial o RC:
+  /// el operador valora el daño (KAN-290).
+  bool get apruebaAlVencer => !const {
+    TipoSiniestroAuto.choqueParcial,
+    TipoSiniestroAuto.hurtoParcial,
+    TipoSiniestroAuto.responsabilidadCivil,
+  }.contains(tipoAuto);
 
   /// `PENDIENTE`, `EN_REVISION`, `APROBADO` o `RECHAZADO` (contrato).
   final String estado;
@@ -144,6 +160,89 @@ final class SiniestroReportado {
   final DateTime? ocurridoEn;
 
   /// `null` mientras el caso está `PENDIENTE`.
+  final ResolucionSiniestro? resolucion;
+}
+
+/// Una foto que el cliente subió con su reporte, ya en el almacenamiento
+/// (M05-07). [url] es una URL firmada que vence en minutos; vacía si el archivo
+/// no está disponible.
+final class FotoDelCaso {
+  const FotoDelCaso({
+    required this.id,
+    required this.url,
+    required this.registradaEn,
+  });
+
+  final String id;
+  final String url;
+  final DateTime registradaEn;
+}
+
+/// Un paso de la línea de tiempo del caso: `PENDIENTE` al reportar,
+/// `EN_REVISION` si pasó a un perito, y `APROBADO` o `RECHAZADO`.
+final class HitoDelCaso {
+  const HitoDelCaso({required this.estado, required this.en});
+
+  final String estado;
+  final DateTime en;
+}
+
+/// La póliza del caso, como la ve el cliente en el detalle.
+final class PolizaDelCaso {
+  const PolizaDelCaso({
+    required this.numero,
+    required this.esAuto,
+    this.vehiculo,
+  });
+
+  final String numero;
+  final bool esAuto;
+
+  /// «Mazda 3 · ABC•••» en una póliza de auto.
+  final String? vehiculo;
+}
+
+/// El detalle completo de un caso del cliente (M05-07, contrato v0.54).
+final class DetalleSiniestro {
+  const DetalleSiniestro({
+    required this.id,
+    required this.radicado,
+    required this.estado,
+    required this.ocurridoEn,
+    required this.notificadoEn,
+    required this.venceDictamenEn,
+    required this.descripcion,
+    required this.lugar,
+    required this.ciudad,
+    required this.poliza,
+    required this.fotos,
+    required this.historial,
+    required this.apruebaAlVencer,
+    this.tipoAuto,
+    this.resolucion,
+  });
+
+  final String id;
+  final String radicado;
+
+  /// `PENDIENTE`, `EN_REVISION`, `APROBADO` o `RECHAZADO` (contrato).
+  final String estado;
+  final DateTime ocurridoEn;
+  final DateTime notificadoEn;
+  final DateTime venceDictamenEn;
+  final String descripcion;
+  final String lugar;
+  final String ciudad;
+  final PolizaDelCaso poliza;
+  final List<FotoDelCaso> fotos;
+  final List<HitoDelCaso> historial;
+
+  /// Vencido el plazo estando `PENDIENTE`, el sistema lo aprueba solo. `false`
+  /// en auto parcial o de responsabilidad civil: el operador valora el daño.
+  final bool apruebaAlVencer;
+  final TipoSiniestroAuto? tipoAuto;
+
+  /// `null` mientras está `PENDIENTE`.
   final ResolucionSiniestro? resolucion;
 }
 
