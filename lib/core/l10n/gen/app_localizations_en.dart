@@ -1849,6 +1849,32 @@ class AppLocalizationsEn extends AppLocalizations {
       'You can\'t try the verification again today. Please come back tomorrow.';
 
   @override
+  String get m0602Poliza => 'Policy covering the assistance';
+
+  @override
+  String get m0602PolizaElegir => 'Choose your vehicle policy';
+
+  @override
+  String get m0602PolizaCargando => 'Looking for your policies…';
+
+  @override
+  String get m0602PolizaRequerida =>
+      'Choose your vehicle policy to send the request.';
+
+  @override
+  String get m0602SinPoliza =>
+      'You need an active vehicle policy to request assistance.';
+
+  @override
+  String get m0602PolizaNoValida =>
+      'That policy doesn\'t cover the assistance. Choose an active vehicle policy.';
+
+  @override
+  String m0602PolizaNumero(String numero) {
+    return 'Policy $numero';
+  }
+
+  @override
   String get m0507ValorandoDano =>
       'The review period has ended. Because the damage must be assessed, an operator will review your claim and you will see the result here.';
 

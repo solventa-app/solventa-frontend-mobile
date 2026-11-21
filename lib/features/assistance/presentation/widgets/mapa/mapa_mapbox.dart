@@ -53,6 +53,9 @@ bool avisarErrorDeCarga({
 /// - Cámara: encuadre inicial con zoom máximo 16 y límites de zoom 11 a 18 y
 ///   de la zona (M7); enfoque con un solo `easeTo` de 400 ms, sin animación
 ///   si el sistema pide quitarlas (M6).
+/// - Botón GPS ([CentrarEnUsuario]): `easeTo` de 600 ms al cliente sin tocar
+///   el zoom y un pulso (3 latidos de un círculo bajo su pin) para ubicarlo;
+///   sin animaciones si el sistema pide quitarlas.
 /// - Estilos calles y satélite (M14): al cambiar se conservan cámara, pines y
 ///   selección.
 /// - Si el satélite no carga (p. ej. Mapbox rechaza sus teselas con 429) se
@@ -94,6 +97,9 @@ class _MapaMapboxState extends State<MapaMapbox> {
   MapboxMap? _mapa;
   PointAnnotationManager? _pines;
   PolylineAnnotationManager? _lineas;
+  CircleAnnotationManager? _pulsos;
+  CircleAnnotation? _pulso;
+  Timer? _latido;
   final _porAnotacion = <String, PrestadorCercano>{};
   final _imagenes = <Object, Uint8List>{};
   final _suscripciones = <StreamSubscription<Object?>>[];
@@ -128,6 +134,11 @@ class _MapaMapboxState extends State<MapaMapbox> {
       unawaited(_pintarRutas());
       unawaited(_pintarPines());
     }
+    // El botón GPS leyó una posición nueva: la cámara sigue al cliente.
+    if (widget.orden is CentrarEnUsuario &&
+        old.datos.origen != widget.datos.origen) {
+      _ordenAplicada = null;
+    }
     if (widget.orden?.generacion != _ordenAplicada) {
       unawaited(_aplicarOrden());
     }
@@ -135,6 +146,7 @@ class _MapaMapboxState extends State<MapaMapbox> {
 
   @override
   void dispose() {
+    _latido?.cancel();
     _toques?.cancel();
     for (final s in _suscripciones) {
       unawaited(s.cancel());
@@ -152,6 +164,8 @@ class _MapaMapboxState extends State<MapaMapbox> {
       await mapa.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
       // Las rutas primero: quedan debajo de los pines (M15).
       _lineas = await mapa.annotations.createPolylineAnnotationManager();
+      // El pulso del botón GPS, debajo de los pines.
+      _pulsos = await mapa.annotations.createCircleAnnotationManager();
       _pines = await mapa.annotations.createPointAnnotationManager();
       await _pines!.setIconAllowOverlap(true);
       _toques = _pines!.tapEvents(
@@ -351,6 +365,16 @@ class _MapaMapboxState extends State<MapaMapbox> {
           16,
           null,
         );
+      case CentrarEnUsuario():
+        // Sin `zoom`: Mapbox conserva el actual y solo mueve el centro.
+        await _mover(
+          mapa,
+          CameraOptions(center: _punto(widget.datos.origen), padding: relleno),
+          rapido,
+          duracion: 600,
+        );
+        if (!rapido) unawaited(_latir());
+        return;
       case EnfocarPrestador(:final destino):
         final actual = await mapa.getCameraState();
         return _mover(
@@ -366,14 +390,66 @@ class _MapaMapboxState extends State<MapaMapbox> {
     await _mover(mapa, destino, rapido);
   }
 
-  Future<void> _mover(MapboxMap mapa, CameraOptions c, bool rapido) async {
+  Future<void> _mover(
+    MapboxMap mapa,
+    CameraOptions c,
+    bool rapido, {
+    int duracion = 400,
+  }) async {
     await mapa.cancelCameraAnimation();
     if (rapido) {
       await mapa.setCamera(c);
     } else {
-      await mapa.easeTo(c, MapAnimationOptions(duration: 400));
+      await mapa.easeTo(c, MapAnimationOptions(duration: duracion));
     }
   }
+
+  /// Tres latidos de un círculo que crece y se desvanece bajo el pin del
+  /// cliente: se ve dónde está sin dejar una animación corriendo (batería).
+  Future<void> _latir() async {
+    final pulsos = _pulsos;
+    if (pulsos == null || !mounted) return;
+    _latido?.cancel();
+    final color = _colorUsuario(context).toARGB32();
+    final anterior = _pulso;
+    _pulso = null;
+    if (anterior != null) await pulsos.delete(anterior);
+    final pulso = await pulsos.create(
+      CircleAnnotationOptions(
+        geometry: _punto(widget.datos.origen),
+        circleColor: color,
+        circleRadius: _radioPulso(0),
+        circleOpacity: _opacidadPulso(0),
+      ),
+    );
+    if (!mounted) return;
+    _pulso = pulso;
+    final inicio = DateTime.now();
+    _latido = Timer.periodic(const Duration(milliseconds: 33), (t) {
+      final ms = DateTime.now().difference(inicio).inMilliseconds;
+      final actual = _pulso;
+      if (!mounted || actual == null) return t.cancel();
+      if (ms >= _latidos * _msLatido) {
+        t.cancel();
+        _pulso = null;
+        unawaited(pulsos.delete(actual));
+        return;
+      }
+      final f = (ms % _msLatido) / _msLatido;
+      actual
+        ..circleRadius = _radioPulso(f)
+        ..circleOpacity = _opacidadPulso(f);
+      unawaited(pulsos.update(actual));
+    });
+  }
+
+  static const _latidos = 3;
+  static const _msLatido = 900;
+
+  /// Del borde del punto (8 px) al doble del halo, con salida suave.
+  static double _radioPulso(double f) =>
+      8 + Curves.easeOut.transform(f) * (SolMapUserPin.halo - 8);
+  static double _opacidadPulso(double f) => 0.45 * (1 - f);
 
   static Color _colorUsuario(BuildContext context) => context.colors.error;
 

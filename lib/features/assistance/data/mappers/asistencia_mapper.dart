@@ -96,6 +96,8 @@ Map<String, Object?> entradaSolicitud(SolicitudAsistencia s) {
       OrigenUbicacion.gps => 'GPS',
       OrigenUbicacion.direccion => 'DIRECCION',
     },
+    // v0.55: solo si eligió una (las versiones anteriores no la mandan).
+    'polizaId': ?s.polizaId,
   };
 }
 

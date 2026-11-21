@@ -1106,6 +1106,20 @@
   "m0601DiaDomingo": "Sun",
   "m0105CambiarDocumento": "Retake document photos",
   "fallaRecorridosAgotados": "You can't try the verification again today. Please come back tomorrow.",
+  "m0602Poliza": "Policy covering the assistance",
+  "m0602PolizaElegir": "Choose your vehicle policy",
+  "m0602PolizaCargando": "Looking for your policies…",
+  "m0602PolizaRequerida": "Choose your vehicle policy to send the request.",
+  "m0602SinPoliza": "You need an active vehicle policy to request assistance.",
+  "m0602PolizaNoValida": "That policy doesn't cover the assistance. Choose an active vehicle policy.",
+  "m0602PolizaNumero": "Policy {numero}",
+  "@m0602PolizaNumero": {
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
   "m0507ValorandoDano": "The review period has ended. Because the damage must be assessed, an operator will review your claim and you will see the result here.",
   "m0507Fotos": "Photos you sent",
   "m0507Foto": "Photo {n} of {total}. Tap to view it full screen.",

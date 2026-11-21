@@ -156,8 +156,14 @@ final class FakeUbicacionService implements UbicacionService {
         UbicacionNoDisponible() => EstadoUbicacion.gpsApagado,
       };
 
+  /// Para pruebas: cuántas veces se leyó la posición.
+  int lecturas = 0;
+
   @override
-  Future<ResultadoUbicacion> ubicacionActual() async => resultado;
+  Future<ResultadoUbicacion> ubicacionActual() async {
+    lecturas++;
+    return resultado;
+  }
 
   @override
   Future<void> abrirAjustes({required bool deUbicacion}) async {}
