@@ -18,10 +18,14 @@ final class SolicitudAsistencia {
     this.origen = OrigenUbicacion.gps,
     this.descripcion = '',
     this.direccion = '',
+    this.polizaId,
   });
 
   final String idSolicitud;
   final Prestador prestador;
+
+  /// v0.55 (KAN-36): la póliza de auto que eligió el cliente.
+  final String? polizaId;
   final TipoPrestador tipo;
 
   /// Adónde debe llegar el prestador: el GPS del teléfono o la dirección que
@@ -137,6 +141,9 @@ abstract final class CodigosAsistencia {
   static const tipoNoAtendido = 'TIPO_NO_ATENDIDO';
   static const datosInvalidos = 'DATOS_INVALIDOS';
   static const noEncontrada = 'NO_ENCONTRADA';
+
+  /// v0.55: la póliza no es suya, no es de auto, no está emitida o venció.
+  static const polizaNoValida = 'POLIZA_NO_VALIDA';
 }
 
 /// Límites del formulario M06-02 (los mismos que valida CLAIMS).

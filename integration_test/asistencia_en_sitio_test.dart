@@ -23,6 +23,9 @@ import 'package:solventa_mobile/features/assistance/presentation/pages/mis_asist
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
 import 'package:solventa_mobile/features/assistance/presentation/solicitud_notifier.dart';
 import 'package:solventa_mobile/features/assistance/presentation/widgets/mapa/mapa_datos.dart';
+import 'package:solventa_mobile/features/claims/data/datasources/reporte_siniestro_remote_datasource.dart';
+import 'package:solventa_mobile/features/claims/presentation/providers.dart'
+    show reporteSiniestroRemoteDataSourceProvider;
 
 import 'soporte/capturas.dart';
 
@@ -42,6 +45,9 @@ void main() {
     final contenedor = ProviderContainer(
       overrides: [
         asistenciaRemoteDataSourceProvider.overrideWithValue(bff),
+        reporteSiniestroRemoteDataSourceProvider.overrideWithValue(
+          FakeReporteSiniestroRemoteDataSource(latencia: Duration.zero),
+        ),
         catalogoLocalDataSourceProvider.overrideWithValue(
           MemoriaCatalogoLocalDataSource(),
         ),
@@ -205,6 +211,9 @@ void main() {
       final contenedor = ProviderContainer(
         overrides: [
           asistenciaRemoteDataSourceProvider.overrideWithValue(bff),
+          reporteSiniestroRemoteDataSourceProvider.overrideWithValue(
+            FakeReporteSiniestroRemoteDataSource(latencia: Duration.zero),
+          ),
           catalogoLocalDataSourceProvider.overrideWithValue(
             MemoriaCatalogoLocalDataSource(),
           ),
@@ -231,7 +240,8 @@ void main() {
             minutosEstimados: 6,
           ),
           const Coordenada(4.6767, -74.0483),
-        );
+        )
+        ..fijarPoliza('pol-demo-02');
       await solicitud.enviar();
       await solicitud.enviar();
       final id = contenedor.read(solicitudProvider).idSolicitud;

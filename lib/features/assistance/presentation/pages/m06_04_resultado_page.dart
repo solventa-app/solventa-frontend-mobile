@@ -68,6 +68,8 @@ class M0604ResultadoPage extends ConsumerWidget {
           l10n.m0604bNoDisponible(nombre),
         FallaNegocio(motivo: CodigosAsistencia.tipoNoAtendido) =>
           l10n.m0602TipoNoAtendido(nombre),
+        FallaNegocio(motivo: CodigosAsistencia.polizaNoValida) =>
+          l10n.m0602PolizaNoValida,
         _ => l10n.falla(falla),
       };
 }
