@@ -51,14 +51,29 @@ final class FotoSiniestro {
     required this.tipoContenido,
     required this.tomadaEn,
     this.ubicacion,
+    this.deDireccion = false,
   });
 
   final Uint8List bytes;
   final String tipoContenido;
   final DateTime tomadaEn;
 
-  /// Donde se tomó; `null` si no hubo permiso o GPS (queda sin geoetiqueta).
+  /// Donde se tomó; `null` si no hubo permiso, GPS ni dirección escrita
+  /// (queda sin geoetiqueta).
   final Coordenada? ubicacion;
+
+  /// Sin GPS: [ubicacion] es el punto de la dirección que el cliente escribió
+  /// y ubicó (Places + `ubicarDireccion`), no el GPS del teléfono (v0.66).
+  final bool deDireccion;
+
+  /// La misma foto con el punto de la dirección escrita.
+  FotoSiniestro conDireccion(Coordenada punto) => FotoSiniestro(
+    bytes: bytes,
+    tipoContenido: tipoContenido,
+    tomadaEn: tomadaEn,
+    ubicacion: punto,
+    deDireccion: true,
+  );
 }
 
 /// Lo que el cliente envía (M05-04). [idReporte] lo genera la app y es el id
