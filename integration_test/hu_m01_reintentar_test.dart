@@ -22,6 +22,10 @@ void main() {
   testWidgets(
     'sin intentos se empieza una verificación nueva desde el inicio',
     (tester) async {
+      // En el teléfono pequeño el teclado real encoge la pantalla y «Crear
+      // cuenta» queda debajo de él: con el teclado de prueba no aparece.
+      tester.testTextInput.register();
+      addTearDown(tester.testTextInput.unregister);
       final bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
       await tester.pumpWidget(
         ProviderScope(
@@ -51,6 +55,8 @@ void main() {
       await tester.enterText(campos.at(0), 'maria@ejemplo.co');
       await tester.enterText(campos.at(1), 'Clave-segura-1');
       await tester.enterText(campos.at(2), 'Clave-segura-1');
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Crear cuenta'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Crear cuenta'));
       await tester.pumpAndSettle();
