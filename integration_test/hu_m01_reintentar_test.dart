@@ -22,6 +22,10 @@ void main() {
   testWidgets(
     'sin intentos se empieza una verificación nueva desde el inicio',
     (tester) async {
+      // En el teléfono pequeño el teclado real encoge la pantalla y «Crear
+      // cuenta» queda debajo de él: con el teclado de prueba no aparece.
+      tester.testTextInput.register();
+      addTearDown(tester.testTextInput.unregister);
       final bff = FakeOnboardingRemoteDataSource(latencia: Duration.zero);
       await tester.pumpWidget(
         ProviderScope(
@@ -44,15 +48,23 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      // En el teléfono pequeño (360 x 592 dp) los botones de abajo, como el
+      // segundo «Capturar», quedan fuera de la pantalla: se desplaza antes.
+      Future<void> tocar(Finder boton) async {
+        await tester.ensureVisible(boton);
+        await tester.pumpAndSettle();
+        await tester.tap(boton);
+      }
+
       // Cuenta nueva con el código del fake (123456).
-      await tester.tap(find.text('¿No tienes cuenta? Crear cuenta'));
+      await tocar(find.text('¿No tienes cuenta? Crear cuenta'));
       await tester.pumpAndSettle();
       final campos = find.byType(TextField);
       await tester.enterText(campos.at(0), 'maria@ejemplo.co');
       await tester.enterText(campos.at(1), 'Clave-segura-1');
       await tester.enterText(campos.at(2), 'Clave-segura-1');
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Crear cuenta'));
+      await tocar(find.text('Crear cuenta'));
       await tester.pumpAndSettle();
       for (final d in ['1', '2', '3', '4', '5', '6']) {
         await tester.tap(find.text(d));
@@ -61,21 +73,21 @@ void main() {
       await tester.pumpAndSettle();
 
       Future<void> hastaLaCedula() async {
-        await tester.tap(find.text('Empezar'));
+        await tocar(find.text('Empezar'));
         await tester.pumpAndSettle();
-        await tester.tap(find.byType(SolConsentCheckbox));
+        await tocar(find.byType(SolConsentCheckbox));
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Continuar'));
+        await tocar(find.text('Continuar'));
         await tester.pumpAndSettle();
         expect(find.text('Captura del documento'), findsWidgets);
       }
 
-      await tester.tap(find.text('Completar registro'));
+      await tocar(find.text('Completar registro'));
       await tester.pumpAndSettle();
       await hastaLaCedula();
-      await tester.tap(find.text('Capturar'));
+      await tocar(find.text('Capturar'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Capturar'));
+      await tocar(find.text('Capturar'));
       await tester.pumpAndSettle();
 
       // Didit rechaza el rostro y ya no quedan intentos en este recorrido.
@@ -85,14 +97,14 @@ void main() {
         intento: 3,
         intentosRestantes: 0,
       );
-      await tester.tap(find.text('Grabar video'));
+      await tocar(find.text('Grabar video'));
       await tester.pumpAndSettle();
       await capturar(tester, 'M01-07c · sin intentos');
       expect(find.textContaining('puedes empezar una nueva'), findsOneWidget);
-      await tester.tap(find.text('Ir al inicio'));
+      await tocar(find.text('Ir al inicio'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Reintentar verificación'));
+      await tocar(find.text('Reintentar verificación'));
       await tester.pumpAndSettle();
       await hastaLaCedula();
       await capturar(tester, 'M01-03 · recorrido nuevo');

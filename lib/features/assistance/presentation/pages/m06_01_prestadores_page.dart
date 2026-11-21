@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -45,6 +46,26 @@ class M0601PrestadoresPage extends ConsumerStatefulWidget {
 class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
   late final AppLifecycleListener _ciclo;
   final _hoja = DraggableScrollableController();
+
+  /// Altura de la hoja que sigue el botón GPS. El controlador de la hoja
+  /// también avisa mientras se construye (al cambiar sus fracciones, p. ej. al
+  /// ubicar una dirección escrita) y el botón ya está construido: escucharlo
+  /// directo falla con «setState() called during build». Este aviso se pasa
+  /// al final del cuadro cuando llega durante la construcción.
+  final _alturaHoja = ValueNotifier<double?>(null);
+
+  void _alMoverHoja() {
+    double? altura() => _hoja.isAttached ? _hoja.size : null;
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _alturaHoja.value = altura();
+      });
+    } else {
+      _alturaHoja.value = altura();
+    }
+  }
+
   bool _mapaFallo = false;
   bool _volviendoDeAjustes = false;
 
@@ -68,6 +89,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
   @override
   void initState() {
     super.initState();
+    _hoja.addListener(_alMoverHoja);
     // Al volver de Ajustes (permiso o GPS) se reintenta solo.
     _ciclo = AppLifecycleListener(
       onResume: () {
@@ -90,7 +112,10 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
   void dispose() {
     _ciclo.dispose();
     _navegando?.cancel();
-    _hoja.dispose();
+    _hoja
+      ..removeListener(_alMoverHoja)
+      ..dispose();
+    _alturaHoja.dispose();
     super.dispose();
   }
 
@@ -453,9 +478,9 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
               ),
               if (conMapa)
                 ListenableBuilder(
-                  listenable: _hoja,
+                  listenable: _alturaHoja,
                   builder: (context, _) {
-                    final fraccion = _hoja.isAttached ? _hoja.size : inicial;
+                    final fraccion = _alturaHoja.value ?? inicial;
                     return PositionedDirectional(
                       end: SolSpacing.sm,
                       bottom: fraccion * alto + SolSpacing.lg,
