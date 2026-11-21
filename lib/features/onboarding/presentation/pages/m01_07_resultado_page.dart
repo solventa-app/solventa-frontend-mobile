@@ -101,6 +101,12 @@ class M0107ResultadoPage extends ConsumerWidget {
         title: l10n.verificacionTitulo,
         status: SolStatus.success,
         message: l10n.m0107aMensaje,
+        // KAN-130: resumen de lo que quedó verificado.
+        details: [
+          l10n.m0107aDocumento,
+          l10n.m0107aPruebaVida,
+          l10n.m0107aRostro,
+        ],
         actionLabel: l10n.m0107aAccion,
         onAction: () => context.go(OnboardingRoutes.biometria),
         onBack: inicio,

@@ -266,6 +266,24 @@ abstract class AppLocalizations {
   /// **'¡Identidad verificada! Bienvenido a Solventa.'**
   String get m0107aMensaje;
 
+  /// M01-07a resumen: el documento pasó la verificación de autenticidad (KAN-130)
+  ///
+  /// In es, this message translates to:
+  /// **'Documento auténtico'**
+  String get m0107aDocumento;
+
+  /// M01-07a resumen: la prueba de vida pasó (KAN-130)
+  ///
+  /// In es, this message translates to:
+  /// **'Prueba de vida superada'**
+  String get m0107aPruebaVida;
+
+  /// M01-07a resumen: el rostro coincide con la foto del documento (KAN-130)
+  ///
+  /// In es, this message translates to:
+  /// **'Tu rostro coincide con el documento'**
+  String get m0107aRostro;
+
   /// M01-07a botón
   ///
   /// In es, this message translates to:

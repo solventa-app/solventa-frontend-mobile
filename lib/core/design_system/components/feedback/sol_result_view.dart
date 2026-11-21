@@ -14,6 +14,7 @@ class SolResultView extends StatelessWidget {
     required this.status,
     required this.message,
     this.action,
+    this.details = const [],
   });
 
   /// success (verificada), warning (en revisión) o error (no pudimos).
@@ -22,6 +23,11 @@ class SolResultView extends StatelessWidget {
 
   /// Acción opcional dentro de la tarjeta (normalmente va anclada abajo).
   final Widget? action;
+
+  /// Filas de detalle bajo el mensaje, cada una con un ícono de chequeo
+  /// decorativo (M01-07a: lo que quedó verificado, KAN-130). Se leen como
+  /// texto, junto con el mensaje.
+  final List<String> details;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,7 @@ class SolResultView extends StatelessWidget {
     return Semantics(
       container: true,
       liveRegion: true,
-      label: '${s.semanticPrefix}. $message',
+      label: ['${s.semanticPrefix}. $message', ...details].join('. '),
       excludeSemantics: action == null,
       child: SolCard(
         padding: const EdgeInsets.all(SolSpacing.xxl),
@@ -74,6 +80,37 @@ class SolResultView extends StatelessWidget {
                 ),
               ),
             ),
+            if (details.isNotEmpty) ...[
+              const SizedBox(height: SolSpacing.lg),
+              for (final detalle in details)
+                Padding(
+                  padding: const EdgeInsets.only(top: SolSpacing.sm),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ExcludeSemantics(
+                        child: Icon(
+                          SolIcons.check,
+                          size: 20,
+                          color: s.foreground,
+                        ),
+                      ),
+                      const SizedBox(width: SolSpacing.sm),
+                      Expanded(
+                        child: ExcludeSemantics(
+                          excluding: action != null,
+                          child: Text(
+                            detalle,
+                            style: context.solText.body.copyWith(
+                              color: colors.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
             if (action != null) ...[
               const SizedBox(height: SolSpacing.xxl),
               action!,
