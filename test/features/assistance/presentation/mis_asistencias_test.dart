@@ -19,6 +19,9 @@ import 'package:solventa_mobile/features/assistance/presentation/pages/asistenci
 import 'package:solventa_mobile/features/assistance/presentation/pages/mis_asistencias_page.dart';
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
 import 'package:solventa_mobile/features/assistance/presentation/solicitud_notifier.dart';
+import 'package:solventa_mobile/features/claims/data/datasources/reporte_siniestro_remote_datasource.dart';
+import 'package:solventa_mobile/features/claims/presentation/providers.dart'
+    show reporteSiniestroRemoteDataSourceProvider;
 
 /// HU-M06 fase 5 (plan de pendientes 4.1 a 4.6): «Mis asistencias», la
 /// cuenta regresiva, la notificación de llegada, «Te alejaste» y el detalle.
@@ -50,6 +53,9 @@ void main() {
     c = ProviderContainer(
       overrides: [
         asistenciaRemoteDataSourceProvider.overrideWithValue(bff),
+        reporteSiniestroRemoteDataSourceProvider.overrideWithValue(
+          FakeReporteSiniestroRemoteDataSource(latencia: Duration.zero),
+        ),
         catalogoLocalDataSourceProvider.overrideWithValue(
           MemoriaCatalogoLocalDataSource(),
         ),
@@ -65,7 +71,9 @@ void main() {
   /// Pide una asistencia y la confirma con el reintento (como CLAIMS con
   /// `primero_falla`). Devuelve su id.
   Future<String> confirmada() async {
-    final n = c.read(solicitudProvider.notifier)..iniciar(cercano, lugar);
+    final n = c.read(solicitudProvider.notifier)
+      ..iniciar(cercano, lugar)
+      ..fijarPoliza('pol-demo-02');
     await n.enviar();
     await n.enviar();
     return c.read(solicitudProvider).idSolicitud;
@@ -136,7 +144,9 @@ void main() {
     test(
       '4.1: las no confirmadas van en camino; reintentar las confirma',
       () async {
-        final n0 = c.read(solicitudProvider.notifier)..iniciar(cercano, lugar);
+        final n0 = c.read(solicitudProvider.notifier)
+          ..iniciar(cercano, lugar)
+          ..fijarPoliza('pol-demo-02');
         await n0.enviar();
         final id = c.read(solicitudProvider).idSolicitud;
         final n = c.read(misAsistenciasProvider.notifier);

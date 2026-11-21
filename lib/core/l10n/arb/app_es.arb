@@ -2150,6 +2150,39 @@
   "@fallaRecorridosAgotados": {
     "description": "RECORRIDOS_AGOTADOS: 3 verificaciones rechazadas en 24 h (contrato v0.56)"
   },
+  "m0602Poliza": "Póliza que cubre la asistencia",
+  "@m0602Poliza": {
+    "description": "M06-02 selector de póliza (v0.55)"
+  },
+  "m0602PolizaElegir": "Elige la póliza de tu vehículo",
+  "@m0602PolizaElegir": {
+    "description": "M06-02 selector de póliza sin elegir"
+  },
+  "m0602PolizaCargando": "Buscando tus pólizas…",
+  "@m0602PolizaCargando": {
+    "description": "M06-02 cargando pólizas"
+  },
+  "m0602PolizaRequerida": "Elige la póliza de tu vehículo para enviar la solicitud.",
+  "@m0602PolizaRequerida": {
+    "description": "M06-02 error: falta la póliza"
+  },
+  "m0602SinPoliza": "Para pedir asistencia necesitas una póliza de vehículo vigente.",
+  "@m0602SinPoliza": {
+    "description": "M06-02 sin pólizas de auto vigentes"
+  },
+  "m0602PolizaNoValida": "Esa póliza no cubre la asistencia. Elige una póliza de vehículo vigente.",
+  "@m0602PolizaNoValida": {
+    "description": "M06-04b rechazo POLIZA_NO_VALIDA"
+  },
+  "m0602PolizaNumero": "Póliza {numero}",
+  "@m0602PolizaNumero": {
+    "description": "M06-02 número de póliza",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
   "m0105AvisoDuracion": "Grabaremos 15 segundos: gira la cara a la izquierda, luego a la derecha y vuelve al centro. Verás el tiempo mientras avanza.",
   "@m0105AvisoDuracion": {
     "description": "M01-05 aviso previo de la duración y los pasos de la grabación"

@@ -178,17 +178,47 @@ void main() {
     final mapa = tester.widget<MapaPrestadores>(find.byType(MapaPrestadores));
     expect(mapa.datos.seleccionadoId, 'prs-bog-001');
     expect(mapa.orden, isA<EnfocarPrestador>());
-    // M8: tras enfocar aparece «Volver a centrar»; al tocarlo, encuadra.
+  });
+
+  // QA 2026-11-18 (KAN-36): el botón GPS centra en el cliente sin cambiar el
+  // zoom (CentrarEnUsuario, no EncuadrarInicio), queda resaltado, vuelve a
+  // leer el GPS y, al mover el mapa, queda como estaba.
+  testWidgets('M8: el botón GPS centra sin zoom, se resalta y se apaga al '
+      'mover el mapa', (tester) async {
+    await abrir(tester);
+    SolMapFab boton() => tester.widget<SolMapFab>(
+      find.ancestor(
+        of: find.byIcon(SolIcons.myLocation),
+        matching: find.byType(SolMapFab),
+      ),
+    );
+    // Siempre visible, sin resaltar al abrir.
+    expect(boton().seleccionado, isFalse);
+    final lecturas = gps.lecturas;
+
     await tester.tap(find.bySemanticsLabel('Volver a centrar en mi ubicación'));
     await tester.pumpAndSettle();
     expect(
       tester.widget<MapaPrestadores>(find.byType(MapaPrestadores)).orden,
-      isA<EncuadrarInicio>(),
+      isA<CentrarEnUsuario>(),
     );
-    expect(
-      find.bySemanticsLabel('Volver a centrar en mi ubicación'),
-      findsNothing,
-    );
+    expect(boton().seleccionado, isTrue);
+    expect(gps.lecturas, lecturas + 1);
+    // Sin el destello de «cargando»: la lista sigue en pantalla.
+    expect(find.byType(SolProviderRow), findsWidgets);
+
+    // Un gesto sobre el mapa lo deja como estaba.
+    tester.widget<MapaPrestadores>(find.byType(MapaPrestadores)).onGesto();
+    await tester.pump();
+    expect(boton().seleccionado, isFalse);
+
+    // Enfocar un prestador también lo apaga.
+    await tester.tap(find.bySemanticsLabel('Volver a centrar en mi ubicación'));
+    await tester.pumpAndSettle();
+    expect(boton().seleccionado, isTrue);
+    await tester.tap(find.textContaining('Médico · 1,1'));
+    await tester.pumpAndSettle();
+    expect(boton().seleccionado, isFalse);
   });
 
   testWidgets('M14: el botón de capas alterna calles y satélite', (

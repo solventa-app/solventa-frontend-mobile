@@ -1106,6 +1106,20 @@
   "m0601DiaDomingo": "Sun",
   "m0105CambiarDocumento": "Retake document photos",
   "fallaRecorridosAgotados": "You can't try the verification again today. Please come back tomorrow.",
+  "m0602Poliza": "Policy covering the assistance",
+  "m0602PolizaElegir": "Choose your vehicle policy",
+  "m0602PolizaCargando": "Looking for your policies…",
+  "m0602PolizaRequerida": "Choose your vehicle policy to send the request.",
+  "m0602SinPoliza": "You need an active vehicle policy to request assistance.",
+  "m0602PolizaNoValida": "That policy doesn't cover the assistance. Choose an active vehicle policy.",
+  "m0602PolizaNumero": "Policy {numero}",
+  "@m0602PolizaNumero": {
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
   "m0105AvisoDuracion": "We'll record 15 seconds: turn your face to the left, then to the right and back to the center. You'll see the time as it goes.",
   "m0105GrabandoTiempo": "Recording · {transcurrido} / {total}",
   "m0105PasoIzquierda": "Left",

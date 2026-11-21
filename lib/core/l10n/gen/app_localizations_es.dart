@@ -1851,6 +1851,32 @@ class AppLocalizationsEs extends AppLocalizations {
       'Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.';
 
   @override
+  String get m0602Poliza => 'Póliza que cubre la asistencia';
+
+  @override
+  String get m0602PolizaElegir => 'Elige la póliza de tu vehículo';
+
+  @override
+  String get m0602PolizaCargando => 'Buscando tus pólizas…';
+
+  @override
+  String get m0602PolizaRequerida =>
+      'Elige la póliza de tu vehículo para enviar la solicitud.';
+
+  @override
+  String get m0602SinPoliza =>
+      'Para pedir asistencia necesitas una póliza de vehículo vigente.';
+
+  @override
+  String get m0602PolizaNoValida =>
+      'Esa póliza no cubre la asistencia. Elige una póliza de vehículo vigente.';
+
+  @override
+  String m0602PolizaNumero(String numero) {
+    return 'Póliza $numero';
+  }
+
+  @override
   String get m0105AvisoDuracion =>
       'Grabaremos 15 segundos: gira la cara a la izquierda, luego a la derecha y vuelve al centro. Verás el tiempo mientras avanza.';
 
