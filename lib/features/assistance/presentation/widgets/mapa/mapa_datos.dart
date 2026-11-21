@@ -40,6 +40,12 @@ final class EnfocarPrestador extends OrdenCamara {
   final Coordenada destino;
 }
 
+/// Botón GPS: la cámara va al cliente con un movimiento suave **sin cambiar
+/// el zoom** y su punto late para que se vea dónde está.
+final class CentrarEnUsuario extends OrdenCamara {
+  const CentrarEnUsuario(super.generacion);
+}
+
 /// Lo que el mapa necesita para dibujarse.
 final class DatosMapa {
   const DatosMapa({
