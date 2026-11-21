@@ -24,7 +24,7 @@ Reglas que no se negocian:
 
 - **Sin datos personales** en eventos, breadcrumbs, capturas ni videos: nada de documento, nombre, correo, teléfono, montos de una persona, datos de pago, tokens ni ubicación exacta.
 - El usuario nunca ve un error técnico: ve un mensaje amable y su **código de soporte**.
-- El video (Session Replay) se guarda **solo cuando hay un error** y va **enmascarado**.
+- El video (Session Replay) se guarda **siempre que hay un error** y, fuera de producción, en **todas las sesiones** (en producción, el 10 %). Va **enmascarado** y en calidad alta, igual que las capturas (2026-11-21).
 - El encabezado `traceparent` va **solo a nuestro gateway**, nunca a terceros.
 
 ## Antes de empezar

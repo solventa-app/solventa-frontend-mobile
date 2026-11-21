@@ -43,7 +43,10 @@ Future<void> main() async {
       o.sendDefaultPii = false;
       o.maxRequestBodySize = MaxRequestBodySize.never;
       o.attachScreenshot = true;
-      o.screenshotQuality = SentryScreenshotQuality.low;
+      // Capturas y video legibles para reproducir el error (pedido de felipe,
+      // 2026-11-21). El texto y las imágenes siguen enmascarados (regla de datos
+      // personales): la calidad mejora la forma de la pantalla, no expone datos.
+      o.screenshotQuality = SentryScreenshotQuality.high;
       o.beforeCaptureScreenshot = (_, _, debounce) {
         if (debounce) return false;
         return !esRutaSinCaptura(rutaActualObservada);
@@ -52,7 +55,10 @@ Future<void> main() async {
       o.tracePropagationTargets
         ..clear()
         ..addAll([if (AppConfig.apiBaseUrl.isNotEmpty) AppConfig.apiBaseUrl]);
-      o.replay.sessionSampleRate = 0;
+      // Video de la sesión: siempre que hay un error y, fuera de producción, en
+      // todas las sesiones para tener el recorrido completo en QA.
+      o.replay.quality = SentryReplayQuality.high;
+      o.replay.sessionSampleRate = AppConfig.isProd ? 0.1 : 1.0;
       o.replay.onErrorSampleRate = 1.0;
       o.privacy.maskAllText = true;
       o.privacy.maskAllImages = true;

@@ -281,6 +281,53 @@ void main() {
       null;
 
   testWidgets(
+    'sin GPS se escribe la dirección (Places) y deja continuar, sin geoetiquetar las fotos',
+    (tester) async {
+      gps.resultado = const UbicacionSinPermiso(permanente: true);
+      await abrir(tester);
+      await tester.tap(find.text('Póliza SOL-2026-000456'));
+      contenedor
+          .read(reporteProvider.notifier)
+          .fijarFecha(DateTime(2026, 11, 4, 13));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Choque con daños que se pueden reparar'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Continuar'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Escribir la dirección'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).last, 'Calle 93 # 15-20');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Buscar esta dirección'));
+      await tester.pumpAndSettle();
+
+      final estado = contenedor.read(reporteProvider);
+      expect(estado.ubicacion, isNotNull);
+      expect(find.textContaining('Ubicación: '), findsOneWidget);
+      expect(find.text('Cambiar dirección'), findsOneWidget);
+
+      await tester.tap(find.text('Tomar foto'));
+      await tester.pump();
+      await tester.tap(find.text('Tomar foto'));
+      await tester.pumpAndSettle();
+      expect(
+        contenedor
+            .read(reporteProvider)
+            .fotos
+            .every((f) => f.ubicacion == null),
+        isTrue,
+      );
+      expect(continuarActivo(tester), isTrue);
+
+      await tester.tap(find.text('Continuar'));
+      await tester.pumpAndSettle();
+      // El lugar del relato llega lleno con la dirección escrita.
+      expect(contenedor.read(reporteProvider).lugar, isNotEmpty);
+    },
+  );
+
+  testWidgets(
     'M05-01 con los selectores reales: sin hora no se fija la fecha',
     (tester) async {
       await abrir(tester);

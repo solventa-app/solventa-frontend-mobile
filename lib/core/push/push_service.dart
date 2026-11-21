@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show Color;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -165,6 +166,9 @@ class PushService {
             channelDescription: canalPush.description,
             importance: Importance.high,
             priority: Priority.high,
+            // Silueta blanca de la «S» sobre el azul de marca (res/drawable-*/ic_stat_solventa).
+            icon: 'ic_stat_solventa',
+            color: const Color(0xFF37599E),
           ),
         ),
         payload: m.data['ruta'] as String?,

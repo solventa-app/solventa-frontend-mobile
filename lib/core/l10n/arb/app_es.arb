@@ -104,9 +104,9 @@
   "@m0105Titulo": {
     "description": "M01-05 barra superior"
   },
-  "m0105Instruccion": "Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.",
+  "m0105Instruccion": "Pon tu rostro dentro del óvalo y toca «Grabar video».",
   "@m0105Instruccion": {
-    "description": "M01-05 instrucción antes de grabar"
+    "description": "M01-05 instrucción antes de grabar (los pasos van debajo del visor)"
   },
   "verificacionTitulo": "Verificación",
   "@verificacionTitulo": {
@@ -144,9 +144,9 @@
   "@m0107bAccion": {
     "description": "M01-07b botón"
   },
-  "m0107cMensaje": "No pudimos verificar tu documento (imagen ilegible)",
+  "m0107cMensaje": "No pudimos leer bien tu documento. Tómale de nuevo las fotos con buena luz, sin reflejos y con la cédula completa dentro del marco.",
   "@m0107cMensaje": {
-    "description": "M01-07c"
+    "description": "M01-07c: ILEGIBLE o motivo desconocido"
   },
   "m0107cFallaTecnica": "No pudimos terminar tu verificación por un problema técnico. No perdiste ningún intento: inténtalo de nuevo.",
   "@m0107cFallaTecnica": {
@@ -289,11 +289,11 @@
   "@irAlInicio": {
     "description": "Botón ir al inicio"
   },
-  "m0107cRostro": "El rostro del video no coincide con el del documento.",
+  "m0107cRostro": "El rostro del video no coincide con el de tu documento. Grábalo de nuevo de frente, con buena luz y sin gafas, gorra ni tapabocas.",
   "@m0107cRostro": {
     "description": "M01-07c: ROSTRO_NO_COINCIDE"
   },
-  "m0107cSuplantacion": "No pudimos confirmar que la prueba de vida la hiciste tú, en vivo.",
+  "m0107cSuplantacion": "No pudimos confirmar que la prueba de vida la hiciste tú, en vivo. Grábala de nuevo tú mismo, sin fotos ni pantallas frente a la cámara.",
   "@m0107cSuplantacion": {
     "description": "M01-07c: SUPLANTACION"
   },
@@ -994,7 +994,7 @@
   "@m0502Ubicada": {
     "description": "M05-02 ubicación obtenida"
   },
-  "m0502SinUbicacion": "Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.",
+  "m0502SinUbicacion": "No tenemos tu GPS. Actívalo o escribe la dirección donde pasó el siniestro.",
   "@m0502SinUbicacion": {
     "description": "M05-02 sin permiso de ubicación"
   },
@@ -2182,5 +2182,91 @@
         "type": "String"
       }
     }
+  },
+  "m0105AvisoDuracion": "Grabaremos 15 segundos: gira la cara a la izquierda, luego a la derecha y vuelve al centro. Verás el tiempo mientras avanza.",
+  "@m0105AvisoDuracion": {
+    "description": "M01-05 aviso previo de la duración y los pasos de la grabación"
+  },
+  "m0105GrabandoTiempo": "Grabando · {transcurrido} / {total}",
+  "@m0105GrabandoTiempo": {
+    "description": "M01-05 etiqueta sobre el visor mientras graba, con el tiempo que avanza (00:07 / 00:15)",
+    "placeholders": {
+      "transcurrido": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "m0105PasoIzquierda": "Izquierda",
+  "@m0105PasoIzquierda": {
+    "description": "M01-05 paso 1 de la grabación"
+  },
+  "m0105PasoDerecha": "Derecha",
+  "@m0105PasoDerecha": {
+    "description": "M01-05 paso 2 de la grabación"
+  },
+  "m0105PasoCentro": "Centro",
+  "@m0105PasoCentro": {
+    "description": "M01-05 paso 3 de la grabación"
+  },
+  "m0105GiraIzquierda": "Gira la cara despacio hacia la izquierda",
+  "@m0105GiraIzquierda": {
+    "description": "M01-05 instrucción del paso 1"
+  },
+  "m0105GiraDerecha": "Ahora gírala despacio hacia la derecha",
+  "@m0105GiraDerecha": {
+    "description": "M01-05 instrucción del paso 2"
+  },
+  "m0105MiraCentro": "Vuelve al centro y mira la cámara",
+  "@m0105MiraCentro": {
+    "description": "M01-05 instrucción del paso 3"
+  },
+  "m0105Listo": "¡Listo! Ya tenemos tu video.",
+  "@m0105Listo": {
+    "description": "M01-05 al terminar los 15 s"
+  },
+  "fallaGenericaOnboarding": "No pudimos completar este paso. Toca «Reintentar envío»; si sigue fallando, empieza de nuevo la verificación.",
+  "@fallaGenericaOnboarding": {
+    "description": "Onboarding: error inesperado con salida (reintentar o empezar de nuevo)"
+  },
+  "asistenciaEnCaminoTitulo": "Tu asistencia va en camino",
+  "@asistenciaEnCaminoTitulo": {
+    "description": "Notificación fija mientras el prestador va en camino"
+  },
+  "asistenciaEnCaminoCuerpo": "{prestador} va hacia tu ubicación. Toca para ver el detalle.",
+  "@asistenciaEnCaminoCuerpo": {
+    "description": "Cuerpo de la notificación fija de en camino",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaEnCaminoCanalNombre": "Asistencia en curso",
+  "@asistenciaEnCaminoCanalNombre": {
+    "description": "Canal silencioso de la notificación fija de en camino"
+  },
+  "asistenciaEnCaminoCanalDescripcion": "Muestra la cuenta regresiva mientras el prestador va en camino",
+  "@asistenciaEnCaminoCanalDescripcion": {
+    "description": "Descripción del canal de en camino en Ajustes de Android"
+  },
+  "m0502EscribirDireccion": "Escribir la dirección",
+  "@m0502EscribirDireccion": {
+    "description": "M05-02 abre la búsqueda de dirección (Places) cuando no hay GPS"
+  },
+  "m0502UbicadaDireccion": "Ubicación: {direccion}",
+  "@m0502UbicadaDireccion": {
+    "description": "M05-02 ubicación tomada de la dirección escrita",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "m0502CambiarDireccion": "Cambiar dirección",
+  "@m0502CambiarDireccion": {
+    "description": "M05-02 vuelve a abrir la búsqueda de dirección"
   }
 }

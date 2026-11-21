@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../icons/sol_icons.dart';
 import '../../theme/context_x.dart';
+import '../../tokens/sol_motion.dart';
 import '../../tokens/sol_radius.dart';
 import '../../tokens/sol_spacing.dart';
 
@@ -31,9 +32,10 @@ class SolCameraFrame extends StatelessWidget {
     this.label,
     this.labelIcon,
     this.preview,
-    this.height = 420,
+    this.height,
     this.guideLabel,
     this.viewfinderLabel = 'Visor de cámara',
+    this.faceGuide,
   });
 
   /// Texto inferior, p. ej. «Ubica el FRENTE del documento dentro del marco».
@@ -45,7 +47,14 @@ class SolCameraFrame extends StatelessWidget {
   final String? label;
   final IconData? labelIcon;
   final Widget? preview;
-  final double height;
+
+  /// Alto del visor. Sin valor se adapta a la pantalla: la mitad del alto
+  /// disponible, entre 280 y 420 dp, para que en teléfonos bajos el botón y
+  /// los pasos quepan sin desbordar.
+  final double? height;
+
+  static double altoAdaptable(BuildContext context) =>
+      (MediaQuery.sizeOf(context).height * 0.5).clamp(280.0, 420.0);
 
   /// Marca de agua del reverso («LADO POSTERIOR»). Solo para [SolCameraFrameShape.documentBack].
   final String? guideLabel;
@@ -53,10 +62,15 @@ class SolCameraFrame extends StatelessWidget {
   /// Nombre del visor para TalkBack (traducido por la feature).
   final String viewfinderLabel;
 
+  /// Guía animada del rostro que reemplaza el óvalo fijo (solo con
+  /// [SolCameraFrameShape.face]); la dibuja la feature, p. ej. la prueba de vida.
+  final Widget? faceGuide;
+
   @override
   Widget build(BuildContext context) {
     final sol = context.solColors;
     final back = shape == SolCameraFrameShape.documentBack;
+    final height = this.height ?? altoAdaptable(context);
     return Semantics(
       container: true,
       label: [?label, viewfinderLabel, instruction].join('. '),
@@ -135,7 +149,7 @@ class SolCameraFrame extends StatelessWidget {
                                     SolCameraFrameShape.documentBack =>
                                       _DocumentBackGuide(label: guideLabel),
                                     SolCameraFrameShape.face =>
-                                      const _FaceGuide(),
+                                      faceGuide ?? const _FaceGuide(),
                                   },
                                 ),
                               ),
@@ -193,7 +207,11 @@ class _LabelPill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 16, opticalSize: 20, color: fg),
+            // Grabando: punto rojo, como el indicador de grabación de una cámara.
+            if (icon == SolIcons.recording)
+              const _PuntoGrabando()
+            else
+              Icon(icon, size: 16, opticalSize: 20, color: fg),
             const SizedBox(width: SolSpacing.xs),
           ],
           Flexible(
@@ -580,4 +598,54 @@ class _DashedFramePainter extends CustomPainter {
   @override
   bool shouldRepaint(_DashedFramePainter old) =>
       old.oval != oval || old.corners != corners;
+}
+
+/// Punto rojo que parpadea mientras se graba, como el indicador de una cámara.
+/// Con «reducir movimiento» queda fijo.
+class _PuntoGrabando extends StatefulWidget {
+  const _PuntoGrabando();
+
+  @override
+  State<_PuntoGrabando> createState() => _PuntoGrabandoState();
+}
+
+class _PuntoGrabandoState extends State<_PuntoGrabando>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 600),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (SolMotion.sinBucles(context)) {
+      _c
+        ..stop()
+        ..value = 1;
+    } else if (!_c.isAnimating) {
+      _c.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => FadeTransition(
+    opacity: Tween<double>(begin: 0.25, end: 1).animate(_c),
+    child: Container(
+      width: 10,
+      height: 10,
+      margin: const EdgeInsets.symmetric(horizontal: 3),
+      decoration: const BoxDecoration(
+        color: Color(0xFFFF3B30),
+        shape: BoxShape.circle,
+        boxShadow: [BoxShadow(color: Color(0x99FF3B30), blurRadius: 6)],
+      ),
+    ),
+  );
 }

@@ -89,7 +89,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0105Instruccion =>
-      'Place your face inside the circle. When you tap “Record video” we\'ll record 3 seconds: slowly move your head from side to side.';
+      'Place your face inside the oval and tap “Record video”.';
 
   @override
   String get verificacionTitulo => 'Verification';
@@ -121,7 +121,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0107cMensaje =>
-      'We couldn\'t verify your document (unreadable image)';
+      'We couldn\'t read your document clearly. Retake the photos in good light, without glare and with the whole ID inside the frame.';
 
   @override
   String get m0107cFallaTecnica =>
@@ -258,11 +258,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0107cRostro =>
-      'The face in the video doesn\'t match the one on the document.';
+      'The face in the video doesn\'t match your document. Record it again facing the camera, in good light and without glasses, cap or mask.';
 
   @override
   String get m0107cSuplantacion =>
-      'We couldn\'t confirm that you took the liveness check yourself, live.';
+      'We couldn\'t confirm you took the liveness check yourself, live. Record it again yourself, without photos or screens in front of the camera.';
 
   @override
   String get m0107cMenor =>
@@ -1036,7 +1036,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0502SinUbicacion =>
-      'We need your location to place the claim. Turn it on to continue.';
+      'We don\'t have your GPS. Turn it on or type the address where it happened.';
 
   @override
   String get m0502PermitirUbicacion => 'Allow location';
@@ -1873,4 +1873,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String m0602PolizaNumero(String numero) {
     return 'Policy $numero';
   }
+
+  @override
+  String get m0105AvisoDuracion =>
+      'We\'ll record 15 seconds: turn your face to the left, then to the right and back to the center. You\'ll see the time as it goes.';
+
+  @override
+  String m0105GrabandoTiempo(String transcurrido, String total) {
+    return 'Recording · $transcurrido / $total';
+  }
+
+  @override
+  String get m0105PasoIzquierda => 'Left';
+
+  @override
+  String get m0105PasoDerecha => 'Right';
+
+  @override
+  String get m0105PasoCentro => 'Center';
+
+  @override
+  String get m0105GiraIzquierda => 'Slowly turn your face to the left';
+
+  @override
+  String get m0105GiraDerecha => 'Now slowly turn it to the right';
+
+  @override
+  String get m0105MiraCentro => 'Back to the center and look at the camera';
+
+  @override
+  String get m0105Listo => 'Done! We have your video.';
+
+  @override
+  String get fallaGenericaOnboarding =>
+      'We couldn\'t complete this step. Tap “Retry upload”; if it keeps failing, start the verification again.';
+
+  @override
+  String get asistenciaEnCaminoTitulo => 'Your assistance is on the way';
+
+  @override
+  String asistenciaEnCaminoCuerpo(String prestador) {
+    return '$prestador is heading to your location. Tap to see details.';
+  }
+
+  @override
+  String get asistenciaEnCaminoCanalNombre => 'Assistance in progress';
+
+  @override
+  String get asistenciaEnCaminoCanalDescripcion =>
+      'Shows the countdown while the provider is on the way';
+
+  @override
+  String get m0502EscribirDireccion => 'Type the address';
+
+  @override
+  String m0502UbicadaDireccion(String direccion) {
+    return 'Location: $direccion';
+  }
+
+  @override
+  String get m0502CambiarDireccion => 'Change address';
 }

@@ -101,9 +101,10 @@ void main() {
 
       expect(find.text('Solventa'), findsOneWidget);
       expect(find.text('Desbloquea tu cuenta'), findsOneWidget);
-      // Un solo texto según lo configurado y siempre las dos salidas: el bloqueo del teléfono y el correo.
+      // Un solo texto según lo configurado y una sola salida: el correo
+      // (el botón del bloqueo del teléfono se quitó, pedido de felipe).
       expect(find.text('Ingresa con tu huella'), findsOneWidget);
-      expect(find.text('Usar el bloqueo del teléfono'), findsOneWidget);
+      expect(find.text('Usar el bloqueo del teléfono'), findsNothing);
       expect(find.text('Usar correo y contraseña'), findsOneWidget);
       expect(find.bySemanticsLabel('Ingresa con tu huella'), findsOne);
       expect(find.byType(SolLocaleChip), findsOneWidget);
@@ -199,37 +200,36 @@ void main() {
       },
     );
 
+    testWidgets('demasiados intentos: la salida es el correo y contraseña', (
+      tester,
+    ) async {
+      biometria.resultados.add(const BloqueoTemporal());
+      final c = await montar(tester, const M0201DesbloqueoPage());
+
+      expect(
+        find.text(
+          'Hiciste demasiados intentos. Espera unos segundos o usa el bloqueo de tu teléfono.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Usar el bloqueo del teléfono'), findsNothing);
+      expect(find.text('Usar correo y contraseña'), findsOneWidget);
+
+      await tester.tap(find.text('Usar correo y contraseña'));
+      await tester.pumpAndSettle();
+      expect(c.read(accesoProvider).fase, FaseAcceso.normal);
+      expect(onboarding.cierres, 1);
+    });
+
     testWidgets(
-      'demasiados intentos: siempre dos salidas, el bloqueo y el correo',
-      (tester) async {
-        biometria.resultados.add(const BloqueoTemporal());
-        final c = await montar(tester, const M0201DesbloqueoPage());
-
-        expect(
-          find.text(
-            'Hiciste demasiados intentos. Espera unos segundos o usa el bloqueo de tu teléfono.',
-          ),
-          findsOneWidget,
-        );
-        expect(find.text('Usar el bloqueo del teléfono'), findsOneWidget);
-        expect(find.text('Usar correo y contraseña'), findsOneWidget);
-
-        await tester.tap(find.text('Usar correo y contraseña'));
-        await tester.pumpAndSettle();
-        expect(c.read(accesoProvider).fase, FaseAcceso.normal);
-        expect(onboarding.cierres, 1);
-      },
-    );
-
-    testWidgets(
-      'cerrar el diálogo de la huella sin elegir deja las dos salidas, y el correo lleva a «Inicia sesión»',
+      'cerrar el diálogo de la huella sin elegir deja la salida por correo, que lleva a «Inicia sesión»',
       (tester) async {
         biometria.resultados.add(const Cancelado());
         final c = await montar(tester, const M0201DesbloqueoPage());
 
         expect(c.read(accesoProvider).aviso, isNull);
         expect(find.byType(SolStatusBanner), findsNothing);
-        expect(find.text('Usar el bloqueo del teléfono'), findsOneWidget);
+        expect(find.text('Usar el bloqueo del teléfono'), findsNothing);
         expect(find.text('Usar correo y contraseña'), findsOneWidget);
 
         await tester.tap(find.text('Usar correo y contraseña'));
@@ -237,19 +237,6 @@ void main() {
 
         expect(c.read(accesoProvider).fase, FaseAcceso.normal);
         expect(onboarding.cierres, 1);
-      },
-    );
-
-    testWidgets(
-      'el enlace del bloqueo abre el diálogo con el PIN del teléfono',
-      (tester) async {
-        biometria.resultados.add(const Cancelado());
-        await montar(tester, const M0201DesbloqueoPage());
-
-        await tester.tap(find.text('Usar el bloqueo del teléfono'));
-        await tester.pumpAndSettle();
-
-        expect(biometria.autenticaciones, [true, true]);
       },
     );
 
@@ -280,7 +267,7 @@ void main() {
       await montar(tester, const M0201DesbloqueoPage());
 
       expect(find.textContaining('demasiados intentos'), findsOneWidget);
-      expect(find.text('Usar el bloqueo del teléfono'), findsOneWidget);
+      expect(find.text('Usar correo y contraseña'), findsOneWidget);
     });
 
     testWidgets('sin red: aviso con Reintentar, sin pedir huella de nuevo', (
@@ -337,11 +324,11 @@ void main() {
 
       expect(tester.takeException(), isNull);
       await tester.scrollUntilVisible(
-        find.text('Usar el bloqueo del teléfono'),
+        find.text('Usar correo y contraseña'),
         100,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text('Usar el bloqueo del teléfono'), findsOneWidget);
+      expect(find.text('Usar correo y contraseña'), findsOneWidget);
     });
   });
 
@@ -362,23 +349,13 @@ void main() {
       expect(c.read(accesoProvider).fase, FaseAcceso.concedida);
     });
 
-    testWidgets('Usar el bloqueo del teléfono desde M02-01a', (tester) async {
-      biometria.resultados.add(const NoReconocido());
-      await montar(tester, const M0201DesbloqueoPage());
-
-      await tester.tap(find.text('Usar el bloqueo del teléfono'));
-      await tester.pumpAndSettle();
-
-      expect(biometria.autenticaciones, [true, true]);
-    });
-
     testWidgets('M02-01a también deja la salida por correo y contraseña', (
       tester,
     ) async {
       biometria.resultados.add(const NoReconocido());
       final c = await montar(tester, const M0201DesbloqueoPage());
 
-      expect(find.text('Usar el bloqueo del teléfono'), findsOneWidget);
+      expect(find.text('Usar el bloqueo del teléfono'), findsNothing);
       await tester.tap(find.text('Usar correo y contraseña'));
       await tester.pumpAndSettle();
 
