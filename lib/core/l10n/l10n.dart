@@ -146,6 +146,12 @@ extension FallaTextoX on AppLocalizations {
     FallaNegocio(motivo: 'RECORRIDOS_AGOTADOS') => fallaRecorridosAgotados,
     FallaNegocio(motivo: 'ROSTRO_NO_COINCIDE') => m0107cRostro,
     FallaNegocio(motivo: 'SUPLANTACION') => m0107cSuplantacion,
+    FallaNegocio(motivo: 'ILEGIBLE') => m0107cMensaje,
+    FallaNegocio(motivo: 'MENOR_DE_EDAD') => m0107cMenor,
+    FallaNegocio(motivo: 'DOCUMENTO_YA_REGISTRADO') =>
+      m0107cDocumentoRegistrado,
+    FallaNegocio(motivo: 'SIN_INTENTOS') => m0107cSinIntentos,
+    FallaNegocio(motivo: 'IMAGEN_NO_DISPONIBLE') => m0107cFallaTecnica,
     _ => fallaGenerica,
   };
 

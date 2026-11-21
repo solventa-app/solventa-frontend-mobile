@@ -18,6 +18,8 @@ import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   // Los tests de widget miden con Inter real, no con la fuente de pruebas.
   TestWidgetsFlutterBinding.ensureInitialized();
+  // Sin bucles de ambiente: no dejarían terminar a pumpAndSettle.
+  SolMotion.animacionesContinuas = false;
   await _loadInter();
   // Antialiasing de macOS y Linux difiere en fracciones de píxel: se tolera
   // hasta 0,5 % para que los goldens de CI pasen también en local.

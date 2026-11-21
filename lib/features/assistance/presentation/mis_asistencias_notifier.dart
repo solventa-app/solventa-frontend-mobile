@@ -264,6 +264,14 @@ Future<void> programarLlegada(Ref ref, Asistencia a) async {
       nombre: l10n.asistenciaCanalNombre,
       descripcion: l10n.asistenciaCanalDescripcion,
     ),
+    enCamino: (
+      titulo: l10n.asistenciaEnCaminoTitulo,
+      cuerpo: l10n.asistenciaEnCaminoCuerpo(a.prestador.nombre),
+      canal: (
+        nombre: l10n.asistenciaEnCaminoCanalNombre,
+        descripcion: l10n.asistenciaEnCaminoCanalDescripcion,
+      ),
+    ),
   );
 }
 

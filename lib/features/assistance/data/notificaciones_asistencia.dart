@@ -1,3 +1,5 @@
+import 'dart:ui' show Color;
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz_datos;
 import 'package:timezone/timezone.dart' as tz;
@@ -27,12 +29,18 @@ abstract interface class NotificacionesAsistencia {
 
   /// Programa (o reprograma: mismo id) la notificación para [llegada].
   /// [canal] es el nombre y la descripción del canal en Ajustes de Android.
+  ///
+  /// Con [enCamino] además muestra ya una notificación fija («en camino»):
+  /// no se puede deslizar, tiene una barra animada y una cuenta regresiva
+  /// hasta [llegada] que lleva Android (sigue con la app cerrada). Se quita
+  /// sola al llegar la hora o con [cancelar].
   Future<void> programar({
     required String id,
     required DateTime llegada,
     required String titulo,
     required String cuerpo,
     required CanalAsistencias canal,
+    EnCaminoAsistencia? enCamino,
   });
 
   Future<void> cancelar(String id);
@@ -40,6 +48,20 @@ abstract interface class NotificacionesAsistencia {
 
 /// Nombre y descripción del canal «Asistencias», en el idioma de la app.
 typedef CanalAsistencias = ({String nombre, String descripcion});
+
+/// Textos de la notificación fija «en camino» y de su canal silencioso.
+typedef EnCaminoAsistencia = ({
+  String titulo,
+  String cuerpo,
+  CanalAsistencias canal,
+});
+
+/// Canal propio, de importancia baja: la notificación fija no suena ni vibra.
+const idCanalEnCamino = 'asistencias_en_camino';
+
+/// Id de la notificación fija: distinto del de llegada de la misma asistencia.
+int idNotificacionEnCamino(String asistenciaId) =>
+    idNotificacion(asistenciaId) ^ 0x40000000;
 
 /// Id del canal: fijo, así el cambio de idioma lo renombra en vez de crear otro.
 const idCanalAsistencias = 'asistencias';
@@ -67,7 +89,7 @@ final class LocalNotificacionesAsistencia implements NotificacionesAsistencia {
       tz_datos.initializeTimeZones();
       await _plugin.initialize(
         settings: const InitializationSettings(
-          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+          android: AndroidInitializationSettings('@drawable/ic_stat_solventa'),
         ),
         onDidReceiveNotificationResponse: (r) {
           final id = r.payload;
@@ -119,8 +141,10 @@ final class LocalNotificacionesAsistencia implements NotificacionesAsistencia {
     required String titulo,
     required String cuerpo,
     required CanalAsistencias canal,
+    EnCaminoAsistencia? enCamino,
   }) async {
     if (!_listo || !llegada.isAfter(DateTime.now())) return;
+    if (enCamino != null) await _mostrarEnCamino(id, llegada, enCamino);
     try {
       await _plugin.zonedSchedule(
         id: idNotificacion(id),
@@ -135,6 +159,9 @@ final class LocalNotificacionesAsistencia implements NotificacionesAsistencia {
             channelDescription: canal.descripcion,
             importance: Importance.high,
             priority: Priority.high,
+            // Silueta blanca de la «S» sobre el azul de marca (res/drawable-*/ic_stat_solventa).
+            icon: 'ic_stat_solventa',
+            color: const Color(0xFF37599E),
           ),
         ),
         // Sin permiso de alarmas exactas: puede llegar un par de minutos
@@ -150,11 +177,57 @@ final class LocalNotificacionesAsistencia implements NotificacionesAsistencia {
     }
   }
 
+  Future<void> _mostrarEnCamino(
+    String id,
+    DateTime llegada,
+    EnCaminoAsistencia enCamino,
+  ) async {
+    try {
+      await _plugin.show(
+        id: idNotificacionEnCamino(id),
+        title: enCamino.titulo,
+        body: enCamino.cuerpo,
+        notificationDetails: NotificationDetails(
+          android: AndroidNotificationDetails(
+            idCanalEnCamino,
+            enCamino.canal.nombre,
+            channelDescription: enCamino.canal.descripcion,
+            importance: Importance.low,
+            priority: Priority.low,
+            icon: 'ic_stat_solventa',
+            color: const Color(0xFF37599E),
+            category: AndroidNotificationCategory.progress,
+            // Fija: no se desliza y se reemplaza sin volver a sonar.
+            ongoing: true,
+            autoCancel: false,
+            onlyAlertOnce: true,
+            // Barra animada sin tener que actualizarla desde la app.
+            showProgress: true,
+            indeterminate: true,
+            // Cuenta regresiva hasta la llegada: la lleva el sistema.
+            when: llegada.millisecondsSinceEpoch,
+            usesChronometer: true,
+            chronometerCountDown: true,
+            // Se quita sola a la hora de llegada, cuando sale la de «llegó».
+            timeoutAfter: llegada.difference(DateTime.now()).inMilliseconds,
+          ),
+        ),
+        payload: id,
+      );
+    } catch (e) {
+      SolLog.warning(
+        'No se mostró la notificación de en camino',
+        codigo: e.runtimeType.toString(),
+      );
+    }
+  }
+
   @override
   Future<void> cancelar(String id) async {
     if (!_listo) return;
     try {
       await _plugin.cancel(id: idNotificacion(id));
+      await _plugin.cancel(id: idNotificacionEnCamino(id));
     } catch (_) {
       // Si no estaba programada no hay nada que cancelar.
     }
@@ -165,6 +238,9 @@ final class LocalNotificacionesAsistencia implements NotificacionesAsistencia {
 final class FakeNotificacionesAsistencia implements NotificacionesAsistencia {
   final Map<String, (DateTime, String, String)> programadas = {};
   final List<String> canceladas = [];
+
+  /// Las notificaciones fijas «en camino» visibles, por id de asistencia.
+  final Map<String, EnCaminoAsistencia> enCamino = {};
   bool permiso = true;
   int permisosPedidos = 0;
 
@@ -196,14 +272,17 @@ final class FakeNotificacionesAsistencia implements NotificacionesAsistencia {
     required String titulo,
     required String cuerpo,
     required CanalAsistencias canal,
+    EnCaminoAsistencia? enCamino,
   }) async {
     this.canal = canal;
     programadas[id] = (llegada, titulo, cuerpo);
+    if (enCamino != null) this.enCamino[id] = enCamino;
   }
 
   @override
   Future<void> cancelar(String id) async {
     programadas.remove(id);
+    enCamino.remove(id);
     canceladas.add(id);
   }
 }

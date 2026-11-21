@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Azul del logotipo de Solventa (#37599E). -->
+    <color name="solventa_azul">#37599E</color>
+    <color name="splash_fondo">#FFFFFF</color>
+</resources>

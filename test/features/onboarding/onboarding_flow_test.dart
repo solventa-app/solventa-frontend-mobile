@@ -199,7 +199,7 @@ void main() {
       await tester.tap(find.text('Grabar video'));
       await tester.pumpAndSettle();
       expect(
-        find.textContaining('No pudimos verificar tu documento'),
+        find.textContaining('No pudimos leer bien tu documento'),
         findsOneWidget,
       );
       await tester.tap(find.text('Reintentar'));
@@ -387,8 +387,8 @@ void main() {
     // El token del recorrido (30 min) ya no sirve: toda subida falla.
     bff.respuestaSubida = OnboardingFixtures.subidaTokenInvalido;
     await hastaPruebaDeVida(tester);
-    // M01-05: antes de grabar explica el video y pide mover la cabeza.
-    expect(find.textContaining('grabaremos 3 segundos'), findsOneWidget);
+    // M01-05: antes de grabar avisa que son 15 s y los tres giros.
+    expect(find.textContaining('Grabaremos 15 segundos'), findsOneWidget);
     await tester.tap(find.text('Grabar video'));
     await tester.pumpAndSettle();
     // Con la selfie y el video tomados la cámara se cierra.

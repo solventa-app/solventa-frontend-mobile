@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/network/network_providers.dart';
+import '../../../assistance/domain/entities/asistencia.dart';
+import '../../../assistance/presentation/widgets/hoja_direccion.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
@@ -24,6 +26,15 @@ class M0502FotosPage extends ConsumerStatefulWidget {
 class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
   late final AppLifecycleListener _ciclo;
   bool _volviendoDeAjustes = false;
+
+  Future<void> _escribirDireccion() async {
+    final d = await HojaDireccion.abrir(context);
+    if (d is DireccionEncontrada && mounted) {
+      ref
+          .read(reporteProvider.notifier)
+          .usarDireccion(d.coordenada, d.direccion);
+    }
+  }
 
   @override
   void initState() {
@@ -94,7 +105,17 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
             onQuitar: notifier.quitarFoto,
           ),
           const SizedBox(height: SolSpacing.md),
-          if (estado.ubicacion != null)
+          if (estado.direccionEscrita case final direccion?) ...[
+            SolInlineNote(
+              icon: SolIcons.location,
+              text: l10n.m0502UbicadaDireccion(direccion),
+              color: sol.success,
+            ),
+            SolButton.text(
+              label: l10n.m0502CambiarDireccion,
+              onPressed: () => unawaited(_escribirDireccion()),
+            ),
+          ] else if (estado.ubicacion != null)
             SolInlineNote(
               icon: SolIcons.location,
               text: l10n.m0502Ubicada,
@@ -105,6 +126,12 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
               icon: SolIcons.location,
               text: l10n.m0502SinUbicacion,
             ),
+            // Sin GPS no se bloquea: la dirección se ubica con Places.
+            SolButton.tonal(
+              label: l10n.m0502EscribirDireccion,
+              onPressed: () => unawaited(_escribirDireccion()),
+            ),
+            const SizedBox(height: SolSpacing.sm),
             SolButtonPair(
               primary: SolButton.tonal(
                 label: l10n.m0502PermitirUbicacion,

@@ -24,7 +24,7 @@
   "m0104Consejo": "Avoid direct glare and strong shadows over the barcode and fingerprint.",
   "m0104Calidad": "Good focus and lighting",
   "m0105Titulo": "Liveness check",
-  "m0105Instruccion": "Place your face inside the circle. When you tap “Record video” we'll record 3 seconds: slowly move your head from side to side.",
+  "m0105Instruccion": "Place your face inside the oval and tap “Record video”.",
   "verificacionTitulo": "Verification",
   "m0106Validando": "Checking with the KYC/AML provider...",
   "m0107aMensaje": "Identity verified! Welcome to Solventa.",
@@ -34,7 +34,7 @@
   "m0107aAccion": "Turn on fingerprint or face unlock",
   "m0107bMensaje": "We're reviewing your identity, we'll let you know.",
   "m0107bAccion": "Got it",
-  "m0107cMensaje": "We couldn't verify your document (unreadable image)",
+  "m0107cMensaje": "We couldn't read your document clearly. Retake the photos in good light, without glare and with the whole ID inside the frame.",
   "m0107cFallaTecnica": "We couldn't finish your verification because of a technical problem. You didn't lose any attempts: try again.",
   "reintentar": "Try again",
   "m0108Titulo": "Activation",
@@ -68,8 +68,8 @@
   "m0106Demora": "This is taking longer than usual. You can refresh or come back later: the check keeps running.",
   "actualizar": "Refresh",
   "irAlInicio": "Go to home",
-  "m0107cRostro": "The face in the video doesn't match the one on the document.",
-  "m0107cSuplantacion": "We couldn't confirm that you took the liveness check yourself, live.",
+  "m0107cRostro": "The face in the video doesn't match your document. Record it again facing the camera, in good light and without glasses, cap or mask.",
+  "m0107cSuplantacion": "We couldn't confirm you took the liveness check yourself, live. Record it again yourself, without photos or screens in front of the camera.",
   "m0107cMenor": "You must be of legal age to have a Solventa account.",
   "m0107cDocumentoRegistrado": "This document already has a Solventa account.",
   "m0107cSinIntentos": "There are no attempts left in this verification. You can start a new one from the home screen.",
@@ -504,7 +504,7 @@
   "@m0502Ubicada": {
     "description": "M05-02 ubicación obtenida"
   },
-  "m0502SinUbicacion": "We need your location to place the claim. Turn it on to continue.",
+  "m0502SinUbicacion": "We don't have your GPS. Turn it on or type the address where it happened.",
   "@m0502SinUbicacion": {
     "description": "M05-02 sin permiso de ubicación"
   },
@@ -1105,5 +1105,22 @@
   "m0601DiaSabado": "Sat",
   "m0601DiaDomingo": "Sun",
   "m0105CambiarDocumento": "Retake document photos",
-  "fallaRecorridosAgotados": "You can't try the verification again today. Please come back tomorrow."
+  "fallaRecorridosAgotados": "You can't try the verification again today. Please come back tomorrow.",
+  "m0105AvisoDuracion": "We'll record 15 seconds: turn your face to the left, then to the right and back to the center. You'll see the time as it goes.",
+  "m0105GrabandoTiempo": "Recording · {transcurrido} / {total}",
+  "m0105PasoIzquierda": "Left",
+  "m0105PasoDerecha": "Right",
+  "m0105PasoCentro": "Center",
+  "m0105GiraIzquierda": "Slowly turn your face to the left",
+  "m0105GiraDerecha": "Now slowly turn it to the right",
+  "m0105MiraCentro": "Back to the center and look at the camera",
+  "m0105Listo": "Done! We have your video.",
+  "fallaGenericaOnboarding": "We couldn't complete this step. Tap “Retry upload”; if it keeps failing, start the verification again.",
+  "asistenciaEnCaminoTitulo": "Your assistance is on the way",
+  "asistenciaEnCaminoCuerpo": "{prestador} is heading to your location. Tap to see details.",
+  "asistenciaEnCaminoCanalNombre": "Assistance in progress",
+  "asistenciaEnCaminoCanalDescripcion": "Shows the countdown while the provider is on the way",
+  "m0502EscribirDireccion": "Type the address",
+  "m0502UbicadaDireccion": "Location: {direccion}",
+  "m0502CambiarDireccion": "Change address"
 }
