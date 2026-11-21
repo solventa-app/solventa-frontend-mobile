@@ -2338,6 +2338,7 @@ class Input$SolicitudAsistenciaInput {
     required double latitud,
     required double longitud,
     Enum$OrigenUbicacion? origenUbicacion,
+    String? polizaId,
   }) => Input$SolicitudAsistenciaInput._({
     r'idSolicitud': idSolicitud,
     r'prestadorId': prestadorId,
@@ -2347,6 +2348,7 @@ class Input$SolicitudAsistenciaInput {
     r'latitud': latitud,
     r'longitud': longitud,
     if (origenUbicacion != null) r'origenUbicacion': origenUbicacion,
+    if (polizaId != null) r'polizaId': polizaId,
   });
 
   Input$SolicitudAsistenciaInput._(this._$data);
@@ -2379,6 +2381,10 @@ class Input$SolicitudAsistenciaInput {
         (l$origenUbicacion as String),
       );
     }
+    if (data.containsKey('polizaId')) {
+      final l$polizaId = data['polizaId'];
+      result$data['polizaId'] = (l$polizaId as String?);
+    }
     return Input$SolicitudAsistenciaInput._(result$data);
   }
 
@@ -2401,6 +2407,8 @@ class Input$SolicitudAsistenciaInput {
 
   Enum$OrigenUbicacion? get origenUbicacion =>
       (_$data['origenUbicacion'] as Enum$OrigenUbicacion?);
+
+  String? get polizaId => (_$data['polizaId'] as String?);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -2427,6 +2435,10 @@ class Input$SolicitudAsistenciaInput {
       result$data['origenUbicacion'] = toJson$Enum$OrigenUbicacion(
         (l$origenUbicacion as Enum$OrigenUbicacion),
       );
+    }
+    if (_$data.containsKey('polizaId')) {
+      final l$polizaId = polizaId;
+      result$data['polizaId'] = l$polizaId;
     }
     return result$data;
   }
@@ -2492,6 +2504,15 @@ class Input$SolicitudAsistenciaInput {
     if (l$origenUbicacion != lOther$origenUbicacion) {
       return false;
     }
+    final l$polizaId = polizaId;
+    final lOther$polizaId = other.polizaId;
+    if (_$data.containsKey('polizaId') !=
+        other._$data.containsKey('polizaId')) {
+      return false;
+    }
+    if (l$polizaId != lOther$polizaId) {
+      return false;
+    }
     return true;
   }
 
@@ -2505,6 +2526,7 @@ class Input$SolicitudAsistenciaInput {
     final l$latitud = latitud;
     final l$longitud = longitud;
     final l$origenUbicacion = origenUbicacion;
+    final l$polizaId = polizaId;
     return Object.hashAll([
       l$idSolicitud,
       l$prestadorId,
@@ -2514,6 +2536,7 @@ class Input$SolicitudAsistenciaInput {
       l$latitud,
       l$longitud,
       _$data.containsKey('origenUbicacion') ? l$origenUbicacion : const {},
+      _$data.containsKey('polizaId') ? l$polizaId : const {},
     ]);
   }
 }
@@ -4558,6 +4581,7 @@ enum Enum$CodigoErrorAsistencia {
   TIPO_NO_ATENDIDO,
   DATOS_INVALIDOS,
   NO_ENCONTRADA,
+  POLIZA_NO_VALIDA,
   $unknown;
 
   factory Enum$CodigoErrorAsistencia.fromJson(String value) =>
@@ -4576,6 +4600,8 @@ String toJson$Enum$CodigoErrorAsistencia(Enum$CodigoErrorAsistencia e) {
       return r'DATOS_INVALIDOS';
     case Enum$CodigoErrorAsistencia.NO_ENCONTRADA:
       return r'NO_ENCONTRADA';
+    case Enum$CodigoErrorAsistencia.POLIZA_NO_VALIDA:
+      return r'POLIZA_NO_VALIDA';
     case Enum$CodigoErrorAsistencia.$unknown:
       return r'$unknown';
   }
@@ -4591,6 +4617,8 @@ Enum$CodigoErrorAsistencia fromJson$Enum$CodigoErrorAsistencia(String value) {
       return Enum$CodigoErrorAsistencia.DATOS_INVALIDOS;
     case r'NO_ENCONTRADA':
       return Enum$CodigoErrorAsistencia.NO_ENCONTRADA;
+    case r'POLIZA_NO_VALIDA':
+      return Enum$CodigoErrorAsistencia.POLIZA_NO_VALIDA;
     default:
       return Enum$CodigoErrorAsistencia.$unknown;
   }

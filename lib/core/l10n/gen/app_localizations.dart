@@ -3163,6 +3163,48 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.'**
   String get fallaRecorridosAgotados;
+
+  /// M06-02 selector de póliza (v0.55)
+  ///
+  /// In es, this message translates to:
+  /// **'Póliza que cubre la asistencia'**
+  String get m0602Poliza;
+
+  /// M06-02 selector de póliza sin elegir
+  ///
+  /// In es, this message translates to:
+  /// **'Elige la póliza de tu vehículo'**
+  String get m0602PolizaElegir;
+
+  /// M06-02 cargando pólizas
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando tus pólizas…'**
+  String get m0602PolizaCargando;
+
+  /// M06-02 error: falta la póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Elige la póliza de tu vehículo para enviar la solicitud.'**
+  String get m0602PolizaRequerida;
+
+  /// M06-02 sin pólizas de auto vigentes
+  ///
+  /// In es, this message translates to:
+  /// **'Para pedir asistencia necesitas una póliza de vehículo vigente.'**
+  String get m0602SinPoliza;
+
+  /// M06-04b rechazo POLIZA_NO_VALIDA
+  ///
+  /// In es, this message translates to:
+  /// **'Esa póliza no cubre la asistencia. Elige una póliza de vehículo vigente.'**
+  String get m0602PolizaNoValida;
+
+  /// M06-02 número de póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Póliza {numero}'**
+  String m0602PolizaNumero(String numero);
 }
 
 class _AppLocalizationsDelegate

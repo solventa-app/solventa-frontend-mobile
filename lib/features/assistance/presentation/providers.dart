@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/network/network_providers.dart';
 import '../../../core/ubicacion/ubicacion_service.dart';
+import '../../claims/presentation/providers.dart'
+    show polizasReportablesProvider;
 import '../data/datasources/asistencia_remote_datasource.dart';
 import '../data/datasources/catalogo_local_datasource.dart';
 import '../data/datasources/permiso_pedido_store.dart';
@@ -122,3 +124,8 @@ final enCaminoCantidadProvider = Provider<int>(
 final solicitudProvider = NotifierProvider<SolicitudNotifier, SolicitudState>(
   SolicitudNotifier.new,
 );
+
+/// v0.55 (KAN-36): las pólizas de **auto** emitidas del cliente, para elegir
+/// cuál cubre la asistencia. Es la misma consulta del reporte de siniestro
+/// (`propuestas` filtradas a `AUTO`): las hipotecarias no se ofrecen.
+final polizasAsistenciaProvider = polizasReportablesProvider;
