@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
+import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../claims/domain/entities/reporte_siniestro.dart';
 import '../../domain/entities/asistencia.dart';
 import '../../domain/entities/prestador.dart';
 import '../asistencia_routes.dart';
@@ -14,7 +16,10 @@ import '../providers.dart';
 /// Banner «Atención inmediata» (S2), prestador elegido en M06-01, tipo de
 /// asistencia prellenado con el del prestador (S3, se puede cambiar), qué pasó
 /// (opcional) y adónde llegará: la ubicación detectada o la dirección que el
-/// cliente escribió antes del mapa (S1: aquí ya no se escribe).
+/// cliente escribió antes del mapa (S1: aquí ya no se escribe). v0.55
+/// (KAN-36): la póliza de **auto** que cubre la asistencia; las hipotecarias no
+/// se ofrecen, si tiene una sola viene elegida y sin ninguna vigente no se
+/// puede enviar.
 /// «Enviar solicitud» pasa a M06-03.
 class M0602SolicitudPage extends ConsumerStatefulWidget {
   const M0602SolicitudPage({super.key});
@@ -26,6 +31,7 @@ class M0602SolicitudPage extends ConsumerStatefulWidget {
 class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
   late final TextEditingController _descripcion;
   final _claveTipo = GlobalKey();
+  final _clavePoliza = GlobalKey();
   bool _intentoEnviar = false;
 
   @override
@@ -33,6 +39,57 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
     super.initState();
     final s = ref.read(solicitudProvider);
     _descripcion = TextEditingController(text: s.descripcion);
+    // Con una sola póliza de auto vigente, viene elegida.
+    ref.listenManual(polizasAsistenciaProvider, (_, polizas) {
+      final vigentes = _vigentes(polizas.value);
+      if (vigentes.length == 1 &&
+          ref.read(solicitudProvider).polizaId == null) {
+        ref.read(solicitudProvider.notifier).fijarPoliza(vigentes.single.id);
+      }
+    }, fireImmediately: true);
+  }
+
+  /// Las pólizas de auto que cubren hoy (solo las de auto llegan aquí).
+  static List<PolizaReportable> _vigentes(
+    Resultado<List<PolizaReportable>>? r,
+  ) => switch (r) {
+    Exito(:final valor) => [
+      for (final p in valor)
+        if (p.esAuto && p.cubre(DateTime.now())) p,
+    ],
+    _ => const [],
+  };
+
+  static String _nombrePoliza(AppLocalizations l10n, PolizaReportable p) =>
+      p.vehiculo ?? l10n.m0602PolizaNumero(p.numero);
+
+  Future<void> _elegirPoliza(List<PolizaReportable> vigentes) async {
+    if (vigentes.isEmpty) return;
+    final l10n = context.l10n;
+    final elegida = await SolBottomSheet.show<String>(
+      context,
+      builder: (hoja) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SolSectionHeader(title: l10n.m0602Poliza),
+          for (final p in vigentes)
+            ListTile(
+              minTileHeight: 56,
+              leading: const Icon(SolIcons.car),
+              title: Text(_nombrePoliza(l10n, p)),
+              subtitle: p.vehiculo == null
+                  ? null
+                  : Text(l10n.m0602PolizaNumero(p.numero)),
+              selected: ref.read(solicitudProvider).polizaId == p.id,
+              onTap: () => Navigator.pop(hoja, p.id),
+            ),
+        ],
+      ),
+    );
+    if (elegida != null) {
+      ref.read(solicitudProvider.notifier).fijarPoliza(elegida);
+    }
   }
 
   @override
@@ -75,10 +132,12 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
     final s = ref.read(solicitudProvider);
     if (!s.listoParaEnviar) {
       // CA M06-02: el error queda bajo el selector y se lleva la vista allí.
-      if (s.tipo == null || s.tipoNoAtendido) {
-        final destino = _claveTipo.currentContext;
-        if (destino != null) Scrollable.ensureVisible(destino);
-      }
+      final destino = s.polizaId == null
+          ? _clavePoliza.currentContext
+          : s.tipo == null || s.tipoNoAtendido
+          ? _claveTipo.currentContext
+          : null;
+      if (destino != null) Scrollable.ensureVisible(destino);
       return;
     }
     context.push(AsistenciaRoutes.enviando);
@@ -102,6 +161,21 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
         : null;
     final descripcionLarga =
         estado.descripcion.trim().length > ReglasSolicitud.maxDescripcion;
+    final polizas = ref.watch(polizasAsistenciaProvider);
+    final vigentes = _vigentes(polizas.value);
+    final cargandoPolizas = polizas.value == null;
+    final fallaPolizas = switch (polizas.value) {
+      Fracaso(:final falla) => falla,
+      _ => null,
+    };
+    final sinPoliza =
+        !cargandoPolizas && fallaPolizas == null && vigentes.isEmpty;
+    final polizaElegida = vigentes
+        .where((p) => p.id == estado.polizaId)
+        .firstOrNull;
+    final errorPoliza = _intentoEnviar && estado.polizaId == null && !sinPoliza
+        ? l10n.m0602PolizaRequerida
+        : null;
 
     return SolFlowScaffold(
       title: l10n.m0602Titulo,
@@ -126,6 +200,42 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
           _TarjetaPrestador(
             rotulo: l10n.m0602PrestadorAsignado,
             prestador: prestador,
+          ),
+          const SizedBox(height: SolSpacing.lg),
+          KeyedSubtree(
+            key: _clavePoliza,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (sinPoliza) ...[
+                  SolStatusBanner(
+                    status: SolStatus.warning,
+                    title: l10n.m0602SinPoliza,
+                  ),
+                  const SizedBox(height: SolSpacing.sm),
+                ],
+                Semantics(
+                  liveRegion: errorPoliza != null,
+                  child: SolTextField.select(
+                    label: l10n.m0602Poliza,
+                    value: cargandoPolizas
+                        ? l10n.m0602PolizaCargando
+                        : polizaElegida != null
+                        ? _nombrePoliza(l10n, polizaElegida)
+                        : l10n.m0602PolizaElegir,
+                    errorText: errorPoliza,
+                    onTap: () => _elegirPoliza(vigentes),
+                  ),
+                ),
+                if (fallaPolizas != null) ...[
+                  SolInlineNote(text: l10n.falla(fallaPolizas)),
+                  SolButton.text(
+                    label: l10n.reintentar,
+                    onPressed: () => ref.invalidate(polizasAsistenciaProvider),
+                  ),
+                ],
+              ],
+            ),
           ),
           const SizedBox(height: SolSpacing.lg),
           KeyedSubtree(

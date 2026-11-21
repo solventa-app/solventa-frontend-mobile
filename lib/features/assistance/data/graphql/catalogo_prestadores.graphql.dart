@@ -264,6 +264,65 @@ const documentNodeQueryCatalogoPrestadores = DocumentNode(
                         selectionSet: null,
                       ),
                       FieldNode(
+                        name: NameNode(value: 'codigoEspecialidad'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'horarioAtencion'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(
+                          selections: [
+                            FieldNode(
+                              name: NameNode(value: 'abierto24h'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'diaDesde'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'diaHasta'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'abre'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'cierra'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: '__typename'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                          ],
+                        ),
+                      ),
+                      FieldNode(
                         name: NameNode(value: '__typename'),
                         alias: null,
                         arguments: [],
@@ -416,6 +475,8 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     required this.direccion,
     this.horario,
     this.fotoUrl,
+    this.codigoEspecialidad,
+    this.horarioAtencion,
     this.$__typename = 'Prestador',
   });
 
@@ -434,6 +495,8 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     final l$direccion = json['direccion'];
     final l$horario = json['horario'];
     final l$fotoUrl = json['fotoUrl'];
+    final l$codigoEspecialidad = json['codigoEspecialidad'];
+    final l$horarioAtencion = json['horarioAtencion'];
     final l$$__typename = json['__typename'];
     return Query$CatalogoPrestadores$catalogoPrestadores$prestadores(
       id: (l$id as String),
@@ -448,6 +511,16 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
       direccion: (l$direccion as String),
       horario: (l$horario as String?),
       fotoUrl: (l$fotoUrl as String?),
+      codigoEspecialidad: l$codigoEspecialidad == null
+          ? null
+          : fromJson$Enum$EspecialidadPrestador(
+              (l$codigoEspecialidad as String),
+            ),
+      horarioAtencion: l$horarioAtencion == null
+          ? null
+          : Query$CatalogoPrestadores$catalogoPrestadores$prestadores$horarioAtencion.fromJson(
+              (l$horarioAtencion as Map<String, dynamic>),
+            ),
       $__typename: (l$$__typename as String),
     );
   }
@@ -468,13 +541,20 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
 
   final bool aliado;
 
+  @Deprecated('v0.53: usar codigoEspecialidad; la app lo traduce a su idioma')
   final String especialidad;
 
   final String direccion;
 
+  @Deprecated('v0.53: usar horarioAtencion; la app lo traduce a su idioma')
   final String? horario;
 
   final String? fotoUrl;
+
+  final Enum$EspecialidadPrestador? codigoEspecialidad;
+
+  final Query$CatalogoPrestadores$catalogoPrestadores$prestadores$horarioAtencion?
+  horarioAtencion;
 
   final String $__typename;
 
@@ -504,6 +584,12 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     _resultData['horario'] = l$horario;
     final l$fotoUrl = fotoUrl;
     _resultData['fotoUrl'] = l$fotoUrl;
+    final l$codigoEspecialidad = codigoEspecialidad;
+    _resultData['codigoEspecialidad'] = l$codigoEspecialidad == null
+        ? null
+        : toJson$Enum$EspecialidadPrestador(l$codigoEspecialidad);
+    final l$horarioAtencion = horarioAtencion;
+    _resultData['horarioAtencion'] = l$horarioAtencion?.toJson();
     final l$$__typename = $__typename;
     _resultData['__typename'] = l$$__typename;
     return _resultData;
@@ -523,6 +609,8 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     final l$direccion = direccion;
     final l$horario = horario;
     final l$fotoUrl = fotoUrl;
+    final l$codigoEspecialidad = codigoEspecialidad;
+    final l$horarioAtencion = horarioAtencion;
     final l$$__typename = $__typename;
     return Object.hashAll([
       l$id,
@@ -537,6 +625,8 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
       l$direccion,
       l$horario,
       l$fotoUrl,
+      l$codigoEspecialidad,
+      l$horarioAtencion,
       l$$__typename,
     ]);
   }
@@ -608,6 +698,144 @@ class Query$CatalogoPrestadores$catalogoPrestadores$prestadores {
     final l$fotoUrl = fotoUrl;
     final lOther$fotoUrl = other.fotoUrl;
     if (l$fotoUrl != lOther$fotoUrl) {
+      return false;
+    }
+    final l$codigoEspecialidad = codigoEspecialidad;
+    final lOther$codigoEspecialidad = other.codigoEspecialidad;
+    if (l$codigoEspecialidad != lOther$codigoEspecialidad) {
+      return false;
+    }
+    final l$horarioAtencion = horarioAtencion;
+    final lOther$horarioAtencion = other.horarioAtencion;
+    if (l$horarioAtencion != lOther$horarioAtencion) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$CatalogoPrestadores$catalogoPrestadores$prestadores$horarioAtencion {
+  Query$CatalogoPrestadores$catalogoPrestadores$prestadores$horarioAtencion({
+    required this.abierto24h,
+    this.diaDesde,
+    this.diaHasta,
+    this.abre,
+    this.cierra,
+    this.$__typename = 'HorarioAtencion',
+  });
+
+  factory Query$CatalogoPrestadores$catalogoPrestadores$prestadores$horarioAtencion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$abierto24h = json['abierto24h'];
+    final l$diaDesde = json['diaDesde'];
+    final l$diaHasta = json['diaHasta'];
+    final l$abre = json['abre'];
+    final l$cierra = json['cierra'];
+    final l$$__typename = json['__typename'];
+    return Query$CatalogoPrestadores$catalogoPrestadores$prestadores$horarioAtencion(
+      abierto24h: (l$abierto24h as bool),
+      diaDesde: l$diaDesde == null
+          ? null
+          : fromJson$Enum$DiaSemana((l$diaDesde as String)),
+      diaHasta: l$diaHasta == null
+          ? null
+          : fromJson$Enum$DiaSemana((l$diaHasta as String)),
+      abre: (l$abre as String?),
+      cierra: (l$cierra as String?),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final bool abierto24h;
+
+  final Enum$DiaSemana? diaDesde;
+
+  final Enum$DiaSemana? diaHasta;
+
+  final String? abre;
+
+  final String? cierra;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$abierto24h = abierto24h;
+    _resultData['abierto24h'] = l$abierto24h;
+    final l$diaDesde = diaDesde;
+    _resultData['diaDesde'] = l$diaDesde == null
+        ? null
+        : toJson$Enum$DiaSemana(l$diaDesde);
+    final l$diaHasta = diaHasta;
+    _resultData['diaHasta'] = l$diaHasta == null
+        ? null
+        : toJson$Enum$DiaSemana(l$diaHasta);
+    final l$abre = abre;
+    _resultData['abre'] = l$abre;
+    final l$cierra = cierra;
+    _resultData['cierra'] = l$cierra;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$abierto24h = abierto24h;
+    final l$diaDesde = diaDesde;
+    final l$diaHasta = diaHasta;
+    final l$abre = abre;
+    final l$cierra = cierra;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$abierto24h,
+      l$diaDesde,
+      l$diaHasta,
+      l$abre,
+      l$cierra,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other
+            is! Query$CatalogoPrestadores$catalogoPrestadores$prestadores$horarioAtencion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$abierto24h = abierto24h;
+    final lOther$abierto24h = other.abierto24h;
+    if (l$abierto24h != lOther$abierto24h) {
+      return false;
+    }
+    final l$diaDesde = diaDesde;
+    final lOther$diaDesde = other.diaDesde;
+    if (l$diaDesde != lOther$diaDesde) {
+      return false;
+    }
+    final l$diaHasta = diaHasta;
+    final lOther$diaHasta = other.diaHasta;
+    if (l$diaHasta != lOther$diaHasta) {
+      return false;
+    }
+    final l$abre = abre;
+    final lOther$abre = other.abre;
+    if (l$abre != lOther$abre) {
+      return false;
+    }
+    final l$cierra = cierra;
+    final lOther$cierra = other.cierra;
+    if (l$cierra != lOther$cierra) {
       return false;
     }
     final l$$__typename = $__typename;

@@ -31,6 +31,13 @@ class _SolAccordionState extends State<SolAccordion> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final duracion = SolMotion.of(context, SolMotion.medium);
+    final contenido = _abierto
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: widget.children,
+          )
+        : const SizedBox(width: double.infinity);
     return Material(
       color: colors.surface,
       borderRadius: SolRadius.cardAll,
@@ -75,17 +82,19 @@ class _SolAccordionState extends State<SolAccordion> {
               ),
             ),
           ),
-          AnimatedSize(
-            duration: SolMotion.of(context, SolMotion.medium),
-            curve: SolMotion.standard,
-            alignment: Alignment.topCenter,
-            child: _abierto
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: widget.children,
-                  )
-                : const SizedBox(width: double.infinity),
-          ),
+          // Con «quitar animaciones» la duración es cero y AnimatedSize falla
+          // («RenderAnimatedSize was mutated in its own performLayout»): su
+          // animación termina dentro del mismo layout. Sin animación no hace
+          // falta.
+          if (duracion == Duration.zero)
+            contenido
+          else
+            AnimatedSize(
+              duration: duracion,
+              curve: SolMotion.standard,
+              alignment: Alignment.topCenter,
+              child: contenido,
+            ),
         ],
       ),
     );

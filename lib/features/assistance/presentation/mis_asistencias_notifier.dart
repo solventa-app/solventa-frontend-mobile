@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/falla.dart';
@@ -95,7 +96,25 @@ final class MisAsistenciasNotifier extends Notifier<MisAsistenciasState> {
 
   @override
   MisAsistenciasState build() {
-    ref.onDispose(() => _tic?.cancel());
+    // H1: al volver la app a primer plano se recarga aunque la pestaña no
+    // esté abierta, para el badge y para reprogramar las notificaciones (4.5).
+    AppLifecycleListener? ciclo;
+    try {
+      ciclo = AppLifecycleListener(onResume: () => unawaited(cargar()));
+    } catch (_) {
+      // Sin WidgetsBinding (pruebas de unidad): sin recarga al volver.
+    }
+    ref.onDispose(() {
+      _tic?.cancel();
+      ciclo?.dispose();
+    });
+    // Al cambiar de idioma, las notificaciones ya programadas y el nombre del
+    // canal pasan al idioma nuevo.
+    ref.listen(localeProvider, (antes, ahora) {
+      if (antes != ahora && !state.cargando) {
+        unawaited(sincronizarNotificaciones(ref, state.asistencias));
+      }
+    });
     return MisAsistenciasState(ahora: ref.read(relojProvider)());
   }
 
@@ -114,7 +133,7 @@ final class MisAsistenciasNotifier extends Notifier<MisAsistenciasState> {
           ahora: ref.read(relojProvider)(),
         );
         await sincronizarNotificaciones(ref, valor);
-        await _revisarDistancia();
+        if (ref.mounted) await _revisarDistancia();
       case Fracaso(:final falla):
         state = state.copyWith(cargando: false, falla: falla);
     }
@@ -227,6 +246,8 @@ final class MisAsistenciasNotifier extends Notifier<MisAsistenciasState> {
 /// Programa la notificación de llegada de una asistencia confirmada (4.5),
 /// con el texto en el idioma de la app. Si no está en camino, la cancela.
 Future<void> programarLlegada(Ref ref, Asistencia a) async {
+  // Una recarga sin esperar puede terminar después de cerrar sesión.
+  if (!ref.mounted) return;
   final avisos = ref.read(notificacionesAsistenciaProvider);
   final llegada = a.llegadaEstimada;
   if (a.estado != EstadoAsistencia.confirmada || llegada == null) {
@@ -239,13 +260,26 @@ Future<void> programarLlegada(Ref ref, Asistencia a) async {
     llegada: llegada,
     titulo: l10n.asistenciaNotifTitulo,
     cuerpo: l10n.asistenciaNotifCuerpo(a.prestador.nombre),
+    canal: (
+      nombre: l10n.asistenciaCanalNombre,
+      descripcion: l10n.asistenciaCanalDescripcion,
+    ),
+    enCamino: (
+      titulo: l10n.asistenciaEnCaminoTitulo,
+      cuerpo: l10n.asistenciaEnCaminoCuerpo(a.prestador.nombre),
+      canal: (
+        nombre: l10n.asistenciaEnCaminoCanalNombre,
+        descripcion: l10n.asistenciaEnCaminoCanalDescripcion,
+      ),
+    ),
   );
 }
 
-/// Al recargar «Mis asistencias»: se reprograma la que cambió de hora y se
-/// cancela la que ya no está en camino (4.5).
+/// Al recargar «Mis asistencias» o cambiar de idioma: se reprograma la que
+/// cambió de hora o de texto y se cancela la que ya no está en camino (4.5).
 Future<void> sincronizarNotificaciones(Ref ref, List<Asistencia> lista) async {
   for (final a in lista) {
+    if (!ref.mounted) return;
     await programarLlegada(ref, a);
   }
 }

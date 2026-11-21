@@ -132,8 +132,21 @@ void main() {
       'Me chocaron por detrás en un semáforo.',
     );
     await tester.enterText(campos.at(1), 'Cra 15 con Calle 93');
-    await tester.enterText(campos.at(2), 'Bogotá');
     await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    // La ciudad es una lista desplegable (catálogo de ciudades), no texto
+    // libre: se abre la hoja y se toca la ciudad.
+    await tester.ensureVisible(campos.at(2));
+    await tester.pumpAndSettle();
+    await tester.tap(campos.at(2));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Bogotá'),
+      300,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bogotá'));
     await tester.pumpAndSettle();
     await capturar(tester, 'M05-03 · relato');
     await tester.ensureVisible(find.text('Enviar reporte'));

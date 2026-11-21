@@ -44,6 +44,7 @@ final class ReporteState {
     this.fotos = const [],
     this.ubicacion,
     this.ubicacionSinPermiso = false,
+    this.direccionEscrita,
     this.descripcion = '',
     this.lugar = '',
     this.ciudad = '',
@@ -65,6 +66,10 @@ final class ReporteState {
   /// Ubicación del teléfono al tomar las fotos; la del siniestro.
   final Coordenada? ubicacion;
   final bool ubicacionSinPermiso;
+
+  /// Sin GPS, la dirección que el cliente escribió y Places ubicó: da la
+  /// [ubicacion] del siniestro, pero no geoetiqueta las fotos.
+  final String? direccionEscrita;
   final String descripcion;
   final String lugar;
   final String ciudad;
@@ -88,6 +93,7 @@ final class ReporteState {
     List<FotoSiniestro>? fotos,
     Coordenada? ubicacion,
     bool? ubicacionSinPermiso,
+    String? Function()? direccionEscrita,
     String? descripcion,
     String? lugar,
     String? ciudad,
@@ -101,6 +107,9 @@ final class ReporteState {
     fotos: fotos ?? this.fotos,
     ubicacion: ubicacion ?? this.ubicacion,
     ubicacionSinPermiso: ubicacionSinPermiso ?? this.ubicacionSinPermiso,
+    direccionEscrita: direccionEscrita != null
+        ? direccionEscrita()
+        : this.direccionEscrita,
     descripcion: descripcion ?? this.descripcion,
     lugar: lugar ?? this.lugar,
     ciudad: ciudad ?? this.ciudad,
@@ -136,11 +145,22 @@ final class ReporteNotifier extends Notifier<ReporteState> {
       UbicacionObtenida(:final coordenada) => state.copyWith(
         ubicacion: coordenada,
         ubicacionSinPermiso: false,
+        direccionEscrita: () => null,
       ),
       UbicacionSinPermiso() ||
       UbicacionNoDisponible() => state.copyWith(ubicacionSinPermiso: true),
     };
   }
+
+  /// Sin GPS: la dirección escrita y ubicada con Places (la misma hoja de
+  /// HU-M06) da el punto del siniestro y, si aún no hay lugar, lo llena.
+  void usarDireccion(Coordenada coordenada, String direccion) =>
+      state = state.copyWith(
+        ubicacion: coordenada,
+        ubicacionSinPermiso: false,
+        direccionEscrita: () => direccion,
+        lugar: state.lugar.trim().isEmpty ? direccion : null,
+      );
 
   Future<void> abrirAjustesUbicacion() =>
       ref.read(ubicacionReporteProvider).abrirAjustes(deUbicacion: false);
@@ -152,7 +172,8 @@ final class ReporteNotifier extends Notifier<ReporteState> {
       bytes: bytes,
       tipoContenido: tipoContenido,
       tomadaEn: ref.read(relojReporteProvider)(),
-      ubicacion: state.ubicacion,
+      // Una dirección escrita no dice dónde se tomó la foto.
+      ubicacion: state.direccionEscrita == null ? state.ubicacion : null,
     );
     state = state.copyWith(fotos: [...state.fotos, foto]);
   }

@@ -242,10 +242,10 @@ abstract class AppLocalizations {
   /// **'Prueba de vida'**
   String get m0105Titulo;
 
-  /// M01-05 instrucción antes de grabar
+  /// M01-05 instrucción antes de grabar (los pasos van debajo del visor)
   ///
   /// In es, this message translates to:
-  /// **'Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.'**
+  /// **'Pon tu rostro dentro del óvalo y toca «Grabar video».'**
   String get m0105Instruccion;
 
   /// M01-06/07 barra superior
@@ -266,6 +266,24 @@ abstract class AppLocalizations {
   /// **'¡Identidad verificada! Bienvenido a Solventa.'**
   String get m0107aMensaje;
 
+  /// M01-07a resumen: el documento pasó la verificación de autenticidad (KAN-130)
+  ///
+  /// In es, this message translates to:
+  /// **'Documento auténtico'**
+  String get m0107aDocumento;
+
+  /// M01-07a resumen: la prueba de vida pasó (KAN-130)
+  ///
+  /// In es, this message translates to:
+  /// **'Prueba de vida superada'**
+  String get m0107aPruebaVida;
+
+  /// M01-07a resumen: el rostro coincide con la foto del documento (KAN-130)
+  ///
+  /// In es, this message translates to:
+  /// **'Tu rostro coincide con el documento'**
+  String get m0107aRostro;
+
   /// M01-07a botón
   ///
   /// In es, this message translates to:
@@ -284,11 +302,17 @@ abstract class AppLocalizations {
   /// **'Entendido'**
   String get m0107bAccion;
 
-  /// M01-07c
+  /// M01-07c: ILEGIBLE o motivo desconocido
   ///
   /// In es, this message translates to:
-  /// **'No pudimos verificar tu documento (imagen ilegible)'**
+  /// **'No pudimos leer bien tu documento. Tómale de nuevo las fotos con buena luz, sin reflejos y con la cédula completa dentro del marco.'**
   String get m0107cMensaje;
+
+  /// M01-07c y tarjeta del inicio: rechazo técnico (PROVEEDOR_NO_DISPONIBLE o IMAGEN_NO_DISPONIBLE, KAN-131), no gasta intento
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos terminar tu verificación por un problema técnico. No perdiste ningún intento: inténtalo de nuevo.'**
+  String get m0107cFallaTecnica;
 
   /// Botón reintentar
   ///
@@ -485,13 +509,13 @@ abstract class AppLocalizations {
   /// M01-07c: ROSTRO_NO_COINCIDE
   ///
   /// In es, this message translates to:
-  /// **'El rostro del video no coincide con el del documento.'**
+  /// **'El rostro del video no coincide con el de tu documento. Grábalo de nuevo de frente, con buena luz y sin gafas, gorra ni tapabocas.'**
   String get m0107cRostro;
 
   /// M01-07c: SUPLANTACION
   ///
   /// In es, this message translates to:
-  /// **'No pudimos confirmar que la prueba de vida la hiciste tú, en vivo.'**
+  /// **'No pudimos confirmar que la prueba de vida la hiciste tú, en vivo. Grábala de nuevo tú mismo, sin fotos ni pantallas frente a la cámara.'**
   String get m0107cSuplantacion;
 
   /// M01-07c: MENOR_DE_EDAD
@@ -509,7 +533,7 @@ abstract class AppLocalizations {
   /// M01-07c: sin intentos
   ///
   /// In es, this message translates to:
-  /// **'Ya no quedan intentos. Escríbenos a soporte para revisar tu caso.'**
+  /// **'Ya no quedan intentos en esta verificación. Desde el inicio puedes empezar una nueva.'**
   String get m0107cSinIntentos;
 
   /// Onboarding: TOKEN_INVALIDO
@@ -1847,7 +1871,7 @@ abstract class AppLocalizations {
   /// M05-02 sin permiso de ubicación
   ///
   /// In es, this message translates to:
-  /// **'Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.'**
+  /// **'No tenemos tu GPS. Actívalo o escribe la dirección donde pasó el siniestro.'**
   String get m0502SinUbicacion;
 
   /// M05-02 reintentar permiso
@@ -3007,6 +3031,450 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Otra ciudad'**
   String get m0503CiudadOtra;
+
+  /// Nombre del canal de notificaciones en Ajustes de Android (H3)
+  ///
+  /// In es, this message translates to:
+  /// **'Asistencias'**
+  String get asistenciaCanalNombre;
+
+  /// Descripción del canal de notificaciones en Ajustes de Android (H3)
+  ///
+  /// In es, this message translates to:
+  /// **'Aviso cuando llega el prestador de una asistencia'**
+  String get asistenciaCanalDescripcion;
+
+  /// Aviso de privacidad de la ubicación en M06-01 (H5, contrato v0.51)
+  ///
+  /// In es, this message translates to:
+  /// **'Tu ubicación viaja cifrada a Solventa y a nuestro proveedor de mapas solo para calcular las rutas. Guardamos un registro cifrado durante 90 días para auditoría.'**
+  String get ubicacionPrivacidad;
+
+  /// Especialidad URGENCIAS (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Urgencias'**
+  String get m0601EspecialidadUrgencias;
+
+  /// Especialidad MEDICINA_GENERAL (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Medicina general'**
+  String get m0601EspecialidadMedicinaGeneral;
+
+  /// Especialidad MECANICA_GENERAL (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Mecánica general'**
+  String get m0601EspecialidadMecanicaGeneral;
+
+  /// Especialidad LLANTAS_Y_FRENOS (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Llantas y frenos'**
+  String get m0601EspecialidadLlantasYFrenos;
+
+  /// Especialidad GRUA_LIVIANA (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Grúa liviana'**
+  String get m0601EspecialidadGruaLiviana;
+
+  /// Especialidad GRUA_Y_CARRO_TALLER (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Grúa y carro taller'**
+  String get m0601EspecialidadGruaYCarroTaller;
+
+  /// Horario del prestador abierto 24 h (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Abierto 24 h'**
+  String get m0601Abierto24h;
+
+  /// Horario del prestador de lunes a domingo (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'Todos los días'**
+  String get m0601TodosLosDias;
+
+  /// Rango de días del horario: «lun a sáb» (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'{desde} a {hasta}'**
+  String m0601RangoDias(String desde, String hasta);
+
+  /// Horario del prestador: «Lun a sáb, 7:00 a. m. a 7:00 p. m.» (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'{dias}, {abre} a {cierra}'**
+  String m0601Horario(String dias, String abre, String cierra);
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'lun'**
+  String get m0601DiaLunes;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'mar'**
+  String get m0601DiaMartes;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'mié'**
+  String get m0601DiaMiercoles;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'jue'**
+  String get m0601DiaJueves;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'vie'**
+  String get m0601DiaViernes;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'sáb'**
+  String get m0601DiaSabado;
+
+  /// Día abreviado del horario (v0.53)
+  ///
+  /// In es, this message translates to:
+  /// **'dom'**
+  String get m0601DiaDomingo;
+
+  /// M01-05 y M01-07c: tras un rechazo del rostro, vuelve a tomar la cédula (KAN-31)
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar fotos del documento'**
+  String get m0105CambiarDocumento;
+
+  /// RECORRIDOS_AGOTADOS: 3 verificaciones rechazadas en 24 h (contrato v0.56)
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.'**
+  String get fallaRecorridosAgotados;
+
+  /// M06-02 selector de póliza (v0.55)
+  ///
+  /// In es, this message translates to:
+  /// **'Póliza que cubre la asistencia'**
+  String get m0602Poliza;
+
+  /// M06-02 selector de póliza sin elegir
+  ///
+  /// In es, this message translates to:
+  /// **'Elige la póliza de tu vehículo'**
+  String get m0602PolizaElegir;
+
+  /// M06-02 cargando pólizas
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando tus pólizas…'**
+  String get m0602PolizaCargando;
+
+  /// M06-02 error: falta la póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Elige la póliza de tu vehículo para enviar la solicitud.'**
+  String get m0602PolizaRequerida;
+
+  /// M06-02 sin pólizas de auto vigentes
+  ///
+  /// In es, this message translates to:
+  /// **'Para pedir asistencia necesitas una póliza de vehículo vigente.'**
+  String get m0602SinPoliza;
+
+  /// M06-04b rechazo POLIZA_NO_VALIDA
+  ///
+  /// In es, this message translates to:
+  /// **'Esa póliza no cubre la asistencia. Elige una póliza de vehículo vigente.'**
+  String get m0602PolizaNoValida;
+
+  /// M06-02 número de póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Póliza {numero}'**
+  String m0602PolizaNumero(String numero);
+
+  /// M01-05 aviso previo de la duración y los pasos de la grabación
+  ///
+  /// In es, this message translates to:
+  /// **'Grabaremos 15 segundos: gira la cara a la izquierda, luego a la derecha y vuelve al centro. Verás el tiempo mientras avanza.'**
+  String get m0105AvisoDuracion;
+
+  /// M01-05 etiqueta sobre el visor mientras graba, con el tiempo que avanza (00:07 / 00:15)
+  ///
+  /// In es, this message translates to:
+  /// **'Grabando · {transcurrido} / {total}'**
+  String m0105GrabandoTiempo(String transcurrido, String total);
+
+  /// M01-05 paso 1 de la grabación
+  ///
+  /// In es, this message translates to:
+  /// **'Izquierda'**
+  String get m0105PasoIzquierda;
+
+  /// M01-05 paso 2 de la grabación
+  ///
+  /// In es, this message translates to:
+  /// **'Derecha'**
+  String get m0105PasoDerecha;
+
+  /// M01-05 paso 3 de la grabación
+  ///
+  /// In es, this message translates to:
+  /// **'Centro'**
+  String get m0105PasoCentro;
+
+  /// M01-05 instrucción del paso 1
+  ///
+  /// In es, this message translates to:
+  /// **'Gira la cara despacio hacia la izquierda'**
+  String get m0105GiraIzquierda;
+
+  /// M01-05 instrucción del paso 2
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora gírala despacio hacia la derecha'**
+  String get m0105GiraDerecha;
+
+  /// M01-05 instrucción del paso 3
+  ///
+  /// In es, this message translates to:
+  /// **'Vuelve al centro y mira la cámara'**
+  String get m0105MiraCentro;
+
+  /// M01-05 al terminar los 15 s
+  ///
+  /// In es, this message translates to:
+  /// **'¡Listo! Ya tenemos tu video.'**
+  String get m0105Listo;
+
+  /// Onboarding: error inesperado con salida (reintentar o empezar de nuevo)
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos completar este paso. Toca «Reintentar envío»; si sigue fallando, empieza de nuevo la verificación.'**
+  String get fallaGenericaOnboarding;
+
+  /// Notificación fija mientras el prestador va en camino
+  ///
+  /// In es, this message translates to:
+  /// **'Tu asistencia va en camino'**
+  String get asistenciaEnCaminoTitulo;
+
+  /// Cuerpo de la notificación fija de en camino
+  ///
+  /// In es, this message translates to:
+  /// **'{prestador} va hacia tu ubicación. Toca para ver el detalle.'**
+  String asistenciaEnCaminoCuerpo(String prestador);
+
+  /// Canal silencioso de la notificación fija de en camino
+  ///
+  /// In es, this message translates to:
+  /// **'Asistencia en curso'**
+  String get asistenciaEnCaminoCanalNombre;
+
+  /// Descripción del canal de en camino en Ajustes de Android
+  ///
+  /// In es, this message translates to:
+  /// **'Muestra la cuenta regresiva mientras el prestador va en camino'**
+  String get asistenciaEnCaminoCanalDescripcion;
+
+  /// M05-02 abre la búsqueda de dirección (Places) cuando no hay GPS
+  ///
+  /// In es, this message translates to:
+  /// **'Escribir la dirección'**
+  String get m0502EscribirDireccion;
+
+  /// M05-02 ubicación tomada de la dirección escrita
+  ///
+  /// In es, this message translates to:
+  /// **'Ubicación: {direccion}'**
+  String m0502UbicadaDireccion(String direccion);
+
+  /// M05-02 vuelve a abrir la búsqueda de dirección
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar dirección'**
+  String get m0502CambiarDireccion;
+
+  /// M05-07 plazo vencido sin aprobación automática (auto parcial o RC)
+  ///
+  /// In es, this message translates to:
+  /// **'El plazo de revisión venció. Como hay que valorar el daño, un operador revisará tu caso y verás el resultado aquí.'**
+  String get m0507ValorandoDano;
+
+  /// M05-07 título del carrusel de fotos
+  ///
+  /// In es, this message translates to:
+  /// **'Fotos que enviaste'**
+  String get m0507Fotos;
+
+  /// M05-07 lo que lee TalkBack en una foto del carrusel
+  ///
+  /// In es, this message translates to:
+  /// **'Foto {n} de {total}. Toca para verla en pantalla completa.'**
+  String m0507Foto(int n, int total);
+
+  /// M05-07 foto que no carga
+  ///
+  /// In es, this message translates to:
+  /// **'Imagen no disponible'**
+  String get m0507FotoNoDisponible;
+
+  /// M05-07 cerrar el visor de fotos
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get m0507CerrarFoto;
+
+  /// M05-07 título de la línea de tiempo
+  ///
+  /// In es, this message translates to:
+  /// **'Seguimiento'**
+  String get m0507Seguimiento;
+
+  /// M05-07 paso: reportado
+  ///
+  /// In es, this message translates to:
+  /// **'Reportado'**
+  String get m0507HitoReportado;
+
+  /// M05-07 paso: derivado a perito
+  ///
+  /// In es, this message translates to:
+  /// **'En revisión con un perito'**
+  String get m0507HitoRevision;
+
+  /// M05-07 paso: aprobado
+  ///
+  /// In es, this message translates to:
+  /// **'Aprobado'**
+  String get m0507HitoAprobado;
+
+  /// M05-07 paso: rechazado
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazado'**
+  String get m0507HitoRechazado;
+
+  /// M05-07 paso por venir: la resolución
+  ///
+  /// In es, this message translates to:
+  /// **'Resolución'**
+  String get m0507HitoResolucion;
+
+  /// M05-07 subtítulo del paso por venir
+  ///
+  /// In es, this message translates to:
+  /// **'A más tardar el {fecha}'**
+  String m0507HitoResolucionPlazo(String fecha);
+
+  /// M05-07 TalkBack: paso terminado
+  ///
+  /// In es, this message translates to:
+  /// **'completado'**
+  String get m0507EstadoCompletado;
+
+  /// M05-07 TalkBack: paso actual
+  ///
+  /// In es, this message translates to:
+  /// **'paso actual'**
+  String get m0507EstadoActual;
+
+  /// M05-07 TalkBack: paso por venir
+  ///
+  /// In es, this message translates to:
+  /// **'pendiente'**
+  String get m0507EstadoPendiente;
+
+  /// M05-07 título de la tarjeta de póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Tu póliza'**
+  String get m0507Poliza;
+
+  /// M05-07 número de póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Póliza {numero}'**
+  String m0507PolizaNumero(String numero);
+
+  /// M05-07 sección plegable con el reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Lo que reportaste'**
+  String get m0507LoQueReportaste;
+
+  /// M05-07 etiqueta del tipo de siniestro
+  ///
+  /// In es, this message translates to:
+  /// **'Qué pasó'**
+  String get m0507QuePaso;
+
+  /// M05-07 etiqueta del lugar
+  ///
+  /// In es, this message translates to:
+  /// **'Dónde'**
+  String get m0507Lugar;
+
+  /// M05-07 etiqueta del relato
+  ///
+  /// In es, this message translates to:
+  /// **'Tu relato'**
+  String get m0507Relato;
+
+  /// M05-06 filtro: todos
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get m0506FiltroTodos;
+
+  /// M05-06 filtro: pendientes y en revisión
+  ///
+  /// In es, this message translates to:
+  /// **'En curso'**
+  String get m0506FiltroEnCurso;
+
+  /// M05-06 filtro: aprobados y rechazados
+  ///
+  /// In es, this message translates to:
+  /// **'Resueltos'**
+  String get m0506FiltroResueltos;
+
+  /// M05-06 filtro sin resultados
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes siniestros en este grupo.'**
+  String get m0506VacioFiltro;
+
+  /// M05-06 monto aprobado en la fila
+  ///
+  /// In es, this message translates to:
+  /// **'Indemnización: {monto}'**
+  String m0506Monto(String monto);
+
+  /// M05-06 tiempo restante en la fila
+  ///
+  /// In es, this message translates to:
+  /// **'Quedan {tiempo} para la revisión'**
+  String m0506Quedan(String tiempo);
+
+  /// M05-06 plazo vencido sin aprobación automática
+  ///
+  /// In es, this message translates to:
+  /// **'Un operador está valorando el daño'**
+  String get m0506PorValorar;
 }
 
 class _AppLocalizationsDelegate

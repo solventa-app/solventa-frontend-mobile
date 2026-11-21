@@ -24,14 +24,18 @@
   "m0104Consejo": "Avoid direct glare and strong shadows over the barcode and fingerprint.",
   "m0104Calidad": "Good focus and lighting",
   "m0105Titulo": "Liveness check",
-  "m0105Instruccion": "Place your face inside the circle. When you tap “Record video” we'll record 3 seconds: slowly move your head from side to side.",
+  "m0105Instruccion": "Place your face inside the oval and tap “Record video”.",
   "verificacionTitulo": "Verification",
   "m0106Validando": "Checking with the KYC/AML provider...",
   "m0107aMensaje": "Identity verified! Welcome to Solventa.",
+  "m0107aDocumento": "Authentic document",
+  "m0107aPruebaVida": "Liveness check passed",
+  "m0107aRostro": "Your face matches your document",
   "m0107aAccion": "Turn on fingerprint or face unlock",
   "m0107bMensaje": "We're reviewing your identity, we'll let you know.",
   "m0107bAccion": "Got it",
-  "m0107cMensaje": "We couldn't verify your document (unreadable image)",
+  "m0107cMensaje": "We couldn't read your document clearly. Retake the photos in good light, without glare and with the whole ID inside the frame.",
+  "m0107cFallaTecnica": "We couldn't finish your verification because of a technical problem. You didn't lose any attempts: try again.",
   "reintentar": "Try again",
   "m0108Titulo": "Activation",
   "m0108Encabezado": "{tipo, select, huella{Turn on your fingerprint} rostro{Turn on your face} bloqueo{Turn on your phone lock} other{Turn on your phone's security}}",
@@ -64,11 +68,11 @@
   "m0106Demora": "This is taking longer than usual. You can refresh or come back later: the check keeps running.",
   "actualizar": "Refresh",
   "irAlInicio": "Go to home",
-  "m0107cRostro": "The face in the video doesn't match the one on the document.",
-  "m0107cSuplantacion": "We couldn't confirm that you took the liveness check yourself, live.",
+  "m0107cRostro": "The face in the video doesn't match your document. Record it again facing the camera, in good light and without glasses, cap or mask.",
+  "m0107cSuplantacion": "We couldn't confirm you took the liveness check yourself, live. Record it again yourself, without photos or screens in front of the camera.",
   "m0107cMenor": "You must be of legal age to have a Solventa account.",
   "m0107cDocumentoRegistrado": "This document already has a Solventa account.",
-  "m0107cSinIntentos": "There are no attempts left. Contact support so we can review your case.",
+  "m0107cSinIntentos": "There are no attempts left in this verification. You can start a new one from the home screen.",
   "fallaRegistroVencido": "Your sign-up expired. Please start again.",
   "fallaEmpezarDeNuevo": "Start over",
   "@fallaEmpezarDeNuevo": {
@@ -500,7 +504,7 @@
   "@m0502Ubicada": {
     "description": "M05-02 ubicación obtenida"
   },
-  "m0502SinUbicacion": "We need your location to place the claim. Turn it on to continue.",
+  "m0502SinUbicacion": "We don't have your GPS. Turn it on or type the address where it happened.",
   "@m0502SinUbicacion": {
     "description": "M05-02 sin permiso de ubicación"
   },
@@ -1056,5 +1060,147 @@
   "m0503CiudadOtra": "Another city",
   "@m0503CiudadOtra": {
     "description": "M05-03 option to type a city that is not in the list"
-  }
+  },
+  "asistenciaCanalNombre": "Assistance",
+  "asistenciaCanalDescripcion": "Alert when the provider of an assistance arrives",
+  "ubicacionPrivacidad": "Your location travels encrypted to Solventa and our map provider only to calculate routes. We keep an encrypted record for 90 days for auditing.",
+  "m0601EspecialidadUrgencias": "Emergency care",
+  "m0601EspecialidadMedicinaGeneral": "General medicine",
+  "m0601EspecialidadMecanicaGeneral": "General mechanics",
+  "m0601EspecialidadLlantasYFrenos": "Tires and brakes",
+  "m0601EspecialidadGruaLiviana": "Light tow truck",
+  "m0601EspecialidadGruaYCarroTaller": "Tow truck and mobile workshop",
+  "m0601Abierto24h": "Open 24 hours",
+  "m0601TodosLosDias": "Every day",
+  "m0601RangoDias": "{desde}–{hasta}",
+  "@m0601RangoDias": {
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      },
+      "hasta": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601Horario": "{dias}, {abre} to {cierra}",
+  "@m0601Horario": {
+    "placeholders": {
+      "dias": {
+        "type": "String"
+      },
+      "abre": {
+        "type": "String"
+      },
+      "cierra": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DiaLunes": "Mon",
+  "m0601DiaMartes": "Tue",
+  "m0601DiaMiercoles": "Wed",
+  "m0601DiaJueves": "Thu",
+  "m0601DiaViernes": "Fri",
+  "m0601DiaSabado": "Sat",
+  "m0601DiaDomingo": "Sun",
+  "m0105CambiarDocumento": "Retake document photos",
+  "fallaRecorridosAgotados": "You can't try the verification again today. Please come back tomorrow.",
+  "m0602Poliza": "Policy covering the assistance",
+  "m0602PolizaElegir": "Choose your vehicle policy",
+  "m0602PolizaCargando": "Looking for your policies…",
+  "m0602PolizaRequerida": "Choose your vehicle policy to send the request.",
+  "m0602SinPoliza": "You need an active vehicle policy to request assistance.",
+  "m0602PolizaNoValida": "That policy doesn't cover the assistance. Choose an active vehicle policy.",
+  "m0602PolizaNumero": "Policy {numero}",
+  "@m0602PolizaNumero": {
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0105AvisoDuracion": "We'll record 15 seconds: turn your face to the left, then to the right and back to the center. You'll see the time as it goes.",
+  "m0105GrabandoTiempo": "Recording · {transcurrido} / {total}",
+  "m0105PasoIzquierda": "Left",
+  "m0105PasoDerecha": "Right",
+  "m0105PasoCentro": "Center",
+  "m0105GiraIzquierda": "Slowly turn your face to the left",
+  "m0105GiraDerecha": "Now slowly turn it to the right",
+  "m0105MiraCentro": "Back to the center and look at the camera",
+  "m0105Listo": "Done! We have your video.",
+  "fallaGenericaOnboarding": "We couldn't complete this step. Tap “Retry upload”; if it keeps failing, start the verification again.",
+  "asistenciaEnCaminoTitulo": "Your assistance is on the way",
+  "asistenciaEnCaminoCuerpo": "{prestador} is heading to your location. Tap to see details.",
+  "asistenciaEnCaminoCanalNombre": "Assistance in progress",
+  "asistenciaEnCaminoCanalDescripcion": "Shows the countdown while the provider is on the way",
+  "m0502EscribirDireccion": "Type the address",
+  "m0502UbicadaDireccion": "Location: {direccion}",
+  "m0502CambiarDireccion": "Change address",
+  "m0507ValorandoDano": "The review period has ended. Because the damage must be assessed, an operator will review your claim and you will see the result here.",
+  "m0507Fotos": "Photos you sent",
+  "m0507Foto": "Photo {n} of {total}. Tap to view it full screen.",
+  "@m0507Foto": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "m0507FotoNoDisponible": "Image not available",
+  "m0507CerrarFoto": "Close",
+  "m0507Seguimiento": "Progress",
+  "m0507HitoReportado": "Reported",
+  "m0507HitoRevision": "Under review by an adjuster",
+  "m0507HitoAprobado": "Approved",
+  "m0507HitoRechazado": "Rejected",
+  "m0507HitoResolucion": "Decision",
+  "m0507HitoResolucionPlazo": "By {fecha}",
+  "@m0507HitoResolucionPlazo": {
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507EstadoCompletado": "completed",
+  "m0507EstadoActual": "current step",
+  "m0507EstadoPendiente": "pending",
+  "m0507Poliza": "Your policy",
+  "m0507PolizaNumero": "Policy {numero}",
+  "@m0507PolizaNumero": {
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507LoQueReportaste": "What you reported",
+  "m0507QuePaso": "What happened",
+  "m0507Lugar": "Where",
+  "m0507Relato": "Your description",
+  "m0506FiltroTodos": "All",
+  "m0506FiltroEnCurso": "In progress",
+  "m0506FiltroResueltos": "Resolved",
+  "m0506VacioFiltro": "You have no claims in this group.",
+  "m0506Monto": "Compensation: {monto}",
+  "@m0506Monto": {
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506Quedan": "{tiempo} left for the review",
+  "@m0506Quedan": {
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506PorValorar": "An operator is assessing the damage"
 }

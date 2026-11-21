@@ -28,7 +28,8 @@
         android:fullBackupContent="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -56,6 +57,18 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- HU-M04 (KAN-259): canal de importancia alta para el push de FCM (lo crea
+             `push_service.dart`). Sin él FCM usa su canal genérico de respaldo. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="avisos_push" />
+        <!-- Ícono y color de las notificaciones push de FCM (silueta blanca de la «S»). -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_solventa" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/solventa_azul" />
         <!-- HU-M06 (4.5): notificación local programada para la llegada de la asistencia
              (flutter_local_notifications). Sin alarmas exactas: inexactAllowWhileIdle. -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />

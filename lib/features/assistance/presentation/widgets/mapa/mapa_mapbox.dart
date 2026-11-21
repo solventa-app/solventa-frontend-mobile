@@ -15,20 +15,34 @@ import 'mapa_datos.dart';
 /// `sourceId` con el que llegan los errores de sus teselas.
 const fuenteSateliteMapbox = 'mapbox-satellite';
 
-/// ¿Se avisa de este error de carga? Mapbox manda uno por cada tesela que falla,
-/// así que se avisa una sola vez por estilo ([yaAvisado]); y los que llegan
-/// tarde de la fuente del satélite ([fuente]) cuando ya se volvió a calles no
-/// son de este mapa: avisarlos escondería un mapa de calles que sí carga.
+/// Teselas fallidas del mismo estilo a partir de las cuales el mapa se da por
+/// caído (p. ej. la cuenta sin el producto de satélite: fallan todas).
+const teselasParaRendirse = 8;
+
+/// ¿Se avisa de este error de carga? Solo esconde el mapa lo que lo deja sin
+/// dibujar: el estilo o una fuente entera, o muchas teselas seguidas
+/// ([teselasFallidas]). Una tesela suelta, un sprite o una fuente tipográfica
+/// no: el mapa sigue sirviendo. Mapbox manda un error por cada tesela, así
+/// que se avisa una sola vez por estilo ([yaAvisado]); y los que llegan tarde
+/// de la fuente del satélite ([fuente]) cuando ya se volvió a calles no son de
+/// este mapa: avisarlos escondería un mapa de calles que sí carga.
 @visibleForTesting
 bool avisarErrorDeCarga({
   required EstiloMapa estilo,
   required EstiloMapa? yaAvisado,
   required String? fuente,
+  required MapLoadErrorType tipo,
+  int teselasFallidas = 0,
 }) {
   if (estilo == EstiloMapa.calles && fuente == fuenteSateliteMapbox) {
     return false;
   }
-  return yaAvisado != estilo;
+  if (yaAvisado == estilo) return false;
+  return switch (tipo) {
+    MapLoadErrorType.STYLE || MapLoadErrorType.SOURCE => true,
+    MapLoadErrorType.TILE => teselasFallidas >= teselasParaRendirse,
+    _ => false,
+  };
 }
 
 /// Mapa de M06-01 con `mapbox_maps_flutter` (HU-M06, M0).
@@ -39,6 +53,9 @@ bool avisarErrorDeCarga({
 /// - Cámara: encuadre inicial con zoom máximo 16 y límites de zoom 11 a 18 y
 ///   de la zona (M7); enfoque con un solo `easeTo` de 400 ms, sin animación
 ///   si el sistema pide quitarlas (M6).
+/// - Botón GPS ([CentrarEnUsuario]): `easeTo` de 600 ms al cliente sin tocar
+///   el zoom y un pulso (3 latidos de un círculo bajo su pin) para ubicarlo;
+///   sin animaciones si el sistema pide quitarlas.
 /// - Estilos calles y satélite (M14): al cambiar se conservan cámara, pines y
 ///   selección.
 /// - Si el satélite no carga (p. ej. Mapbox rechaza sus teselas con 429) se
@@ -80,6 +97,9 @@ class _MapaMapboxState extends State<MapaMapbox> {
   MapboxMap? _mapa;
   PointAnnotationManager? _pines;
   PolylineAnnotationManager? _lineas;
+  CircleAnnotationManager? _pulsos;
+  CircleAnnotation? _pulso;
+  Timer? _latido;
   final _porAnotacion = <String, PrestadorCercano>{};
   final _imagenes = <Object, Uint8List>{};
   final _suscripciones = <StreamSubscription<Object?>>[];
@@ -91,11 +111,17 @@ class _MapaMapboxState extends State<MapaMapbox> {
   /// Estilo del que ya se avisó una falla de carga (ver [avisarErrorDeCarga]).
   EstiloMapa? _estiloAvisado;
 
+  /// Teselas que fallaron con el estilo actual (ver [avisarErrorDeCarga]).
+  int _teselasFallidas = 0;
+
   @override
   void didUpdateWidget(MapaMapbox old) {
     super.didUpdateWidget(old);
     // Con otro estilo, sus fallas vuelven a contar.
-    if (old.datos.estilo != widget.datos.estilo) _estiloAvisado = null;
+    if (old.datos.estilo != widget.datos.estilo) {
+      _estiloAvisado = null;
+      _teselasFallidas = 0;
+    }
     final mapa = _mapa;
     if (mapa == null) return;
     if (old.datos.estilo != widget.datos.estilo) {
@@ -108,6 +134,11 @@ class _MapaMapboxState extends State<MapaMapbox> {
       unawaited(_pintarRutas());
       unawaited(_pintarPines());
     }
+    // El botón GPS leyó una posición nueva: la cámara sigue al cliente.
+    if (widget.orden is CentrarEnUsuario &&
+        old.datos.origen != widget.datos.origen) {
+      _ordenAplicada = null;
+    }
     if (widget.orden?.generacion != _ordenAplicada) {
       unawaited(_aplicarOrden());
     }
@@ -115,6 +146,7 @@ class _MapaMapboxState extends State<MapaMapbox> {
 
   @override
   void dispose() {
+    _latido?.cancel();
     _toques?.cancel();
     for (final s in _suscripciones) {
       unawaited(s.cancel());
@@ -132,6 +164,8 @@ class _MapaMapboxState extends State<MapaMapbox> {
       await mapa.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
       // Las rutas primero: quedan debajo de los pines (M15).
       _lineas = await mapa.annotations.createPolylineAnnotationManager();
+      // El pulso del botón GPS, debajo de los pines.
+      _pulsos = await mapa.annotations.createCircleAnnotationManager();
       _pines = await mapa.annotations.createPointAnnotationManager();
       await _pines!.setIconAllowOverlap(true);
       _toques = _pines!.tapEvents(
@@ -331,6 +365,16 @@ class _MapaMapboxState extends State<MapaMapbox> {
           16,
           null,
         );
+      case CentrarEnUsuario():
+        // Sin `zoom`: Mapbox conserva el actual y solo mueve el centro.
+        await _mover(
+          mapa,
+          CameraOptions(center: _punto(widget.datos.origen), padding: relleno),
+          rapido,
+          duracion: 600,
+        );
+        if (!rapido) unawaited(_latir());
+        return;
       case EnfocarPrestador(:final destino):
         final actual = await mapa.getCameraState();
         return _mover(
@@ -346,14 +390,66 @@ class _MapaMapboxState extends State<MapaMapbox> {
     await _mover(mapa, destino, rapido);
   }
 
-  Future<void> _mover(MapboxMap mapa, CameraOptions c, bool rapido) async {
+  Future<void> _mover(
+    MapboxMap mapa,
+    CameraOptions c,
+    bool rapido, {
+    int duracion = 400,
+  }) async {
     await mapa.cancelCameraAnimation();
     if (rapido) {
       await mapa.setCamera(c);
     } else {
-      await mapa.easeTo(c, MapAnimationOptions(duration: 400));
+      await mapa.easeTo(c, MapAnimationOptions(duration: duracion));
     }
   }
+
+  /// Tres latidos de un círculo que crece y se desvanece bajo el pin del
+  /// cliente: se ve dónde está sin dejar una animación corriendo (batería).
+  Future<void> _latir() async {
+    final pulsos = _pulsos;
+    if (pulsos == null || !mounted) return;
+    _latido?.cancel();
+    final color = _colorUsuario(context).toARGB32();
+    final anterior = _pulso;
+    _pulso = null;
+    if (anterior != null) await pulsos.delete(anterior);
+    final pulso = await pulsos.create(
+      CircleAnnotationOptions(
+        geometry: _punto(widget.datos.origen),
+        circleColor: color,
+        circleRadius: _radioPulso(0),
+        circleOpacity: _opacidadPulso(0),
+      ),
+    );
+    if (!mounted) return;
+    _pulso = pulso;
+    final inicio = DateTime.now();
+    _latido = Timer.periodic(const Duration(milliseconds: 33), (t) {
+      final ms = DateTime.now().difference(inicio).inMilliseconds;
+      final actual = _pulso;
+      if (!mounted || actual == null) return t.cancel();
+      if (ms >= _latidos * _msLatido) {
+        t.cancel();
+        _pulso = null;
+        unawaited(pulsos.delete(actual));
+        return;
+      }
+      final f = (ms % _msLatido) / _msLatido;
+      actual
+        ..circleRadius = _radioPulso(f)
+        ..circleOpacity = _opacidadPulso(f);
+      unawaited(pulsos.update(actual));
+    });
+  }
+
+  static const _latidos = 3;
+  static const _msLatido = 900;
+
+  /// Del borde del punto (8 px) al doble del halo, con salida suave.
+  static double _radioPulso(double f) =>
+      8 + Curves.easeOut.transform(f) * (SolMapUserPin.halo - 8);
+  static double _opacidadPulso(double f) => 0.45 * (1 - f);
 
   static Color _colorUsuario(BuildContext context) => context.colors.error;
 
@@ -384,13 +480,19 @@ class _MapaMapboxState extends State<MapaMapbox> {
     return bytes!.buffer.asUint8List();
   }
 
-  /// Un error de carga del estilo que se ve (estilo, fuentes, teselas...).
+  /// Un error de carga del estilo que se ve (estilo, fuentes, teselas...). Lo
+  /// que no es fatal no esconde el mapa (H3 de la revisión).
   void _errorDeCarga(MapLoadingErrorEventData e) {
     final estilo = widget.datos.estilo;
+    final deOtroEstilo =
+        estilo == EstiloMapa.calles && e.sourceId == fuenteSateliteMapbox;
+    if (e.type == MapLoadErrorType.TILE && !deOtroEstilo) _teselasFallidas++;
     if (!avisarErrorDeCarga(
       estilo: estilo,
       yaAvisado: _estiloAvisado,
       fuente: e.sourceId,
+      tipo: e.type,
+      teselasFallidas: _teselasFallidas,
     )) {
       return;
     }

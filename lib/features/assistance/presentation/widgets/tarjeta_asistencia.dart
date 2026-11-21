@@ -37,7 +37,9 @@ SolAssistanceCardState estadoTarjeta(
   if (s.llego(a)) {
     final hora = a.llegadaEstimada ?? a.solicitadaEn;
     return SolAssistanceArrived(
-      l10n.asistenciaLlego(SolFormat.time(hora.toLocal())),
+      l10n.asistenciaLlego(
+        SolFormat.timeFor(hora.toLocal(), Locale(l10n.localeName)),
+      ),
     );
   }
   final llegada = a.llegadaEstimada;
@@ -58,7 +60,7 @@ SolAssistanceCardState estadoTarjeta(
   return SolAssistanceOnTheWay(
     countdown: cuentaRegresiva(l10n, llegada, s.ahora),
     estimatedTime: l10n.asistenciaHoraEstimada(
-      SolFormat.time(llegada.toLocal()),
+      SolFormat.timeFor(llegada.toLocal(), Locale(l10n.localeName)),
     ),
     progress: total <= 0 ? 0 : avance / total,
   );
@@ -92,7 +94,7 @@ Widget tarjetaAsistencia(
     isPartner: a.prestador.aliado,
     subtitle: l10n.asistenciaPedida(
       tipo,
-      SolFormat.time(a.solicitadaEn.toLocal()),
+      SolFormat.timeFor(a.solicitadaEn.toLocal(), Locale(l10n.localeName)),
     ),
     state: estado,
     semanticLabel: l10n.asistenciaLectura(nombre, tipo, lecturaEstado),

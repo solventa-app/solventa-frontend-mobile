@@ -49,10 +49,10 @@ class _MisAsistenciasPageState extends ConsumerState<MisAsistenciasPage> {
   void initState() {
     super.initState();
     _ciclo = AppLifecycleListener(
+      // La recarga al volver la hace el notifier (también con la pestaña
+      // cerrada, para el badge); aquí solo se reanuda el reloj.
       onResume: () {
-        if (!widget.visible) return;
-        unawaited(_notifier.cargar());
-        _notifier.activar();
+        if (widget.visible) _notifier.activar();
       },
       onPause: () => _notifier.pausar(),
     );

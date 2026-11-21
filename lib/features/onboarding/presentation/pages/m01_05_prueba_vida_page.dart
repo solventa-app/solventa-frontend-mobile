@@ -6,19 +6,22 @@ import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
+import '../../../../core/errors/falla.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../data/datasources/captura_service.dart';
 import '../onboarding_notifier.dart';
 import '../onboarding_routes.dart';
 import '../widgets/falla_banner.dart';
+import '../widgets/guia_prueba_vida.dart';
 import '../widgets/onboarding_widgets.dart';
 
 /// M01-05 · Prueba de vida (2001:502), en tres momentos:
 ///
-/// 1. **Lista**: la instrucción dice que se graban 3 s y que hay que mover la
-///    cabeza; «Grabar video» toma la selfie y empieza el video.
-/// 2. **Grabando**: «● Grabando» sobre el visor y una cuenta regresiva que pide
-///    mover la cabeza despacio de un lado a otro.
+/// 1. **Lista**: avisa que se graban 15 s y muestra los tres pasos (izquierda,
+///    derecha y centro); «Grabar video» toma la selfie y empieza el video.
+/// 2. **Grabando**: «● Grabando · 00:07 / 00:15» sobre el visor, un anillo
+///    verde que se llena alrededor del óvalo ([GuiaPruebaVida]) y el paso
+///    actual resaltado, unos 5 s cada uno.
 /// 3. **Capturado**: la cámara se cierra (ya no hace falta) y la pantalla dice
 ///    que tiene la selfie y el video; mientras sube y Didit responde, explica
 ///    la espera. Si Didit rechaza solo el rostro, la cámara vuelve a abrirse.
@@ -34,8 +37,12 @@ class M0105PruebaVidaPage extends ConsumerStatefulWidget {
 }
 
 class _M0105PruebaVidaPageState extends ConsumerState<M0105PruebaVidaPage> {
+  static final _total = CamaraCapturaService.duracionVideo.inSeconds;
+
   Timer? _reloj;
-  int _restantes = CamaraCapturaService.duracionVideo.inSeconds;
+
+  /// Segundos de grabación que ya pasaron (0 a 15).
+  int _transcurridos = 0;
 
   @override
   void dispose() {
@@ -45,13 +52,16 @@ class _M0105PruebaVidaPageState extends ConsumerState<M0105PruebaVidaPage> {
 
   void _contar(bool grabando) {
     _reloj?.cancel();
-    setState(() => _restantes = CamaraCapturaService.duracionVideo.inSeconds);
+    setState(() => _transcurridos = 0);
     if (!grabando) return;
     _reloj = Timer.periodic(const Duration(seconds: 1), (t) {
       if (!mounted) return;
-      setState(() => _restantes = (_restantes - 1).clamp(1, 99));
+      setState(() => _transcurridos = (_transcurridos + 1).clamp(0, _total));
     });
   }
+
+  static String _mmss(int s) =>
+      '${(s ~/ 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
 
   Future<void> _ir() async {
     final notifier = ref.read(onboardingProvider.notifier);
@@ -77,17 +87,69 @@ class _M0105PruebaVidaPageState extends ConsumerState<M0105PruebaVidaPage> {
     final capturado = estado.rostroCapturado && estado.videoCapturado;
     final grabando = estado.grabandoVideo;
 
+    final paso = GuiaPruebaVida.pasoEn(
+      _transcurridos,
+      CamaraCapturaService.duracionVideo,
+    );
+    final instruccionPaso = switch (paso) {
+      PasoPruebaVida.izquierda => l10n.m0105GiraIzquierda,
+      PasoPruebaVida.derecha => l10n.m0105GiraDerecha,
+      PasoPruebaVida.centro => l10n.m0105MiraCentro,
+    };
     final contenido = capturado
         // Con la selfie y el video en memoria la cámara ya no hace falta.
         ? _Capturado(enviando: estado.ocupado)
-        : SolLiveCameraFrame(
-            shape: SolCameraFrameShape.face,
-            frontal: true,
-            label: grabando ? l10n.m0105Grabando : null,
-            labelIcon: grabando ? SolIcons.recording : null,
-            instruction: grabando
-                ? l10n.m0105GrabandoInstruccion(_restantes)
-                : l10n.m0105Instruccion,
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SolLiveCameraFrame(
+                shape: SolCameraFrameShape.face,
+                frontal: true,
+                label: grabando
+                    ? l10n.m0105GrabandoTiempo(
+                        _mmss(_transcurridos),
+                        _mmss(_total),
+                      )
+                    : null,
+                labelIcon: grabando ? SolIcons.recording : null,
+                instruction: grabando ? instruccionPaso : l10n.m0105Instruccion,
+                faceGuide: GuiaPruebaVida(
+                  grabando: grabando,
+                  duracion: CamaraCapturaService.duracionVideo,
+                ),
+              ),
+              const SizedBox(height: SolSpacing.md),
+              PasosPruebaVida(
+                etiquetas: [
+                  l10n.m0105PasoIzquierda,
+                  l10n.m0105PasoDerecha,
+                  l10n.m0105PasoCentro,
+                ],
+                actual: paso,
+                grabando: grabando,
+              ),
+              if (!grabando) ...[
+                const SizedBox(height: SolSpacing.sm),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.timer_outlined,
+                      size: 16,
+                      color: context.colors.secondary,
+                    ),
+                    const SizedBox(width: SolSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        l10n.m0105AvisoDuracion,
+                        style: context.solText.note.copyWith(
+                          color: context.colors.secondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ],
           );
 
     final String etiqueta;
@@ -132,11 +194,26 @@ class _M0105PruebaVidaPageState extends ConsumerState<M0105PruebaVidaPage> {
             loading: estado.ocupado || grabando,
             onPressed: _ir,
           ),
+          // KAN-31: tras un rechazo del rostro, muchas veces la foto mala es la
+          // de la cédula: se puede volver a tomar en vez de repetir el video.
+          if (_rechazoDelRostro(falla) && !estado.ocupado && !grabando)
+            SolButton.text(
+              label: l10n.m0105CambiarDocumento,
+              onPressed: () {
+                ref.read(onboardingProvider.notifier).cambiarFotosDocumento();
+                context.go(OnboardingRoutes.frente);
+              },
+            ),
         ],
       ),
     );
   }
 }
+
+bool _rechazoDelRostro(Falla? falla) => switch (falla) {
+  FallaNegocio(motivo: 'ROSTRO_NO_COINCIDE' || 'SUPLANTACION') => true,
+  _ => false,
+};
 
 /// La selfie y el video ya están tomados: sin cámara abierta, con la espera
 /// explicada mientras se envían y Didit responde.

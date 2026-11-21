@@ -48,9 +48,9 @@ abstract interface class CapturaService {
 final class CamaraCapturaService implements CapturaService {
   CamaraCapturaService({this.permitirRespaldo = false});
 
-  /// Lo que dura el video de la prueba de vida. M01-05 lo muestra como cuenta
-  /// regresiva mientras pide mover la cabeza.
-  static const duracionVideo = Duration(seconds: 3);
+  /// Lo que dura el video de la prueba de vida: 5 s por paso (izquierda,
+  /// derecha y centro). M01-05 muestra el tiempo que avanza y el paso actual.
+  static const duracionVideo = Duration(seconds: 15);
 
   final bool permitirRespaldo;
 

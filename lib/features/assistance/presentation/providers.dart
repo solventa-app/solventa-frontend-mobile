@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/config/app_config.dart';
 import '../../../core/network/network_providers.dart';
 import '../../../core/ubicacion/ubicacion_service.dart';
+import '../../claims/presentation/providers.dart'
+    show polizasReportablesProvider;
 import '../data/datasources/asistencia_remote_datasource.dart';
 import '../data/datasources/catalogo_local_datasource.dart';
 import '../data/datasources/permiso_pedido_store.dart';
@@ -25,7 +28,11 @@ bool get _enPruebas => Platform.environment.containsKey('FLUTTER_TEST');
 /// BFF (contrato v0.36, KAN-263).
 final asistenciaRemoteDataSourceProvider = Provider<AsistenciaRemoteDataSource>(
   (ref) => ref.watch(usarFakesProvider)
-      ? FakeAsistenciaRemoteDataSource()
+      // En pruebas sin espera: «Mis asistencias» se carga al abrir la app (H1)
+      // y su latencia de demo quedaría pendiente al cerrar cada prueba.
+      ? (_enPruebas
+            ? FakeAsistenciaRemoteDataSource(latencia: Duration.zero)
+            : FakeAsistenciaRemoteDataSource())
       : GqlAsistenciaRemoteDataSource(ref.watch(graphqlClientProvider)),
 );
 
@@ -96,6 +103,17 @@ final misAsistenciasProvider =
       MisAsistenciasNotifier.new,
     );
 
+/// H1: carga «Mis asistencias» una vez al abrir la app con sesión, para el
+/// badge y para reprogramar las notificaciones sin entrar a la pestaña. Lo
+/// observa el inicio; al cerrar sesión se descarta y al volver carga de nuevo.
+final cargaInicialAsistenciasProvider = Provider.autoDispose<void>((ref) {
+  unawaited(
+    Future.microtask(() async {
+      if (ref.mounted) await ref.read(misAsistenciasProvider.notifier).cargar();
+    }),
+  );
+});
+
 /// Número del badge de «Mis asistencias»: las en camino (4.1).
 final enCaminoCantidadProvider = Provider<int>(
   (ref) => ref.watch(misAsistenciasProvider.select((s) => s.enCamino.length)),
@@ -106,3 +124,8 @@ final enCaminoCantidadProvider = Provider<int>(
 final solicitudProvider = NotifierProvider<SolicitudNotifier, SolicitudState>(
   SolicitudNotifier.new,
 );
+
+/// v0.55 (KAN-36): las pólizas de **auto** emitidas del cliente, para elegir
+/// cuál cubre la asistencia. Es la misma consulta del reporte de siniestro
+/// (`propuestas` filtradas a `AUTO`): las hipotecarias no se ofrecen.
+final polizasAsistenciaProvider = polizasReportablesProvider;

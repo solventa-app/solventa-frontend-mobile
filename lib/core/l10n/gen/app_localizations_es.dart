@@ -93,7 +93,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0105Instruccion =>
-      'Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.';
+      'Pon tu rostro dentro del óvalo y toca «Grabar video».';
 
   @override
   String get verificacionTitulo => 'Verificación';
@@ -103,6 +103,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0107aMensaje => '¡Identidad verificada! Bienvenido a Solventa.';
+
+  @override
+  String get m0107aDocumento => 'Documento auténtico';
+
+  @override
+  String get m0107aPruebaVida => 'Prueba de vida superada';
+
+  @override
+  String get m0107aRostro => 'Tu rostro coincide con el documento';
 
   @override
   String get m0107aAccion => 'Activar huella o rostro';
@@ -115,7 +124,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0107cMensaje =>
-      'No pudimos verificar tu documento (imagen ilegible)';
+      'No pudimos leer bien tu documento. Tómale de nuevo las fotos con buena luz, sin reflejos y con la cédula completa dentro del marco.';
+
+  @override
+  String get m0107cFallaTecnica =>
+      'No pudimos terminar tu verificación por un problema técnico. No perdiste ningún intento: inténtalo de nuevo.';
 
   @override
   String get reintentar => 'Reintentar';
@@ -248,11 +261,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0107cRostro =>
-      'El rostro del video no coincide con el del documento.';
+      'El rostro del video no coincide con el de tu documento. Grábalo de nuevo de frente, con buena luz y sin gafas, gorra ni tapabocas.';
 
   @override
   String get m0107cSuplantacion =>
-      'No pudimos confirmar que la prueba de vida la hiciste tú, en vivo.';
+      'No pudimos confirmar que la prueba de vida la hiciste tú, en vivo. Grábala de nuevo tú mismo, sin fotos ni pantallas frente a la cámara.';
 
   @override
   String get m0107cMenor =>
@@ -264,7 +277,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0107cSinIntentos =>
-      'Ya no quedan intentos. Escríbenos a soporte para revisar tu caso.';
+      'Ya no quedan intentos en esta verificación. Desde el inicio puedes empezar una nueva.';
 
   @override
   String get fallaRegistroVencido => 'Tu registro venció. Empieza de nuevo.';
@@ -1026,7 +1039,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0502SinUbicacion =>
-      'Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.';
+      'No tenemos tu GPS. Actívalo o escribe la dirección donde pasó el siniestro.';
 
   @override
   String get m0502PermitirUbicacion => 'Permitir ubicación';
@@ -1763,4 +1776,258 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0503CiudadOtra => 'Otra ciudad';
+
+  @override
+  String get asistenciaCanalNombre => 'Asistencias';
+
+  @override
+  String get asistenciaCanalDescripcion =>
+      'Aviso cuando llega el prestador de una asistencia';
+
+  @override
+  String get ubicacionPrivacidad =>
+      'Tu ubicación viaja cifrada a Solventa y a nuestro proveedor de mapas solo para calcular las rutas. Guardamos un registro cifrado durante 90 días para auditoría.';
+
+  @override
+  String get m0601EspecialidadUrgencias => 'Urgencias';
+
+  @override
+  String get m0601EspecialidadMedicinaGeneral => 'Medicina general';
+
+  @override
+  String get m0601EspecialidadMecanicaGeneral => 'Mecánica general';
+
+  @override
+  String get m0601EspecialidadLlantasYFrenos => 'Llantas y frenos';
+
+  @override
+  String get m0601EspecialidadGruaLiviana => 'Grúa liviana';
+
+  @override
+  String get m0601EspecialidadGruaYCarroTaller => 'Grúa y carro taller';
+
+  @override
+  String get m0601Abierto24h => 'Abierto 24 h';
+
+  @override
+  String get m0601TodosLosDias => 'Todos los días';
+
+  @override
+  String m0601RangoDias(String desde, String hasta) {
+    return '$desde a $hasta';
+  }
+
+  @override
+  String m0601Horario(String dias, String abre, String cierra) {
+    return '$dias, $abre a $cierra';
+  }
+
+  @override
+  String get m0601DiaLunes => 'lun';
+
+  @override
+  String get m0601DiaMartes => 'mar';
+
+  @override
+  String get m0601DiaMiercoles => 'mié';
+
+  @override
+  String get m0601DiaJueves => 'jue';
+
+  @override
+  String get m0601DiaViernes => 'vie';
+
+  @override
+  String get m0601DiaSabado => 'sáb';
+
+  @override
+  String get m0601DiaDomingo => 'dom';
+
+  @override
+  String get m0105CambiarDocumento => 'Cambiar fotos del documento';
+
+  @override
+  String get fallaRecorridosAgotados =>
+      'Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.';
+
+  @override
+  String get m0602Poliza => 'Póliza que cubre la asistencia';
+
+  @override
+  String get m0602PolizaElegir => 'Elige la póliza de tu vehículo';
+
+  @override
+  String get m0602PolizaCargando => 'Buscando tus pólizas…';
+
+  @override
+  String get m0602PolizaRequerida =>
+      'Elige la póliza de tu vehículo para enviar la solicitud.';
+
+  @override
+  String get m0602SinPoliza =>
+      'Para pedir asistencia necesitas una póliza de vehículo vigente.';
+
+  @override
+  String get m0602PolizaNoValida =>
+      'Esa póliza no cubre la asistencia. Elige una póliza de vehículo vigente.';
+
+  @override
+  String m0602PolizaNumero(String numero) {
+    return 'Póliza $numero';
+  }
+
+  @override
+  String get m0105AvisoDuracion =>
+      'Grabaremos 15 segundos: gira la cara a la izquierda, luego a la derecha y vuelve al centro. Verás el tiempo mientras avanza.';
+
+  @override
+  String m0105GrabandoTiempo(String transcurrido, String total) {
+    return 'Grabando · $transcurrido / $total';
+  }
+
+  @override
+  String get m0105PasoIzquierda => 'Izquierda';
+
+  @override
+  String get m0105PasoDerecha => 'Derecha';
+
+  @override
+  String get m0105PasoCentro => 'Centro';
+
+  @override
+  String get m0105GiraIzquierda => 'Gira la cara despacio hacia la izquierda';
+
+  @override
+  String get m0105GiraDerecha => 'Ahora gírala despacio hacia la derecha';
+
+  @override
+  String get m0105MiraCentro => 'Vuelve al centro y mira la cámara';
+
+  @override
+  String get m0105Listo => '¡Listo! Ya tenemos tu video.';
+
+  @override
+  String get fallaGenericaOnboarding =>
+      'No pudimos completar este paso. Toca «Reintentar envío»; si sigue fallando, empieza de nuevo la verificación.';
+
+  @override
+  String get asistenciaEnCaminoTitulo => 'Tu asistencia va en camino';
+
+  @override
+  String asistenciaEnCaminoCuerpo(String prestador) {
+    return '$prestador va hacia tu ubicación. Toca para ver el detalle.';
+  }
+
+  @override
+  String get asistenciaEnCaminoCanalNombre => 'Asistencia en curso';
+
+  @override
+  String get asistenciaEnCaminoCanalDescripcion =>
+      'Muestra la cuenta regresiva mientras el prestador va en camino';
+
+  @override
+  String get m0502EscribirDireccion => 'Escribir la dirección';
+
+  @override
+  String m0502UbicadaDireccion(String direccion) {
+    return 'Ubicación: $direccion';
+  }
+
+  @override
+  String get m0502CambiarDireccion => 'Cambiar dirección';
+
+  @override
+  String get m0507ValorandoDano =>
+      'El plazo de revisión venció. Como hay que valorar el daño, un operador revisará tu caso y verás el resultado aquí.';
+
+  @override
+  String get m0507Fotos => 'Fotos que enviaste';
+
+  @override
+  String m0507Foto(int n, int total) {
+    return 'Foto $n de $total. Toca para verla en pantalla completa.';
+  }
+
+  @override
+  String get m0507FotoNoDisponible => 'Imagen no disponible';
+
+  @override
+  String get m0507CerrarFoto => 'Cerrar';
+
+  @override
+  String get m0507Seguimiento => 'Seguimiento';
+
+  @override
+  String get m0507HitoReportado => 'Reportado';
+
+  @override
+  String get m0507HitoRevision => 'En revisión con un perito';
+
+  @override
+  String get m0507HitoAprobado => 'Aprobado';
+
+  @override
+  String get m0507HitoRechazado => 'Rechazado';
+
+  @override
+  String get m0507HitoResolucion => 'Resolución';
+
+  @override
+  String m0507HitoResolucionPlazo(String fecha) {
+    return 'A más tardar el $fecha';
+  }
+
+  @override
+  String get m0507EstadoCompletado => 'completado';
+
+  @override
+  String get m0507EstadoActual => 'paso actual';
+
+  @override
+  String get m0507EstadoPendiente => 'pendiente';
+
+  @override
+  String get m0507Poliza => 'Tu póliza';
+
+  @override
+  String m0507PolizaNumero(String numero) {
+    return 'Póliza $numero';
+  }
+
+  @override
+  String get m0507LoQueReportaste => 'Lo que reportaste';
+
+  @override
+  String get m0507QuePaso => 'Qué pasó';
+
+  @override
+  String get m0507Lugar => 'Dónde';
+
+  @override
+  String get m0507Relato => 'Tu relato';
+
+  @override
+  String get m0506FiltroTodos => 'Todos';
+
+  @override
+  String get m0506FiltroEnCurso => 'En curso';
+
+  @override
+  String get m0506FiltroResueltos => 'Resueltos';
+
+  @override
+  String get m0506VacioFiltro => 'No tienes siniestros en este grupo.';
+
+  @override
+  String m0506Monto(String monto) {
+    return 'Indemnización: $monto';
+  }
+
+  @override
+  String m0506Quedan(String tiempo) {
+    return 'Quedan $tiempo para la revisión';
+  }
+
+  @override
+  String get m0506PorValorar => 'Un operador está valorando el daño';
 }

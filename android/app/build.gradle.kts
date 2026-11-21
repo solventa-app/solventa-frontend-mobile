@@ -102,6 +102,22 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 }
 
+// Test Lab fallaba al compilar las pruebas instrumentadas (`mergeDevDebugAndroidTestAssets`): el plugin
+// integration_test mete androidx.test runner 1.3.0 y rules 1.2.0 en el runtime de la app, y la resolución
+// consistente de AGP los fijaba como «strictly» contra el 1.6.x de androidTest. Se fuerzan las mismas
+// versiones en todas las configuraciones para que ambas coincidan.
+configurations.configureEach {
+    resolutionStrategy {
+        force(
+            "androidx.test:runner:1.6.2",
+            "androidx.test:rules:1.6.1",
+            "androidx.test:core:1.6.1",
+            "androidx.test:monitor:1.7.2",
+            "androidx.test.espresso:espresso-core:3.6.1",
+        )
+    }
+}
+
 kotlin {
     compilerOptions {
         jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17

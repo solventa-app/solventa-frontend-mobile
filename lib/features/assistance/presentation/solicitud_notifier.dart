@@ -49,9 +49,13 @@ final class SolicitudState {
     this.envio = const SinEnviar(),
     this.cancelando = false,
     this.falloCancelar,
+    this.polizaId,
   });
 
   final String idSolicitud;
+
+  /// v0.55 (KAN-36): la póliza de auto que cubre la asistencia.
+  final String? polizaId;
   final PrestadorCercano? cercano;
 
   /// Adónde debe llegar el prestador: el GPS o la dirección escrita ya
@@ -79,6 +83,7 @@ final class SolicitudState {
       prestador != null &&
       origen != null &&
       tipo != null &&
+      polizaId != null &&
       !tipoNoAtendido &&
       descripcion.trim().length <= ReglasSolicitud.maxDescripcion;
 
@@ -95,7 +100,9 @@ final class SolicitudState {
     bool? cancelando,
     Falla? falloCancelar,
     bool limpiarFalloCancelar = false,
+    String? polizaId,
   }) => SolicitudState(
+    polizaId: polizaId ?? this.polizaId,
     idSolicitud: idSolicitud,
     cercano: cercano,
     origen: origen,
@@ -138,9 +145,15 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
     origen: origen,
     direccionEscrita: direccionEscrita,
     tipo: cercano.prestador.tipo,
+    // v0.55: la póliza ya elegida sigue (es el mismo vehículo).
+    polizaId: state.polizaId,
   );
 
   void fijarTipo(TipoPrestador tipo) => state = state.copyWith(tipo: tipo);
+
+  /// v0.55: la póliza de auto elegida en M06-02 (o la única que tiene).
+  void fijarPoliza(String polizaId) =>
+      state = state.copyWith(polizaId: polizaId);
 
   void fijarTextos({String? descripcion}) =>
       state = state.copyWith(descripcion: descripcion);
@@ -169,12 +182,17 @@ final class SolicitudNotifier extends Notifier<SolicitudState> {
                 : OrigenUbicacion.direccion,
             descripcion: s.descripcion,
             direccion: s.direccionEscrita ?? '',
+            polizaId: s.polizaId,
           ),
         );
     await espera;
     if (!ref.mounted) return;
     // 4.5: confirmada, se programa la notificación de llegada.
-    if (r case Exito(:final valor)) unawaited(programarLlegada(ref, valor));
+    if (r case Exito(:final valor)) {
+      unawaited(programarLlegada(ref, valor));
+      // H1: el badge de «Mis asistencias» la cuenta sin abrir la pestaña.
+      unawaited(ref.read(misAsistenciasProvider.notifier).cargar());
+    }
     state = state.copyWith(
       intentos: s.intentos + 1,
       envio: switch (r) {

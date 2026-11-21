@@ -2338,6 +2338,7 @@ class Input$SolicitudAsistenciaInput {
     required double latitud,
     required double longitud,
     Enum$OrigenUbicacion? origenUbicacion,
+    String? polizaId,
   }) => Input$SolicitudAsistenciaInput._({
     r'idSolicitud': idSolicitud,
     r'prestadorId': prestadorId,
@@ -2347,6 +2348,7 @@ class Input$SolicitudAsistenciaInput {
     r'latitud': latitud,
     r'longitud': longitud,
     if (origenUbicacion != null) r'origenUbicacion': origenUbicacion,
+    if (polizaId != null) r'polizaId': polizaId,
   });
 
   Input$SolicitudAsistenciaInput._(this._$data);
@@ -2379,6 +2381,10 @@ class Input$SolicitudAsistenciaInput {
         (l$origenUbicacion as String),
       );
     }
+    if (data.containsKey('polizaId')) {
+      final l$polizaId = data['polizaId'];
+      result$data['polizaId'] = (l$polizaId as String?);
+    }
     return Input$SolicitudAsistenciaInput._(result$data);
   }
 
@@ -2401,6 +2407,8 @@ class Input$SolicitudAsistenciaInput {
 
   Enum$OrigenUbicacion? get origenUbicacion =>
       (_$data['origenUbicacion'] as Enum$OrigenUbicacion?);
+
+  String? get polizaId => (_$data['polizaId'] as String?);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -2427,6 +2435,10 @@ class Input$SolicitudAsistenciaInput {
       result$data['origenUbicacion'] = toJson$Enum$OrigenUbicacion(
         (l$origenUbicacion as Enum$OrigenUbicacion),
       );
+    }
+    if (_$data.containsKey('polizaId')) {
+      final l$polizaId = polizaId;
+      result$data['polizaId'] = l$polizaId;
     }
     return result$data;
   }
@@ -2492,6 +2504,15 @@ class Input$SolicitudAsistenciaInput {
     if (l$origenUbicacion != lOther$origenUbicacion) {
       return false;
     }
+    final l$polizaId = polizaId;
+    final lOther$polizaId = other.polizaId;
+    if (_$data.containsKey('polizaId') !=
+        other._$data.containsKey('polizaId')) {
+      return false;
+    }
+    if (l$polizaId != lOther$polizaId) {
+      return false;
+    }
     return true;
   }
 
@@ -2505,6 +2526,7 @@ class Input$SolicitudAsistenciaInput {
     final l$latitud = latitud;
     final l$longitud = longitud;
     final l$origenUbicacion = origenUbicacion;
+    final l$polizaId = polizaId;
     return Object.hashAll([
       l$idSolicitud,
       l$prestadorId,
@@ -2514,6 +2536,7 @@ class Input$SolicitudAsistenciaInput {
       l$latitud,
       l$longitud,
       _$data.containsKey('origenUbicacion') ? l$origenUbicacion : const {},
+      _$data.containsKey('polizaId') ? l$polizaId : const {},
     ]);
   }
 }
@@ -4371,6 +4394,117 @@ Enum$TipoPrestador fromJson$Enum$TipoPrestador(String value) {
   }
 }
 
+enum Enum$EspecialidadPrestador {
+  URGENCIAS,
+  MEDICINA_GENERAL,
+  MECANICA_GENERAL,
+  LLANTAS_Y_FRENOS,
+  GRUA_LIVIANA,
+  GRUA_Y_CARRO_TALLER,
+  $unknown;
+
+  factory Enum$EspecialidadPrestador.fromJson(String value) =>
+      fromJson$Enum$EspecialidadPrestador(value);
+
+  String toJson() => toJson$Enum$EspecialidadPrestador(this);
+}
+
+String toJson$Enum$EspecialidadPrestador(Enum$EspecialidadPrestador e) {
+  switch (e) {
+    case Enum$EspecialidadPrestador.URGENCIAS:
+      return r'URGENCIAS';
+    case Enum$EspecialidadPrestador.MEDICINA_GENERAL:
+      return r'MEDICINA_GENERAL';
+    case Enum$EspecialidadPrestador.MECANICA_GENERAL:
+      return r'MECANICA_GENERAL';
+    case Enum$EspecialidadPrestador.LLANTAS_Y_FRENOS:
+      return r'LLANTAS_Y_FRENOS';
+    case Enum$EspecialidadPrestador.GRUA_LIVIANA:
+      return r'GRUA_LIVIANA';
+    case Enum$EspecialidadPrestador.GRUA_Y_CARRO_TALLER:
+      return r'GRUA_Y_CARRO_TALLER';
+    case Enum$EspecialidadPrestador.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$EspecialidadPrestador fromJson$Enum$EspecialidadPrestador(String value) {
+  switch (value) {
+    case r'URGENCIAS':
+      return Enum$EspecialidadPrestador.URGENCIAS;
+    case r'MEDICINA_GENERAL':
+      return Enum$EspecialidadPrestador.MEDICINA_GENERAL;
+    case r'MECANICA_GENERAL':
+      return Enum$EspecialidadPrestador.MECANICA_GENERAL;
+    case r'LLANTAS_Y_FRENOS':
+      return Enum$EspecialidadPrestador.LLANTAS_Y_FRENOS;
+    case r'GRUA_LIVIANA':
+      return Enum$EspecialidadPrestador.GRUA_LIVIANA;
+    case r'GRUA_Y_CARRO_TALLER':
+      return Enum$EspecialidadPrestador.GRUA_Y_CARRO_TALLER;
+    default:
+      return Enum$EspecialidadPrestador.$unknown;
+  }
+}
+
+enum Enum$DiaSemana {
+  LUNES,
+  MARTES,
+  MIERCOLES,
+  JUEVES,
+  VIERNES,
+  SABADO,
+  DOMINGO,
+  $unknown;
+
+  factory Enum$DiaSemana.fromJson(String value) =>
+      fromJson$Enum$DiaSemana(value);
+
+  String toJson() => toJson$Enum$DiaSemana(this);
+}
+
+String toJson$Enum$DiaSemana(Enum$DiaSemana e) {
+  switch (e) {
+    case Enum$DiaSemana.LUNES:
+      return r'LUNES';
+    case Enum$DiaSemana.MARTES:
+      return r'MARTES';
+    case Enum$DiaSemana.MIERCOLES:
+      return r'MIERCOLES';
+    case Enum$DiaSemana.JUEVES:
+      return r'JUEVES';
+    case Enum$DiaSemana.VIERNES:
+      return r'VIERNES';
+    case Enum$DiaSemana.SABADO:
+      return r'SABADO';
+    case Enum$DiaSemana.DOMINGO:
+      return r'DOMINGO';
+    case Enum$DiaSemana.$unknown:
+      return r'$unknown';
+  }
+}
+
+Enum$DiaSemana fromJson$Enum$DiaSemana(String value) {
+  switch (value) {
+    case r'LUNES':
+      return Enum$DiaSemana.LUNES;
+    case r'MARTES':
+      return Enum$DiaSemana.MARTES;
+    case r'MIERCOLES':
+      return Enum$DiaSemana.MIERCOLES;
+    case r'JUEVES':
+      return Enum$DiaSemana.JUEVES;
+    case r'VIERNES':
+      return Enum$DiaSemana.VIERNES;
+    case r'SABADO':
+      return Enum$DiaSemana.SABADO;
+    case r'DOMINGO':
+      return Enum$DiaSemana.DOMINGO;
+    default:
+      return Enum$DiaSemana.$unknown;
+  }
+}
+
 enum Enum$EstadoAsistencia {
   CONFIRMADA,
   NO_CONFIRMADA,
@@ -4447,6 +4581,7 @@ enum Enum$CodigoErrorAsistencia {
   TIPO_NO_ATENDIDO,
   DATOS_INVALIDOS,
   NO_ENCONTRADA,
+  POLIZA_NO_VALIDA,
   $unknown;
 
   factory Enum$CodigoErrorAsistencia.fromJson(String value) =>
@@ -4465,6 +4600,8 @@ String toJson$Enum$CodigoErrorAsistencia(Enum$CodigoErrorAsistencia e) {
       return r'DATOS_INVALIDOS';
     case Enum$CodigoErrorAsistencia.NO_ENCONTRADA:
       return r'NO_ENCONTRADA';
+    case Enum$CodigoErrorAsistencia.POLIZA_NO_VALIDA:
+      return r'POLIZA_NO_VALIDA';
     case Enum$CodigoErrorAsistencia.$unknown:
       return r'$unknown';
   }
@@ -4480,6 +4617,8 @@ Enum$CodigoErrorAsistencia fromJson$Enum$CodigoErrorAsistencia(String value) {
       return Enum$CodigoErrorAsistencia.DATOS_INVALIDOS;
     case r'NO_ENCONTRADA':
       return Enum$CodigoErrorAsistencia.NO_ENCONTRADA;
+    case r'POLIZA_NO_VALIDA':
+      return Enum$CodigoErrorAsistencia.POLIZA_NO_VALIDA;
     default:
       return Enum$CodigoErrorAsistencia.$unknown;
   }

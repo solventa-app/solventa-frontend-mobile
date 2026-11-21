@@ -18,6 +18,9 @@ import 'package:solventa_mobile/features/assistance/presentation/pages/m06_02_so
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
 import 'package:solventa_mobile/features/assistance/presentation/widgets/detalle_prestador.dart';
 import 'package:solventa_mobile/features/assistance/presentation/widgets/mapa/mapa_datos.dart';
+import 'package:solventa_mobile/features/claims/data/datasources/reporte_siniestro_remote_datasource.dart';
+import 'package:solventa_mobile/features/claims/presentation/providers.dart'
+    show reporteSiniestroRemoteDataSourceProvider;
 
 import 'golden_helpers.dart';
 
@@ -225,12 +228,21 @@ void main() {
       textScaleFactor: escala,
       constraints: BoxConstraints.tight(Size(ancho, 760)),
       builder: () {
-        final contenedor = ProviderContainer()
-          ..read(solicitudProvider.notifier).iniciar(
-            cercano,
-            const Coordenada(4.6729, -74.0512),
-            direccionEscrita: 'Cra 45 # 22-18',
-          );
+        final contenedor =
+            ProviderContainer(
+                overrides: [
+                  reporteSiniestroRemoteDataSourceProvider.overrideWithValue(
+                    FakeReporteSiniestroRemoteDataSource(
+                      latencia: Duration.zero,
+                    ),
+                  ),
+                ],
+              )
+              ..read(solicitudProvider.notifier).iniciar(
+                cercano,
+                const Coordenada(4.6729, -74.0512),
+                direccionEscrita: 'Cra 45 # 22-18',
+              );
         return UncontrolledProviderScope(
           container: contenedor,
           child: conL10n(const M0602SolicitudPage(), locale),

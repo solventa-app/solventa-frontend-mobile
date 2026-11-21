@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 
 import 'soporte/capturas.dart';
 
@@ -12,6 +13,8 @@ import 'soporte/capturas.dart';
 /// prueba falla, flutter_test no desmonta el árbol de widgets, así que en el
 /// tearDown la pantalla sigue tal como estaba en el momento del fallo.
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
+  // Sin bucles de ambiente: no dejarían terminar a pumpAndSettle.
+  SolMotion.animacionesContinuas = false;
   if (capturasActivas) {
     var fallo = false;
     final reportarOriginal = reportTestException;

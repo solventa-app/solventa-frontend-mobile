@@ -173,6 +173,7 @@ class SolLiveCameraFrame extends ConsumerStatefulWidget {
     this.labelIcon,
     this.guideLabel,
     this.frontal = false,
+    this.faceGuide,
   });
 
   final SolCameraFrameShape shape;
@@ -181,6 +182,7 @@ class SolLiveCameraFrame extends ConsumerStatefulWidget {
   final IconData? labelIcon;
   final String? guideLabel;
   final bool frontal;
+  final Widget? faceGuide;
 
   @override
   ConsumerState<SolLiveCameraFrame> createState() => _SolLiveCameraFrameState();
@@ -259,6 +261,9 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
         // legible y el rostro del documento muy pequeño para el face-match.
         ResolutionPreset.high,
         enableAudio: false,
+        // El video de la prueba de vida dura 15 s: a 2 Mbps pesa ~4 MB, lejos
+        // del tope de 15 MB del almacenamiento. No cambia la calidad de las fotos.
+        videoBitrate: 2000000,
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
       await _enSerieCamara(ctrl.initialize);
@@ -369,6 +374,7 @@ class _SolLiveCameraFrameState extends ConsumerState<SolLiveCameraFrame>
       guideLabel: widget.guideLabel,
       instruction: widget.instruction,
       preview: preview,
+      faceGuide: widget.faceGuide,
     );
   }
 }

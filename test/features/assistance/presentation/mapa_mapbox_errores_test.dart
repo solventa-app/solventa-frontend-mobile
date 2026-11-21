@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:solventa_mobile/features/assistance/presentation/widgets/mapa/mapa_datos.dart';
 import 'package:solventa_mobile/features/assistance/presentation/widgets/mapa/mapa_mapbox.dart';
 
@@ -12,6 +13,7 @@ void main() {
           estilo: EstiloMapa.satelite,
           yaAvisado: null,
           fuente: fuenteSateliteMapbox,
+          tipo: MapLoadErrorType.STYLE,
         ),
         isTrue,
       );
@@ -20,6 +22,7 @@ void main() {
           estilo: EstiloMapa.satelite,
           yaAvisado: EstiloMapa.satelite,
           fuente: fuenteSateliteMapbox,
+          tipo: MapLoadErrorType.STYLE,
         ),
         isFalse,
       );
@@ -33,6 +36,7 @@ void main() {
           estilo: EstiloMapa.calles,
           yaAvisado: null,
           fuente: fuenteSateliteMapbox,
+          tipo: MapLoadErrorType.STYLE,
         ),
         isFalse,
       );
@@ -45,6 +49,7 @@ void main() {
             estilo: EstiloMapa.calles,
             yaAvisado: null,
             fuente: fuente,
+            tipo: MapLoadErrorType.STYLE,
           ),
           isTrue,
           reason: 'fuente: $fuente',
@@ -54,6 +59,7 @@ void main() {
             estilo: EstiloMapa.calles,
             yaAvisado: EstiloMapa.calles,
             fuente: fuente,
+            tipo: MapLoadErrorType.STYLE,
           ),
           isFalse,
           reason: 'fuente: $fuente',
@@ -69,6 +75,69 @@ void main() {
           estilo: EstiloMapa.satelite,
           yaAvisado: EstiloMapa.calles,
           fuente: fuenteSateliteMapbox,
+          tipo: MapLoadErrorType.STYLE,
+        ),
+        isTrue,
+      );
+    });
+
+    test(
+      'una tesela suelta, un sprite o una tipografía no esconden el mapa',
+      () {
+        for (final tipo in [
+          MapLoadErrorType.TILE,
+          MapLoadErrorType.SPRITE,
+          MapLoadErrorType.GLYPHS,
+        ]) {
+          expect(
+            avisarErrorDeCarga(
+              estilo: EstiloMapa.calles,
+              yaAvisado: null,
+              fuente: 'composite',
+              tipo: tipo,
+              teselasFallidas: 1,
+            ),
+            isFalse,
+            reason: tipo.name,
+          );
+        }
+      },
+    );
+
+    test('el estilo o una fuente entera sí lo esconden', () {
+      for (final tipo in [MapLoadErrorType.STYLE, MapLoadErrorType.SOURCE]) {
+        expect(
+          avisarErrorDeCarga(
+            estilo: EstiloMapa.calles,
+            yaAvisado: null,
+            fuente: null,
+            tipo: tipo,
+          ),
+          isTrue,
+          reason: tipo.name,
+        );
+      }
+    });
+
+    test('muchas teselas del satélite seguidas cuentan como caído', () {
+      // La cuenta sin el producto de satélite: fallan todas las teselas.
+      expect(
+        avisarErrorDeCarga(
+          estilo: EstiloMapa.satelite,
+          yaAvisado: null,
+          fuente: fuenteSateliteMapbox,
+          tipo: MapLoadErrorType.TILE,
+          teselasFallidas: teselasParaRendirse - 1,
+        ),
+        isFalse,
+      );
+      expect(
+        avisarErrorDeCarga(
+          estilo: EstiloMapa.satelite,
+          yaAvisado: null,
+          fuente: fuenteSateliteMapbox,
+          tipo: MapLoadErrorType.TILE,
+          teselasFallidas: teselasParaRendirse,
         ),
         isTrue,
       );

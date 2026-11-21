@@ -18,6 +18,9 @@ import 'package:solventa_mobile/features/assistance/presentation/pages/m06_04_re
 import 'package:solventa_mobile/features/assistance/presentation/pages/m06_06_cancelada_page.dart';
 import 'package:solventa_mobile/features/assistance/presentation/providers.dart';
 import 'package:solventa_mobile/features/assistance/presentation/solicitud_notifier.dart';
+import 'package:solventa_mobile/features/claims/data/datasources/reporte_siniestro_remote_datasource.dart';
+import 'package:solventa_mobile/features/claims/presentation/providers.dart'
+    show reporteSiniestroRemoteDataSourceProvider;
 
 /// HU-M06 desde «Solicitar» (M06-02 a M06-06) con el fake del BFF, que se
 /// comporta como CLAIMS con `primero_falla`: el primer envío no se confirma y
@@ -31,8 +34,12 @@ void main() {
   final clinica = prestadorDesdeMapa(AsistenciaFixtures.prestadores.first)!;
   const origen = Coordenada(4.6760, -74.0480);
 
-  Future<void> abrir(WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 1400);
+  Future<void> abrir(
+    WidgetTester tester, {
+    Size tamano = const Size(390, 1400),
+    double textoEscala = 1,
+  }) async {
+    tester.view.physicalSize = tamano;
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     void ir(BuildContext context, String a) {
@@ -71,6 +78,9 @@ void main() {
     contenedor = ProviderContainer(
       overrides: [
         asistenciaRemoteDataSourceProvider.overrideWithValue(bff),
+        reporteSiniestroRemoteDataSourceProvider.overrideWithValue(
+          FakeReporteSiniestroRemoteDataSource(latencia: Duration.zero),
+        ),
         catalogoLocalDataSourceProvider.overrideWithValue(
           MemoriaCatalogoLocalDataSource(),
         ),
@@ -97,6 +107,11 @@ void main() {
           locale: AppLocales.es,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: TextScaler.linear(textoEscala)),
+            child: child!,
+          ),
           routerConfig: router,
         ),
       ),
@@ -105,7 +120,13 @@ void main() {
   }
 
   Future<void> elegirTipo(WidgetTester tester, String tipo) async {
-    await tester.tap(find.byType(SolTextField).first);
+    // v0.55: el primero es el de la póliza; el del tipo, por su etiqueta.
+    await tester.tap(
+      find.ancestor(
+        of: find.text('Tipo de asistencia'),
+        matching: find.byType(SolTextField),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text(tipo).last);
     await tester.pumpAndSettle();
@@ -121,6 +142,27 @@ void main() {
     rutas = FakeRutaExternaService();
     destino = null;
   });
+
+  // Responsive (pedido de felipe): teléfonos bajos y texto grande, de la
+  // solicitud a la confirmación, sin desbordes.
+  for (final (tamano, escala) in const [
+    (Size(320, 568), 1.0),
+    (Size(360, 640), 1.3),
+    (Size(360, 740), 2.0),
+  ]) {
+    testWidgets(
+      'M06-02 a M06-04 sin desbordes · ${tamano.width.toInt()}×${tamano.height.toInt()} · texto ${(escala * 100).toInt()} %',
+      (tester) async {
+        await abrir(tester, tamano: tamano, textoEscala: escala);
+        expect(tester.takeException(), isNull);
+        await elegirTipo(tester, 'Mecánica');
+        expect(tester.takeException(), isNull);
+        await tester.ensureVisible(find.text('Enviar solicitud'));
+        await enviar(tester);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 
   testWidgets('M06-02 muestra el prestador, la ubicación y el tiempo', (
     tester,
@@ -199,7 +241,7 @@ void main() {
     (tester) async {
       await abrir(tester);
       await elegirTipo(tester, 'Médica');
-      await tester.enterText(find.byType(TextField).at(1), 'Dolor en el pecho');
+      await tester.enterText(find.byType(TextField).last, 'Dolor en el pecho');
       await enviar(tester);
 
       // M06-04b: la causa y las dos salidas.
@@ -285,5 +327,37 @@ void main() {
     expect(find.textContaining('Solicitud confirmada'), findsOneWidget);
     // El reintento usa el mismo idSolicitud que el envío que falló.
     expect(bff.solicitudes.map((s) => s['idSolicitud']).toSet(), hasLength(1));
+  });
+
+  // ---------- v0.55 (KAN-36): la póliza de auto que cubre la asistencia ----------
+
+  testWidgets('con una sola póliza de auto viene elegida y viaja con la '
+      'solicitud; la hipotecaria no se ofrece', (tester) async {
+    await abrir(tester);
+    expect(find.text('Póliza que cubre la asistencia'), findsOneWidget);
+    expect(find.text('MAZDA ABC•••'), findsOneWidget);
+    await tester.tap(find.text('MAZDA ABC•••'));
+    await tester.pumpAndSettle();
+    // La de vida del crédito hipotecario (SOL-2026-000123) no aparece.
+    expect(find.textContaining('SOL-2026-000123'), findsNothing);
+    expect(find.text('Póliza SOL-2026-000456'), findsOneWidget);
+    await tester.tap(find.text('Póliza SOL-2026-000456'));
+    await tester.pumpAndSettle();
+    bff.confirmarSiempre = true;
+    await enviar(tester);
+    expect(bff.solicitudes.single['polizaId'], 'pol-demo-02');
+  });
+
+  testWidgets('el rechazo POLIZA_NO_VALIDA se explica en el resultado', (
+    tester,
+  ) async {
+    await abrir(tester);
+    bff.rechazo = 'POLIZA_NO_VALIDA';
+    await enviar(tester);
+    expect(
+      find.textContaining('Esa póliza no cubre la asistencia'),
+      findsOneWidget,
+    );
+    expect(find.text('Reintentar'), findsNothing); // no cambia por reenviar
   });
 }

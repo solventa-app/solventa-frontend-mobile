@@ -36,12 +36,15 @@ sin push y sin backend. La feature vive en `lib/features/parametric/`.
    Hace falta diseño y que el backend entregue esos datos.
 2. **Moneda.** Los criterios de M04-02 piden el monto «en la moneda seleccionada en la barra superior». Hoy se muestra
    en COP con `SolFormat.currency`, igual que M05. Falta la conversión (tasa del BFF) para las 7 monedas.
-3. **Navegación:** rutas `m04-02`, `m04-03` y `m04-04` en `router.dart`, conectar los callbacks (push → M04-02 → «Ver
-   detalle» → M04-03; M04-04 desde Home o desde el perfil).
-4. **Push M04-01** (banner, Figma `2005:286`) y FCM real con registro del dispositivo (KAN-138, KAN-259; falta
-   `firebase_messaging`).
-5. **Contrato y backend:** consulta de cobertura e indemnizaciones paramétricas; cuando exista, crear
-   `GqlCoberturaRemoteDataSource` y elegirlo con `usarFakesProvider`.
+3. ~~**Navegación**~~ hecho (KAN-259, #102): rutas `m04-02`, `m04-03` y `m04-04` en `router.dart`; tocar el push sin
+   sesión o con la sesión bloqueada guarda la ruta y sigue a ella tras el login o el desbloqueo; M04-04 desde Home.
+   Lo cubre `integration_test/push_m04_test.dart` (5 casos con la app entera: con sesión, aviso en primer plano, sin
+   sesión, sesión bloqueada y Mi cobertura desde el inicio).
+4. ~~**Push M04-01 y FCM**~~ hecho (KAN-259, #101): `firebase_messaging`, canal `avisos_push` de importancia alta y
+   aviso propio con la app abierta. El banner con el diseño de Figma `2005:286` sigue pendiente.
+5. ~~**Contrato y backend**~~ hecho: `indemnizacion` y `miCoberturaParametrica` (contrato v0.48) con
+   `GqlCoberturaRemoteDataSource`. La cadena del backend se prueba con `scripts/probar_m04_local.py` en
+   `solventa-backend`.
 6. **Total indemnizado:** decidir si suma todas las pólizas (así lo muestra el mockup: $ 950.000) o solo la vigente.
 7. **Pruebas fuera de esta máquina.** Aquí solo se corren, en la imagen del devcontainer, el análisis, las pruebas
    unitarias y de widget y los goldens. Quedan pendientes:

@@ -292,33 +292,43 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
   void marcarConsentimiento(bool valor) =>
       state = state.copyWith(consentimientoMarcado: valor, limpiarFalla: true);
 
-  /// M01-02: inicia el recorrido y registra el consentimiento. `true` si quedó.
+  /// M01-02: abre un recorrido **nuevo** y registra el consentimiento. `true`
+  /// si quedó.
+  ///
+  /// KAN-31: aceptar el consentimiento siempre empieza una verificación limpia.
+  /// Se descartan las fotos, el video y el resultado que hubiera en memoria y
+  /// el recorrido anterior: antes se registraba el consentimiento sobre ese
+  /// recorrido viejo (por ejemplo, uno rechazado sin intentos), M01-02 no
+  /// avanzaba y la cédula no se podía volver a tomar. El backend deja sin
+  /// piezas los recorridos abiertos anteriores y limita los rechazados a 3 por
+  /// día (`RECORRIDOS_AGOTADOS`).
   Future<bool> registrarConsentimiento() async {
     if (!state.consentimientoMarcado || state.registrandoConsentimiento) {
       return false;
     }
-    state = state.copyWith(registrandoConsentimiento: true, limpiarFalla: true);
-    final r = await ref
-        .read(onboardingRepositoryProvider)
-        .iniciarConConsentimiento(versionTexto: versionTexto);
+    _capturasEnMemoria.clear();
+    _subidas.clear();
+    unawaited(limpiarCacheCapturas());
+    final repo = ref.read(onboardingRepositoryProvider)..descartarRecorrido();
+    state = state.copyWith(
+      registrandoConsentimiento: true,
+      frenteCapturado: false,
+      reversoCapturado: false,
+      rostroCapturado: false,
+      videoCapturado: false,
+      consultasAgotadas: false,
+      limpiarVerificacion: true,
+      limpiarFalla: true,
+    );
+    final r = await repo.iniciarConConsentimiento(versionTexto: versionTexto);
     switch (r) {
       case Exito(:final valor):
-        if (valor.id != state.onboarding?.id) {
-          // Recorrido nuevo (el anterior ya no admitía intentos): las capturas
-          // y el resultado del recorrido viejo no le sirven.
-          _capturasEnMemoria.clear();
-          _subidas.clear();
-          state = state.copyWith(
-            frenteCapturado: false,
-            reversoCapturado: false,
-            rostroCapturado: false,
-            videoCapturado: false,
-            consultasAgotadas: false,
-            limpiarVerificacion: true,
-          );
-        }
         state = state.copyWith(
           registrandoConsentimiento: false,
+          // La casilla nunca vuelve marcada: si quedaba marcada, al volver a
+          // M01-02 tras un rechazo, tocarla la desmarcaba y «Continuar» se
+          // quedaba inactivo (M01-02 «no dejaba pasar», KAN-31).
+          consentimientoMarcado: false,
           onboarding: valor,
         );
         return true;
@@ -383,6 +393,12 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
       limpiarFalla: true,
     );
   }
+
+  /// KAN-31: tras un rechazo del rostro (`ROSTRO_NO_COINCIDE` o
+  /// `SUPLANTACION`) la persona puede volver a tomar la cédula: muchas veces el
+  /// rostro no coincide por una foto mala del documento. El recorrido ya volvió
+  /// a `INICIADO` y las piezas nuevas reemplazan a las anteriores.
+  void cambiarFotosDocumento() => repetirFrente();
 
   void repetirReverso() {
     _capturasEnMemoria.remove(PasoOnboarding.reverso);

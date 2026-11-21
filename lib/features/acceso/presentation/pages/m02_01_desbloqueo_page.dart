@@ -274,14 +274,9 @@ class _Desbloqueo extends StatelessWidget {
                 onPressed: onUsarCorreo,
               ),
             ] else if (avisoConPin || aviso == null) ...[
-              // Siempre dos salidas (M02-01a): el bloqueo del teléfono y el correo con contraseña. También sin aviso:
-              // quien cierra el diálogo de la huella sin elegir nada no se queda sin cómo entrar. Con el teléfono que
-              // solo tiene bloqueo, el ícono ya abre ese diálogo y el enlace sobraría.
-              if (aviso != null || tipo != TipoBiometria.ninguna)
-                SolLinkButton(
-                  label: l10n.m0201UsarBloqueo,
-                  onPressed: ocupado ? null : onUsarPin,
-                ),
+              // Una sola alternativa a la huella: correo y contraseña (pedido de felipe, 2026-11-21; antes también
+              // estaba «Usar el bloqueo del teléfono»). También sin aviso: quien cierra el diálogo de la huella sin
+              // elegir nada no se queda sin cómo entrar.
               SolLinkButton(
                 label: l10n.m0201UsarCorreo,
                 onPressed: ocupado ? null : onUsarCorreo,
@@ -393,11 +388,6 @@ class _NoReconocida extends StatelessWidget {
             ),
             const SizedBox(height: SolSpacing.sm),
             SolButton.tonal(
-              label: l10n.m0201UsarBloqueo,
-              onPressed: ocupado ? null : onUsarPin,
-            ),
-            const SizedBox(height: SolSpacing.xs),
-            SolLinkButton(
               label: l10n.m0201UsarCorreo,
               onPressed: ocupado ? null : onUsarCorreo,
             ),

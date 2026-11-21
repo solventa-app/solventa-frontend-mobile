@@ -1,4 +1,4 @@
-# HU-M06 (KAN-36): catálogo maestro de prestadores, contrato v0.36 (v0.49: detalle y GRUA). Con `versionLocal` igual a la vigente el BFF responde
+# HU-M06 (KAN-36): catálogo maestro de prestadores, contrato v0.36 (v0.49: detalle y GRUA; v0.53: especialidad y horario como datos). Con `versionLocal` igual a la vigente el BFF responde
 # `vigente: true` y la lista vacía (la app sigue con su copia).
 query CatalogoPrestadores($versionLocal: String) {
   catalogoPrestadores(versionLocal: $versionLocal) {
@@ -17,6 +17,14 @@ query CatalogoPrestadores($versionLocal: String) {
       direccion
       horario
       fotoUrl
+      codigoEspecialidad
+      horarioAtencion {
+        abierto24h
+        diaDesde
+        diaHasta
+        abre
+        cierra
+      }
     }
   }
 }

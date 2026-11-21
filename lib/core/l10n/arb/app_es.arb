@@ -104,9 +104,9 @@
   "@m0105Titulo": {
     "description": "M01-05 barra superior"
   },
-  "m0105Instruccion": "Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.",
+  "m0105Instruccion": "Pon tu rostro dentro del óvalo y toca «Grabar video».",
   "@m0105Instruccion": {
-    "description": "M01-05 instrucción antes de grabar"
+    "description": "M01-05 instrucción antes de grabar (los pasos van debajo del visor)"
   },
   "verificacionTitulo": "Verificación",
   "@verificacionTitulo": {
@@ -120,6 +120,18 @@
   "@m0107aMensaje": {
     "description": "M01-07a"
   },
+  "m0107aDocumento": "Documento auténtico",
+  "@m0107aDocumento": {
+    "description": "M01-07a resumen: el documento pasó la verificación de autenticidad (KAN-130)"
+  },
+  "m0107aPruebaVida": "Prueba de vida superada",
+  "@m0107aPruebaVida": {
+    "description": "M01-07a resumen: la prueba de vida pasó (KAN-130)"
+  },
+  "m0107aRostro": "Tu rostro coincide con el documento",
+  "@m0107aRostro": {
+    "description": "M01-07a resumen: el rostro coincide con la foto del documento (KAN-130)"
+  },
   "m0107aAccion": "Activar huella o rostro",
   "@m0107aAccion": {
     "description": "M01-07a botón"
@@ -132,9 +144,13 @@
   "@m0107bAccion": {
     "description": "M01-07b botón"
   },
-  "m0107cMensaje": "No pudimos verificar tu documento (imagen ilegible)",
+  "m0107cMensaje": "No pudimos leer bien tu documento. Tómale de nuevo las fotos con buena luz, sin reflejos y con la cédula completa dentro del marco.",
   "@m0107cMensaje": {
-    "description": "M01-07c"
+    "description": "M01-07c: ILEGIBLE o motivo desconocido"
+  },
+  "m0107cFallaTecnica": "No pudimos terminar tu verificación por un problema técnico. No perdiste ningún intento: inténtalo de nuevo.",
+  "@m0107cFallaTecnica": {
+    "description": "M01-07c y tarjeta del inicio: rechazo técnico (PROVEEDOR_NO_DISPONIBLE o IMAGEN_NO_DISPONIBLE, KAN-131), no gasta intento"
   },
   "reintentar": "Reintentar",
   "@reintentar": {
@@ -273,11 +289,11 @@
   "@irAlInicio": {
     "description": "Botón ir al inicio"
   },
-  "m0107cRostro": "El rostro del video no coincide con el del documento.",
+  "m0107cRostro": "El rostro del video no coincide con el de tu documento. Grábalo de nuevo de frente, con buena luz y sin gafas, gorra ni tapabocas.",
   "@m0107cRostro": {
     "description": "M01-07c: ROSTRO_NO_COINCIDE"
   },
-  "m0107cSuplantacion": "No pudimos confirmar que la prueba de vida la hiciste tú, en vivo.",
+  "m0107cSuplantacion": "No pudimos confirmar que la prueba de vida la hiciste tú, en vivo. Grábala de nuevo tú mismo, sin fotos ni pantallas frente a la cámara.",
   "@m0107cSuplantacion": {
     "description": "M01-07c: SUPLANTACION"
   },
@@ -289,7 +305,7 @@
   "@m0107cDocumentoRegistrado": {
     "description": "M01-07c: DOCUMENTO_YA_REGISTRADO"
   },
-  "m0107cSinIntentos": "Ya no quedan intentos. Escríbenos a soporte para revisar tu caso.",
+  "m0107cSinIntentos": "Ya no quedan intentos en esta verificación. Desde el inicio puedes empezar una nueva.",
   "@m0107cSinIntentos": {
     "description": "M01-07c: sin intentos"
   },
@@ -978,7 +994,7 @@
   "@m0502Ubicada": {
     "description": "M05-02 ubicación obtenida"
   },
-  "m0502SinUbicacion": "Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.",
+  "m0502SinUbicacion": "No tenemos tu GPS. Actívalo o escribe la dirección donde pasó el siniestro.",
   "@m0502SinUbicacion": {
     "description": "M05-02 sin permiso de ubicación"
   },
@@ -2026,5 +2042,371 @@
   "m0503CiudadOtra": "Otra ciudad",
   "@m0503CiudadOtra": {
     "description": "M05-03 opción para escribir una ciudad que no está en la lista"
+  },
+  "asistenciaCanalNombre": "Asistencias",
+  "@asistenciaCanalNombre": {
+    "description": "Nombre del canal de notificaciones en Ajustes de Android (H3)"
+  },
+  "asistenciaCanalDescripcion": "Aviso cuando llega el prestador de una asistencia",
+  "@asistenciaCanalDescripcion": {
+    "description": "Descripción del canal de notificaciones en Ajustes de Android (H3)"
+  },
+  "ubicacionPrivacidad": "Tu ubicación viaja cifrada a Solventa y a nuestro proveedor de mapas solo para calcular las rutas. Guardamos un registro cifrado durante 90 días para auditoría.",
+  "@ubicacionPrivacidad": {
+    "description": "Aviso de privacidad de la ubicación en M06-01 (H5, contrato v0.51)"
+  },
+  "m0601EspecialidadUrgencias": "Urgencias",
+  "@m0601EspecialidadUrgencias": {
+    "description": "Especialidad URGENCIAS (v0.53)"
+  },
+  "m0601EspecialidadMedicinaGeneral": "Medicina general",
+  "@m0601EspecialidadMedicinaGeneral": {
+    "description": "Especialidad MEDICINA_GENERAL (v0.53)"
+  },
+  "m0601EspecialidadMecanicaGeneral": "Mecánica general",
+  "@m0601EspecialidadMecanicaGeneral": {
+    "description": "Especialidad MECANICA_GENERAL (v0.53)"
+  },
+  "m0601EspecialidadLlantasYFrenos": "Llantas y frenos",
+  "@m0601EspecialidadLlantasYFrenos": {
+    "description": "Especialidad LLANTAS_Y_FRENOS (v0.53)"
+  },
+  "m0601EspecialidadGruaLiviana": "Grúa liviana",
+  "@m0601EspecialidadGruaLiviana": {
+    "description": "Especialidad GRUA_LIVIANA (v0.53)"
+  },
+  "m0601EspecialidadGruaYCarroTaller": "Grúa y carro taller",
+  "@m0601EspecialidadGruaYCarroTaller": {
+    "description": "Especialidad GRUA_Y_CARRO_TALLER (v0.53)"
+  },
+  "m0601Abierto24h": "Abierto 24 h",
+  "@m0601Abierto24h": {
+    "description": "Horario del prestador abierto 24 h (v0.53)"
+  },
+  "m0601TodosLosDias": "Todos los días",
+  "@m0601TodosLosDias": {
+    "description": "Horario del prestador de lunes a domingo (v0.53)"
+  },
+  "m0601RangoDias": "{desde} a {hasta}",
+  "@m0601RangoDias": {
+    "description": "Rango de días del horario: «lun a sáb» (v0.53)",
+    "placeholders": {
+      "desde": {
+        "type": "String"
+      },
+      "hasta": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601Horario": "{dias}, {abre} a {cierra}",
+  "@m0601Horario": {
+    "description": "Horario del prestador: «Lun a sáb, 7:00 a. m. a 7:00 p. m.» (v0.53)",
+    "placeholders": {
+      "dias": {
+        "type": "String"
+      },
+      "abre": {
+        "type": "String"
+      },
+      "cierra": {
+        "type": "String"
+      }
+    }
+  },
+  "m0601DiaLunes": "lun",
+  "@m0601DiaLunes": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaMartes": "mar",
+  "@m0601DiaMartes": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaMiercoles": "mié",
+  "@m0601DiaMiercoles": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaJueves": "jue",
+  "@m0601DiaJueves": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaViernes": "vie",
+  "@m0601DiaViernes": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaSabado": "sáb",
+  "@m0601DiaSabado": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0601DiaDomingo": "dom",
+  "@m0601DiaDomingo": {
+    "description": "Día abreviado del horario (v0.53)"
+  },
+  "m0105CambiarDocumento": "Cambiar fotos del documento",
+  "@m0105CambiarDocumento": {
+    "description": "M01-05 y M01-07c: tras un rechazo del rostro, vuelve a tomar la cédula (KAN-31)"
+  },
+  "fallaRecorridosAgotados": "Hoy ya no puedes intentar la verificación otra vez. Vuelve mañana.",
+  "@fallaRecorridosAgotados": {
+    "description": "RECORRIDOS_AGOTADOS: 3 verificaciones rechazadas en 24 h (contrato v0.56)"
+  },
+  "m0602Poliza": "Póliza que cubre la asistencia",
+  "@m0602Poliza": {
+    "description": "M06-02 selector de póliza (v0.55)"
+  },
+  "m0602PolizaElegir": "Elige la póliza de tu vehículo",
+  "@m0602PolizaElegir": {
+    "description": "M06-02 selector de póliza sin elegir"
+  },
+  "m0602PolizaCargando": "Buscando tus pólizas…",
+  "@m0602PolizaCargando": {
+    "description": "M06-02 cargando pólizas"
+  },
+  "m0602PolizaRequerida": "Elige la póliza de tu vehículo para enviar la solicitud.",
+  "@m0602PolizaRequerida": {
+    "description": "M06-02 error: falta la póliza"
+  },
+  "m0602SinPoliza": "Para pedir asistencia necesitas una póliza de vehículo vigente.",
+  "@m0602SinPoliza": {
+    "description": "M06-02 sin pólizas de auto vigentes"
+  },
+  "m0602PolizaNoValida": "Esa póliza no cubre la asistencia. Elige una póliza de vehículo vigente.",
+  "@m0602PolizaNoValida": {
+    "description": "M06-04b rechazo POLIZA_NO_VALIDA"
+  },
+  "m0602PolizaNumero": "Póliza {numero}",
+  "@m0602PolizaNumero": {
+    "description": "M06-02 número de póliza",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0105AvisoDuracion": "Grabaremos 15 segundos: gira la cara a la izquierda, luego a la derecha y vuelve al centro. Verás el tiempo mientras avanza.",
+  "@m0105AvisoDuracion": {
+    "description": "M01-05 aviso previo de la duración y los pasos de la grabación"
+  },
+  "m0105GrabandoTiempo": "Grabando · {transcurrido} / {total}",
+  "@m0105GrabandoTiempo": {
+    "description": "M01-05 etiqueta sobre el visor mientras graba, con el tiempo que avanza (00:07 / 00:15)",
+    "placeholders": {
+      "transcurrido": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "m0105PasoIzquierda": "Izquierda",
+  "@m0105PasoIzquierda": {
+    "description": "M01-05 paso 1 de la grabación"
+  },
+  "m0105PasoDerecha": "Derecha",
+  "@m0105PasoDerecha": {
+    "description": "M01-05 paso 2 de la grabación"
+  },
+  "m0105PasoCentro": "Centro",
+  "@m0105PasoCentro": {
+    "description": "M01-05 paso 3 de la grabación"
+  },
+  "m0105GiraIzquierda": "Gira la cara despacio hacia la izquierda",
+  "@m0105GiraIzquierda": {
+    "description": "M01-05 instrucción del paso 1"
+  },
+  "m0105GiraDerecha": "Ahora gírala despacio hacia la derecha",
+  "@m0105GiraDerecha": {
+    "description": "M01-05 instrucción del paso 2"
+  },
+  "m0105MiraCentro": "Vuelve al centro y mira la cámara",
+  "@m0105MiraCentro": {
+    "description": "M01-05 instrucción del paso 3"
+  },
+  "m0105Listo": "¡Listo! Ya tenemos tu video.",
+  "@m0105Listo": {
+    "description": "M01-05 al terminar los 15 s"
+  },
+  "fallaGenericaOnboarding": "No pudimos completar este paso. Toca «Reintentar envío»; si sigue fallando, empieza de nuevo la verificación.",
+  "@fallaGenericaOnboarding": {
+    "description": "Onboarding: error inesperado con salida (reintentar o empezar de nuevo)"
+  },
+  "asistenciaEnCaminoTitulo": "Tu asistencia va en camino",
+  "@asistenciaEnCaminoTitulo": {
+    "description": "Notificación fija mientras el prestador va en camino"
+  },
+  "asistenciaEnCaminoCuerpo": "{prestador} va hacia tu ubicación. Toca para ver el detalle.",
+  "@asistenciaEnCaminoCuerpo": {
+    "description": "Cuerpo de la notificación fija de en camino",
+    "placeholders": {
+      "prestador": {
+        "type": "String"
+      }
+    }
+  },
+  "asistenciaEnCaminoCanalNombre": "Asistencia en curso",
+  "@asistenciaEnCaminoCanalNombre": {
+    "description": "Canal silencioso de la notificación fija de en camino"
+  },
+  "asistenciaEnCaminoCanalDescripcion": "Muestra la cuenta regresiva mientras el prestador va en camino",
+  "@asistenciaEnCaminoCanalDescripcion": {
+    "description": "Descripción del canal de en camino en Ajustes de Android"
+  },
+  "m0502EscribirDireccion": "Escribir la dirección",
+  "@m0502EscribirDireccion": {
+    "description": "M05-02 abre la búsqueda de dirección (Places) cuando no hay GPS"
+  },
+  "m0502UbicadaDireccion": "Ubicación: {direccion}",
+  "@m0502UbicadaDireccion": {
+    "description": "M05-02 ubicación tomada de la dirección escrita",
+    "placeholders": {
+      "direccion": {
+        "type": "String"
+      }
+    }
+  },
+  "m0502CambiarDireccion": "Cambiar dirección",
+  "@m0502CambiarDireccion": {
+    "description": "M05-02 vuelve a abrir la búsqueda de dirección"
+  },
+  "m0507ValorandoDano": "El plazo de revisión venció. Como hay que valorar el daño, un operador revisará tu caso y verás el resultado aquí.",
+  "@m0507ValorandoDano": {
+    "description": "M05-07 plazo vencido sin aprobación automática (auto parcial o RC)"
+  },
+  "m0507Fotos": "Fotos que enviaste",
+  "@m0507Fotos": {
+    "description": "M05-07 título del carrusel de fotos"
+  },
+  "m0507Foto": "Foto {n} de {total}. Toca para verla en pantalla completa.",
+  "@m0507Foto": {
+    "description": "M05-07 lo que lee TalkBack en una foto del carrusel",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "m0507FotoNoDisponible": "Imagen no disponible",
+  "@m0507FotoNoDisponible": {
+    "description": "M05-07 foto que no carga"
+  },
+  "m0507CerrarFoto": "Cerrar",
+  "@m0507CerrarFoto": {
+    "description": "M05-07 cerrar el visor de fotos"
+  },
+  "m0507Seguimiento": "Seguimiento",
+  "@m0507Seguimiento": {
+    "description": "M05-07 título de la línea de tiempo"
+  },
+  "m0507HitoReportado": "Reportado",
+  "@m0507HitoReportado": {
+    "description": "M05-07 paso: reportado"
+  },
+  "m0507HitoRevision": "En revisión con un perito",
+  "@m0507HitoRevision": {
+    "description": "M05-07 paso: derivado a perito"
+  },
+  "m0507HitoAprobado": "Aprobado",
+  "@m0507HitoAprobado": {
+    "description": "M05-07 paso: aprobado"
+  },
+  "m0507HitoRechazado": "Rechazado",
+  "@m0507HitoRechazado": {
+    "description": "M05-07 paso: rechazado"
+  },
+  "m0507HitoResolucion": "Resolución",
+  "@m0507HitoResolucion": {
+    "description": "M05-07 paso por venir: la resolución"
+  },
+  "m0507HitoResolucionPlazo": "A más tardar el {fecha}",
+  "@m0507HitoResolucionPlazo": {
+    "description": "M05-07 subtítulo del paso por venir",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507EstadoCompletado": "completado",
+  "@m0507EstadoCompletado": {
+    "description": "M05-07 TalkBack: paso terminado"
+  },
+  "m0507EstadoActual": "paso actual",
+  "@m0507EstadoActual": {
+    "description": "M05-07 TalkBack: paso actual"
+  },
+  "m0507EstadoPendiente": "pendiente",
+  "@m0507EstadoPendiente": {
+    "description": "M05-07 TalkBack: paso por venir"
+  },
+  "m0507Poliza": "Tu póliza",
+  "@m0507Poliza": {
+    "description": "M05-07 título de la tarjeta de póliza"
+  },
+  "m0507PolizaNumero": "Póliza {numero}",
+  "@m0507PolizaNumero": {
+    "description": "M05-07 número de póliza",
+    "placeholders": {
+      "numero": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507LoQueReportaste": "Lo que reportaste",
+  "@m0507LoQueReportaste": {
+    "description": "M05-07 sección plegable con el reporte"
+  },
+  "m0507QuePaso": "Qué pasó",
+  "@m0507QuePaso": {
+    "description": "M05-07 etiqueta del tipo de siniestro"
+  },
+  "m0507Lugar": "Dónde",
+  "@m0507Lugar": {
+    "description": "M05-07 etiqueta del lugar"
+  },
+  "m0507Relato": "Tu relato",
+  "@m0507Relato": {
+    "description": "M05-07 etiqueta del relato"
+  },
+  "m0506FiltroTodos": "Todos",
+  "@m0506FiltroTodos": {
+    "description": "M05-06 filtro: todos"
+  },
+  "m0506FiltroEnCurso": "En curso",
+  "@m0506FiltroEnCurso": {
+    "description": "M05-06 filtro: pendientes y en revisión"
+  },
+  "m0506FiltroResueltos": "Resueltos",
+  "@m0506FiltroResueltos": {
+    "description": "M05-06 filtro: aprobados y rechazados"
+  },
+  "m0506VacioFiltro": "No tienes siniestros en este grupo.",
+  "@m0506VacioFiltro": {
+    "description": "M05-06 filtro sin resultados"
+  },
+  "m0506Monto": "Indemnización: {monto}",
+  "@m0506Monto": {
+    "description": "M05-06 monto aprobado en la fila",
+    "placeholders": {
+      "monto": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506Quedan": "Quedan {tiempo} para la revisión",
+  "@m0506Quedan": {
+    "description": "M05-06 tiempo restante en la fila",
+    "placeholders": {
+      "tiempo": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506PorValorar": "Un operador está valorando el daño",
+  "@m0506PorValorar": {
+    "description": "M05-06 plazo vencido sin aprobación automática"
   }
 }

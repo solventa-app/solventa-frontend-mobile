@@ -416,6 +416,60 @@ void main() {
       expect(bff.operaciones, isNot(contains('enviar')));
     });
 
+    test(
+      'KAN-31: aceptar el consentimiento otra vez abre un recorrido nuevo y '
+      'descarta las capturas, la verificación y el recorrido anterior',
+      () async {
+        await conRecorrido();
+        await notifier().capturarFrente();
+        await notifier().capturarReverso();
+        expect(await notifier().completarPruebaDeVida(), isTrue);
+        await notifier().actualizar();
+        expect(estado().verificacion, isNotNull);
+
+        notifier().marcarConsentimiento(true);
+        expect(await notifier().registrarConsentimiento(), isTrue);
+
+        // Antes, el segundo consentimiento iba sobre el recorrido viejo y no
+        // llamaba `iniciar` otra vez.
+        expect(bff.operaciones.where((o) => o == 'iniciar'), hasLength(2));
+        expect(estado().frenteCapturado, isFalse);
+        expect(estado().reversoCapturado, isFalse);
+        expect(estado().rostroCapturado, isFalse);
+        expect(estado().videoCapturado, isFalse);
+        expect(estado().verificacion, isNull);
+        expect(estado().consultasAgotadas, isFalse);
+        expect(estado().onboarding, isNotNull);
+        // La casilla de M01-02 no vuelve marcada la próxima vez.
+        expect(estado().consentimientoMarcado, isFalse);
+
+        // La prueba de vida ya no reutiliza la selfie vieja: pide cámara.
+        final subidasAntes = bff.operaciones
+            .where((o) => o.startsWith('subida:'))
+            .length;
+        await notifier().capturarFrente();
+        await notifier().capturarReverso();
+        expect(await notifier().completarPruebaDeVida(), isTrue);
+        expect(
+          bff.operaciones.where((o) => o.startsWith('subida:')).length -
+              subidasAntes,
+          4,
+        );
+      },
+    );
+
+    test('KAN-31: cambiarFotosDocumento deja la cédula sin capturar', () async {
+      await conRecorrido();
+      await notifier().capturarFrente();
+      await notifier().capturarReverso();
+
+      notifier().cambiarFotosDocumento();
+
+      expect(estado().frenteCapturado, isFalse);
+      expect(estado().reversoCapturado, isFalse);
+      expect(estado().falla, isNull);
+    });
+
     test('reiniciarRecorrido descarta capturas y consentimiento', () async {
       await conRecorrido();
       await notifier().capturarFrente();

@@ -8,10 +8,10 @@ name: Sonar
 on:
   pull_request:
     branches: [develop, 'release/**', main]
-    paths: ['lib/**', 'test/**', 'pubspec.yaml', 'pubspec.lock', 'sonar-project.properties', '.github/workflows/sonar.yml']
+    paths: ['lib/**', 'test/**', 'pubspec.yaml', 'pubspec.lock', 'sonar-project.properties', '.github/workflows/sonar.yml', 'tool/reporte_sonar.py']
   push:
     branches: [develop]
-    paths: ['lib/**', 'test/**', 'pubspec.yaml', 'pubspec.lock', 'sonar-project.properties', '.github/workflows/sonar.yml']
+    paths: ['lib/**', 'test/**', 'pubspec.yaml', 'pubspec.lock', 'sonar-project.properties', '.github/workflows/sonar.yml', 'tool/reporte_sonar.py']
   workflow_dispatch:
 
 concurrency:
@@ -44,3 +44,13 @@ jobs:
         # Sin lcov Sonar publicaría 0 % de cobertura sin avisar.
         run: test -s coverage/lcov.info
       - uses: SonarSource/sonarqube-scan-action@4d1dc0c91ee400dcf8a6dddf2f705ac36542e304 # v8
+      # Quality gate, métricas y problemas graves en el resumen del run y como artefacto (informativo).
+      - name: Reporte de Sonar
+        if: always() && env.SONAR_TOKEN != ''
+        run: python3 tool/reporte_sonar.py
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always() && env.SONAR_TOKEN != ''
+        with:
+          name: reporte-sonar
+          path: reporte-sonar.md
+          if-no-files-found: ignore

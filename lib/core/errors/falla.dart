@@ -77,6 +77,9 @@ final class FallaNegocio extends Falla {
 /// Códigos de `ErrorOnboarding` con los que el recorrido ya no sirve.
 const _codigosRegistroVencido = {
   'TOKEN_INVALIDO',
+  // El recorrido quedó en un estado desde el que no se puede seguir (p. ej.
+  // falló al final y ya se cerró): la salida es empezar uno nuevo.
+  'ESTADO_INVALIDO',
   'SESION_NO_ENCONTRADA',
   'SIN_ONBOARDING',
 };
