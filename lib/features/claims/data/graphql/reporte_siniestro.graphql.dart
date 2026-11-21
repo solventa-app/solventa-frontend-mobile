@@ -3384,3 +3384,1383 @@ const documentNodeQueryMisSiniestros = DocumentNode(
     fragmentDefinitionSiniestroReportadoCampos,
   ],
 );
+
+class Variables$Query$MiSiniestro {
+  factory Variables$Query$MiSiniestro({required String id}) =>
+      Variables$Query$MiSiniestro._({r'id': id});
+
+  Variables$Query$MiSiniestro._(this._$data);
+
+  factory Variables$Query$MiSiniestro.fromJson(Map<String, dynamic> data) {
+    final result$data = <String, dynamic>{};
+    final l$id = data['id'];
+    result$data['id'] = (l$id as String);
+    return Variables$Query$MiSiniestro._(result$data);
+  }
+
+  Map<String, dynamic> _$data;
+
+  String get id => (_$data['id'] as String);
+
+  Map<String, dynamic> toJson() {
+    final result$data = <String, dynamic>{};
+    final l$id = id;
+    result$data['id'] = l$id;
+    return result$data;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Variables$Query$MiSiniestro ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$id = id;
+    final lOther$id = other.id;
+    if (l$id != lOther$id) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode {
+    final l$id = id;
+    return Object.hashAll([l$id]);
+  }
+}
+
+class Query$MiSiniestro {
+  Query$MiSiniestro({this.miSiniestro, this.$__typename = 'Query'});
+
+  factory Query$MiSiniestro.fromJson(Map<String, dynamic> json) {
+    final l$miSiniestro = json['miSiniestro'];
+    final l$$__typename = json['__typename'];
+    return Query$MiSiniestro(
+      miSiniestro: l$miSiniestro == null
+          ? null
+          : Query$MiSiniestro$miSiniestro.fromJson(
+              (l$miSiniestro as Map<String, dynamic>),
+            ),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Query$MiSiniestro$miSiniestro? miSiniestro;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$miSiniestro = miSiniestro;
+    _resultData['miSiniestro'] = l$miSiniestro?.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$miSiniestro = miSiniestro;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$miSiniestro, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$MiSiniestro || runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$miSiniestro = miSiniestro;
+    final lOther$miSiniestro = other.miSiniestro;
+    if (l$miSiniestro != lOther$miSiniestro) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+const documentNodeQueryMiSiniestro = DocumentNode(
+  definitions: [
+    OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'MiSiniestro'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+          variable: VariableNode(name: NameNode(value: 'id')),
+          type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+          defaultValue: DefaultValueNode(value: null),
+          directives: [],
+        ),
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(
+        selections: [
+          FieldNode(
+            name: NameNode(value: 'miSiniestro'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                name: NameNode(value: 'id'),
+                value: VariableNode(name: NameNode(value: 'id')),
+              ),
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(
+              selections: [
+                FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FieldNode(
+                  name: NameNode(value: 'radicado'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FieldNode(
+                  name: NameNode(value: 'estado'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FieldNode(
+                  name: NameNode(value: 'ocurridoEn'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FieldNode(
+                  name: NameNode(value: 'notificadoEn'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FieldNode(
+                  name: NameNode(value: 'venceDictamenEn'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FieldNode(
+                  name: NameNode(value: 'tipoSiniestroAuto'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FieldNode(
+                  name: NameNode(value: 'descripcion'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FieldNode(
+                  name: NameNode(value: 'ubicacion'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'descripcion'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'ciudad'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+                FieldNode(
+                  name: NameNode(value: 'poliza'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'numero'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'producto'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'vehiculo'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(
+                          selections: [
+                            FieldNode(
+                              name: NameNode(value: 'marca'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'linea'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'placaEnmascarada'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: '__typename'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                          ],
+                        ),
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+                FieldNode(
+                  name: NameNode(value: 'fotos'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'id'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'url'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'registradaEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+                FieldNode(
+                  name: NameNode(value: 'historial'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'estado'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'en'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+                FieldNode(
+                  name: NameNode(value: 'resolucion'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(
+                    selections: [
+                      FieldNode(
+                        name: NameNode(value: 'tipo'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'resueltaEn'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'motivo'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'viaRecurso'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'indemnizacion'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(
+                          selections: [
+                            FieldNode(
+                              name: NameNode(value: 'valor'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: 'moneda'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                            FieldNode(
+                              name: NameNode(value: '__typename'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: null,
+                            ),
+                          ],
+                        ),
+                      ),
+                      FieldNode(
+                        name: NameNode(value: 'plazoDispersion'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                      FieldNode(
+                        name: NameNode(value: '__typename'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null,
+                      ),
+                    ],
+                  ),
+                ),
+                FieldNode(
+                  name: NameNode(value: 'apruebaAlVencer'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+                FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null,
+                ),
+              ],
+            ),
+          ),
+          FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null,
+          ),
+        ],
+      ),
+    ),
+  ],
+);
+
+class Query$MiSiniestro$miSiniestro {
+  Query$MiSiniestro$miSiniestro({
+    required this.id,
+    required this.radicado,
+    required this.estado,
+    required this.ocurridoEn,
+    required this.notificadoEn,
+    required this.venceDictamenEn,
+    this.tipoSiniestroAuto,
+    required this.descripcion,
+    required this.ubicacion,
+    required this.poliza,
+    required this.fotos,
+    required this.historial,
+    this.resolucion,
+    required this.apruebaAlVencer,
+    this.$__typename = 'DetalleSiniestroCliente',
+  });
+
+  factory Query$MiSiniestro$miSiniestro.fromJson(Map<String, dynamic> json) {
+    final l$id = json['id'];
+    final l$radicado = json['radicado'];
+    final l$estado = json['estado'];
+    final l$ocurridoEn = json['ocurridoEn'];
+    final l$notificadoEn = json['notificadoEn'];
+    final l$venceDictamenEn = json['venceDictamenEn'];
+    final l$tipoSiniestroAuto = json['tipoSiniestroAuto'];
+    final l$descripcion = json['descripcion'];
+    final l$ubicacion = json['ubicacion'];
+    final l$poliza = json['poliza'];
+    final l$fotos = json['fotos'];
+    final l$historial = json['historial'];
+    final l$resolucion = json['resolucion'];
+    final l$apruebaAlVencer = json['apruebaAlVencer'];
+    final l$$__typename = json['__typename'];
+    return Query$MiSiniestro$miSiniestro(
+      id: (l$id as String),
+      radicado: (l$radicado as String),
+      estado: fromJson$Enum$EstadoSiniestro((l$estado as String)),
+      ocurridoEn: DateTime.parse((l$ocurridoEn as String)),
+      notificadoEn: DateTime.parse((l$notificadoEn as String)),
+      venceDictamenEn: DateTime.parse((l$venceDictamenEn as String)),
+      tipoSiniestroAuto: l$tipoSiniestroAuto == null
+          ? null
+          : fromJson$Enum$TipoSiniestroAuto((l$tipoSiniestroAuto as String)),
+      descripcion: (l$descripcion as String),
+      ubicacion: Query$MiSiniestro$miSiniestro$ubicacion.fromJson(
+        (l$ubicacion as Map<String, dynamic>),
+      ),
+      poliza: Query$MiSiniestro$miSiniestro$poliza.fromJson(
+        (l$poliza as Map<String, dynamic>),
+      ),
+      fotos: (l$fotos as List<dynamic>)
+          .map(
+            (e) => Query$MiSiniestro$miSiniestro$fotos.fromJson(
+              (e as Map<String, dynamic>),
+            ),
+          )
+          .toList(),
+      historial: (l$historial as List<dynamic>)
+          .map(
+            (e) => Query$MiSiniestro$miSiniestro$historial.fromJson(
+              (e as Map<String, dynamic>),
+            ),
+          )
+          .toList(),
+      resolucion: l$resolucion == null
+          ? null
+          : Query$MiSiniestro$miSiniestro$resolucion.fromJson(
+              (l$resolucion as Map<String, dynamic>),
+            ),
+      apruebaAlVencer: (l$apruebaAlVencer as bool),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String id;
+
+  final String radicado;
+
+  final Enum$EstadoSiniestro estado;
+
+  final DateTime ocurridoEn;
+
+  final DateTime notificadoEn;
+
+  final DateTime venceDictamenEn;
+
+  final Enum$TipoSiniestroAuto? tipoSiniestroAuto;
+
+  final String descripcion;
+
+  final Query$MiSiniestro$miSiniestro$ubicacion ubicacion;
+
+  final Query$MiSiniestro$miSiniestro$poliza poliza;
+
+  final List<Query$MiSiniestro$miSiniestro$fotos> fotos;
+
+  final List<Query$MiSiniestro$miSiniestro$historial> historial;
+
+  final Query$MiSiniestro$miSiniestro$resolucion? resolucion;
+
+  final bool apruebaAlVencer;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$id = id;
+    _resultData['id'] = l$id;
+    final l$radicado = radicado;
+    _resultData['radicado'] = l$radicado;
+    final l$estado = estado;
+    _resultData['estado'] = toJson$Enum$EstadoSiniestro(l$estado);
+    final l$ocurridoEn = ocurridoEn;
+    _resultData['ocurridoEn'] = l$ocurridoEn.toIso8601String();
+    final l$notificadoEn = notificadoEn;
+    _resultData['notificadoEn'] = l$notificadoEn.toIso8601String();
+    final l$venceDictamenEn = venceDictamenEn;
+    _resultData['venceDictamenEn'] = l$venceDictamenEn.toIso8601String();
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    _resultData['tipoSiniestroAuto'] = l$tipoSiniestroAuto == null
+        ? null
+        : toJson$Enum$TipoSiniestroAuto(l$tipoSiniestroAuto);
+    final l$descripcion = descripcion;
+    _resultData['descripcion'] = l$descripcion;
+    final l$ubicacion = ubicacion;
+    _resultData['ubicacion'] = l$ubicacion.toJson();
+    final l$poliza = poliza;
+    _resultData['poliza'] = l$poliza.toJson();
+    final l$fotos = fotos;
+    _resultData['fotos'] = l$fotos.map((e) => e.toJson()).toList();
+    final l$historial = historial;
+    _resultData['historial'] = l$historial.map((e) => e.toJson()).toList();
+    final l$resolucion = resolucion;
+    _resultData['resolucion'] = l$resolucion?.toJson();
+    final l$apruebaAlVencer = apruebaAlVencer;
+    _resultData['apruebaAlVencer'] = l$apruebaAlVencer;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$id = id;
+    final l$radicado = radicado;
+    final l$estado = estado;
+    final l$ocurridoEn = ocurridoEn;
+    final l$notificadoEn = notificadoEn;
+    final l$venceDictamenEn = venceDictamenEn;
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    final l$descripcion = descripcion;
+    final l$ubicacion = ubicacion;
+    final l$poliza = poliza;
+    final l$fotos = fotos;
+    final l$historial = historial;
+    final l$resolucion = resolucion;
+    final l$apruebaAlVencer = apruebaAlVencer;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$id,
+      l$radicado,
+      l$estado,
+      l$ocurridoEn,
+      l$notificadoEn,
+      l$venceDictamenEn,
+      l$tipoSiniestroAuto,
+      l$descripcion,
+      l$ubicacion,
+      l$poliza,
+      Object.hashAll(l$fotos.map((v) => v)),
+      Object.hashAll(l$historial.map((v) => v)),
+      l$resolucion,
+      l$apruebaAlVencer,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$MiSiniestro$miSiniestro ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$id = id;
+    final lOther$id = other.id;
+    if (l$id != lOther$id) {
+      return false;
+    }
+    final l$radicado = radicado;
+    final lOther$radicado = other.radicado;
+    if (l$radicado != lOther$radicado) {
+      return false;
+    }
+    final l$estado = estado;
+    final lOther$estado = other.estado;
+    if (l$estado != lOther$estado) {
+      return false;
+    }
+    final l$ocurridoEn = ocurridoEn;
+    final lOther$ocurridoEn = other.ocurridoEn;
+    if (l$ocurridoEn != lOther$ocurridoEn) {
+      return false;
+    }
+    final l$notificadoEn = notificadoEn;
+    final lOther$notificadoEn = other.notificadoEn;
+    if (l$notificadoEn != lOther$notificadoEn) {
+      return false;
+    }
+    final l$venceDictamenEn = venceDictamenEn;
+    final lOther$venceDictamenEn = other.venceDictamenEn;
+    if (l$venceDictamenEn != lOther$venceDictamenEn) {
+      return false;
+    }
+    final l$tipoSiniestroAuto = tipoSiniestroAuto;
+    final lOther$tipoSiniestroAuto = other.tipoSiniestroAuto;
+    if (l$tipoSiniestroAuto != lOther$tipoSiniestroAuto) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    final l$ubicacion = ubicacion;
+    final lOther$ubicacion = other.ubicacion;
+    if (l$ubicacion != lOther$ubicacion) {
+      return false;
+    }
+    final l$poliza = poliza;
+    final lOther$poliza = other.poliza;
+    if (l$poliza != lOther$poliza) {
+      return false;
+    }
+    final l$fotos = fotos;
+    final lOther$fotos = other.fotos;
+    if (l$fotos.length != lOther$fotos.length) {
+      return false;
+    }
+    for (int i = 0; i < l$fotos.length; i++) {
+      final l$fotos$entry = l$fotos[i];
+      final lOther$fotos$entry = lOther$fotos[i];
+      if (l$fotos$entry != lOther$fotos$entry) {
+        return false;
+      }
+    }
+    final l$historial = historial;
+    final lOther$historial = other.historial;
+    if (l$historial.length != lOther$historial.length) {
+      return false;
+    }
+    for (int i = 0; i < l$historial.length; i++) {
+      final l$historial$entry = l$historial[i];
+      final lOther$historial$entry = lOther$historial[i];
+      if (l$historial$entry != lOther$historial$entry) {
+        return false;
+      }
+    }
+    final l$resolucion = resolucion;
+    final lOther$resolucion = other.resolucion;
+    if (l$resolucion != lOther$resolucion) {
+      return false;
+    }
+    final l$apruebaAlVencer = apruebaAlVencer;
+    final lOther$apruebaAlVencer = other.apruebaAlVencer;
+    if (l$apruebaAlVencer != lOther$apruebaAlVencer) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$MiSiniestro$miSiniestro$ubicacion {
+  Query$MiSiniestro$miSiniestro$ubicacion({
+    required this.descripcion,
+    required this.ciudad,
+    this.$__typename = 'Ubicacion',
+  });
+
+  factory Query$MiSiniestro$miSiniestro$ubicacion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$descripcion = json['descripcion'];
+    final l$ciudad = json['ciudad'];
+    final l$$__typename = json['__typename'];
+    return Query$MiSiniestro$miSiniestro$ubicacion(
+      descripcion: (l$descripcion as String),
+      ciudad: (l$ciudad as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String descripcion;
+
+  final String ciudad;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$descripcion = descripcion;
+    _resultData['descripcion'] = l$descripcion;
+    final l$ciudad = ciudad;
+    _resultData['ciudad'] = l$ciudad;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$descripcion = descripcion;
+    final l$ciudad = ciudad;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$descripcion, l$ciudad, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$MiSiniestro$miSiniestro$ubicacion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$descripcion = descripcion;
+    final lOther$descripcion = other.descripcion;
+    if (l$descripcion != lOther$descripcion) {
+      return false;
+    }
+    final l$ciudad = ciudad;
+    final lOther$ciudad = other.ciudad;
+    if (l$ciudad != lOther$ciudad) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$MiSiniestro$miSiniestro$poliza {
+  Query$MiSiniestro$miSiniestro$poliza({
+    required this.numero,
+    required this.producto,
+    this.vehiculo,
+    this.$__typename = 'Poliza',
+  });
+
+  factory Query$MiSiniestro$miSiniestro$poliza.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$numero = json['numero'];
+    final l$producto = json['producto'];
+    final l$vehiculo = json['vehiculo'];
+    final l$$__typename = json['__typename'];
+    return Query$MiSiniestro$miSiniestro$poliza(
+      numero: (l$numero as String),
+      producto: fromJson$Enum$Producto((l$producto as String)),
+      vehiculo: l$vehiculo == null
+          ? null
+          : Query$MiSiniestro$miSiniestro$poliza$vehiculo.fromJson(
+              (l$vehiculo as Map<String, dynamic>),
+            ),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String numero;
+
+  final Enum$Producto producto;
+
+  final Query$MiSiniestro$miSiniestro$poliza$vehiculo? vehiculo;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$numero = numero;
+    _resultData['numero'] = l$numero;
+    final l$producto = producto;
+    _resultData['producto'] = toJson$Enum$Producto(l$producto);
+    final l$vehiculo = vehiculo;
+    _resultData['vehiculo'] = l$vehiculo?.toJson();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$numero = numero;
+    final l$producto = producto;
+    final l$vehiculo = vehiculo;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$numero, l$producto, l$vehiculo, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$MiSiniestro$miSiniestro$poliza ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$numero = numero;
+    final lOther$numero = other.numero;
+    if (l$numero != lOther$numero) {
+      return false;
+    }
+    final l$producto = producto;
+    final lOther$producto = other.producto;
+    if (l$producto != lOther$producto) {
+      return false;
+    }
+    final l$vehiculo = vehiculo;
+    final lOther$vehiculo = other.vehiculo;
+    if (l$vehiculo != lOther$vehiculo) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$MiSiniestro$miSiniestro$poliza$vehiculo {
+  Query$MiSiniestro$miSiniestro$poliza$vehiculo({
+    required this.marca,
+    required this.linea,
+    required this.placaEnmascarada,
+    this.$__typename = 'VehiculoAsegurado',
+  });
+
+  factory Query$MiSiniestro$miSiniestro$poliza$vehiculo.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$marca = json['marca'];
+    final l$linea = json['linea'];
+    final l$placaEnmascarada = json['placaEnmascarada'];
+    final l$$__typename = json['__typename'];
+    return Query$MiSiniestro$miSiniestro$poliza$vehiculo(
+      marca: (l$marca as String),
+      linea: (l$linea as String),
+      placaEnmascarada: (l$placaEnmascarada as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String marca;
+
+  final String linea;
+
+  final String placaEnmascarada;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$marca = marca;
+    _resultData['marca'] = l$marca;
+    final l$linea = linea;
+    _resultData['linea'] = l$linea;
+    final l$placaEnmascarada = placaEnmascarada;
+    _resultData['placaEnmascarada'] = l$placaEnmascarada;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$marca = marca;
+    final l$linea = linea;
+    final l$placaEnmascarada = placaEnmascarada;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$marca,
+      l$linea,
+      l$placaEnmascarada,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$MiSiniestro$miSiniestro$poliza$vehiculo ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$marca = marca;
+    final lOther$marca = other.marca;
+    if (l$marca != lOther$marca) {
+      return false;
+    }
+    final l$linea = linea;
+    final lOther$linea = other.linea;
+    if (l$linea != lOther$linea) {
+      return false;
+    }
+    final l$placaEnmascarada = placaEnmascarada;
+    final lOther$placaEnmascarada = other.placaEnmascarada;
+    if (l$placaEnmascarada != lOther$placaEnmascarada) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$MiSiniestro$miSiniestro$fotos {
+  Query$MiSiniestro$miSiniestro$fotos({
+    required this.id,
+    required this.url,
+    required this.registradaEn,
+    this.$__typename = 'FotoSiniestro',
+  });
+
+  factory Query$MiSiniestro$miSiniestro$fotos.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$id = json['id'];
+    final l$url = json['url'];
+    final l$registradaEn = json['registradaEn'];
+    final l$$__typename = json['__typename'];
+    return Query$MiSiniestro$miSiniestro$fotos(
+      id: (l$id as String),
+      url: (l$url as String),
+      registradaEn: DateTime.parse((l$registradaEn as String)),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String id;
+
+  final String url;
+
+  final DateTime registradaEn;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$id = id;
+    _resultData['id'] = l$id;
+    final l$url = url;
+    _resultData['url'] = l$url;
+    final l$registradaEn = registradaEn;
+    _resultData['registradaEn'] = l$registradaEn.toIso8601String();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$id = id;
+    final l$url = url;
+    final l$registradaEn = registradaEn;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$id, l$url, l$registradaEn, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$MiSiniestro$miSiniestro$fotos ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$id = id;
+    final lOther$id = other.id;
+    if (l$id != lOther$id) {
+      return false;
+    }
+    final l$url = url;
+    final lOther$url = other.url;
+    if (l$url != lOther$url) {
+      return false;
+    }
+    final l$registradaEn = registradaEn;
+    final lOther$registradaEn = other.registradaEn;
+    if (l$registradaEn != lOther$registradaEn) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$MiSiniestro$miSiniestro$historial {
+  Query$MiSiniestro$miSiniestro$historial({
+    required this.estado,
+    required this.en,
+    this.$__typename = 'HitoSiniestro',
+  });
+
+  factory Query$MiSiniestro$miSiniestro$historial.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$estado = json['estado'];
+    final l$en = json['en'];
+    final l$$__typename = json['__typename'];
+    return Query$MiSiniestro$miSiniestro$historial(
+      estado: fromJson$Enum$EstadoSiniestro((l$estado as String)),
+      en: DateTime.parse((l$en as String)),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Enum$EstadoSiniestro estado;
+
+  final DateTime en;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$estado = estado;
+    _resultData['estado'] = toJson$Enum$EstadoSiniestro(l$estado);
+    final l$en = en;
+    _resultData['en'] = l$en.toIso8601String();
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$estado = estado;
+    final l$en = en;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$estado, l$en, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$MiSiniestro$miSiniestro$historial ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$estado = estado;
+    final lOther$estado = other.estado;
+    if (l$estado != lOther$estado) {
+      return false;
+    }
+    final l$en = en;
+    final lOther$en = other.en;
+    if (l$en != lOther$en) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$MiSiniestro$miSiniestro$resolucion {
+  Query$MiSiniestro$miSiniestro$resolucion({
+    required this.tipo,
+    required this.resueltaEn,
+    this.motivo,
+    this.viaRecurso,
+    this.indemnizacion,
+    this.plazoDispersion,
+    this.$__typename = 'ResolucionCliente',
+  });
+
+  factory Query$MiSiniestro$miSiniestro$resolucion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$tipo = json['tipo'];
+    final l$resueltaEn = json['resueltaEn'];
+    final l$motivo = json['motivo'];
+    final l$viaRecurso = json['viaRecurso'];
+    final l$indemnizacion = json['indemnizacion'];
+    final l$plazoDispersion = json['plazoDispersion'];
+    final l$$__typename = json['__typename'];
+    return Query$MiSiniestro$miSiniestro$resolucion(
+      tipo: fromJson$Enum$TipoResolucion((l$tipo as String)),
+      resueltaEn: DateTime.parse((l$resueltaEn as String)),
+      motivo: l$motivo == null
+          ? null
+          : fromJson$Enum$MotivoRechazo((l$motivo as String)),
+      viaRecurso: (l$viaRecurso as String?),
+      indemnizacion: l$indemnizacion == null
+          ? null
+          : Query$MiSiniestro$miSiniestro$resolucion$indemnizacion.fromJson(
+              (l$indemnizacion as Map<String, dynamic>),
+            ),
+      plazoDispersion: (l$plazoDispersion as String?),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final Enum$TipoResolucion tipo;
+
+  final DateTime resueltaEn;
+
+  final Enum$MotivoRechazo? motivo;
+
+  final String? viaRecurso;
+
+  final Query$MiSiniestro$miSiniestro$resolucion$indemnizacion? indemnizacion;
+
+  final String? plazoDispersion;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$tipo = tipo;
+    _resultData['tipo'] = toJson$Enum$TipoResolucion(l$tipo);
+    final l$resueltaEn = resueltaEn;
+    _resultData['resueltaEn'] = l$resueltaEn.toIso8601String();
+    final l$motivo = motivo;
+    _resultData['motivo'] = l$motivo == null
+        ? null
+        : toJson$Enum$MotivoRechazo(l$motivo);
+    final l$viaRecurso = viaRecurso;
+    _resultData['viaRecurso'] = l$viaRecurso;
+    final l$indemnizacion = indemnizacion;
+    _resultData['indemnizacion'] = l$indemnizacion?.toJson();
+    final l$plazoDispersion = plazoDispersion;
+    _resultData['plazoDispersion'] = l$plazoDispersion;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$tipo = tipo;
+    final l$resueltaEn = resueltaEn;
+    final l$motivo = motivo;
+    final l$viaRecurso = viaRecurso;
+    final l$indemnizacion = indemnizacion;
+    final l$plazoDispersion = plazoDispersion;
+    final l$$__typename = $__typename;
+    return Object.hashAll([
+      l$tipo,
+      l$resueltaEn,
+      l$motivo,
+      l$viaRecurso,
+      l$indemnizacion,
+      l$plazoDispersion,
+      l$$__typename,
+    ]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$MiSiniestro$miSiniestro$resolucion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$tipo = tipo;
+    final lOther$tipo = other.tipo;
+    if (l$tipo != lOther$tipo) {
+      return false;
+    }
+    final l$resueltaEn = resueltaEn;
+    final lOther$resueltaEn = other.resueltaEn;
+    if (l$resueltaEn != lOther$resueltaEn) {
+      return false;
+    }
+    final l$motivo = motivo;
+    final lOther$motivo = other.motivo;
+    if (l$motivo != lOther$motivo) {
+      return false;
+    }
+    final l$viaRecurso = viaRecurso;
+    final lOther$viaRecurso = other.viaRecurso;
+    if (l$viaRecurso != lOther$viaRecurso) {
+      return false;
+    }
+    final l$indemnizacion = indemnizacion;
+    final lOther$indemnizacion = other.indemnizacion;
+    if (l$indemnizacion != lOther$indemnizacion) {
+      return false;
+    }
+    final l$plazoDispersion = plazoDispersion;
+    final lOther$plazoDispersion = other.plazoDispersion;
+    if (l$plazoDispersion != lOther$plazoDispersion) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}
+
+class Query$MiSiniestro$miSiniestro$resolucion$indemnizacion {
+  Query$MiSiniestro$miSiniestro$resolucion$indemnizacion({
+    required this.valor,
+    required this.moneda,
+    this.$__typename = 'Monto',
+  });
+
+  factory Query$MiSiniestro$miSiniestro$resolucion$indemnizacion.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final l$valor = json['valor'];
+    final l$moneda = json['moneda'];
+    final l$$__typename = json['__typename'];
+    return Query$MiSiniestro$miSiniestro$resolucion$indemnizacion(
+      valor: (l$valor as String),
+      moneda: (l$moneda as String),
+      $__typename: (l$$__typename as String),
+    );
+  }
+
+  final String valor;
+
+  final String moneda;
+
+  final String $__typename;
+
+  Map<String, dynamic> toJson() {
+    final _resultData = <String, dynamic>{};
+    final l$valor = valor;
+    _resultData['valor'] = l$valor;
+    final l$moneda = moneda;
+    _resultData['moneda'] = l$moneda;
+    final l$$__typename = $__typename;
+    _resultData['__typename'] = l$$__typename;
+    return _resultData;
+  }
+
+  @override
+  int get hashCode {
+    final l$valor = valor;
+    final l$moneda = moneda;
+    final l$$__typename = $__typename;
+    return Object.hashAll([l$valor, l$moneda, l$$__typename]);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Query$MiSiniestro$miSiniestro$resolucion$indemnizacion ||
+        runtimeType != other.runtimeType) {
+      return false;
+    }
+    final l$valor = valor;
+    final lOther$valor = other.valor;
+    if (l$valor != lOther$valor) {
+      return false;
+    }
+    final l$moneda = moneda;
+    final lOther$moneda = other.moneda;
+    if (l$moneda != lOther$moneda) {
+      return false;
+    }
+    final l$$__typename = $__typename;
+    final lOther$$__typename = other.$__typename;
+    if (l$$__typename != lOther$$__typename) {
+      return false;
+    }
+    return true;
+  }
+}

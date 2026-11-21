@@ -3205,6 +3205,174 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Póliza {numero}'**
   String m0602PolizaNumero(String numero);
+
+  /// M05-07 plazo vencido sin aprobación automática (auto parcial o RC)
+  ///
+  /// In es, this message translates to:
+  /// **'El plazo de revisión venció. Como hay que valorar el daño, un operador revisará tu caso y verás el resultado aquí.'**
+  String get m0507ValorandoDano;
+
+  /// M05-07 título del carrusel de fotos
+  ///
+  /// In es, this message translates to:
+  /// **'Fotos que enviaste'**
+  String get m0507Fotos;
+
+  /// M05-07 lo que lee TalkBack en una foto del carrusel
+  ///
+  /// In es, this message translates to:
+  /// **'Foto {n} de {total}. Toca para verla en pantalla completa.'**
+  String m0507Foto(int n, int total);
+
+  /// M05-07 foto que no carga
+  ///
+  /// In es, this message translates to:
+  /// **'Imagen no disponible'**
+  String get m0507FotoNoDisponible;
+
+  /// M05-07 cerrar el visor de fotos
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get m0507CerrarFoto;
+
+  /// M05-07 título de la línea de tiempo
+  ///
+  /// In es, this message translates to:
+  /// **'Seguimiento'**
+  String get m0507Seguimiento;
+
+  /// M05-07 paso: reportado
+  ///
+  /// In es, this message translates to:
+  /// **'Reportado'**
+  String get m0507HitoReportado;
+
+  /// M05-07 paso: derivado a perito
+  ///
+  /// In es, this message translates to:
+  /// **'En revisión con un perito'**
+  String get m0507HitoRevision;
+
+  /// M05-07 paso: aprobado
+  ///
+  /// In es, this message translates to:
+  /// **'Aprobado'**
+  String get m0507HitoAprobado;
+
+  /// M05-07 paso: rechazado
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazado'**
+  String get m0507HitoRechazado;
+
+  /// M05-07 paso por venir: la resolución
+  ///
+  /// In es, this message translates to:
+  /// **'Resolución'**
+  String get m0507HitoResolucion;
+
+  /// M05-07 subtítulo del paso por venir
+  ///
+  /// In es, this message translates to:
+  /// **'A más tardar el {fecha}'**
+  String m0507HitoResolucionPlazo(String fecha);
+
+  /// M05-07 TalkBack: paso terminado
+  ///
+  /// In es, this message translates to:
+  /// **'completado'**
+  String get m0507EstadoCompletado;
+
+  /// M05-07 TalkBack: paso actual
+  ///
+  /// In es, this message translates to:
+  /// **'paso actual'**
+  String get m0507EstadoActual;
+
+  /// M05-07 TalkBack: paso por venir
+  ///
+  /// In es, this message translates to:
+  /// **'pendiente'**
+  String get m0507EstadoPendiente;
+
+  /// M05-07 título de la tarjeta de póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Tu póliza'**
+  String get m0507Poliza;
+
+  /// M05-07 número de póliza
+  ///
+  /// In es, this message translates to:
+  /// **'Póliza {numero}'**
+  String m0507PolizaNumero(String numero);
+
+  /// M05-07 sección plegable con el reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Lo que reportaste'**
+  String get m0507LoQueReportaste;
+
+  /// M05-07 etiqueta del tipo de siniestro
+  ///
+  /// In es, this message translates to:
+  /// **'Qué pasó'**
+  String get m0507QuePaso;
+
+  /// M05-07 etiqueta del lugar
+  ///
+  /// In es, this message translates to:
+  /// **'Dónde'**
+  String get m0507Lugar;
+
+  /// M05-07 etiqueta del relato
+  ///
+  /// In es, this message translates to:
+  /// **'Tu relato'**
+  String get m0507Relato;
+
+  /// M05-06 filtro: todos
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get m0506FiltroTodos;
+
+  /// M05-06 filtro: pendientes y en revisión
+  ///
+  /// In es, this message translates to:
+  /// **'En curso'**
+  String get m0506FiltroEnCurso;
+
+  /// M05-06 filtro: aprobados y rechazados
+  ///
+  /// In es, this message translates to:
+  /// **'Resueltos'**
+  String get m0506FiltroResueltos;
+
+  /// M05-06 filtro sin resultados
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes siniestros en este grupo.'**
+  String get m0506VacioFiltro;
+
+  /// M05-06 monto aprobado en la fila
+  ///
+  /// In es, this message translates to:
+  /// **'Indemnización: {monto}'**
+  String m0506Monto(String monto);
+
+  /// M05-06 tiempo restante en la fila
+  ///
+  /// In es, this message translates to:
+  /// **'Quedan {tiempo} para la revisión'**
+  String m0506Quedan(String tiempo);
+
+  /// M05-06 plazo vencido sin aprobación automática
+  ///
+  /// In es, this message translates to:
+  /// **'Un operador está valorando el daño'**
+  String get m0506PorValorar;
 }
 
 class _AppLocalizationsDelegate

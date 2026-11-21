@@ -80,6 +80,48 @@ void main() {
     expect(find.text('Pendiente'), findsOneWidget);
     expect(find.textContaining('Lo revisaremos a más tardar'), findsOneWidget);
   });
+
+  testWidgets('cada tarjeta dice qué pasó y, si se aprobó, el monto', (
+    tester,
+  ) async {
+    await abrir(tester);
+    expect(
+      find.textContaining('Choque con daños que se pueden reparar'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Indemnización: \$'), findsOneWidget);
+  });
+
+  testWidgets('el filtro separa los casos en curso de los resueltos', (
+    tester,
+  ) async {
+    await abrir(tester);
+    expect(find.byType(SolStatusBadge), findsNWidgets(3));
+
+    await tester.tap(find.text('En curso'));
+    await tester.pumpAndSettle();
+    expect(find.text('SIN-2026-0987'), findsOneWidget);
+    expect(find.text('SIN-2026-0942'), findsNothing);
+
+    await tester.tap(find.text('Resueltos'));
+    await tester.pumpAndSettle();
+    expect(find.text('SIN-2026-0987'), findsNothing);
+    expect(find.text('SIN-2026-0942'), findsOneWidget);
+    expect(find.text('SIN-2026-0915'), findsOneWidget);
+
+    await tester.tap(find.text('Todos'));
+    await tester.pumpAndSettle();
+    expect(find.byType(SolStatusBadge), findsNWidgets(3));
+  });
+
+  testWidgets('un filtro sin casos lo dice', (tester) async {
+    bff.sinHistorial = true;
+    await bff.reportar(_entradaMinima());
+    await abrir(tester);
+    await tester.tap(find.text('Resueltos'));
+    await tester.pumpAndSettle();
+    expect(find.text('No tienes siniestros en este grupo.'), findsOneWidget);
+  });
 }
 
 Input$ReporteSiniestroInput _entradaMinima() => Input$ReporteSiniestroInput(

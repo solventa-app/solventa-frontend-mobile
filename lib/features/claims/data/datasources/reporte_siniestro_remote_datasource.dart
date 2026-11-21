@@ -21,6 +21,9 @@ abstract interface class ReporteSiniestroRemoteDataSource {
   );
 
   Future<Query$MisSiniestros> misSiniestros();
+
+  /// v0.54: el detalle de un caso; `miSiniestro` null si no es del cliente.
+  Future<Query$MiSiniestro> miSiniestro(String id);
 }
 
 final class GqlReporteSiniestroRemoteDataSource
@@ -85,6 +88,15 @@ final class GqlReporteSiniestroRemoteDataSource
   Future<Query$MisSiniestros> misSiniestros() async =>
       Query$MisSiniestros.fromJson(
         await _cliente.ejecutar(documentNodeQueryMisSiniestros),
+      );
+
+  @override
+  Future<Query$MiSiniestro> miSiniestro(String id) async =>
+      Query$MiSiniestro.fromJson(
+        await _cliente.ejecutar(
+          documentNodeQueryMiSiniestro,
+          variables: Variables$Query$MiSiniestro(id: id).toJson(),
+        ),
       );
 }
 
@@ -169,14 +181,56 @@ final class FakeReporteSiniestroRemoteDataSource
     ).reportarSiniestro;
   }
 
+  /// Los casos del fake; los reportados aquí llevan el tipo que mandó la app.
+  List<Map<String, Object?>> _listado() {
+    final tipos = {
+      for (final r in reportes) r.idReporte: r.tipoSiniestroAuto?.toJson(),
+    };
+    return [
+      for (final c
+          in ReporteSiniestroFixtures.misSiniestros(
+                nuevos: _mios,
+                conDemo: !sinHistorial,
+              )['misSiniestros']!
+              as List<Object?>)
+        if (c case final Map<String, Object?> caso)
+          tipos.containsKey(caso['id'])
+              ? {...caso, 'tipoSiniestroAuto': tipos[caso['id']]}
+              : caso,
+    ];
+  }
+
   @override
   Future<Query$MisSiniestros> misSiniestros() async {
     await _esperar();
-    return Query$MisSiniestros.fromJson(
-      ReporteSiniestroFixtures.misSiniestros(
-        nuevos: _mios,
-        conDemo: !sinHistorial,
-      ),
+    return Query$MisSiniestros.fromJson({
+      '__typename': 'Query',
+      'misSiniestros': _listado(),
+    });
+  }
+
+  /// Para pruebas: cuántas veces se pidió cada detalle.
+  final Map<String, int> detallesPedidos = {};
+
+  /// Para pruebas: el estado con el que llega el siguiente detalle de un caso
+  /// (p. ej. `APROBADO` tras vencer el plazo).
+  final Map<String, String> estadoForzado = {};
+
+  /// Para pruebas: el siguiente detalle lanza este error.
+  Object? errorAlDetallar;
+
+  @override
+  Future<Query$MiSiniestro> miSiniestro(String id) async {
+    await _esperar();
+    detallesPedidos[id] = (detallesPedidos[id] ?? 0) + 1;
+    final error = errorAlDetallar;
+    if (error != null) {
+      errorAlDetallar = null;
+      throw error;
+    }
+    final caso = _listado().where((c) => c['id'] == id).firstOrNull;
+    return Query$MiSiniestro.fromJson(
+      ReporteSiniestroFixtures.detalle(caso, estado: estadoForzado[id]),
     );
   }
 }
