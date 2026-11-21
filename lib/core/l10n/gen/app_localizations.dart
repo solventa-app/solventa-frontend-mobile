@@ -242,10 +242,10 @@ abstract class AppLocalizations {
   /// **'Prueba de vida'**
   String get m0105Titulo;
 
-  /// M01-05 instrucción antes de grabar
+  /// M01-05 instrucción antes de grabar (los pasos van debajo del visor)
   ///
   /// In es, this message translates to:
-  /// **'Pon tu rostro dentro del círculo. Al tocar «Grabar video» grabaremos 3 segundos: mueve la cabeza despacio de un lado a otro.'**
+  /// **'Pon tu rostro dentro del óvalo y toca «Grabar video».'**
   String get m0105Instruccion;
 
   /// M01-06/07 barra superior
@@ -302,10 +302,10 @@ abstract class AppLocalizations {
   /// **'Entendido'**
   String get m0107bAccion;
 
-  /// M01-07c
+  /// M01-07c: ILEGIBLE o motivo desconocido
   ///
   /// In es, this message translates to:
-  /// **'No pudimos verificar tu documento (imagen ilegible)'**
+  /// **'No pudimos leer bien tu documento. Tómale de nuevo las fotos con buena luz, sin reflejos y con la cédula completa dentro del marco.'**
   String get m0107cMensaje;
 
   /// M01-07c y tarjeta del inicio: rechazo técnico (PROVEEDOR_NO_DISPONIBLE o IMAGEN_NO_DISPONIBLE, KAN-131), no gasta intento
@@ -509,13 +509,13 @@ abstract class AppLocalizations {
   /// M01-07c: ROSTRO_NO_COINCIDE
   ///
   /// In es, this message translates to:
-  /// **'El rostro del video no coincide con el del documento.'**
+  /// **'El rostro del video no coincide con el de tu documento. Grábalo de nuevo de frente, con buena luz y sin gafas, gorra ni tapabocas.'**
   String get m0107cRostro;
 
   /// M01-07c: SUPLANTACION
   ///
   /// In es, this message translates to:
-  /// **'No pudimos confirmar que la prueba de vida la hiciste tú, en vivo.'**
+  /// **'No pudimos confirmar que la prueba de vida la hiciste tú, en vivo. Grábala de nuevo tú mismo, sin fotos ni pantallas frente a la cámara.'**
   String get m0107cSuplantacion;
 
   /// M01-07c: MENOR_DE_EDAD
@@ -1871,7 +1871,7 @@ abstract class AppLocalizations {
   /// M05-02 sin permiso de ubicación
   ///
   /// In es, this message translates to:
-  /// **'Necesitamos tu ubicación para ubicar el siniestro. Actívala para continuar.'**
+  /// **'No tenemos tu GPS. Actívalo o escribe la dirección donde pasó el siniestro.'**
   String get m0502SinUbicacion;
 
   /// M05-02 reintentar permiso
@@ -3205,6 +3205,108 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Póliza {numero}'**
   String m0602PolizaNumero(String numero);
+
+  /// M01-05 aviso previo de la duración y los pasos de la grabación
+  ///
+  /// In es, this message translates to:
+  /// **'Grabaremos 15 segundos: gira la cara a la izquierda, luego a la derecha y vuelve al centro. Verás el tiempo mientras avanza.'**
+  String get m0105AvisoDuracion;
+
+  /// M01-05 etiqueta sobre el visor mientras graba, con el tiempo que avanza (00:07 / 00:15)
+  ///
+  /// In es, this message translates to:
+  /// **'Grabando · {transcurrido} / {total}'**
+  String m0105GrabandoTiempo(String transcurrido, String total);
+
+  /// M01-05 paso 1 de la grabación
+  ///
+  /// In es, this message translates to:
+  /// **'Izquierda'**
+  String get m0105PasoIzquierda;
+
+  /// M01-05 paso 2 de la grabación
+  ///
+  /// In es, this message translates to:
+  /// **'Derecha'**
+  String get m0105PasoDerecha;
+
+  /// M01-05 paso 3 de la grabación
+  ///
+  /// In es, this message translates to:
+  /// **'Centro'**
+  String get m0105PasoCentro;
+
+  /// M01-05 instrucción del paso 1
+  ///
+  /// In es, this message translates to:
+  /// **'Gira la cara despacio hacia la izquierda'**
+  String get m0105GiraIzquierda;
+
+  /// M01-05 instrucción del paso 2
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora gírala despacio hacia la derecha'**
+  String get m0105GiraDerecha;
+
+  /// M01-05 instrucción del paso 3
+  ///
+  /// In es, this message translates to:
+  /// **'Vuelve al centro y mira la cámara'**
+  String get m0105MiraCentro;
+
+  /// M01-05 al terminar los 15 s
+  ///
+  /// In es, this message translates to:
+  /// **'¡Listo! Ya tenemos tu video.'**
+  String get m0105Listo;
+
+  /// Onboarding: error inesperado con salida (reintentar o empezar de nuevo)
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos completar este paso. Toca «Reintentar envío»; si sigue fallando, empieza de nuevo la verificación.'**
+  String get fallaGenericaOnboarding;
+
+  /// Notificación fija mientras el prestador va en camino
+  ///
+  /// In es, this message translates to:
+  /// **'Tu asistencia va en camino'**
+  String get asistenciaEnCaminoTitulo;
+
+  /// Cuerpo de la notificación fija de en camino
+  ///
+  /// In es, this message translates to:
+  /// **'{prestador} va hacia tu ubicación. Toca para ver el detalle.'**
+  String asistenciaEnCaminoCuerpo(String prestador);
+
+  /// Canal silencioso de la notificación fija de en camino
+  ///
+  /// In es, this message translates to:
+  /// **'Asistencia en curso'**
+  String get asistenciaEnCaminoCanalNombre;
+
+  /// Descripción del canal de en camino en Ajustes de Android
+  ///
+  /// In es, this message translates to:
+  /// **'Muestra la cuenta regresiva mientras el prestador va en camino'**
+  String get asistenciaEnCaminoCanalDescripcion;
+
+  /// M05-02 abre la búsqueda de dirección (Places) cuando no hay GPS
+  ///
+  /// In es, this message translates to:
+  /// **'Escribir la dirección'**
+  String get m0502EscribirDireccion;
+
+  /// M05-02 ubicación tomada de la dirección escrita
+  ///
+  /// In es, this message translates to:
+  /// **'Ubicación: {direccion}'**
+  String m0502UbicadaDireccion(String direccion);
+
+  /// M05-02 vuelve a abrir la búsqueda de dirección
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar dirección'**
+  String get m0502CambiarDireccion;
 
   /// M05-07 plazo vencido sin aprobación automática (auto parcial o RC)
   ///

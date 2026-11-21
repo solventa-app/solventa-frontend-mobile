@@ -113,19 +113,19 @@ void main() {
     expect(find.byType(SolAppShell), findsOneWidget);
   });
 
-  testWidgets('M02-01a → Usar el bloqueo del teléfono → Home (D2)', (
+  testWidgets('M02-01a → Usar correo y contraseña → «Inicia sesión»', (
     tester,
   ) async {
     await guardarSesionAnterior();
     biometria.resultados.add(const NoReconocido());
     await abrirApp(tester);
 
-    await tester.tap(find.text('Usar el bloqueo del teléfono'));
+    // El botón del bloqueo del teléfono se quitó: la salida es el correo.
+    expect(find.text('Usar el bloqueo del teléfono'), findsNothing);
+    await tester.tap(find.text('Usar correo y contraseña'));
     await tester.pumpAndSettle();
 
-    expect(biometria.autenticaciones, [true, true]);
-    await esperarHome(tester);
-    expect(find.byType(SolAppShell), findsOneWidget);
+    expect(find.text('Usar correo y contraseña'), findsNothing);
   });
 
   testWidgets('refresh vencido o revocado → «Inicia sesión» con aviso', (

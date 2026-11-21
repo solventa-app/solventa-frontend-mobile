@@ -34,8 +34,12 @@ void main() {
   final clinica = prestadorDesdeMapa(AsistenciaFixtures.prestadores.first)!;
   const origen = Coordenada(4.6760, -74.0480);
 
-  Future<void> abrir(WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 1400);
+  Future<void> abrir(
+    WidgetTester tester, {
+    Size tamano = const Size(390, 1400),
+    double textoEscala = 1,
+  }) async {
+    tester.view.physicalSize = tamano;
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     void ir(BuildContext context, String a) {
@@ -103,6 +107,11 @@ void main() {
           locale: AppLocales.es,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: TextScaler.linear(textoEscala)),
+            child: child!,
+          ),
           routerConfig: router,
         ),
       ),
@@ -133,6 +142,27 @@ void main() {
     rutas = FakeRutaExternaService();
     destino = null;
   });
+
+  // Responsive (pedido de felipe): teléfonos bajos y texto grande, de la
+  // solicitud a la confirmación, sin desbordes.
+  for (final (tamano, escala) in const [
+    (Size(320, 568), 1.0),
+    (Size(360, 640), 1.3),
+    (Size(360, 740), 2.0),
+  ]) {
+    testWidgets(
+      'M06-02 a M06-04 sin desbordes · ${tamano.width.toInt()}×${tamano.height.toInt()} · texto ${(escala * 100).toInt()} %',
+      (tester) async {
+        await abrir(tester, tamano: tamano, textoEscala: escala);
+        expect(tester.takeException(), isNull);
+        await elegirTipo(tester, 'Mecánica');
+        expect(tester.takeException(), isNull);
+        await tester.ensureVisible(find.text('Enviar solicitud'));
+        await enviar(tester);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 
   testWidgets('M06-02 muestra el prestador, la ubicación y el tiempo', (
     tester,

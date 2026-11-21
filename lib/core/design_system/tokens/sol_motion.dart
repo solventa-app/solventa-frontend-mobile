@@ -12,6 +12,16 @@ abstract final class SolMotion {
     return reduce ? Duration.zero : duration;
   }
 
+  /// Animaciones de ambiente que se repiten sin fin (guía de la prueba de
+  /// vida, punto de «Grabando»). Las pruebas lo apagan en
+  /// `flutter_test_config.dart`: un bucle infinito no deja que
+  /// `pumpAndSettle` termine. En la app siempre es `true`.
+  static bool animacionesContinuas = true;
+
+  /// `true` si no deben correr las animaciones que se repiten sin fin.
+  static bool sinBucles(BuildContext context) =>
+      reduced(context) || !animacionesContinuas;
+
   /// `true` si el usuario activó «quitar animaciones».
   static bool reduced(BuildContext context) =>
       MediaQuery.maybeDisableAnimationsOf(context) ?? false;

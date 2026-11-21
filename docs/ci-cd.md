@@ -21,7 +21,7 @@ Estado de cada pieza:
 | | Firebase Test Lab manual (`test-lab.yml`): Robo test e `integration_test` en teléfonos reales | Listo, falta cuenta |
 | Merge a `main` | `cd.yml`: versión calculada sola, build prod firmado con R8 y Dart ofuscado, GitHub Release `v<versión>+<build>` con APK, AAB, mapping y símbolos | Hoy |
 | Manual | `rollback.yml` (recompila un tag anterior con build nuevo), `cd.yml` desde otra rama (compila sin publicar), `imagen-devcontainer.yml` | Hoy |
-| | `sonar.yml`: SonarCloud con la cobertura de `flutter test`; en PRs (decora el PR y evalúa el quality gate) y en push a `develop` cuando cambia `lib/`, `test/` o `pubspec.*`. Se salta en PRs de forks y de Dependabot (sin secretos) | Hoy |
+| | `sonar.yml`: SonarCloud con la cobertura de `flutter test`; en PRs (decora el PR y evalúa el quality gate) y en push a `develop` cuando cambia `lib/`, `test/` o `pubspec.*`. Se salta en PRs de forks y de Dependabot (sin secretos). Al final `tool/reporte_sonar.py` deja el quality gate, las métricas y los problemas graves en el resumen del run y como artefacto `reporte-sonar` (informativo) | Hoy |
 | Sentry | Reporte de errores con replay enmascarado y subida de símbolos en `cd.yml` / `rollback.yml` | Hoy (listo en código; falta `SENTRY_AUTH_TOKEN` en GitHub): [`plan-sentry.md`](plan-sentry.md) |
 
 ## Flujo de ramas
