@@ -34,8 +34,10 @@ sin push y sin backend. La feature vive en `lib/features/parametric/`.
    cuenta. Faltan la **fuente del evento** (proveedor de clima o de vuelos), el **umbral superado**, el **desglose del
    cálculo** (tabla que se lee fila por fila y pasa a lista apilada) y la **referencia del siniestro para soporte**.
    Hace falta diseño y que el backend entregue esos datos.
-2. **Moneda.** Los criterios de M04-02 piden el monto «en la moneda seleccionada en la barra superior». Hoy se muestra
-   en COP con `SolFormat.currency`, igual que M05. Falta la conversión (tasa del BFF) para las 7 monedas.
+2. ~~**Moneda**~~ hecho (KAN-209): M04-02, M04-03, M04-04, M05-06 y M05-07 muestran los montos en la moneda de la
+   barra superior con `ref.monto(context, valor)` (`lib/core/moneda/`), que convierte con `convertirMontos` del BFF
+   (un lote por cuadro, recordado por moneda) y cae a COP si falla. Con otra moneda aparece la nota «Valores de
+   referencia en USD. Se pagan en pesos colombianos (COP).», como en la web. Cambia al instante, sin reiniciar.
 3. ~~**Navegación**~~ hecho (KAN-259, #102): rutas `m04-02`, `m04-03` y `m04-04` en `router.dart`; tocar el push sin
    sesión o con la sesión bloqueada guarda la ruta y sigue a ella tras el login o el desbloqueo; M04-04 desde Home.
    Lo cubre `integration_test/push_m04_test.dart` (5 casos con la app entera: con sesión, aviso en primer plano, sin

@@ -55,6 +55,9 @@ Flutter 3.47.8 / Dart ^3.13 (fijado; `tool/verificar-versiones.sh` lo controla c
 - **Perfil `G-05` (`/perfil`, solo si está verificado) y cierre de sesión `G-04`** (`SolConfirmDialog`). Datos de solo
   lectura, documento enmascarado.
 - **Preferencias:** `SolPreferenciasSheet` (ES/EN y 7 monedas) persistidas en `SharedPreferences`.
+  Al cambiarlas, textos, fechas y montos se actualizan al instante: los montos en COP se convierten con
+  `convertirMontos` del BFF (`lib/core/moneda/`, KAN-209) y el sistema de diseño toma sus textos del ARB (`sol*`,
+  `context.solTextos`). La píldora solo abre la hoja; ya no alterna el idioma al tocarla.
 - **Sentry (`uniandes-xm`):** `SolLog`, `limpiar`, `SentryMask` y bloqueo de capturas en `M01-03`..`M01-05`, y subida de
   símbolos en `cd.yml`/`rollback.yml`.
 - **CI/CD y seguridad:** según `docs/ci-cd.md` (estados «hoy»). 24 archivos de prueba (unitarias, widget, contrato,
@@ -114,7 +117,7 @@ real, staging y el aviso de privacidad (A6).
 ### Pendiente
 
 - HU-M04: confirmar los goldens regenerados en el devcontainer; `google-services.json` real (paso del usuario);
-  prueba de integración del flujo push→login→detalle; moneda seleccionada y los datos de M04-03 que pide KAN-146
+  prueba de integración del flujo push→login→detalle; los datos de M04-03 que pide KAN-146
   (fuente, umbral, desglose, referencia). Lista completa en `docs/hu-m04/README.md`.
 - Firebase App Distribution y Test Lab: listos, falta la cuenta. Google Play queda para el futuro.
 - Goldens horizontales de 640 × 360 (`docs/ci-cd.md`).

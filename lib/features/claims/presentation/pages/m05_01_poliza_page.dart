@@ -59,7 +59,12 @@ class M0501PolizaPage extends ConsumerWidget {
     final errorFecha = !fueraDeVigencia
         ? null
         : fecha.isBefore(poliza.vigenciaDesde)
-        ? l10n.m0501FechaAntes(SolFormat.dateTime(poliza.vigenciaDesde))
+        ? l10n.m0501FechaAntes(
+            SolFormat.dateTimeFor(
+              poliza.vigenciaDesde,
+              Localizations.localeOf(context),
+            ),
+          )
         : l10n.m0501FechaFuera;
 
     final lista = switch (polizas) {
@@ -76,7 +81,12 @@ class M0501PolizaPage extends ConsumerWidget {
               titulo: l10n.m0501PolizaNumero(p.numero),
               vigencia: [
                 if (p.vehiculo case final v?) l10n.m0501PolizaAuto(v),
-                l10n.m0501Vigencia(SolFormat.date(p.vigenciaHasta)),
+                l10n.m0501Vigencia(
+                  SolFormat.dateFor(
+                    p.vigenciaHasta,
+                    Localizations.localeOf(context),
+                  ),
+                ),
               ].join(' · '),
               onTap: () => notifier.elegirPoliza(p),
             ),
@@ -128,14 +138,17 @@ class M0501PolizaPage extends ConsumerWidget {
             label: l10n.m0501Fecha,
             value: fecha == null
                 ? l10n.m0501FechaElegir
-                : SolFormat.dateTime(fecha),
+                : SolFormat.dateTimeFor(fecha, Localizations.localeOf(context)),
             // Dice qué falta en lugar de dejar «Continuar» apagado sin más.
             helperText: poliza == null
                 ? l10n.m0501ElegirPoliza
                 : estado.faltaTipoAuto
                 ? l10n.m0501ElegirTipo
                 : l10n.m0501CubreDesde(
-                    SolFormat.dateTime(poliza.vigenciaDesde),
+                    SolFormat.dateTimeFor(
+                      poliza.vigenciaDesde,
+                      Localizations.localeOf(context),
+                    ),
                   ),
             errorText: errorFecha,
             onTap: () => _elegirFecha(context, ref, poliza, fecha),

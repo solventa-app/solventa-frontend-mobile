@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/moneda/monto_en_moneda.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
@@ -149,12 +150,16 @@ class _Lista extends StatelessWidget {
             ),
             const SizedBox(height: SolSpacing.sm),
           ],
+        if (casos.any((c) => c.resolucion?.indemnizacion != null))
+          const NotaMontosDeReferencia(
+            padding: EdgeInsets.only(top: SolSpacing.xs),
+          ),
       ],
     );
   }
 }
 
-class _FilaSiniestro extends StatelessWidget {
+class _FilaSiniestro extends ConsumerWidget {
   const _FilaSiniestro({
     required this.caso,
     required this.vehiculo,
@@ -166,7 +171,7 @@ class _FilaSiniestro extends StatelessWidget {
   final DateTime ahora;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final (status, estado) = estadoDelCaso(l10n, caso.estado);
@@ -179,7 +184,7 @@ class _FilaSiniestro extends StatelessWidget {
       'EN_REVISION' => (SolIcons.schedule, l10n.m0506EnRevisionDetalle),
       'APROBADO' when monto != null => (
         SolIcons.payments,
-        l10n.m0506Monto(SolFormat.currency(monto)),
+        l10n.m0506Monto(ref.monto(context, monto)),
       ),
       'APROBADO' => (SolIcons.payments, l10n.m0506AprobadoDetalle),
       'RECHAZADO' => (SolIcons.info, l10n.m0506RechazadoDetalle),
@@ -192,7 +197,10 @@ class _FilaSiniestro extends StatelessWidget {
         null => (
           SolIcons.schedule,
           l10n.m0506PendienteDetalle(
-            SolFormat.date(caso.venceDictamenEn.toLocal()),
+            SolFormat.dateFor(
+              caso.venceDictamenEn.toLocal(),
+              Localizations.localeOf(context),
+            ),
           ),
         ),
       },
@@ -249,7 +257,10 @@ class _FilaSiniestro extends StatelessWidget {
                         const SizedBox(height: SolSpacing.xxs),
                         Text(
                           l10n.m0506Reportado(
-                            SolFormat.date(caso.notificadoEn.toLocal()),
+                            SolFormat.dateFor(
+                              caso.notificadoEn.toLocal(),
+                              Localizations.localeOf(context),
+                            ),
                             caso.fotos,
                           ),
                           style: suave,

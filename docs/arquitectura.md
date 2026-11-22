@@ -301,8 +301,13 @@ widgets y `SolLocalizations` fija `es_CO`; el primer PR de HU-M01 lo migra.
   frases.
 - El sistema de diseño también se traduce: sus textos por defecto («Inicio», «Asistencia», «Cerrar sesión»,
   etiquetas de `Semantics`) pasan al ARB.
-- Formatos (`SolFormat`) siguen el locale activo: `es-CO` → `$ 450.000`, `12 sep 2026, 11:02 a. m.`; `en` →
-  `COP 450,000`, `Sep 12, 2026, 11:02 AM`. La moneda siempre es la que manda el contrato.
+- Formatos (`SolFormat.*For(…, locale)`, `currencyIn`) siguen el locale activo: `es-CO` → `$ 450.000`,
+  `12 sep 2026, 11:02 a. m.`; `en` → `COP 450,000`, `Sep 12, 2026, 11:02 AM`. Otras monedas llevan su código ISO
+  (`USD 109,76` / `USD 109.76`).
+- Moneda (KAN-209): los montos llegan en COP y se muestran en la moneda de la barra superior con
+  `ref.monto(context, valor)` (`lib/core/moneda/`), que pide `convertirMontos` al BFF (la app no hace aritmética con
+  dinero), junta los montos de un cuadro en una llamada y recuerda el resultado; si falla, se ve en COP.
+  `NotaMontosDeReferencia` aclara que lo pagado sigue en COP.
 - Idioma: el del teléfono si es `es` o `en`; si no, español. La píldora «ES · COP» de la barra superior permite
   cambiarlo y la elección se guarda en preferencias (no es dato personal).
 - Un test recorre las claves de `app_es.arb` y falla si falta alguna en `app_en.arb`; los goldens de pantalla se

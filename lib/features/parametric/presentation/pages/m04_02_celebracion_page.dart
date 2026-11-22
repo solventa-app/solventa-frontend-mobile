@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/moneda/monto_en_moneda.dart';
 import '../../domain/entities/cobertura.dart';
 import '../providers.dart';
 import '../widgets/cobertura_widgets.dart';
@@ -61,18 +62,18 @@ class M0402CelebracionPage extends ConsumerWidget {
   }
 }
 
-class _Celebracion extends StatelessWidget {
+class _Celebracion extends ConsumerWidget {
   const _Celebracion({required this.indemnizacion, required this.onVerDetalle});
 
   final Indemnizacion indemnizacion;
   final VoidCallback? onVerDetalle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final sol = context.solColors;
-    final monto = l10n.m0402Monto(SolFormat.currency(indemnizacion.monto));
+    final monto = l10n.m0402Monto(ref.monto(context, indemnizacion.monto));
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -144,6 +145,7 @@ class _Celebracion extends StatelessWidget {
             semantica: l10n.m0402CuentaSemantica,
           ),
         ),
+        const NotaMontosDeReferencia(center: true),
         const SizedBox(height: SolSpacing.xxxl),
         SolButton.primary(
           label: l10n.m0402VerDetalle,
