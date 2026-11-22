@@ -66,6 +66,21 @@ Flutter 3.47.8 / Dart ^3.13 (fijado; `tool/verificar-versiones.sh` lo controla c
   §Estado. Reporte HTML de Emuladores con capturas (#56: `integration_test/soporte/capturas.dart`,
   `tool/reporte-emuladores.py`).
 
+### En curso: HU-M05 (KAN-35), reporte de siniestro sin conexión
+
+Ramas locales apiladas `feat/KAN-35-sin-conexion-1-indicador` a `…-5-pruebas` (la última contiene todo), sin PR
+todavía. Estado, piezas, pendientes y huecos conocidos en [`docs/hu-m05/README.md`](docs/hu-m05/README.md).
+
+- Hecho: estado y calidad de red (`lib/core/red/`), base local cifrada (`lib/core/almacen/`), guardado automático del
+  reporte, cola de envío con estados, «Por enviar» en «Mis siniestros», detalle de un reporte por enviar (M05-07b),
+  notificaciones y recordatorios, servicio en primer plano durante el envío, pregunta de datos móviles y su ajuste en
+  Mi perfil, cierre de sesión que conserva los reportes, y entrada con la huella sin red a un inicio donde solo
+  funciona el reporte. Textos ES/EN, pruebas unitarias y de widget, goldens e
+  `integration_test/reporte_sin_conexion_test.dart`.
+- Verificado con `flutter analyze` y `flutter test`. **Falta en dispositivo:** `tool/verificar.sh --apk`, regenerar los
+  goldens con `tool/goldens.sh` y la lista de [`docs/hu-m05/pruebas-sin-conexion.md`](docs/hu-m05/pruebas-sin-conexion.md)
+  (modo avión, huella sin red, servicio en primer plano, base cifrada nativa), con su evidencia.
+
 ### En curso: HU-M04 (KAN-38), siniestro paramétrico — contrato real y push (Fase 6, KAN-259)
 
 Rama `feat/KAN-259-movil-indemnizacion-parametrica`, sobre lo ya hecho en `feat/KAN-260-cobertura-mock` (KAN-260 y

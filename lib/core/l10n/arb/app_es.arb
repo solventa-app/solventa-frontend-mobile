@@ -2965,7 +2965,7 @@
   "@m0505Guardado": {
     "description": "M05-05 desenlace sin conexión: guardado, sin radicado"
   },
-  "m0505GuardadoSinRed": "Lo enviaremos a la aseguradora apenas vuelva la conexión. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las {hora}.",
+  "m0505GuardadoSinRed": "Lo guardamos a las {hora} y lo enviaremos a la aseguradora apenas vuelva la conexión. Todavía no tiene radicado: te avisaremos cuando lo reciban.",
   "@m0505GuardadoSinRed": {
     "description": "M05-05 reporte guardado, sin conexión",
     "placeholders": {
@@ -2974,7 +2974,7 @@
       }
     }
   },
-  "m0505GuardadoWifi": "Lo enviaremos cuando te conectes a Wi-Fi. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las {hora}.",
+  "m0505GuardadoWifi": "Lo guardamos a las {hora} y lo enviaremos cuando te conectes a Wi-Fi. Todavía no tiene radicado: te avisaremos cuando lo reciban.",
   "@m0505GuardadoWifi": {
     "description": "M05-05 reporte guardado, esperando Wi-Fi",
     "placeholders": {
@@ -2983,7 +2983,7 @@
       }
     }
   },
-  "m0505GuardadoSesion": "Lo enviaremos cuando vuelvas a iniciar sesión. Todavía no tiene radicado. Guardado a las {hora}.",
+  "m0505GuardadoSesion": "Lo guardamos a las {hora} y lo enviaremos cuando vuelvas a iniciar sesión. Todavía no tiene radicado.",
   "@m0505GuardadoSesion": {
     "description": "M05-05 reporte guardado, sin sesión abierta",
     "placeholders": {
@@ -2992,7 +2992,7 @@
       }
     }
   },
-  "m0505GuardadoReintento": "No pudimos enviarlo ahora. Lo intentaremos de nuevo en un momento, sin que tengas que hacer nada. Todavía no tiene radicado. Guardado a las {hora}.",
+  "m0505GuardadoReintento": "Lo guardamos a las {hora}, pero no pudimos enviarlo ahora. Lo intentaremos de nuevo en un momento, sin que tengas que hacer nada. Todavía no tiene radicado.",
   "@m0505GuardadoReintento": {
     "description": "M05-05 reporte guardado tras una falla técnica que se reintenta sola",
     "placeholders": {
@@ -3118,7 +3118,7 @@
   "@m0507bEnColaNota": {
     "description": "M05-07b nota del paso en cola"
   },
-  "m0507bReintento": "No se pudo enviar. Reintento automático a las {hora}.",
+  "m0507bReintento": "No se pudo enviar. A las {hora} lo intentamos de nuevo, sin que hagas nada.",
   "@m0507bReintento": {
     "description": "M05-07b cuándo será el próximo intento",
     "placeholders": {

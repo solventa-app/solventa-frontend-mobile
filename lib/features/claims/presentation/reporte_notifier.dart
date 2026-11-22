@@ -151,7 +151,7 @@ final class ReporteState {
 /// UUID v4 para `idReporte` (clave de idempotencia y id del siniestro).
 String nuevoIdReporte([Random? azar]) => uuidV4(azar);
 
-final class ReporteNotifier extends Notifier<ReporteState> {
+class ReporteNotifier extends Notifier<ReporteState> {
   /// Las escrituras al almacén van una tras otra, en el orden en que el
   /// cliente hizo cada cosa.
   Future<void> _escrituras = Future.value();

@@ -4055,25 +4055,25 @@ abstract class AppLocalizations {
   /// M05-05 reporte guardado, sin conexión
   ///
   /// In es, this message translates to:
-  /// **'Lo enviaremos a la aseguradora apenas vuelva la conexión. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las {hora}.'**
+  /// **'Lo guardamos a las {hora} y lo enviaremos a la aseguradora apenas vuelva la conexión. Todavía no tiene radicado: te avisaremos cuando lo reciban.'**
   String m0505GuardadoSinRed(String hora);
 
   /// M05-05 reporte guardado, esperando Wi-Fi
   ///
   /// In es, this message translates to:
-  /// **'Lo enviaremos cuando te conectes a Wi-Fi. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las {hora}.'**
+  /// **'Lo guardamos a las {hora} y lo enviaremos cuando te conectes a Wi-Fi. Todavía no tiene radicado: te avisaremos cuando lo reciban.'**
   String m0505GuardadoWifi(String hora);
 
   /// M05-05 reporte guardado, sin sesión abierta
   ///
   /// In es, this message translates to:
-  /// **'Lo enviaremos cuando vuelvas a iniciar sesión. Todavía no tiene radicado. Guardado a las {hora}.'**
+  /// **'Lo guardamos a las {hora} y lo enviaremos cuando vuelvas a iniciar sesión. Todavía no tiene radicado.'**
   String m0505GuardadoSesion(String hora);
 
   /// M05-05 reporte guardado tras una falla técnica que se reintenta sola
   ///
   /// In es, this message translates to:
-  /// **'No pudimos enviarlo ahora. Lo intentaremos de nuevo en un momento, sin que tengas que hacer nada. Todavía no tiene radicado. Guardado a las {hora}.'**
+  /// **'Lo guardamos a las {hora}, pero no pudimos enviarlo ahora. Lo intentaremos de nuevo en un momento, sin que tengas que hacer nada. Todavía no tiene radicado.'**
   String m0505GuardadoReintento(String hora);
 
   /// M05-05 detalle del reporte guardado
@@ -4223,7 +4223,7 @@ abstract class AppLocalizations {
   /// M05-07b cuándo será el próximo intento
   ///
   /// In es, this message translates to:
-  /// **'No se pudo enviar. Reintento automático a las {hora}.'**
+  /// **'No se pudo enviar. A las {hora} lo intentamos de nuevo, sin que hagas nada.'**
   String m0507bReintento(String hora);
 
   /// M05-07b paso actual de un reporte rechazado

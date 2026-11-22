@@ -38,6 +38,11 @@ class SolActionTile extends StatelessWidget {
     final razon = disabledReason;
     final habilitada = razon == null;
     final tinta = habilitada ? colors.onSurface : colors.onSurfaceVariant;
+    final titulo = Text(
+      title,
+      style: context.solText.titleSmall.copyWith(color: tinta),
+    );
+    final insignia = habilitada ? badge : null;
     final fila = Row(
       children: [
         Icon(
@@ -50,10 +55,27 @@ class SolActionTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: context.solText.titleSmall.copyWith(color: tinta),
-              ),
+              if (insignia == null)
+                titulo
+              else
+                // Con texto grande la insignia no cabe al lado: baja a otra
+                // línea en vez de salirse de la tarjeta.
+                SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: SolSpacing.sm,
+                    runSpacing: SolSpacing.xs,
+                    children: [
+                      titulo,
+                      SolStatusBadge(
+                        status: SolStatus.warning,
+                        label: insignia,
+                      ),
+                    ],
+                  ),
+                ),
               if (razon != null) ...[
                 const SizedBox(height: SolSpacing.xxs),
                 Text(
@@ -66,10 +88,6 @@ class SolActionTile extends StatelessWidget {
             ],
           ),
         ),
-        if (badge case final texto? when habilitada) ...[
-          const SizedBox(width: SolSpacing.sm),
-          SolStatusBadge(status: SolStatus.warning, label: texto),
-        ],
         const SizedBox(width: SolSpacing.sm),
         Icon(
           habilitada ? SolIcons.chevronRight : SolIcons.offline,

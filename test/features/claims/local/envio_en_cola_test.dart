@@ -265,7 +265,7 @@ void main() {
 
       expect(find.text('Reporte guardado'), findsOneWidget);
       expect(
-        find.textContaining('Lo enviaremos cuando te conectes a Wi-Fi'),
+        find.textContaining('lo enviaremos cuando te conectes a Wi-Fi'),
         findsOneWidget,
       );
       expect(bff.reportes, isEmpty);
