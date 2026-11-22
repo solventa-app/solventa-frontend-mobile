@@ -103,6 +103,25 @@ final copiasReporteProvider = Provider<CopiasReporte>(
   ),
 );
 
+/// HU-M05 (plan 4.2): al entrar con red se bajan las pólizas y «Mis
+/// siniestros» y se guarda su copia, para que el reporte funcione después sin
+/// conexión aunque el cliente nunca haya abierto esas pantallas. Lo observa el
+/// inicio con la sesión abierta; se repite al volver la red y al cambiar de
+/// cuenta. Si falla no se avisa: la pantalla que los necesite lo dirá.
+final cargaInicialReporteProvider = Provider.autoDispose<void>((ref) {
+  final cuenta = ref.watch(cuentaReporteProvider);
+  final conectado = ref.watch(estadoRedProvider.select((red) => red.conectado));
+  if (cuenta == null || !conectado) return;
+  unawaited(
+    Future.microtask(() async {
+      if (!ref.mounted) return;
+      final copias = ref.read(copiasReporteProvider);
+      await copias.polizas();
+      if (ref.mounted) await copias.misSiniestros();
+    }),
+  );
+});
+
 /// Los reportes de la cuenta guardados en el teléfono (borradores, por enviar
 /// y recién enviados), al día con cada cambio.
 final reportesGuardadosProvider = StreamProvider<List<ReporteGuardado>>((

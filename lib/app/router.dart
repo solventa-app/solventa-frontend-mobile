@@ -541,6 +541,11 @@ class _RootShell extends ConsumerWidget {
     // HU-M06 (H1): con sesión, «Mis asistencias» se carga al abrir la app (el
     // badge y la reprogramación de las notificaciones) sin entrar a la pestaña.
     ref.watch(cargaInicialAsistenciasProvider);
+    // HU-M05 (sin conexión): las pólizas quedan guardadas desde que se entra
+    // con red. Solo una cuenta verificada puede reportar.
+    if (estado.verificacion == EstadoVerificacion.verificada) {
+      ref.watch(cargaInicialReporteProvider);
+    }
 
     final l10n = context.l10n;
     final notifier = ref.read(onboardingProvider.notifier);

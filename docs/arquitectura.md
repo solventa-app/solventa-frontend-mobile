@@ -341,6 +341,10 @@ memoria, con aviso; el archivo de base y las claves llevan el prefijo del ambien
 - **El reporte se guarda desde la primera foto.** `ReporteNotifier` escribe cada cambio en `AlmacenReportes`
   (borrador). El `idReporte` nace con el borrador y es el mismo que viaja a `reportarSiniestro`: reenviar no duplica el
   caso, y cada foto guarda su `archivoId` al subir para no subirse dos veces.
+- **Las pólizas se bajan al entrar.** Con la sesión abierta, la cuenta verificada y red, el inicio pide las pólizas
+  reportables y «Mis siniestros» y guarda su copia (`cargaInicialReporteProvider`, `CopiasReporte`); se repite al
+  volver la red y cada vez que esas pantallas cargan con conexión. La copia es de solo lectura y se reemplaza con
+  cada respuesta del servidor. Sin copia, M05-01 pide conectarse una vez.
 - **Una cola con un solo trabajador** (`ColaReportes`): envía en orden lo de la cuenta con sesión, reintenta las fallas
   técnicas a los 10 s, 1 min, 5 min y 15 min, y a las 8 seguidas (que no sean de red) deja el reporte en «No se pudo
   enviar». Un rechazo de negocio queda «Con error» con su motivo. Sin sesión espera, y avisa una sola vez.

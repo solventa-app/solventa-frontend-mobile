@@ -23,27 +23,33 @@ typedef _Cuenta = ({
 /// si está verificada) y limpia lo vencido. Al cerrarse la sesión, nadie es
 /// dueño: no se guarda ni se muestra nada.
 void seguirCuentaLocal(WidgetRef ref) {
-  ref.listenManual<_Cuenta>(
-    onboardingProvider.select(
-      (s) => (
-        abierta: s.cuentaCreada,
-        id: s.perfil?.id,
-        nombre: s.perfil?.nombre,
-        verificacion: s.verificacion,
-      ),
+  final cuenta = onboardingProvider.select<_Cuenta>(
+    (s) => (
+      abierta: s.cuentaCreada,
+      id: s.perfil?.id,
+      nombre: s.perfil?.nombre,
+      verificacion: s.verificacion,
     ),
-    (antes, ahora) {
-      final id = ahora.id;
-      if (!ahora.abierta || id == null) {
-        if (antes?.abierta ?? false) {
-          ref.read(cuentaActualProvider.notifier).fijar(null);
-        }
-        return;
+  );
+  void alCambiar(_Cuenta? antes, _Cuenta ahora) {
+    final id = ahora.id;
+    if (!ahora.abierta || id == null) {
+      if (antes?.abierta ?? false) {
+        ref.read(cuentaActualProvider.notifier).fijar(null);
       }
-      ref.read(cuentaActualProvider.notifier).fijar(id);
-      unawaited(_anotar(ref, id, ahora, limpiar: antes?.id != id));
-    },
-    fireImmediately: true,
+      return;
+    }
+    ref.read(cuentaActualProvider.notifier).fijar(id);
+    unawaited(_anotar(ref, id, ahora, limpiar: antes?.id != id));
+  }
+
+  ref.listenManual<_Cuenta>(cuenta, alCambiar);
+  // El estado con el que arranca la app se atiende fuera de la construcción
+  // del árbol: ahí no se puede cambiar un provider.
+  unawaited(
+    Future.microtask(() {
+      if (ref.context.mounted) alCambiar(null, ref.read(cuenta));
+    }),
   );
 }
 
