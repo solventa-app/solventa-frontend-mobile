@@ -15,6 +15,7 @@ class SolTopLevelScaffold extends StatelessWidget {
     this.destinations = SolBottomNav.defaultDestinations,
     this.onLocaleTap,
     this.onWordmarkLongPress,
+    this.onProfileTap,
   });
 
   final Widget body;
@@ -24,12 +25,16 @@ class SolTopLevelScaffold extends StatelessWidget {
   final VoidCallback? onLocaleTap;
   final VoidCallback? onWordmarkLongPress;
 
+  /// Avatar del inicio que abre Mi perfil; sin él no hay avatar.
+  final VoidCallback? onProfileTap;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SolTopBar.home(
         onLocaleTap: onLocaleTap,
         onWordmarkLongPress: onWordmarkLongPress,
+        onProfileTap: onProfileTap,
       ),
       body: SolAdaptiveBody(child: body),
       bottomNavigationBar: SolBottomNav(

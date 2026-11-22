@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
@@ -12,7 +13,10 @@ import '../reporte_routes.dart';
 /// M05-01 · Póliza y fecha del siniestro (KAN-277). Sin frame en Figma: se
 /// arma con el sistema de diseño (decisión del 2026-11-04).
 class M0501PolizaPage extends ConsumerWidget {
-  const M0501PolizaPage({super.key});
+  const M0501PolizaPage({super.key, this.onHome});
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   Future<void> _elegirFecha(
     BuildContext context,
@@ -102,7 +106,8 @@ class M0501PolizaPage extends ConsumerWidget {
 
     return SolFlowScaffold(
       title: l10n.m05Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: onHome,
       anchorActions: true,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

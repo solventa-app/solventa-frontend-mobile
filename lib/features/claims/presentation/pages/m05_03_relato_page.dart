@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../domain/ciudades.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
@@ -11,7 +12,10 @@ import '../reporte_routes.dart';
 
 /// M05-03 · Qué pasó y dónde (KAN-277).
 class M0503RelatoPage extends ConsumerStatefulWidget {
-  const M0503RelatoPage({super.key});
+  const M0503RelatoPage({super.key, this.onHome});
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   @override
   ConsumerState<M0503RelatoPage> createState() => _M0503RelatoPageState();
@@ -114,7 +118,8 @@ class _M0503RelatoPageState extends ConsumerState<M0503RelatoPage> {
 
     return SolFlowScaffold(
       title: l10n.m0503Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: salirAlInicioConfirmando(context, widget.onHome),
       anchorActions: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

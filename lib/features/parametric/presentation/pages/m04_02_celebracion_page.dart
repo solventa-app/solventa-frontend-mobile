@@ -18,12 +18,16 @@ class M0402CelebracionPage extends ConsumerWidget {
     super.key,
     required this.id,
     this.onBack,
+    this.onHome,
     this.onVerDetalle,
     this.onVerCobertura,
   });
 
   final String id;
   final VoidCallback? onBack;
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
   final VoidCallback? onVerDetalle;
   final VoidCallback? onVerCobertura;
 
@@ -50,6 +54,7 @@ class M0402CelebracionPage extends ConsumerWidget {
         title: l10n.m0402Titulo,
         onBack: onBack,
         showBack: onBack != null,
+        onHomeTap: onHome,
       ),
       centerBody: true,
       body: cuerpo,

@@ -120,6 +120,11 @@ void main() {
     await tester.tap(find.text('Ver mi cobertura'));
     await tester.pumpAndSettle();
     expect(find.byType(M0404CoberturaPage), findsOneWidget);
+
+    // La flecha devuelve a la celebración.
+    await tester.tap(find.byIcon(SolIcons.back));
+    await tester.pumpAndSettle();
+    expect(find.byType(M0402CelebracionPage), findsOneWidget);
   });
 
   testWidgets('app abierta: el aviso en primer plano abre M04-02', (

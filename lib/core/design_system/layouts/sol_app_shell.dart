@@ -19,6 +19,7 @@ class SolAppShell extends StatefulWidget {
     this.initialIndex = 0,
     this.onLocaleTap,
     this.onWordmarkLongPress,
+    this.onProfileTap,
     this.pestana,
   });
 
@@ -32,6 +33,9 @@ class SolAppShell extends StatefulWidget {
   final int initialIndex;
   final VoidCallback? onLocaleTap;
   final VoidCallback? onWordmarkLongPress;
+
+  /// Avatar de la barra superior que abre Mi perfil.
+  final VoidCallback? onProfileTap;
 
   /// Control opcional de la pestaña activa desde fuera (p. ej. volver a
   /// Asistencia al terminar un recorrido). Se mantiene al día con los toques.
@@ -105,6 +109,7 @@ class _SolAppShellState extends State<SolAppShell> {
         destinations: widget.destinations,
         onLocaleTap: widget.onLocaleTap,
         onWordmarkLongPress: widget.onWordmarkLongPress,
+        onProfileTap: widget.onProfileTap,
         body: IndexedStack(
           index: _index,
           children: [

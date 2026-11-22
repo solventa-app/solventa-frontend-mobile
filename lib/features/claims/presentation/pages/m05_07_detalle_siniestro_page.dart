@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import 'm05_01_poliza_page.dart' show nombreTipoAuto;
@@ -30,7 +30,11 @@ class M0507DetalleSiniestroPage extends ConsumerStatefulWidget {
     this.ahora = DateTime.now,
     this.cadaCuanto = const Duration(seconds: 30),
     super.key,
+    this.onHome,
   });
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   final String id;
 
@@ -124,7 +128,8 @@ class _M0507DetalleSiniestroPageState
 
     return SolFlowScaffold(
       title: l10n.m0507Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: widget.onHome,
       body: RefreshIndicator(
         onRefresh: () {
           _renovadas.clear();
