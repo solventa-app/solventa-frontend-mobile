@@ -793,6 +793,23 @@ class OnboardingNotifier extends Notifier<OnboardingState> {
     state = state.copyWith(cargandoPerfil: false, perfilSinCargar: !cargado);
   }
 
+  /// Vuelve a leer el perfil (`yo`) para tomar el idioma y la moneda que se
+  /// hayan guardado desde la web u otro teléfono mientras la app estaba en
+  /// segundo plano (`SolventaApp` lo llama al volver a primer plano).
+  /// `preferenciasDeLaCuentaProvider` los aplica si cambiaron. No hace nada sin
+  /// sesión, sin perfil o con un cambio local todavía sin guardar (ese manda).
+  Future<void> refrescarPreferenciasDeLaCuenta() async {
+    if (state.perfil == null || !state.cuentaCreada) return;
+    if (_temporizadorPreferencias?.isActive ?? false) return;
+    final epoca = _epocaSesion;
+    final r = await ref.read(onboardingRepositoryProvider).consultarPerfil();
+    if (!ref.mounted || epoca != _epocaSesion) return;
+    if (_temporizadorPreferencias?.isActive ?? false) return;
+    if (r case Exito(valor: final perfil?)) {
+      state = state.copyWith(perfil: perfil);
+    }
+  }
+
   /// Cierra la sesión actual y reinicia el estado en memoria.
   Future<void> cerrarSesion() async {
     _capturasEnMemoria.clear();

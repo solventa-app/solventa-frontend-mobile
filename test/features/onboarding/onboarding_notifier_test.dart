@@ -273,6 +273,39 @@ void main() {
         expect(estado().perfil!.moneda, 'MXN');
       });
 
+      test(
+        'al volver a primer plano toma lo que se guardó desde la web',
+        () async {
+          c.read(preferenciasDeLaCuentaProvider);
+          await notifier().reanudarSesion();
+          expect(c.read(localeProvider).languageCode, 'es');
+
+          // Otro cliente guardó EN/EUR en la cuenta.
+          bff.usuarioActual = {
+            ...bff.usuarioActual,
+            'idioma': 'EN',
+            'moneda': 'EUR',
+          };
+          await notifier().refrescarPreferenciasDeLaCuenta();
+
+          expect(c.read(localeProvider).languageCode, 'en');
+          expect(c.read(monedaProvider), 'EUR');
+          await Future<void>.delayed(const Duration(milliseconds: 900));
+          expect(bff.operaciones, isNot(contains('actualizarPreferencias')));
+        },
+      );
+
+      test('un cambio local sin guardar manda sobre el de la cuenta', () async {
+        c.read(preferenciasDeLaCuentaProvider);
+        await notifier().reanudarSesion();
+        c.read(monedaProvider.notifier).cambiar('MXN');
+        bff.usuarioActual = {...bff.usuarioActual, 'moneda': 'EUR'};
+
+        await notifier().refrescarPreferenciasDeLaCuenta();
+
+        expect(c.read(monedaProvider), 'MXN');
+      });
+
       test('sin sesión no se manda nada a la cuenta', () async {
         c.read(localeProvider.notifier).cambiar(AppLocales.en);
         await Future<void>.delayed(const Duration(milliseconds: 900));
