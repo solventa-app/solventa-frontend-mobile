@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:ui' show Color;
+import 'dart:ui' show Color, Locale;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/router.dart';
 import '../../features/onboarding/presentation/providers.dart';
+import '../l10n/l10n.dart';
 import '../log/sol_log.dart';
 import '../network/network_providers.dart';
 import 'instalacion_id.dart';
@@ -33,13 +34,26 @@ import 'instalacion_id.dart';
 /// que ese fallo deje el push apagado en vez de tumbar el arranque de la
 /// app; se registra con [SolLog], nunca `print` (regla del repo).
 /// Id del canal: el mismo que el manifiesto (`default_notification_channel_id`)
-/// y el que manda `enviar-push` en `android.notification.channel_id`.
+/// y el que manda `enviar-push` en `android.notification.channel_id`. El
+/// nombre y la descripción que ve el usuario en los ajustes de Android siguen
+/// el idioma de la app ([canalPushEn]); estos son los de español.
 const canalPush = AndroidNotificationChannel(
   'avisos_push',
   'Avisos de Solventa',
   description: 'Indemnizaciones y otros avisos de tus pólizas',
   importance: Importance.high,
 );
+
+/// [canalPush] con el nombre y la descripción en el idioma [locale].
+AndroidNotificationChannel canalPushEn(Locale locale) {
+  final l10n = lookupAppLocalizations(locale);
+  return AndroidNotificationChannel(
+    canalPush.id,
+    l10n.pushCanalNombre,
+    description: l10n.pushCanalDescripcion,
+    importance: Importance.high,
+  );
+}
 
 class PushService {
   PushService(this._ref, [FlutterLocalNotificationsPlugin? avisos])
@@ -64,6 +78,9 @@ class PushService {
     }
 
     await _crearCanal();
+    // Android actualiza el nombre y la descripción de un canal existente al
+    // volver a crearlo con el mismo id: así los ajustes siguen el idioma.
+    _ref.listen(localeProvider, (_, _) => unawaited(_crearCanal()));
 
     try {
       final ajustes = await FirebaseMessaging.instance.requestPermission();
@@ -142,7 +159,7 @@ class PushService {
           .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin
           >()
-          ?.createNotificationChannel(canalPush);
+          ?.createNotificationChannel(_canal);
     } catch (e) {
       SolLog.warning(
         'No se creó el canal de push',
@@ -151,9 +168,13 @@ class PushService {
     }
   }
 
+  AndroidNotificationChannel get _canal =>
+      canalPushEn(_ref.read(localeProvider));
+
   Future<void> _mostrarEnPrimerPlano(RemoteMessage m) async {
     final aviso = m.notification;
     if (aviso == null) return;
+    final canal = _canal;
     try {
       await _avisos.show(
         id: m.messageId.hashCode & 0x7fffffff,
@@ -161,9 +182,9 @@ class PushService {
         body: aviso.body,
         notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
-            canalPush.id,
-            canalPush.name,
-            channelDescription: canalPush.description,
+            canal.id,
+            canal.name,
+            channelDescription: canal.description,
             importance: Importance.high,
             priority: Priority.high,
             // Silueta blanca de la «S» sobre el azul de marca (res/drawable-*/ic_stat_solventa).

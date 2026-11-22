@@ -201,10 +201,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get fallaGenerica => 'Algo salió mal. Intenta nuevamente.';
 
   @override
-  String get localeChipSemantica =>
-      'Idioma español, moneda pesos colombianos. Toca para cambiar a inglés.';
-
-  @override
   String get m0105bTitulo => 'Crea tu cuenta';
 
   @override
@@ -2030,4 +2026,90 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0506PorValorar => 'Un operador está valorando el daño';
+
+  @override
+  String montosDeReferencia(String moneda) {
+    return 'Valores de referencia en $moneda. Se pagan en pesos colombianos (COP).';
+  }
+
+  @override
+  String localeChipEtiquetaSemantica(String idioma, String moneda) {
+    return 'Idioma $idioma, moneda $moneda';
+  }
+
+  @override
+  String get idiomaNombreEs => 'español';
+
+  @override
+  String get idiomaNombreEn => 'inglés';
+
+  @override
+  String get solCambiarIdiomaMoneda => 'Cambiar idioma y moneda';
+
+  @override
+  String get solVolver => 'Volver';
+
+  @override
+  String get solMiPerfil => 'Mi perfil';
+
+  @override
+  String get solBorrarDigito => 'Borrar dígito';
+
+  @override
+  String solPinProgreso(int lleno, int total) {
+    return 'PIN: $lleno de $total dígitos ingresados';
+  }
+
+  @override
+  String get solVisorCamara => 'Visor de cámara';
+
+  @override
+  String solPestana(int posicion, int total) {
+    return 'Pestaña $posicion de $total';
+  }
+
+  @override
+  String get solEstadoAtencion => 'Atención';
+
+  @override
+  String get solEstadoError => 'Error';
+
+  @override
+  String get solEstadoInformacion => 'Información';
+
+  @override
+  String get solEstadoExito => 'Éxito';
+
+  @override
+  String get solProveedorMedico => 'Médico';
+
+  @override
+  String get solProveedorMecanico => 'Mecánico';
+
+  @override
+  String get solProveedorGrua => 'Grúa';
+
+  @override
+  String get solSolicitar => 'Solicitar';
+
+  @override
+  String get solAliado => 'Aliado Solventa';
+
+  @override
+  String get solMostrarClave => 'Mostrar clave';
+
+  @override
+  String get solOcultarClave => 'Ocultar clave';
+
+  @override
+  String solErrorCampo(String texto) {
+    return 'Error: $texto';
+  }
+
+  @override
+  String get pushCanalNombre => 'Avisos de Solventa';
+
+  @override
+  String get pushCanalDescripcion =>
+      'Indemnizaciones y otros avisos de tus pólizas';
 }

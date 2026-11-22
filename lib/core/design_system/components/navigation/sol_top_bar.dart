@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../icons/sol_icons.dart';
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_sizes.dart';
 import '../../tokens/sol_spacing.dart';
@@ -155,7 +156,7 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
                 if (!isHome && onHomeTap != null)
                   IconButton(
                     onPressed: onHomeTap,
-                    tooltip: 'Inicio',
+                    tooltip: context.solTextos.navInicio,
                     icon: const Icon(SolIcons.home),
                     iconSize: SolSizes.icon,
                     color: colors.onSurface,
@@ -190,7 +191,7 @@ class _BackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: onBack ?? () => Navigator.maybePop(context),
-      tooltip: 'Volver',
+      tooltip: context.solTextos.solVolver,
       icon: const Icon(SolIcons.back),
       iconSize: SolSizes.icon,
       color: context.colors.onSurface,

@@ -198,10 +198,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fallaGenerica => 'Something went wrong. Please try again.';
 
   @override
-  String get localeChipSemantica =>
-      'English language, Colombian pesos. Tap to switch to Spanish.';
-
-  @override
   String get m0105bTitulo => 'Create your account';
 
   @override
@@ -2028,4 +2024,90 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0506PorValorar => 'An operator is assessing the damage';
+
+  @override
+  String montosDeReferencia(String moneda) {
+    return 'Reference values in $moneda. Paid in Colombian pesos (COP).';
+  }
+
+  @override
+  String localeChipEtiquetaSemantica(String idioma, String moneda) {
+    return 'Language $idioma, currency $moneda';
+  }
+
+  @override
+  String get idiomaNombreEs => 'Spanish';
+
+  @override
+  String get idiomaNombreEn => 'English';
+
+  @override
+  String get solCambiarIdiomaMoneda => 'Change language and currency';
+
+  @override
+  String get solVolver => 'Back';
+
+  @override
+  String get solMiPerfil => 'My profile';
+
+  @override
+  String get solBorrarDigito => 'Delete digit';
+
+  @override
+  String solPinProgreso(int lleno, int total) {
+    return 'PIN: $lleno of $total digits entered';
+  }
+
+  @override
+  String get solVisorCamara => 'Camera viewfinder';
+
+  @override
+  String solPestana(int posicion, int total) {
+    return 'Tab $posicion of $total';
+  }
+
+  @override
+  String get solEstadoAtencion => 'Warning';
+
+  @override
+  String get solEstadoError => 'Error';
+
+  @override
+  String get solEstadoInformacion => 'Information';
+
+  @override
+  String get solEstadoExito => 'Success';
+
+  @override
+  String get solProveedorMedico => 'Medical';
+
+  @override
+  String get solProveedorMecanico => 'Mechanic';
+
+  @override
+  String get solProveedorGrua => 'Tow truck';
+
+  @override
+  String get solSolicitar => 'Request';
+
+  @override
+  String get solAliado => 'Solventa partner';
+
+  @override
+  String get solMostrarClave => 'Show password';
+
+  @override
+  String get solOcultarClave => 'Hide password';
+
+  @override
+  String solErrorCampo(String texto) {
+    return 'Error: $texto';
+  }
+
+  @override
+  String get pushCanalNombre => 'Solventa alerts';
+
+  @override
+  String get pushCanalDescripcion =>
+      'Payouts and other alerts about your policies';
 }

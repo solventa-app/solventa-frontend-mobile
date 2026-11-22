@@ -322,7 +322,7 @@ void main() {
       expect(
         tester.getSemantics(find.byType(SolLocaleChip)),
         matchesSemantics(
-          label: 'Idioma español, moneda pesos colombianos',
+          label: 'Idioma español, moneda Peso colombiano (COP)',
           hint: 'Cambiar idioma y moneda',
           isButton: true,
           hasTapAction: true,
@@ -330,7 +330,7 @@ void main() {
       );
       handle.dispose();
       expect(
-        find.bySemanticsLabel('Idioma español, moneda pesos colombianos'),
+        find.bySemanticsLabel('Idioma español, moneda Peso colombiano (COP)'),
         findsOneWidget,
       );
       await expectA11yGuidelines(tester);

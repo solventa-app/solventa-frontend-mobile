@@ -128,7 +128,12 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
         final l10n = context.l10n;
         return SolLocaleScope(
           label: etiquetaChip,
-          semanticLabel: l10n.localeChipSemantica,
+          semanticLabel: l10n.localeChipEtiquetaSemantica(
+            locale.languageCode == 'en'
+                ? l10n.idiomaNombreEn
+                : l10n.idiomaNombreEs,
+            l10n.nombreMoneda(moneda),
+          ),
           onTap: () {
             ref.read(localeProvider.notifier).alternar();
             final navContext =
