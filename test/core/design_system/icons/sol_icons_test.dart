@@ -42,6 +42,18 @@ void main() {
       SolIcons.payments,
       SolIcons.bank,
       SolIcons.celebration,
+      SolIcons.offline,
+      SolIcons.syncing,
+      SolIcons.synced,
+      SolIcons.upload,
+      SolIcons.sendLater,
+      SolIcons.slowConnection,
+      SolIcons.wifi,
+      SolIcons.wifiFair,
+      SolIcons.wifiPoor,
+      SolIcons.mobileData,
+      SolIcons.mobileDataFair,
+      SolIcons.mobileDataPoor,
     ];
     for (final icon in icons) {
       expect(icon.fontFamily, 'MaterialSymbolsOutlined');

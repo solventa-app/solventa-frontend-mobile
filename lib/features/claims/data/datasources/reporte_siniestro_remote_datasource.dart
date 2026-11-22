@@ -1,5 +1,6 @@
 import '../../../../core/contrato/schema.graphql.dart';
 import '../../../../core/network/graphql_client.dart';
+import '../../../../core/network/network_exceptions.dart';
 import '../fixtures/reporte_siniestro_fixtures.dart';
 import '../graphql/reporte_siniestro.graphql.dart';
 
@@ -121,10 +122,22 @@ final class FakeReporteSiniestroRemoteDataSource
   /// Para pruebas: `misSiniestros` sin los casos de demostración.
   bool sinHistorial = false;
 
+  /// Para pruebas: cuántas confirmaciones seguidas responden que el archivo
+  /// no llegó al almacenamiento.
+  int confirmacionesFallidas = 0;
+
+  /// Para pruebas: `solicitarSubida` lanza este error (una vez).
+  Object? errorAlSolicitar;
+
+  /// Sin red: toda operación falla como en un teléfono sin señal (pruebas y
+  /// la conexión simulada de `API_ENV=mock`).
+  bool sinRed = false;
+
   final List<String> _mios = [];
 
   Future<void> _esperar() async {
     if (latencia > Duration.zero) await Future<void>.delayed(latencia);
+    if (sinRed) throw const ErrorRed(tipo: 'connectionError');
   }
 
   @override
@@ -142,6 +155,12 @@ final class FakeReporteSiniestroRemoteDataSource
     String tipoContenido,
     int tamanoBytes,
   ) async {
+    if (sinRed) throw const ErrorRed(tipo: 'connectionError');
+    final error = errorAlSolicitar;
+    if (error != null) {
+      errorAlSolicitar = null;
+      throw error;
+    }
     final id = 'arch-${subidas.length + 1}';
     subidas.add(id);
     return Mutation$SolicitarSubidaEvidenciaSiniestro.fromJson(
@@ -152,9 +171,22 @@ final class FakeReporteSiniestroRemoteDataSource
   @override
   Future<Mutation$ConfirmarSubidaEvidencia$confirmarSubidaArchivo> confirmar(
     String archivoId,
-  ) async => Mutation$ConfirmarSubidaEvidencia.fromJson(
-    ReporteSiniestroFixtures.confirmada(archivoId),
-  ).confirmarSubidaArchivo;
+  ) async {
+    if (sinRed) throw const ErrorRed(tipo: 'connectionError');
+    if (confirmacionesFallidas > 0) {
+      confirmacionesFallidas--;
+      return Mutation$ConfirmarSubidaEvidencia.fromJson({
+        '__typename': 'Mutation',
+        'confirmarSubidaArchivo': {
+          '__typename': 'ErrorArchivo',
+          'codigo': 'ARCHIVO_NO_ENCONTRADO',
+        },
+      }).confirmarSubidaArchivo;
+    }
+    return Mutation$ConfirmarSubidaEvidencia.fromJson(
+      ReporteSiniestroFixtures.confirmada(archivoId),
+    ).confirmarSubidaArchivo;
+  }
 
   @override
   Future<Mutation$ReportarSiniestro$reportarSiniestro> reportar(

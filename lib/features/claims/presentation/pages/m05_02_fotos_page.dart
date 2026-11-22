@@ -6,18 +6,25 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../../../core/network/network_providers.dart';
+import '../../../../core/red/estado_red_notifier.dart';
 import '../../../assistance/domain/entities/asistencia.dart';
 import '../../../assistance/presentation/widgets/hoja_direccion.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
+import '../reporte_notifier.dart';
 import '../reporte_routes.dart';
+import '../widgets/banner_reporte.dart';
 import '../widgets/visor_camara_reporte.dart';
 
 /// M05-02 · Fotos del daño con GPS (KAN-276). Cada foto lleva la ubicación
 /// del teléfono en el momento de tomarla (CA-M05-02).
 class M0502FotosPage extends ConsumerStatefulWidget {
-  const M0502FotosPage({super.key});
+  const M0502FotosPage({super.key, this.onHome});
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   @override
   ConsumerState<M0502FotosPage> createState() => _M0502FotosPageState();
@@ -70,10 +77,19 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
     // permisos a la vez y el segundo quedaría colgado.
     final ubicacionLista =
         estado.ubicacion != null || estado.ubicacionSinPermiso;
+    // Con cuenta, el reporte queda guardado cifrado desde la primera foto.
+    final guardaEnTelefono = ref.watch(cuentaReporteProvider) != null;
+    // Ubicar una dirección escrita necesita internet: sin conexión solo vale
+    // el GPS del teléfono (que no usa internet).
+    final conectado = ref.watch(
+      estadoRedProvider.select((red) => red.conectado),
+    );
 
     return SolFlowScaffold(
+      banner: const BannerReporte(),
       title: l10n.m0502Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: salirAlInicioConfirmando(context, widget.onHome),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -105,16 +121,29 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
             onQuitar: notifier.quitarFoto,
           ),
           const SizedBox(height: SolSpacing.md),
+          if (estado.avisoGuardado case final aviso?) ...[
+            SolStatusBanner(
+              status: SolStatus.warning,
+              title: aviso == AvisoGuardado.sinEspacio
+                  ? l10n.m05SinEspacio
+                  : l10n.m05NoGuardado,
+            ),
+            const SizedBox(height: SolSpacing.md),
+          ] else if (guardaEnTelefono) ...[
+            SolInlineNote(icon: SolIcons.lock, text: l10n.m0502FotosCifradas),
+            const SizedBox(height: SolSpacing.sm),
+          ],
           if (estado.direccionEscrita case final direccion?) ...[
             SolInlineNote(
               icon: SolIcons.location,
               text: l10n.m0502UbicadaDireccion(direccion),
               color: sol.success,
             ),
-            SolButton.text(
-              label: l10n.m0502CambiarDireccion,
-              onPressed: () => unawaited(_escribirDireccion()),
-            ),
+            if (conectado)
+              SolButton.text(
+                label: l10n.m0502CambiarDireccion,
+                onPressed: () => unawaited(_escribirDireccion()),
+              ),
           ] else if (estado.ubicacion != null)
             SolInlineNote(
               icon: SolIcons.location,
@@ -124,13 +153,16 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
           else if (estado.ubicacionSinPermiso) ...[
             SolInlineNote(
               icon: SolIcons.location,
-              text: l10n.m0502SinUbicacion,
+              text: conectado
+                  ? l10n.m0502SinUbicacion
+                  : l10n.m0502UbicacionSinRed,
             ),
             // Sin GPS no se bloquea: la dirección se ubica con Places.
-            SolButton.tonal(
-              label: l10n.m0502EscribirDireccion,
-              onPressed: () => unawaited(_escribirDireccion()),
-            ),
+            if (conectado)
+              SolButton.tonal(
+                label: l10n.m0502EscribirDireccion,
+                onPressed: () => unawaited(_escribirDireccion()),
+              ),
             const SizedBox(height: SolSpacing.sm),
             SolButtonPair(
               primary: SolButton.tonal(

@@ -13,6 +13,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- HU-M06 (4.5): reprogramar la notificación de llegada tras reiniciar el teléfono. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- HU-M05 (sin conexión, fase 3b): servicio en primer plano mientras se envía un
+         reporte, para que Android no cierre la app si el cliente sale de ella. Android 14+
+         pide además el permiso del tipo de servicio (`dataSync`). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <!-- El plugin de cámara los declara, pero el video se graba sin audio y las
          capturas van a la caché privada: se quitan del manifest final. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
@@ -80,6 +85,14 @@
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
             </intent-filter>
         </receiver>
+        <!-- HU-M05 (sin conexión, fase 3b): el servicio en primer plano del envío de reportes
+             (flutter_local_notifications). `stopWithTask`: si el cliente quita la app de
+             recientes, el servicio se detiene con ella; la cola retoma al abrirla. -->
+        <service
+            android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
+            android:exported="false"
+            android:stopWithTask="true"
+            android:foregroundServiceType="dataSync" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

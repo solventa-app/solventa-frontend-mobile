@@ -301,8 +301,13 @@ widgets y `SolLocalizations` fija `es_CO`; el primer PR de HU-M01 lo migra.
   frases.
 - El sistema de diseño también se traduce: sus textos por defecto («Inicio», «Asistencia», «Cerrar sesión»,
   etiquetas de `Semantics`) pasan al ARB.
-- Formatos (`SolFormat`) siguen el locale activo: `es-CO` → `$ 450.000`, `12 sep 2026, 11:02 a. m.`; `en` →
-  `COP 450,000`, `Sep 12, 2026, 11:02 AM`. La moneda siempre es la que manda el contrato.
+- Formatos (`SolFormat.*For(…, locale)`, `currencyIn`) siguen el locale activo: `es-CO` → `$ 450.000`,
+  `12 sep 2026, 11:02 a. m.`; `en` → `COP 450,000`, `Sep 12, 2026, 11:02 AM`. Otras monedas llevan su código ISO
+  (`USD 109,76` / `USD 109.76`).
+- Moneda (KAN-209): los montos llegan en COP y se muestran en la moneda de la barra superior con
+  `ref.monto(context, valor)` (`lib/core/moneda/`), que pide `convertirMontos` al BFF (la app no hace aritmética con
+  dinero), junta los montos de un cuadro en una llamada y recuerda el resultado; si falla, se ve en COP.
+  `NotaMontosDeReferencia` aclara que lo pagado sigue en COP.
 - Idioma: el del teléfono si es `es` o `en`; si no, español. La píldora «ES · COP» de la barra superior permite
   cambiarlo y la elección se guarda en preferencias (no es dato personal).
 - Un test recorre las claves de `app_es.arb` y falla si falta alguna en `app_en.arb`; los goldens de pantalla se
@@ -312,19 +317,57 @@ widgets y `SolLocalizations` fija `es_CO`; el primer PR de HU-M01 lo migra.
 
 ## 8. Persistencia local y offline
 
-**Plan, cuando una HU lo pida.** La guía propone SQLite como fuente de verdad local; en Solventa se aplica así:
+La guía propone SQLite como fuente de verdad local; en Solventa se aplica así (la base local existe desde HU-M05 sin conexión, KAN-35):
 
 | Dato | Dónde | Por qué |
 |---|---|---|
 | JWT de acceso | Solo en memoria (`GestorSesion`) | Dura 60 min y se renueva con el refresh: no hace falta persistirlo |
 | Refresh token | Cifrado con la llave pública RSA del Keystore y guardado en `flutter_secure_storage`, con prefijo de ambiente | La llave privada solo descifra 10 s después de una huella o del PIN del teléfono (HU-M02, D3) |
 | Preferencias (idioma, onboarding visto) | `shared_preferences` | No son datos personales |
-| Datos que deben sobrevivir sin red (póliza de la billetera, evidencias de siniestro pendientes de enviar, colas de sincronización) | SQLite con `drift` | ACID, transacciones, migraciones versionadas y consultas reactivas (`Stream`) |
+| Reportes de siniestro por enviar con sus fotos, la cuenta que entró y las copias de lo último que respondió el servidor (pólizas, «Mis siniestros») | SQLite **cifrado** (`lib/core/almacen/`, `drift` sobre SQLite3 Multiple Ciphers, ChaCha20); la llave, de 32 bytes al azar, en `flutter_secure_storage` con prefijo de ambiente | Tienen datos personales y deben sobrevivir sin red y al cierre de la app. ACID y transacciones |
+| «Enviar las fotos solo con Wi-Fi» | `shared_preferences` (`preferencias_envio.dart`) | Preferencia del teléfono, sin datos personales |
+| Póliza de la billetera (HU futura) | La misma base cifrada | Pendiente |
 | Imágenes del documento y la selfie (HU-M01) | Solo en memoria y en el directorio temporal mientras se envían; se borran al terminar | Son datos biométricos y de identidad: no se guardan |
 
-Reglas: las migraciones de `drift` se versionan y prueban (como Alembic en el backend); ningún dato personal va en
-SQLite sin cifrar (si hiciera falta, SQLCipher); el archivo de base y las claves llevan el prefijo del ambiente (ver
-[integracion-backend.md §1](integracion-backend.md#1-ambientes)). HU-M01 no necesita SQLite.
+Reglas: el esquema se versiona (`BaseLocal.version`) y sus migraciones se prueban (como Alembic en el backend);
+ningún dato personal va en SQLite sin cifrar: si la librería nativa no cifra, la base no se usa y la app sigue solo en
+memoria, con aviso; el archivo de base y las claves llevan el prefijo del ambiente (ver
+[integracion-backend.md §1](integracion-backend.md#1-ambientes)). HU-M01 no necesita SQLite. Con `API_ENV=mock` y en
+`flutter test` todo queda en memoria (`almacenEnDiscoProvider`).
+
+**Decisiones de HU-M05 sin conexión (2026-11-22, KAN-35).** Plan, bocetos y estado en
+[`hu-m05/`](hu-m05/README.md).
+
+- **Solo el reporte de siniestros funciona sin red.** Asistencia en sitio y cobertura dicen «Necesita conexión».
+- **Un solo estado de red para toda la app** (`lib/core/red/`, `estadoRedProvider`): la interfaz del teléfono
+  (`connectivity_plus`), una prueba al gateway (`/health`) que solo corre mientras una pantalla lo necesita, y el
+  resultado de las peticiones reales. Una prueba fallida baja a «mala» y se confirma a los 2 s antes de decir «sin
+  conexión». Las pantallas no consultan la red por su cuenta: usan `BannerConexion` y `ChipRed`.
+- **El reporte se guarda desde la primera foto.** `ReporteNotifier` escribe cada cambio en `AlmacenReportes`
+  (borrador). El `idReporte` nace con el borrador y es el mismo que viaja a `reportarSiniestro`: reenviar no duplica el
+  caso, y cada foto guarda su `archivoId` al subir para no subirse dos veces.
+- **Una cola con un solo trabajador** (`ColaReportes`): envía en orden lo de la cuenta con sesión, reintenta las fallas
+  técnicas a los 10 s, 1 min, 5 min y 15 min, y a las 8 seguidas (que no sean de red) deja el reporte en «No se pudo
+  enviar». Un rechazo de negocio queda «Con error» con su motivo. Sin sesión espera, y avisa una sola vez.
+- **El vigía** (`VigiaReportes`) es lo único que despierta la cola: al volver la red, al abrir la app y al iniciar
+  sesión. También muestra la franja «Reporte enviado» 8 s, las notificaciones (canales propios, distintos a los de
+  HU-M06), los recordatorios a los 30 min, 3 h y 24 h fuera de 10 p. m. a 7 a. m., y arranca el **servicio en primer
+  plano** (`dataSync`, del plugin `flutter_local_notifications`) mientras hay un envío en curso, para que Android no lo
+  corte al salir de la app. No hay trabajo en segundo plano con la app cerrada: se retoma al abrirla.
+- **Datos móviles.** La primera vez que un reporte va a salir por datos se pregunta; «solo con Wi-Fi» queda apagado por
+  defecto y se cambia en Mi perfil.
+- **Límites** (`LimitesLocales`): 5 reportes sin enviar por cuenta; un borrador sin tocar se borra a los 7 días; un
+  enviado, a las 24 h; lo de una cuenta que no vuelve a entrar, a los 30 días; 50 MB libres para guardar otra foto.
+- **Cuenta local** (`CuentaLocal`, `seguirCuentaLocal`): el teléfono guarda el id, el nombre y si está verificada. Con
+  eso lo guardado se separa por cuenta. Correo y documento **no** se guardan.
+- **Entrada sin red** (`FaseAcceso.sinConexion`): si la huella abre el refresh guardado y lo único que falla es la
+  red, entra una cuenta que ya había entrado en ese teléfono, verificada y con el refresh sin vencer. No hay JWT
+  (`GestorSesion.porRenovar`); la sesión se renueva sola cuando vuelve la red o la app regresa al frente. El router
+  solo deja pasar `/`, `/siniestro…`, `/siniestros…` y `/perfil` (`rutaPermitidaSinConexion`). El bloqueo de 15 min
+  aplica igual.
+- **Cierre de sesión con reportes sin enviar:** se conservan cifrados para la misma cuenta, salvo que el cliente
+  marque borrarlos (`DialogoCierreConReportes`, `cerrarCuentaLocal`).
+- **Deuda conocida.** Ver «Huecos conocidos» en [`hu-m05/README.md`](hu-m05/README.md).
 
 **Decisiones de HU-M02 (2026-11-06).**
 

@@ -25,10 +25,14 @@ import 'mis_asistencias_page.dart';
 class AsistenciaDetallePage extends ConsumerStatefulWidget {
   const AsistenciaDetallePage({
     super.key,
+    this.onHome,
     required this.id,
     required this.onBack,
     required this.onPedirOtra,
   });
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   final String id;
   final VoidCallback onBack;
@@ -279,6 +283,7 @@ class _AsistenciaDetallePageState extends ConsumerState<AsistenciaDetallePage> {
     return SolFlowScaffold(
       title: l10n.asistenciaDetalleTitulo,
       onBack: widget.onBack,
+      onHomeTap: widget.onHome,
       anchorActions: false,
       body: cuerpo,
       actions: acciones,

@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/almacen/almacen_local.dart';
+import '../../../core/almacen/almacen_providers.dart';
 import '../../../core/biometria/biometria_providers.dart';
 import '../../../core/biometria/biometria_service.dart';
 import '../../../core/log/sol_log.dart';
 import '../../../core/network/network_providers.dart';
+import '../../../core/red/estado_red_notifier.dart';
 import '../../../core/sesion/gestor_sesion.dart';
 import '../../onboarding/presentation/onboarding_notifier.dart';
 import 'acceso_routes.dart';
@@ -24,6 +27,12 @@ enum FaseAcceso {
 
   /// Recién desbloqueada: M02-03 y luego el Home.
   concedida,
+
+  /// HU-M05 (sin conexión): la huella abrió la sesión guardada, pero no hay
+  /// red para renovarla. Se entra sin JWT, con lo guardado en el teléfono:
+  /// reportar un siniestro, «Mis siniestros» y Mi perfil. Al volver la red la
+  /// sesión se renueva sola y la fase pasa a [normal].
+  sinConexion,
 }
 
 /// Aviso de M02-01, distinto de «no reconocida» (que es M02-01a).
@@ -54,9 +63,14 @@ final class AccesoState {
     this.autenticando = false,
     this.noReconocida = false,
     this.aviso,
+    this.cuentaLocal,
   });
 
   final FaseAcceso fase;
+
+  /// La cuenta guardada en el teléfono con la que se entró sin conexión
+  /// (solo en [FaseAcceso.sinConexion]): su nombre para el saludo.
+  final CuentaLocal? cuentaLocal;
 
   /// Diálogo del sistema abierto o renovación en curso: botones inactivos.
   final bool autenticando;
@@ -76,6 +90,7 @@ final class AccesoState {
     autenticando: autenticando ?? this.autenticando,
     noReconocida: noReconocida ?? this.noReconocida,
     aviso: limpiarAviso ? null : aviso ?? this.aviso,
+    cuentaLocal: cuentaLocal,
   );
 }
 
@@ -103,14 +118,25 @@ class AccesoNotifier extends Notifier<AccesoState> {
   static const bloqueoTrasSegundoPlano = Duration(minutes: 15);
 
   DateTime? _enSegundoPlanDesde;
+  bool _renovando = false;
 
   @override
   AccesoState build() {
     final gestor = ref.watch(gestorSesionProvider);
+    // HU-M05 (sin conexión): al volver la red, la sesión se renueva sola.
+    ref.listen(estadoRedProvider.select((red) => red.conectado), (
+      antes,
+      ahora,
+    ) {
+      if (ahora && antes == false) unawaited(renovarSiHayRed());
+    });
     final eventos = gestor.eventos.listen((evento) {
       // El onboarding ya muestra «Inicia sesión» con el aviso; aquí solo se
       // sale de M02 si se estaba en ella.
       if (evento is SesionVencidaEvento && state.fase != FaseAcceso.normal) {
+        if (state.fase == FaseAcceso.sinConexion) {
+          ref.read(cuentaActualProvider.notifier).fijar(null);
+        }
         state = const AccesoState(fase: FaseAcceso.normal);
       }
     });
@@ -233,10 +259,10 @@ class AccesoNotifier extends Notifier<AccesoState> {
       desbloqueo = await gestor.desbloquear();
       if (!ref.mounted) return;
     }
-    _aplicar(desbloqueo);
+    await _aplicar(desbloqueo);
   }
 
-  void _aplicar(Desbloqueo desbloqueo) {
+  Future<void> _aplicar(Desbloqueo desbloqueo) async {
     switch (desbloqueo) {
       case Desbloqueada():
         state = const AccesoState(fase: FaseAcceso.concedida);
@@ -244,7 +270,7 @@ class AccesoNotifier extends Notifier<AccesoState> {
       case FaltaAutenticacion():
         _terminar(aviso: AvisoAcceso.faltaAutenticacion);
       case DesbloqueoSinRed():
-        _terminar(aviso: AvisoAcceso.sinRed);
+        await _entrarSinConexion();
       case DesbloqueoVencido():
         _onboarding.marcarSesionVencida();
         state = const AccesoState(fase: FaseAcceso.normal);
@@ -252,6 +278,81 @@ class AccesoNotifier extends Notifier<AccesoState> {
         _onboarding.marcarSeguridadTelefonoCambio();
         state = const AccesoState(fase: FaseAcceso.normal);
     }
+  }
+
+  /// HU-M05 (plan 4.5): la huella ya abrió el refresh guardado (esa es la
+  /// prueba local de identidad) y lo único que falló fue la red. Si esta
+  /// cuenta ya entró antes en este teléfono y está verificada, entra en modo
+  /// sin conexión; si no, queda el aviso de siempre con «Reintentar».
+  Future<void> _entrarSinConexion() async {
+    CuentaLocal? cuenta;
+    try {
+      cuenta = await ref.read(almacenLocalProvider).cuentaActiva();
+    } on Object catch (e) {
+      SolLog.warning('No se pudo leer la cuenta guardada (${e.runtimeType})');
+    }
+    if (!ref.mounted || state.fase != FaseAcceso.bloqueada) return;
+    // Solo una cuenta verificada puede reportar un siniestro.
+    if (cuenta == null || !cuenta.verificada) {
+      _terminar(aviso: AvisoAcceso.sinRed);
+      return;
+    }
+    // La sesión guardada sirve hasta que vence el refresh (8 días desde la
+    // última conexión): vencida, sin red no se puede entrar.
+    final guardado = await ref.read(gestorSesionProvider).consultarGuardado();
+    if (!ref.mounted || state.fase != FaseAcceso.bloqueada) return;
+    if (guardado != RefreshGuardado.vigente) {
+      _onboarding.marcarSesionVencida();
+      state = const AccesoState(fase: FaseAcceso.normal);
+      return;
+    }
+    SolLog.info('Ingreso en modo sin conexión');
+    ref.read(cuentaActualProvider.notifier).fijar(cuenta.id);
+    state = AccesoState(fase: FaseAcceso.sinConexion, cuentaLocal: cuenta);
+  }
+
+  /// En modo sin conexión: renueva la sesión con el refresh que ya está en
+  /// memoria (sin volver a pedir la huella). La llaman la red al volver y la
+  /// app al regresar al frente. Si sigue sin red, no cambia nada.
+  Future<void> renovarSiHayRed() async {
+    if (state.fase != FaseAcceso.sinConexion || _renovando) return;
+    _renovando = true;
+    try {
+      final desbloqueo = await ref
+          .read(gestorSesionProvider)
+          .reintentarRenovacion();
+      if (!ref.mounted || state.fase != FaseAcceso.sinConexion) return;
+      switch (desbloqueo) {
+        case Desbloqueada():
+          SolLog.info('Sesión renovada al volver la conexión');
+          // Primero la cuenta abierta: `/` no pasa por «Inicia sesión».
+          unawaited(_onboarding.reanudarSesion());
+          state = const AccesoState(fase: FaseAcceso.normal);
+        case DesbloqueoSinRed():
+          break;
+        case FaltaAutenticacion():
+          // El refresh ya no está en memoria: la huella otra vez.
+          state = const AccesoState(fase: FaseAcceso.bloqueada);
+        case DesbloqueoVencido():
+          ref.read(cuentaActualProvider.notifier).fijar(null);
+          _onboarding.marcarSesionVencida();
+          state = const AccesoState(fase: FaseAcceso.normal);
+        case DesbloqueoLlaveInvalidada():
+          ref.read(cuentaActualProvider.notifier).fijar(null);
+          _onboarding.marcarSeguridadTelefonoCambio();
+          state = const AccesoState(fase: FaseAcceso.normal);
+      }
+    } finally {
+      _renovando = false;
+    }
+  }
+
+  /// Cierre de sesión desde el modo sin conexión: ya no hay cuenta en el
+  /// teléfono; `/` vuelve a «Inicia sesión».
+  void alCerrarSesion() {
+    if (state.fase != FaseAcceso.sinConexion) return;
+    ref.read(cuentaActualProvider.notifier).fijar(null);
+    state = const AccesoState(fase: FaseAcceso.normal);
   }
 
   void _terminar({AvisoAcceso? aviso, bool noReconocida = false}) {
@@ -281,7 +382,7 @@ class AccesoNotifier extends Notifier<AccesoState> {
       state = state.copyWith(autenticando: false);
       return desbloquear(motivo: motivo, dialogo: dialogo);
     }
-    _aplicar(desbloqueo);
+    await _aplicar(desbloqueo);
   }
 
   /// Al volver de Ajustes: si el aviso era de bloqueo o hardware, se limpia
@@ -333,9 +434,15 @@ class AccesoNotifier extends Notifier<AccesoState> {
       return;
     }
     final gestor = ref.read(gestorSesionProvider);
-    if (!gestor.abierta || !gestor.refreshPersistido) return;
+    // En modo sin conexión no hay JWT, pero la sesión guardada sí: también se
+    // bloquea, y la huella vuelve a abrir el modo sin conexión.
+    final sinConexion = state.fase == FaseAcceso.sinConexion;
+    if (!sinConexion && (!gestor.abierta || !gestor.refreshPersistido)) return;
     final ahora = ref.read(relojAccesoProvider)();
-    if (ahora.difference(desde) < bloqueoTrasSegundoPlano) return;
+    if (ahora.difference(desde) < bloqueoTrasSegundoPlano) {
+      if (sinConexion) unawaited(renovarSiHayRed());
+      return;
+    }
     SolLog.info('Sesión bloqueada tras 15 min en segundo plano');
     gestor.bloquear();
     state = const AccesoState(fase: FaseAcceso.bloqueada);
@@ -355,7 +462,8 @@ String? redirigirAcceso(FaseAcceso fase, String ubicacion) {
       ubicacion == AccesoRoutes.desbloqueo ? null : AccesoRoutes.desbloqueo,
     FaseAcceso.concedida =>
       ubicacion == AccesoRoutes.concedido ? null : AccesoRoutes.concedido,
-    FaseAcceso.normal =>
+    // Qué rutas valen sin conexión lo decide `redirigirRuta` (router.dart).
+    FaseAcceso.normal || FaseAcceso.sinConexion =>
       ubicacion == AccesoRoutes.desbloqueo ||
               ubicacion == AccesoRoutes.concedido
           ? '/'

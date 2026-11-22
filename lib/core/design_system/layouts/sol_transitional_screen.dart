@@ -13,6 +13,7 @@ class SolTransitionalScreen extends StatelessWidget {
     required this.title,
     required this.message,
     this.footer,
+    this.banner,
   });
 
   final String title;
@@ -22,6 +23,9 @@ class SolTransitionalScreen extends StatelessWidget {
 
   /// Contenido opcional bajo el indicador (p. ej. un SolDemoTrigger).
   final Widget? footer;
+
+  /// Franja bajo la barra superior (estado de la red).
+  final Widget? banner;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +44,7 @@ class SolTransitionalScreen extends StatelessWidget {
           SolSpacing.xxxl,
         ),
         centerBody: true,
+        banner: banner,
         body: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,

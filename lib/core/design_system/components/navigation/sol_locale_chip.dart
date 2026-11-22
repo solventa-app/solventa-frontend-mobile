@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../icons/sol_icons.dart';
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_radius.dart';
 import '../../tokens/sol_sizes.dart';
@@ -25,7 +26,10 @@ class SolLocaleChip extends StatelessWidget {
     final semanticLabel =
         this.semanticLabel ??
         scope?.semanticLabel ??
-        'Idioma español, moneda pesos colombianos';
+        context.solTextos.localeChipEtiquetaSemantica(
+          context.solTextos.idiomaNombreEs,
+          context.solTextos.monedaNombreCOP,
+        );
     final onTap = this.onTap ?? scope?.onTap;
     final colors = context.colors;
     final sol = context.solColors;
@@ -64,7 +68,7 @@ class SolLocaleChip extends StatelessWidget {
     return Semantics(
       button: onTap != null,
       label: semanticLabel,
-      hint: onTap != null ? 'Cambiar idioma y moneda' : null,
+      hint: onTap != null ? context.solTextos.solCambiarIdiomaMoneda : null,
       onTap: onTap,
       excludeSemantics: true,
       child: InkWell(

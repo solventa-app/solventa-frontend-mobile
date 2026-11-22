@@ -20,6 +20,7 @@ class SolResultScreen extends StatelessWidget {
     this.showBack = true,
     this.secondaryAction,
     this.details = const [],
+    this.banner,
   });
 
   final String title;
@@ -38,11 +39,15 @@ class SolResultScreen extends StatelessWidget {
   /// Filas bajo el mensaje (ver [SolResultView.details]).
   final List<String> details;
 
+  /// Franja bajo la barra superior (estado de la red).
+  final Widget? banner;
+
   @override
   Widget build(BuildContext context) {
     final frame = SolScreenFrame(
       topBar: SolTopBar.flow(title: title, onBack: onBack, showBack: showBack),
       centerBody: true,
+      banner: banner,
       body: SolResultView(status: status, message: message, details: details),
       actions: [
         SolButton.primary(label: actionLabel, onPressed: onAction),

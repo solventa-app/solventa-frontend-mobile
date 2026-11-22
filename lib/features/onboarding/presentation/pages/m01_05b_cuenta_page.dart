@@ -26,9 +26,16 @@ import '../onboarding_routes.dart';
 /// - **Iniciar sesión**: correo + clave existentes para recuperar la cuenta y
 ///   volver al Home.
 class M0105bCuentaPage extends ConsumerStatefulWidget {
-  const M0105bCuentaPage({super.key, this.modoInicialLogin = false});
+  const M0105bCuentaPage({
+    super.key,
+    this.modoInicialLogin = false,
+    this.banner,
+  });
 
   final bool modoInicialLogin;
+
+  /// Franja bajo la barra superior (el estado de la conexión en la entrada).
+  final Widget? banner;
 
   @override
   ConsumerState<M0105bCuentaPage> createState() => _M0105bCuentaPageState();
@@ -137,6 +144,7 @@ class _M0105bCuentaPageState extends ConsumerState<M0105bCuentaPage> {
     final puedeVolver = Navigator.maybeOf(context)?.canPop() ?? false;
 
     return SolFlowScaffold(
+      banner: widget.banner,
       title: _modoLogin ? l10n.cuentaTituloIngresar : l10n.m0105bTitulo,
       anchorActions: false,
       showBack: puedeVolver,

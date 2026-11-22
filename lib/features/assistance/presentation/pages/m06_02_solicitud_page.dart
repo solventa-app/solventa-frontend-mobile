@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../../claims/domain/entities/reporte_siniestro.dart';
 import '../../domain/entities/asistencia.dart';
 import '../../domain/entities/prestador.dart';
@@ -22,7 +23,10 @@ import '../providers.dart';
 /// puede enviar.
 /// «Enviar solicitud» pasa a M06-03.
 class M0602SolicitudPage extends ConsumerStatefulWidget {
-  const M0602SolicitudPage({super.key});
+  const M0602SolicitudPage({super.key, this.onHome});
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   @override
   ConsumerState<M0602SolicitudPage> createState() => _M0602SolicitudPageState();
@@ -179,7 +183,8 @@ class _M0602SolicitudPageState extends ConsumerState<M0602SolicitudPage> {
 
     return SolFlowScaffold(
       title: l10n.m0602Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: salirAlInicioConfirmando(context, widget.onHome),
       anchorActions: false,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

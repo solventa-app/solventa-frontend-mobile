@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../icons/sol_icons.dart';
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_radius.dart';
 import '../../tokens/sol_sizes.dart';
@@ -220,7 +221,9 @@ class _SolTextFieldState extends State<SolTextField> {
           if (widget.obscureText && widget.enabled)
             IconButton(
               onPressed: () => setState(() => _oculto = !_oculto),
-              tooltip: _oculto ? 'Mostrar clave' : 'Ocultar clave',
+              tooltip: _oculto
+                  ? context.solTextos.solMostrarClave
+                  : context.solTextos.solOcultarClave,
               icon: Icon(
                 _oculto ? SolIcons.visibility : SolIcons.visibilityOff,
               ),
@@ -287,7 +290,9 @@ class _SolTextFieldState extends State<SolTextField> {
                   Expanded(
                     child: Text(
                       supporting,
-                      semanticsLabel: hasError ? 'Error: $supporting' : null,
+                      semanticsLabel: hasError
+                          ? context.solTextos.solErrorCampo(supporting)
+                          : null,
                       style: context.solText.note.copyWith(
                         color: hasError
                             ? colors.error

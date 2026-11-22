@@ -139,7 +139,95 @@ abstract final class SolFormat {
     return '$hour12:$minutes$nbsp${d.hour < 12 ? 'AM' : 'PM'}';
   }
 
+  /// `1,4 MB` (en inglés `1.4 MB`): tamaño de fotos, con un decimal.
+  static String megabytesFor(int bytes, Locale locale) {
+    final mb = bytes / (1024 * 1024);
+    final formato = _ingles(locale) ? _decimal1En : _decimal1;
+    return '${formato.format(mb)}${nbsp}MB';
+  }
+
   /// Como [distanceKm] en español (`1,5 km`); en inglés `1.5 km`.
   static String distanceKmFor(double km, Locale locale) =>
       _ingles(locale) ? '${_decimal1En.format(km)}${nbsp}km' : distanceKm(km);
+
+  // ---------------------------------------------------------------------------
+  // Formatos que siguen el idioma activo (docs/arquitectura.md §7): es-CO →
+  // `12 sep 2026, 11:02 a. m.`; en → `Sep 12, 2026, 11:02 AM`.
+  // ---------------------------------------------------------------------------
+
+  static const List<String> _monthsEn = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  static const List<String> _monthNamesEn = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  /// Como [date] en español; en inglés `Sep 12, 2026`.
+  static String dateFor(DateTime d, Locale locale) => _ingles(locale)
+      ? '${_monthsEn[d.month - 1]} ${d.day}, ${d.year}'
+      : date(d);
+
+  /// Como [dateTime] en español; en inglés `Sep 12, 2026, 11:02 AM`.
+  static String dateTimeFor(DateTime d, Locale locale) =>
+      '${dateFor(d, locale)}, ${timeFor(d, locale)}';
+
+  /// Como [monthYear] en español; en inglés `Jul 2026`.
+  static String monthYearFor(DateTime d, Locale locale) =>
+      _ingles(locale) ? '${_monthsEn[d.month - 1]} ${d.year}' : monthYear(d);
+
+  /// Como [monthName] en español (`octubre`); en inglés `October`.
+  static String monthNameFor(DateTime d, Locale locale) =>
+      _ingles(locale) ? _monthNamesEn[d.month - 1] : monthName(d);
+
+  /// Decimales con que se muestra cada moneda. El peso colombiano va sin
+  /// decimales (Figma SG-01) y el peso chileno no los tiene (ISO 4217).
+  static int decimalesDe(String moneda) => switch (moneda.toUpperCase()) {
+    'COP' || 'CLP' => 0,
+    _ => 2,
+  };
+
+  /// Monto [valor] (decimal como texto o número) en [moneda], con el formato
+  /// del idioma activo:
+  ///
+  /// - es-CO: `$ 450.000` en COP (como [currency]) y `USD 109,76` en las demás.
+  /// - en: `COP 450,000` y `USD 109.76`.
+  ///
+  /// El código ISO evita confundir monedas que comparten el símbolo `$`.
+  /// Entre el código y la cifra va un espacio duro. Un valor que no se puede
+  /// leer se muestra tal cual, con su código.
+  static String currencyIn(Object valor, String moneda, Locale locale) {
+    final codigo = moneda.toUpperCase();
+    final cantidad = valor is num ? valor : num.tryParse(valor.toString());
+    if (cantidad == null) return '$codigo$nbsp$valor';
+    final decimales = decimalesDe(codigo);
+    final patron = decimales == 0 ? '#,##0' : '#,##0.${'0' * decimales}';
+    final formato = NumberFormat(patron, _ingles(locale) ? 'en' : localeName);
+    final cifra = formato.format(cantidad.abs());
+    final signo = cantidad < 0 ? '-' : '';
+    if (!_ingles(locale) && codigo == 'COP') return '$signo\$$nbsp$cifra';
+    return '$signo$codigo$nbsp$cifra';
+  }
 }

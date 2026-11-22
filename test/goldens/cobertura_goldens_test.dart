@@ -9,7 +9,7 @@ import 'package:solventa_mobile/features/parametric/presentation/pages/m04_03_de
 import 'package:solventa_mobile/features/parametric/presentation/pages/m04_04_cobertura_page.dart';
 import 'package:solventa_mobile/features/parametric/presentation/providers.dart';
 
-/// Flecha visible como en el diseño (sin navegación todavía, M04-D2).
+/// Flecha, casita y botones visibles como en la app (callback vacío).
 void _atras() {}
 
 /// Goldens de HU-M04 contra el diseño: M04-02 (Figma 2005:301), M04-03 (Figma
@@ -73,21 +73,29 @@ void main() {
 
   pantalla(
     'm04_02_celebracion',
-    const M0402CelebracionPage(id: id, onBack: _atras),
+    const M0402CelebracionPage(
+      id: id,
+      onBack: _atras,
+      onHome: _atras,
+      onVerCobertura: _atras,
+    ),
   );
   pantalla(
     'm04_03_detalle',
-    const M0403DetalleIndemnizacionPage(id: id, onBack: _atras),
+    const M0403DetalleIndemnizacionPage(id: id, onBack: _atras, onHome: _atras),
   );
-  pantalla('m04_04_sin_saldo', const M0404CoberturaPage(onBack: _atras));
+  pantalla(
+    'm04_04_sin_saldo',
+    const M0404CoberturaPage(onBack: _atras, onHome: _atras),
+  );
   pantalla(
     'm04_04_saldo_favor',
-    const M0404CoberturaPage(onBack: _atras),
+    const M0404CoberturaPage(onBack: _atras, onHome: _atras),
     EscenarioCobertura.aFavor,
   );
   pantalla(
     'm04_04_saldo_contra',
-    const M0404CoberturaPage(onBack: _atras),
+    const M0404CoberturaPage(onBack: _atras, onHome: _atras),
     EscenarioCobertura.enContra,
   );
 }

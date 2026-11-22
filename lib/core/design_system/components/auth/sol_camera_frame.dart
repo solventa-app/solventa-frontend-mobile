@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../icons/sol_icons.dart';
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_motion.dart';
 import '../../tokens/sol_radius.dart';
@@ -34,7 +35,7 @@ class SolCameraFrame extends StatelessWidget {
     this.preview,
     this.height,
     this.guideLabel,
-    this.viewfinderLabel = 'Visor de cámara',
+    this.viewfinderLabel,
     this.faceGuide,
   });
 
@@ -60,7 +61,7 @@ class SolCameraFrame extends StatelessWidget {
   final String? guideLabel;
 
   /// Nombre del visor para TalkBack (traducido por la feature).
-  final String viewfinderLabel;
+  final String? viewfinderLabel;
 
   /// Guía animada del rostro que reemplaza el óvalo fijo (solo con
   /// [SolCameraFrameShape.face]); la dibuja la feature, p. ej. la prueba de vida.
@@ -73,7 +74,11 @@ class SolCameraFrame extends StatelessWidget {
     final height = this.height ?? altoAdaptable(context);
     return Semantics(
       container: true,
-      label: [?label, viewfinderLabel, instruction].join('. '),
+      label: [
+        ?label,
+        viewfinderLabel ?? context.solTextos.solVisorCamara,
+        instruction,
+      ].join('. '),
       excludeSemantics: true,
       child: Center(
         child: ConstrainedBox(

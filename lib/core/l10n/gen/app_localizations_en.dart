@@ -198,10 +198,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fallaGenerica => 'Something went wrong. Please try again.';
 
   @override
-  String get localeChipSemantica =>
-      'English language, Colombian pesos. Tap to switch to Spanish.';
-
-  @override
   String get m0105bTitulo => 'Create your account';
 
   @override
@@ -635,6 +631,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cerrarSesionCancelar => 'No, stay here';
+
+  @override
+  String get salirInicioTitulo => 'Leave to home?';
+
+  @override
+  String get salirInicioMensaje =>
+      'You will lose what you have entered in this form.';
+
+  @override
+  String get salirInicioConfirmar => 'Yes, leave';
+
+  @override
+  String get salirInicioCancelar => 'No, stay here';
 
   @override
   String get camaraEnVivoListo => 'Live camera active in viewfinder';
@@ -1432,6 +1441,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0402VerDetalle => 'See details';
 
   @override
+  String get m0402VerCobertura => 'See my coverage';
+
+  @override
   String get m0402Cargando => 'Loading your payout…';
 
   @override
@@ -2028,4 +2040,802 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0506PorValorar => 'An operator is assessing the damage';
+
+  @override
+  String montosDeReferencia(String moneda) {
+    return 'Reference values in $moneda. Paid in Colombian pesos (COP).';
+  }
+
+  @override
+  String localeChipEtiquetaSemantica(String idioma, String moneda) {
+    return 'Language $idioma, currency $moneda';
+  }
+
+  @override
+  String get idiomaNombreEs => 'Spanish';
+
+  @override
+  String get idiomaNombreEn => 'English';
+
+  @override
+  String get solCambiarIdiomaMoneda => 'Change language and currency';
+
+  @override
+  String get solVolver => 'Back';
+
+  @override
+  String get solMiPerfil => 'My profile';
+
+  @override
+  String get solBorrarDigito => 'Delete digit';
+
+  @override
+  String solPinProgreso(int lleno, int total) {
+    return 'PIN: $lleno of $total digits entered';
+  }
+
+  @override
+  String get solVisorCamara => 'Camera viewfinder';
+
+  @override
+  String solPestana(int posicion, int total) {
+    return 'Tab $posicion of $total';
+  }
+
+  @override
+  String get solEstadoAtencion => 'Warning';
+
+  @override
+  String get solEstadoError => 'Error';
+
+  @override
+  String get solEstadoInformacion => 'Information';
+
+  @override
+  String get solEstadoExito => 'Success';
+
+  @override
+  String get solProveedorMedico => 'Medical';
+
+  @override
+  String get solProveedorMecanico => 'Mechanic';
+
+  @override
+  String get solProveedorGrua => 'Tow truck';
+
+  @override
+  String get solSolicitar => 'Request';
+
+  @override
+  String get solAliado => 'Solventa partner';
+
+  @override
+  String get solMostrarClave => 'Show password';
+
+  @override
+  String get solOcultarClave => 'Hide password';
+
+  @override
+  String solErrorCampo(String texto) {
+    return 'Error: $texto';
+  }
+
+  @override
+  String get pushCanalNombre => 'Solventa alerts';
+
+  @override
+  String get pushCanalDescripcion =>
+      'Payouts and other alerts about your policies';
+
+  @override
+  String get redSinConexionTitulo => 'No connection';
+
+  @override
+  String get redSinConexionMensaje => 'Check your Wi-Fi or mobile data.';
+
+  @override
+  String get redLentaTitulo => 'Slow connection';
+
+  @override
+  String get redLentaDatos =>
+      'You\'re on mobile data with a weak signal. Sending may take a while.';
+
+  @override
+  String get redLentaWifi =>
+      'Your Wi-Fi is responding slowly. Sending may take a while.';
+
+  @override
+  String get redLentaOtra =>
+      'Your connection is responding slowly. Sending may take a while.';
+
+  @override
+  String get redRestablecidaTitulo => 'Connection restored';
+
+  @override
+  String redChipWifi(String calidad) {
+    return 'Wi-Fi · $calidad';
+  }
+
+  @override
+  String redChipDatos(String calidad) {
+    return 'Data · $calidad';
+  }
+
+  @override
+  String redChipOtra(String calidad) {
+    return 'Connection · $calidad';
+  }
+
+  @override
+  String get redCalidadBuena => 'good';
+
+  @override
+  String get redCalidadRegular => 'fair';
+
+  @override
+  String get redCalidadMala => 'poor';
+
+  @override
+  String get redChipSinConexion => 'No connection';
+
+  @override
+  String get redDemoSinConexion => 'Simulate no connection';
+
+  @override
+  String get redDemoLenta => 'Simulate slow connection';
+
+  @override
+  String get redDemoReal => 'Back to the real connection';
+
+  @override
+  String get tiempoHaceMomento => 'just now';
+
+  @override
+  String tiempoHaceMin(int n) {
+    return '$n min ago';
+  }
+
+  @override
+  String tiempoHaceHoras(int n) {
+    return '$n h ago';
+  }
+
+  @override
+  String tiempoHaceDias(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0506PorEnviar => 'To send';
+
+  @override
+  String get m0506Enviados => 'Sent';
+
+  @override
+  String m0506Actualizado(String cuando) {
+    return 'Updated $cuando';
+  }
+
+  @override
+  String get m0506SinCopia => 'Connect to see your sent claims.';
+
+  @override
+  String get m0506SinTerminar => 'Unfinished';
+
+  @override
+  String get m0506BorradorTitulo => 'Unfinished report';
+
+  @override
+  String m0506UltimaEdicion(String fecha, int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos photos',
+      one: '1 photo',
+      zero: 'no photos',
+    );
+    return 'Last edited: $fecha · $_temp0';
+  }
+
+  @override
+  String m0506BorradorSeBorra(int dias) {
+    String _temp0 = intl.Intl.pluralLogic(
+      dias,
+      locale: localeName,
+      other: 'It will be deleted in $dias days if you don\'t finish it.',
+      one: 'It will be deleted in 1 day if you don\'t finish it.',
+      zero: 'It will be deleted today if you don\'t finish it.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0506Continuar => 'Continue report';
+
+  @override
+  String get m0506Descartar => 'Discard report';
+
+  @override
+  String get m0506DescartarTitulo => 'Discard this report?';
+
+  @override
+  String get m0506DescartarMensaje =>
+      'Its photos and what you wrote will be deleted from this phone. This can\'t be undone.';
+
+  @override
+  String get m0506DescartarConfirmar => 'Discard';
+
+  @override
+  String get m0506DescartarCancelar => 'Keep';
+
+  @override
+  String get m0506BaseReiniciadaTitulo => 'We couldn\'t read what was saved';
+
+  @override
+  String get m0506BaseReiniciadaMensaje =>
+      'The unsent reports on this phone were lost. If one is missing from the list, report it again.';
+
+  @override
+  String m0501PolizasGuardadas(String fecha) {
+    return 'Policies saved on this phone on $fecha. They are checked again when sending.';
+  }
+
+  @override
+  String get m0501SinPolizasGuardadas =>
+      'Connect once to download your policies.';
+
+  @override
+  String m0501YaTienes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'You already have $n reports to send.',
+      one: 'You already have 1 report to send.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String m0501TopeReportes(int n) {
+    return 'You have $n unsent reports, which is the maximum. Send or discard one to create another.';
+  }
+
+  @override
+  String get m0501VerPendientes => 'See my reports';
+
+  @override
+  String get m0502FotosCifradas =>
+      'Photos are stored encrypted on this phone until they are sent. They don\'t go to your gallery.';
+
+  @override
+  String get m0502FotoMuyGrande =>
+      'That photo is larger than 10 MB. Take it again.';
+
+  @override
+  String get m05SinEspacio =>
+      'Your phone has no space to save the report. Free up space so you don\'t lose it.';
+
+  @override
+  String get m05NoGuardado =>
+      'We couldn\'t save the report on this phone. If you close the app, it will be lost.';
+
+  @override
+  String get avisoReporteCanal => 'Claim reports';
+
+  @override
+  String get avisoReporteCanalDescripcion =>
+      'Updates on your claim reports: sent, needs fixing and reminders.';
+
+  @override
+  String get avisoReporteProgresoCanal => 'Report upload';
+
+  @override
+  String get avisoReporteProgresoCanalDescripcion =>
+      'Upload progress of your reports. Silent.';
+
+  @override
+  String avisoReporteEnviando(int porcentaje) {
+    return 'Sending your report · $porcentaje%';
+  }
+
+  @override
+  String avisoReporteEnviandoVarios(int posicion, int total, int porcentaje) {
+    return 'Sending $posicion of $total reports · $porcentaje%';
+  }
+
+  @override
+  String avisoReporteFoto(int foto, int fotos) {
+    return 'Photo $foto of $fotos';
+  }
+
+  @override
+  String get avisoReporteRadicando => 'Filing your claim';
+
+  @override
+  String avisoReportePausa(int porcentaje) {
+    return 'Upload paused · $porcentaje%';
+  }
+
+  @override
+  String get avisoReportePausaCuerpo =>
+      'No connection. It resumes on its own when you are back online.';
+
+  @override
+  String get avisoReporteEnviado => 'Your report was sent';
+
+  @override
+  String avisoReporteEnviadoCuerpo(String radicado, String fecha) {
+    return 'Claim number $radicado. The insurer will reply by $fecha.';
+  }
+
+  @override
+  String avisoReportesEnviados(int n) {
+    return 'Your $n reports were sent';
+  }
+
+  @override
+  String avisoReportesMixto(int enviados, int porCorregir) {
+    return '$enviados sent and $porCorregir to fix';
+  }
+
+  @override
+  String get avisoReportesVer => 'Open Solventa to see them.';
+
+  @override
+  String get avisoReporteRechazado => 'We couldn\'t send your report';
+
+  @override
+  String get avisoReporteRechazadoCuerpo => 'Open it to see why and fix it.';
+
+  @override
+  String get avisoReporteAtencionCuerpo => 'Open Solventa to try again.';
+
+  @override
+  String get avisoReporteEsperaWifi => 'Your report is waiting for Wi-Fi';
+
+  @override
+  String get avisoReporteEsperaWifiCuerpo =>
+      'It will be sent once you are on Wi-Fi. Open it if you\'d rather use mobile data.';
+
+  @override
+  String get avisoReporteSesion => 'Sign in to send your report';
+
+  @override
+  String get avisoReporteSesionCuerpo =>
+      'Your report is still saved on this phone.';
+
+  @override
+  String avisoReporteRecordatorio(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'You have $n reports to send',
+      one: 'You have a report to send',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get avisoReporteRecordatorioCuerpo =>
+      'Open Solventa when you are back online.';
+
+  @override
+  String get redSinConexionReporte =>
+      'You can report a claim. It will be sent when you are back online.';
+
+  @override
+  String redReportesPorEnviar(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n reports to send',
+      one: '1 report to send',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get redVer => 'View';
+
+  @override
+  String get redEnviandoTitulo => 'Upload in progress';
+
+  @override
+  String redEnviandoReportes(int n, int porcentaje) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Sending $n reports…',
+      one: 'Sending 1 report…',
+    );
+    return '$_temp0 $porcentaje%';
+  }
+
+  @override
+  String get redReporteEnviado => 'Report sent';
+
+  @override
+  String redReportesEnviados(int n) {
+    return '$n reports sent';
+  }
+
+  @override
+  String redRadicado(String radicado) {
+    return 'Claim number $radicado';
+  }
+
+  @override
+  String get m05DatosTitulo => 'You are on mobile data';
+
+  @override
+  String m05DatosMensaje(int fotos, String tamano) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: 'Sending $fotos photos',
+      one: 'Sending 1 photo',
+    );
+    return '$_temp0 uses about $tamano of your plan.';
+  }
+
+  @override
+  String get m05EnviarConDatos => 'Send now with mobile data';
+
+  @override
+  String get m05EsperarWifi => 'Wait for Wi-Fi';
+
+  @override
+  String get m05DatosRecordar =>
+      'Remember my choice. You can change it in My profile.';
+
+  @override
+  String get m0503GuardarDespues => 'Save and send later';
+
+  @override
+  String get m0503SinConexionNota =>
+      'No connection. We will save your report and send it when you are back online.';
+
+  @override
+  String get m0503Avisaremos =>
+      'We will let you know when your report is sent.';
+
+  @override
+  String get m0504SegundoPlano => 'Continue in the background';
+
+  @override
+  String m0504Porcentaje(int porcentaje) {
+    return '$porcentaje%';
+  }
+
+  @override
+  String m0504AvanceSemantica(int porcentaje, String paso) {
+    return 'Sending, $porcentaje percent. $paso';
+  }
+
+  @override
+  String m0504Avance(String paso) {
+    return '$paso. You can leave this screen: the upload continues and we will let you know when it is done.';
+  }
+
+  @override
+  String m0504Foto(int numero) {
+    return 'Photo $numero';
+  }
+
+  @override
+  String get m0504Radicar => 'File the claim';
+
+  @override
+  String get m0504PasoListo => 'done';
+
+  @override
+  String get m0504PasoEnCurso => 'sending';
+
+  @override
+  String get m0504PasoEnEspera => 'waiting';
+
+  @override
+  String get m0505Guardado => 'Report saved';
+
+  @override
+  String m0505GuardadoSinRed(String hora) {
+    return 'We will send it to the insurer as soon as you are back online. It has no claim number yet: we will let you know when they receive it. Saved at $hora.';
+  }
+
+  @override
+  String m0505GuardadoWifi(String hora) {
+    return 'We will send it once you are on Wi-Fi. It has no claim number yet: we will let you know when they receive it. Saved at $hora.';
+  }
+
+  @override
+  String m0505GuardadoSesion(String hora) {
+    return 'We will send it when you sign in again. It has no claim number yet. Saved at $hora.';
+  }
+
+  @override
+  String m0505GuardadoReintento(String hora) {
+    return 'We couldn\'t send it right now. We will try again shortly, you don\'t need to do anything. It has no claim number yet. Saved at $hora.';
+  }
+
+  @override
+  String m0505GuardadoDetalle(int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos photos',
+      one: '1 photo',
+    );
+    return 'Saved encrypted on this phone with $_temp0 and your location.';
+  }
+
+  @override
+  String get m0505GuardadoAviso =>
+      'If you uninstall the app or clear its data, it is lost.';
+
+  @override
+  String get m05EnviarAhora => 'Send now';
+
+  @override
+  String get m0506PendienteEnvio => 'Waiting to be sent';
+
+  @override
+  String get m0506EsperandoWifi => 'Waiting for Wi-Fi';
+
+  @override
+  String get m0506Enviando => 'Sending';
+
+  @override
+  String m0506EnviandoFoto(int foto, int fotos) {
+    return 'Sending · photo $foto of $fotos';
+  }
+
+  @override
+  String get m0506ConError => 'Needs fixing';
+
+  @override
+  String get m0506NecesitaAtencion => 'Couldn\'t be sent';
+
+  @override
+  String m0506GuardadoEl(String fecha, int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos photos',
+      one: '1 photo',
+    );
+    return 'Saved on $fecha · $_temp0';
+  }
+
+  @override
+  String get m0507bTitulo => 'Report to send';
+
+  @override
+  String get m0507bYaNoEsta =>
+      'This report is no longer saved on the phone. If it was sent, you will find it in My claims.';
+
+  @override
+  String get m0507bVerCaso => 'View the claim';
+
+  @override
+  String get m0507bCorregir => 'Fix and send';
+
+  @override
+  String get m0507bEditar => 'Edit report';
+
+  @override
+  String get m0507bEstadoEnvio => 'Sending status';
+
+  @override
+  String get m0507bGuardadoTelefono => 'Saved on this phone';
+
+  @override
+  String get m0507bBorradorNota => 'Finish it so it can be sent.';
+
+  @override
+  String get m0507bEsperandoConexion => 'Waiting for a connection';
+
+  @override
+  String get m0507bEsperandoConexionNota =>
+      'It is sent automatically when you are back online.';
+
+  @override
+  String get m0507bEsperandoSesion => 'Waiting for you to sign in';
+
+  @override
+  String get m0507bEsperandoWifiNota =>
+      'It is sent automatically once you are on Wi-Fi.';
+
+  @override
+  String get m0507bEnCola => 'In the sending queue';
+
+  @override
+  String get m0507bEnColaNota => 'It will go out shortly.';
+
+  @override
+  String m0507bReintento(String hora) {
+    return 'It couldn\'t be sent. Automatic retry at $hora.';
+  }
+
+  @override
+  String get m0507bNoAceptado => 'The insurer didn\'t accept it';
+
+  @override
+  String get m0507bNoAceptadoNota => 'Fix the detail and send it again.';
+
+  @override
+  String get m0507bErrorTecnico =>
+      'It failed several times. You can try sending it again.';
+
+  @override
+  String get m0507bAtencion =>
+      'It failed several times and we stopped retrying. Tap “Send now” to try again. Your report is still saved.';
+
+  @override
+  String get m0507bRecibido => 'Received by the insurer';
+
+  @override
+  String get m0507bRecibidoNota => 'Your claim number will appear here.';
+
+  @override
+  String get m0507bIncierto =>
+      'We are confirming whether the insurer already received it. It can\'t be edited for now.';
+
+  @override
+  String get m0507bEnviandoNota =>
+      'You can keep using the app. Don\'t sign out while it is being sent.';
+
+  @override
+  String get m0507bNadaSePerdio =>
+      'Your photos and your statement are still saved. Nothing was lost.';
+
+  @override
+  String get m0507bActivaAvisos =>
+      'Turn on notifications so we can let you know when it is sent.';
+
+  @override
+  String get m0507bPoliza => 'Policy';
+
+  @override
+  String get m0507bQuePaso => 'What happened';
+
+  @override
+  String get m0507bCuando => 'When';
+
+  @override
+  String get m0507bDonde => 'Where';
+
+  @override
+  String get m0507bFotos => 'Photos';
+
+  @override
+  String m0507bFotosSubidas(int fotos, int subidas) {
+    String _temp0 = intl.Intl.pluralLogic(
+      subidas,
+      locale: localeName,
+      other: '$fotos, $subidas already uploaded',
+      zero: '$fotos',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0502UbicacionSinRed =>
+      'To report offline we need your phone\'s location.';
+
+  @override
+  String homePorEnviar(int n) {
+    return '$n to send';
+  }
+
+  @override
+  String cerrarSesionReportesSinEnviar(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other:
+          'You have $n unsent reports. They stay saved on this phone and will be sent when you sign in again with this account.',
+      one: 'You have 1 unsent report. It stays saved on this phone and will be sent when you sign in again with this account.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cerrarSesionReportesSinTerminar(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other:
+          'You have $n unfinished reports. They stay saved on this phone for when you sign in again with this account.',
+      one: 'You have 1 unfinished report. It stays saved on this phone for when you sign in again with this account.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cerrarSesionBorrarReportes => 'Also delete the saved reports';
+
+  @override
+  String get cerrarSesionEnviarAhora => 'Send now';
+
+  @override
+  String get perfilEnvioTitulo => 'Sending reports';
+
+  @override
+  String get perfilEnvioConexion => 'Connection';
+
+  @override
+  String get perfilEnvioConexionTexto => 'Checked while you report a claim';
+
+  @override
+  String get perfilEnvioSoloWifi => 'Send photos only over Wi-Fi';
+
+  @override
+  String get perfilEnvioSoloWifiApagado =>
+      'Off: sends over Wi-Fi or mobile data';
+
+  @override
+  String get perfilEnvioSoloWifiEncendido =>
+      'On: photos wait until there is Wi-Fi';
+
+  @override
+  String get perfilEnvioPorEnviar => 'Reports to send';
+
+  @override
+  String get perfilEnvioNinguno => 'None';
+
+  @override
+  String perfilEnvioGuardados(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n saved on this phone',
+      one: '1 saved on this phone',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0507SinConexion => 'Connect to see the full detail.';
+
+  @override
+  String get redNecesitaConexion => 'Needs connection';
+
+  @override
+  String get accesoSinConexionLogin =>
+      'To get in without internet you need to have signed in before on this phone with the screen lock on.';
+
+  @override
+  String get accesoSesionVencidaSinConexion =>
+      'Your saved session expired. Connect to sign in.';
+
+  @override
+  String get homeSinConexionPestana =>
+      'Connect to request assistance and see your requests.';
+
+  @override
+  String get perfilSinConexionDatos => 'Email and ID';
+
+  @override
+  String get perfilSinConexionDatosTexto => 'Connect to see your full details';
+
+  @override
+  String get perfilIdiomaMoneda => 'Language and currency';
+
+  @override
+  String perfilPreferenciasSinConexion(String idioma, String moneda) {
+    return '$idioma · $moneda · Needs connection';
+  }
+
+  @override
+  String get perfilBiometriaSinConexion => 'On · you used it to get in offline';
+
+  @override
+  String get homeBiometriaPistaReporte =>
+      'Turn on fingerprint or face to get in faster and to report a claim offline.';
 }
