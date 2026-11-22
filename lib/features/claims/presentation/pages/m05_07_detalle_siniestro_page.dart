@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/moneda/monto_en_moneda.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../widgets/banner_reporte.dart';
@@ -32,7 +33,11 @@ class M0507DetalleSiniestroPage extends ConsumerStatefulWidget {
     this.ahora = DateTime.now,
     this.cadaCuanto = const Duration(seconds: 30),
     super.key,
+    this.onHome,
   });
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   final String id;
 
@@ -133,7 +138,8 @@ class _M0507DetalleSiniestroPageState
     return SolFlowScaffold(
       banner: const BannerReporte(),
       title: l10n.m0507Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: widget.onHome,
       body: RefreshIndicator(
         onRefresh: () {
           _renovadas.clear();
@@ -327,7 +333,10 @@ class _Resumen extends StatelessWidget {
           const SizedBox(height: SolSpacing.xs),
           Text(
             l10n.m0506Reportado(
-              SolFormat.date(caso.notificadoEn.toLocal()),
+              SolFormat.dateFor(
+                caso.notificadoEn.toLocal(),
+                Localizations.localeOf(context),
+              ),
               caso.fotos.length,
             ),
             style: suave,
@@ -340,7 +349,10 @@ class _Resumen extends StatelessWidget {
                 status: SolStatus.info,
                 texto: l10n.m0507Restante(restante),
                 detalle: l10n.m0506PendienteDetalle(
-                  SolFormat.date(caso.venceDictamenEn.toLocal()),
+                  SolFormat.dateFor(
+                    caso.venceDictamenEn.toLocal(),
+                    Localizations.localeOf(context),
+                  ),
                 ),
               )
             else
@@ -473,7 +485,10 @@ class _Seguimiento extends StatelessWidget {
             'RECHAZADO' => l10n.m0507HitoRechazado,
             _ => l10n.m0507HitoReportado,
           },
-          subtitle: SolFormat.date(h.en.toLocal()),
+          subtitle: SolFormat.dateFor(
+            h.en.toLocal(),
+            Localizations.localeOf(context),
+          ),
           // El último hito es el paso actual mientras el caso no se resuelve.
           state: i == hitos.length - 1 && !resuelto
               ? SolTimelineState.current
@@ -489,7 +504,10 @@ class _Seguimiento extends StatelessWidget {
           title: l10n.m0507HitoResolucion,
           subtitle: caso.estado == 'PENDIENTE'
               ? l10n.m0507HitoResolucionPlazo(
-                  SolFormat.date(caso.venceDictamenEn.toLocal()),
+                  SolFormat.dateFor(
+                    caso.venceDictamenEn.toLocal(),
+                    Localizations.localeOf(context),
+                  ),
                 )
               : null,
           state: SolTimelineState.upcoming,
@@ -506,13 +524,13 @@ class _Seguimiento extends StatelessWidget {
   }
 }
 
-class _Resolucion extends StatelessWidget {
+class _Resolucion extends ConsumerWidget {
   const _Resolucion({required this.resolucion});
 
   final ResolucionSiniestro resolucion;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     Widget linea(String texto) => Padding(
@@ -533,7 +551,10 @@ class _Resolucion extends StatelessWidget {
           ),
           linea(
             l10n.m0507ResueltoEl(
-              SolFormat.date(resolucion.resueltaEn.toLocal()),
+              SolFormat.dateFor(
+                resolucion.resueltaEn.toLocal(),
+                Localizations.localeOf(context),
+              ),
             ),
           ),
           if (aprobado) ...[
@@ -541,11 +562,15 @@ class _Resolucion extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: SolSpacing.sm),
                 child: Text(
-                  l10n.m0507Indemnizacion(SolFormat.currency(monto)),
+                  l10n.m0507Indemnizacion(ref.monto(context, monto)),
                   style: context.solText.title.copyWith(
                     color: context.solColors.success,
                   ),
                 ),
+              ),
+            if (resolucion.indemnizacion != null)
+              const NotaMontosDeReferencia(
+                padding: EdgeInsets.only(top: SolSpacing.xs),
               ),
             if (resolucion.plazoDispersion case final plazo?)
               linea(l10n.m0507PlazoPago(plazo)),
@@ -664,7 +689,12 @@ class _LoQueReportaste extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                l10n.m0507Ocurrio(SolFormat.date(caso.ocurridoEn.toLocal())),
+                l10n.m0507Ocurrio(
+                  SolFormat.dateFor(
+                    caso.ocurridoEn.toLocal(),
+                    Localizations.localeOf(context),
+                  ),
+                ),
                 style: context.solText.body,
               ),
               dato(l10n.m0507Lugar, '${caso.lugar}, ${caso.ciudad}'),

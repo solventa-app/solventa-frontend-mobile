@@ -398,12 +398,6 @@ abstract class AppLocalizations {
   /// **'Algo salió mal. Intenta nuevamente.'**
   String get fallaGenerica;
 
-  /// Lectura de TalkBack de la píldora de idioma
-  ///
-  /// In es, this message translates to:
-  /// **'Idioma español, moneda pesos colombianos. Toca para cambiar a inglés.'**
-  String get localeChipSemantica;
-
   /// M01-05b: título
   ///
   /// In es, this message translates to:
@@ -1177,6 +1171,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No, seguir aquí'**
   String get cerrarSesionCancelar;
+
+  /// No description provided for @salirInicioTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Salir al inicio?'**
+  String get salirInicioTitulo;
+
+  /// No description provided for @salirInicioMensaje.
+  ///
+  /// In es, this message translates to:
+  /// **'Se perderá lo que llevas en este formulario.'**
+  String get salirInicioMensaje;
+
+  /// No description provided for @salirInicioConfirmar.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, salir'**
+  String get salirInicioConfirmar;
+
+  /// No description provided for @salirInicioCancelar.
+  ///
+  /// In es, this message translates to:
+  /// **'No, seguir aquí'**
+  String get salirInicioCancelar;
 
   /// No description provided for @camaraEnVivoListo.
   ///
@@ -2516,6 +2534,12 @@ abstract class AppLocalizations {
   /// **'Ver detalle'**
   String get m0402VerDetalle;
 
+  /// M04-02: botón a Mi cobertura (M04-04), con todos los pagos
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mi cobertura'**
+  String get m0402VerCobertura;
+
   /// M04-02 y M04-03: cargando
   ///
   /// In es, this message translates to:
@@ -3475,6 +3499,156 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Un operador está valorando el daño'**
   String get m0506PorValorar;
+
+  /// Nota bajo los montos cuando la moneda de la barra superior no es COP (M04, M05)
+  ///
+  /// In es, this message translates to:
+  /// **'Valores de referencia en {moneda}. Se pagan en pesos colombianos (COP).'**
+  String montosDeReferencia(String moneda);
+
+  /// Etiqueta para lector de pantalla de la píldora de idioma y moneda; idioma y moneda son los activos
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma {idioma}, moneda {moneda}'**
+  String localeChipEtiquetaSemantica(String idioma, String moneda);
+
+  /// Nombre del idioma español dentro de una frase (lector de pantalla)
+  ///
+  /// In es, this message translates to:
+  /// **'español'**
+  String get idiomaNombreEs;
+
+  /// Nombre del idioma inglés dentro de una frase (lector de pantalla)
+  ///
+  /// In es, this message translates to:
+  /// **'inglés'**
+  String get idiomaNombreEn;
+
+  /// Pista de accesibilidad de la píldora de idioma y moneda
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar idioma y moneda'**
+  String get solCambiarIdiomaMoneda;
+
+  /// Tooltip del botón atrás de la barra superior
+  ///
+  /// In es, this message translates to:
+  /// **'Volver'**
+  String get solVolver;
+
+  /// Etiqueta del avatar
+  ///
+  /// In es, this message translates to:
+  /// **'Mi perfil'**
+  String get solMiPerfil;
+
+  /// Tecla borrar del teclado numérico
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar dígito'**
+  String get solBorrarDigito;
+
+  /// Indicador de dígitos del código
+  ///
+  /// In es, this message translates to:
+  /// **'PIN: {lleno} de {total} dígitos ingresados'**
+  String solPinProgreso(int lleno, int total);
+
+  /// Etiqueta del visor de cámara
+  ///
+  /// In es, this message translates to:
+  /// **'Visor de cámara'**
+  String get solVisorCamara;
+
+  /// Pista de cada pestaña de la barra inferior
+  ///
+  /// In es, this message translates to:
+  /// **'Pestaña {posicion} de {total}'**
+  String solPestana(int posicion, int total);
+
+  /// Prefijo de lector de pantalla de un aviso de atención
+  ///
+  /// In es, this message translates to:
+  /// **'Atención'**
+  String get solEstadoAtencion;
+
+  /// Prefijo de lector de pantalla de un aviso de error
+  ///
+  /// In es, this message translates to:
+  /// **'Error'**
+  String get solEstadoError;
+
+  /// Prefijo de lector de pantalla de un aviso informativo
+  ///
+  /// In es, this message translates to:
+  /// **'Información'**
+  String get solEstadoInformacion;
+
+  /// Prefijo de lector de pantalla de un aviso de éxito
+  ///
+  /// In es, this message translates to:
+  /// **'Éxito'**
+  String get solEstadoExito;
+
+  /// Tipo de prestador en la fila de prestadores
+  ///
+  /// In es, this message translates to:
+  /// **'Médico'**
+  String get solProveedorMedico;
+
+  /// Tipo de prestador en la fila de prestadores
+  ///
+  /// In es, this message translates to:
+  /// **'Mecánico'**
+  String get solProveedorMecanico;
+
+  /// Tipo de prestador en la fila de prestadores
+  ///
+  /// In es, this message translates to:
+  /// **'Grúa'**
+  String get solProveedorGrua;
+
+  /// Botón por defecto de la fila de prestador
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitar'**
+  String get solSolicitar;
+
+  /// Etiqueta por defecto de prestador aliado
+  ///
+  /// In es, this message translates to:
+  /// **'Aliado Solventa'**
+  String get solAliado;
+
+  /// Botón del ojo en el campo de clave
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar clave'**
+  String get solMostrarClave;
+
+  /// Botón del ojo en el campo de clave
+  ///
+  /// In es, this message translates to:
+  /// **'Ocultar clave'**
+  String get solOcultarClave;
+
+  /// Lector de pantalla del texto de error de un campo
+  ///
+  /// In es, this message translates to:
+  /// **'Error: {texto}'**
+  String solErrorCampo(String texto);
+
+  /// Nombre del canal de notificaciones push en los ajustes de Android
+  ///
+  /// In es, this message translates to:
+  /// **'Avisos de Solventa'**
+  String get pushCanalNombre;
+
+  /// Descripción del canal de notificaciones push en los ajustes de Android
+  ///
+  /// In es, this message translates to:
+  /// **'Indemnizaciones y otros avisos de tus pólizas'**
+  String get pushCanalDescripcion;
 
   /// Franja de red: título sin salida a internet
   ///

@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 
@@ -112,5 +113,41 @@ void main() {
   test('locales soportados incluyen es-CO', () {
     expect(SolLocalizations.supportedLocales.first, SolFormat.locale);
     SolLocalizations.init();
+  });
+
+  group('Formatos según el idioma activo (arquitectura §7)', () {
+    const es = Locale('es', 'CO');
+    const en = Locale('en');
+    final d = DateTime(2026, 9, 12, 11, 2);
+
+    test('montos en COP: \$ en español, código en inglés', () {
+      expect(plain(SolFormat.currencyIn(450000, 'COP', es)), r'$ 450.000');
+      expect(plain(SolFormat.currencyIn(450000, 'COP', en)), 'COP 450,000');
+      expect(plain(SolFormat.currencyIn('-450000', 'COP', es)), r'-$ 450.000');
+    });
+
+    test('otras monedas con su código y sus decimales', () {
+      expect(plain(SolFormat.currencyIn('109.76', 'USD', es)), 'USD 109,76');
+      expect(plain(SolFormat.currencyIn('109.76', 'USD', en)), 'USD 109.76');
+      expect(plain(SolFormat.currencyIn('1234.5', 'EUR', es)), 'EUR 1.234,50');
+      expect(plain(SolFormat.currencyIn('100000', 'CLP', en)), 'CLP 100,000');
+    });
+
+    test('el monto nunca se parte en dos líneas', () {
+      expect(SolFormat.currencyIn('1', 'USD', en), contains(SolFormat.nbsp));
+    });
+
+    test('fechas en inglés', () {
+      expect(SolFormat.dateFor(d, en), 'Sep 12, 2026');
+      expect(plain(SolFormat.dateTimeFor(d, en)), 'Sep 12, 2026, 11:02 AM');
+      expect(SolFormat.monthYearFor(d, en), 'Sep 2026');
+      expect(SolFormat.monthNameFor(d, en), 'September');
+    });
+
+    test('en español se mantiene el formato del Figma', () {
+      expect(SolFormat.dateFor(d, es), SolFormat.date(d));
+      expect(SolFormat.dateTimeFor(d, es), SolFormat.dateTime(d));
+      expect(SolFormat.monthNameFor(d, es), 'septiembre');
+    });
   });
 }

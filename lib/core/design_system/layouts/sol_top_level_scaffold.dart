@@ -16,6 +16,7 @@ class SolTopLevelScaffold extends StatelessWidget {
     this.destinations = SolBottomNav.defaultDestinations,
     this.onLocaleTap,
     this.onWordmarkLongPress,
+    this.onProfileTap,
     this.banner,
   });
 
@@ -26,6 +27,9 @@ class SolTopLevelScaffold extends StatelessWidget {
   final VoidCallback? onLocaleTap;
   final VoidCallback? onWordmarkLongPress;
 
+  /// Avatar del inicio que abre Mi perfil; sin él no hay avatar.
+  final VoidCallback? onProfileTap;
+
   /// Franja bajo la barra superior (estado de la red).
   final Widget? banner;
 
@@ -35,6 +39,7 @@ class SolTopLevelScaffold extends StatelessWidget {
       appBar: SolTopBar.home(
         onLocaleTap: onLocaleTap,
         onWordmarkLongPress: onWordmarkLongPress,
+        onProfileTap: onProfileTap,
       ),
       body: Column(
         children: [

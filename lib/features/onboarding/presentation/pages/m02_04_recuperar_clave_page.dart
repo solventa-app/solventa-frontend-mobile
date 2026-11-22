@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../onboarding_notifier.dart';
 
 /// M02-04 · Recupera tu contraseña (KAN-26, contrato v0.43).
@@ -53,7 +54,7 @@ class _M0204RecuperarClavePageState
       title: l10n.m0204Titulo,
       anchorActions: false,
       showProfile: false,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

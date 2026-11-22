@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../icons/sol_icons.dart';
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_motion.dart';
 import '../../tokens/sol_radius.dart';
@@ -134,7 +135,7 @@ class _NavItem extends StatelessWidget {
       button: true,
       selected: selected,
       label: destination.semanticLabel ?? destination.label,
-      hint: 'Pestaña ${index + 1} de $count',
+      hint: context.solTextos.solPestana(index + 1, count),
       onTap: onTap,
       excludeSemantics: true,
       child: InkWell(

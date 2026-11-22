@@ -134,6 +134,23 @@ void main() {
       expect(tocados, ['IND-2026-0912']);
     });
 
+    testWidgets('la flecha llama onBack y la casita onHome', (tester) async {
+      var atras = 0;
+      var inicio = 0;
+      await montar(
+        tester,
+        M0404CoberturaPage(onBack: () => atras++, onHome: () => inicio++),
+      );
+
+      await tester.tap(find.byIcon(SolIcons.back));
+      await tester.pump();
+      await tester.tap(find.byIcon(SolIcons.home));
+      await tester.pump();
+
+      expect(atras, 1);
+      expect(inicio, 1);
+    });
+
     testWidgets('error: Reintentar vuelve a consultar', (tester) async {
       await montar(tester, const M0404CoberturaPage(), fallar: true);
 
@@ -250,6 +267,30 @@ void main() {
       await tester.pump();
 
       expect(vistos, 1);
+    });
+
+    testWidgets('«Ver mi cobertura» llama onVerCobertura', (tester) async {
+      var vistos = 0;
+      await montar(
+        tester,
+        M0402CelebracionPage(
+          id: 'IND-2026-0912',
+          onVerCobertura: () => vistos++,
+        ),
+      );
+
+      await tester.tap(find.text('Ver mi cobertura'));
+      await tester.pump();
+
+      expect(vistos, 1);
+    });
+
+    testWidgets('sin onVerCobertura no hay botón a Mi cobertura', (
+      tester,
+    ) async {
+      await montar(tester, const M0402CelebracionPage(id: 'IND-2026-0912'));
+
+      expect(find.text('Ver mi cobertura'), findsNothing);
     });
 
     testWidgets('la flecha llama onBack', (tester) async {

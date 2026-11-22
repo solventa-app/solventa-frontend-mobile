@@ -15,6 +15,7 @@ import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/assistance/presentation/asistencia_routes.dart';
 import '../features/assistance/presentation/providers.dart';
 import '../features/claims/presentation/vigia_reportes.dart';
+import '../features/onboarding/presentation/onboarding_notifier.dart';
 import '../features/onboarding/presentation/preferencias_de_la_cuenta.dart';
 import '../features/profile/presentation/sol_preferencias_sheet.dart';
 import 'cuenta_local.dart';
@@ -85,6 +86,14 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
         ref.read(accesoProvider.notifier).alVolverAPrimerPlano();
         unawaited(ref.read(estadoRedProvider.notifier).alVolverAlFrente());
         ref.read(vigiaReportesProvider).alVolverAlFrente();
+        // Idioma y moneda guardados desde la web u otro teléfono (KAN-209).
+        if (ref.read(accesoProvider).fase == FaseAcceso.normal) {
+          unawaited(
+            ref
+                .read(onboardingProvider.notifier)
+                .refrescarPreferenciasDeLaCuenta(),
+          );
+        }
       },
     );
     // HU-M04 Fase 6 (KAN-259): nunca lanza, aun sin `google-services.json`.
@@ -160,7 +169,12 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
         final l10n = context.l10n;
         return SolLocaleScope(
           label: etiquetaChip,
-          semanticLabel: l10n.localeChipSemantica,
+          semanticLabel: l10n.localeChipEtiquetaSemantica(
+            locale.languageCode == 'en'
+                ? l10n.idiomaNombreEn
+                : l10n.idiomaNombreEs,
+            l10n.nombreMoneda(moneda),
+          ),
           onTap: () {
             ref.read(localeProvider.notifier).alternar();
             final navContext =

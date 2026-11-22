@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../../../core/network/network_providers.dart';
 import '../../../../core/red/estado_red_notifier.dart';
 import '../../../assistance/domain/entities/asistencia.dart';
@@ -20,7 +21,10 @@ import '../widgets/visor_camara_reporte.dart';
 /// M05-02 · Fotos del daño con GPS (KAN-276). Cada foto lleva la ubicación
 /// del teléfono en el momento de tomarla (CA-M05-02).
 class M0502FotosPage extends ConsumerStatefulWidget {
-  const M0502FotosPage({super.key});
+  const M0502FotosPage({super.key, this.onHome});
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   @override
   ConsumerState<M0502FotosPage> createState() => _M0502FotosPageState();
@@ -84,7 +88,8 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
     return SolFlowScaffold(
       banner: const BannerReporte(),
       title: l10n.m0502Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: salirAlInicioConfirmando(context, widget.onHome),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../icons/sol_icons.dart';
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_sizes.dart';
 
@@ -13,18 +14,21 @@ class SolAvatar extends StatelessWidget {
     this.initials,
     this.size = SolSizes.avatar,
     this.onTap,
-    this.semanticLabel = 'Mi perfil',
+    this.semanticLabel,
   });
 
   /// Iniciales opcionales; sin ellas se dibuja el ícono de persona.
   final String? initials;
   final double size;
   final VoidCallback? onTap;
-  final String semanticLabel;
+
+  /// Por defecto «Mi perfil» en el idioma activo.
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final semanticLabel = this.semanticLabel ?? context.solTextos.solMiPerfil;
     final Widget glyph = initials == null
         ? Icon(
             SolIcons.profile,

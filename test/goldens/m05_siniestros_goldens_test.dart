@@ -113,7 +113,8 @@ void main() {
       fileName: 'm05_06_mis_siniestros_$sufijo',
       textScaleFactor: escala,
       constraints: BoxConstraints.tight(Size(ancho, escala > 1 ? 1500 : 900)),
-      builder: () => pantalla(M0506MisSiniestrosPage(ahora: ahora), locale),
+      builder: () =>
+          pantalla(M0506MisSiniestrosPage(ahora: ahora, onHome: () {}), locale),
     );
     goldenTest(
       'M05-06 Mis siniestros con borradores · $sufijo',
@@ -142,6 +143,7 @@ void main() {
             id: id,
             ahora: ahora,
             cadaCuanto: const Duration(days: 1),
+            onHome: () {},
           ),
           locale,
         ),

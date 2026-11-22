@@ -217,10 +217,6 @@
   "@fallaGenerica": {
     "description": "Falla Inesperada"
   },
-  "localeChipSemantica": "Idioma español, moneda pesos colombianos. Toca para cambiar a inglés.",
-  "@localeChipSemantica": {
-    "description": "Lectura de TalkBack de la píldora de idioma"
-  },
   "m0105bTitulo": "Crea tu cuenta",
   "@m0105bTitulo": {
     "description": "M01-05b: título"
@@ -468,6 +464,10 @@
   "cerrarSesionMensaje": "Tendrás que ingresar de nuevo para usar Solventa.",
   "cerrarSesionConfirmar": "Sí, cerrar sesión",
   "cerrarSesionCancelar": "No, seguir aquí",
+  "salirInicioTitulo": "¿Salir al inicio?",
+  "salirInicioMensaje": "Se perderá lo que llevas en este formulario.",
+  "salirInicioConfirmar": "Sí, salir",
+  "salirInicioCancelar": "No, seguir aquí",
   "camaraEnVivoListo": "Cámara activa en el visor",
   "camaraReintentarEnvio": "Reintentar envío",
   "m0108DemoActivar": "Simular huella/rostro activado en el emulador",
@@ -1589,6 +1589,10 @@
   "@m0402VerDetalle": {
     "description": "M04-02: botón al detalle"
   },
+  "m0402VerCobertura": "Ver mi cobertura",
+  "@m0402VerCobertura": {
+    "description": "M04-02: botón a Mi cobertura (M04-04), con todos los pagos"
+  },
   "m0402Cargando": "Consultando tu indemnización…",
   "@m0402Cargando": {
     "description": "M04-02 y M04-03: cargando"
@@ -2408,6 +2412,140 @@
   "m0506PorValorar": "Un operador está valorando el daño",
   "@m0506PorValorar": {
     "description": "M05-06 plazo vencido sin aprobación automática"
+  },
+  "montosDeReferencia": "Valores de referencia en {moneda}. Se pagan en pesos colombianos (COP).",
+  "@montosDeReferencia": {
+    "description": "Nota bajo los montos cuando la moneda de la barra superior no es COP (M04, M05)",
+    "placeholders": {
+      "moneda": {
+        "type": "String"
+      }
+    }
+  },
+  "localeChipEtiquetaSemantica": "Idioma {idioma}, moneda {moneda}",
+  "@localeChipEtiquetaSemantica": {
+    "description": "Etiqueta para lector de pantalla de la píldora de idioma y moneda; idioma y moneda son los activos",
+    "placeholders": {
+      "idioma": {
+        "type": "String"
+      },
+      "moneda": {
+        "type": "String"
+      }
+    }
+  },
+  "idiomaNombreEs": "español",
+  "@idiomaNombreEs": {
+    "description": "Nombre del idioma español dentro de una frase (lector de pantalla)"
+  },
+  "idiomaNombreEn": "inglés",
+  "@idiomaNombreEn": {
+    "description": "Nombre del idioma inglés dentro de una frase (lector de pantalla)"
+  },
+  "solCambiarIdiomaMoneda": "Cambiar idioma y moneda",
+  "@solCambiarIdiomaMoneda": {
+    "description": "Pista de accesibilidad de la píldora de idioma y moneda"
+  },
+  "solVolver": "Volver",
+  "@solVolver": {
+    "description": "Tooltip del botón atrás de la barra superior"
+  },
+  "solMiPerfil": "Mi perfil",
+  "@solMiPerfil": {
+    "description": "Etiqueta del avatar"
+  },
+  "solBorrarDigito": "Borrar dígito",
+  "@solBorrarDigito": {
+    "description": "Tecla borrar del teclado numérico"
+  },
+  "solPinProgreso": "PIN: {lleno} de {total} dígitos ingresados",
+  "@solPinProgreso": {
+    "description": "Indicador de dígitos del código",
+    "placeholders": {
+      "lleno": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "solVisorCamara": "Visor de cámara",
+  "@solVisorCamara": {
+    "description": "Etiqueta del visor de cámara"
+  },
+  "solPestana": "Pestaña {posicion} de {total}",
+  "@solPestana": {
+    "description": "Pista de cada pestaña de la barra inferior",
+    "placeholders": {
+      "posicion": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "solEstadoAtencion": "Atención",
+  "@solEstadoAtencion": {
+    "description": "Prefijo de lector de pantalla de un aviso de atención"
+  },
+  "solEstadoError": "Error",
+  "@solEstadoError": {
+    "description": "Prefijo de lector de pantalla de un aviso de error"
+  },
+  "solEstadoInformacion": "Información",
+  "@solEstadoInformacion": {
+    "description": "Prefijo de lector de pantalla de un aviso informativo"
+  },
+  "solEstadoExito": "Éxito",
+  "@solEstadoExito": {
+    "description": "Prefijo de lector de pantalla de un aviso de éxito"
+  },
+  "solProveedorMedico": "Médico",
+  "@solProveedorMedico": {
+    "description": "Tipo de prestador en la fila de prestadores"
+  },
+  "solProveedorMecanico": "Mecánico",
+  "@solProveedorMecanico": {
+    "description": "Tipo de prestador en la fila de prestadores"
+  },
+  "solProveedorGrua": "Grúa",
+  "@solProveedorGrua": {
+    "description": "Tipo de prestador en la fila de prestadores"
+  },
+  "solSolicitar": "Solicitar",
+  "@solSolicitar": {
+    "description": "Botón por defecto de la fila de prestador"
+  },
+  "solAliado": "Aliado Solventa",
+  "@solAliado": {
+    "description": "Etiqueta por defecto de prestador aliado"
+  },
+  "solMostrarClave": "Mostrar clave",
+  "@solMostrarClave": {
+    "description": "Botón del ojo en el campo de clave"
+  },
+  "solOcultarClave": "Ocultar clave",
+  "@solOcultarClave": {
+    "description": "Botón del ojo en el campo de clave"
+  },
+  "solErrorCampo": "Error: {texto}",
+  "@solErrorCampo": {
+    "description": "Lector de pantalla del texto de error de un campo",
+    "placeholders": {
+      "texto": {
+        "type": "String"
+      }
+    }
+  },
+  "pushCanalNombre": "Avisos de Solventa",
+  "@pushCanalNombre": {
+    "description": "Nombre del canal de notificaciones push en los ajustes de Android"
+  },
+  "pushCanalDescripcion": "Indemnizaciones y otros avisos de tus pólizas",
+  "@pushCanalDescripcion": {
+    "description": "Descripción del canal de notificaciones push en los ajustes de Android"
   },
   "redSinConexionTitulo": "Sin conexión",
   "@redSinConexionTitulo": {

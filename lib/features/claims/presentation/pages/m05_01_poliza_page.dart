@@ -6,6 +6,7 @@ import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../domain/entities/reporte_guardado.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
@@ -15,7 +16,10 @@ import '../widgets/banner_reporte.dart';
 /// M05-01 · Póliza y fecha del siniestro (KAN-277). Sin frame en Figma: se
 /// arma con el sistema de diseño (decisión del 2026-11-04).
 class M0501PolizaPage extends ConsumerWidget {
-  const M0501PolizaPage({super.key});
+  const M0501PolizaPage({super.key, this.onHome});
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   Future<void> _elegirFecha(
     BuildContext context,
@@ -68,7 +72,12 @@ class M0501PolizaPage extends ConsumerWidget {
     final errorFecha = !fueraDeVigencia
         ? null
         : fecha.isBefore(poliza.vigenciaDesde)
-        ? l10n.m0501FechaAntes(SolFormat.dateTime(poliza.vigenciaDesde))
+        ? l10n.m0501FechaAntes(
+            SolFormat.dateTimeFor(
+              poliza.vigenciaDesde,
+              Localizations.localeOf(context),
+            ),
+          )
         : l10n.m0501FechaFuera;
 
     final lista = switch (polizas) {
@@ -93,7 +102,12 @@ class M0501PolizaPage extends ConsumerWidget {
               titulo: l10n.m0501PolizaNumero(p.numero),
               vigencia: [
                 if (p.vehiculo case final v?) l10n.m0501PolizaAuto(v),
-                l10n.m0501Vigencia(SolFormat.date(p.vigenciaHasta)),
+                l10n.m0501Vigencia(
+                  SolFormat.dateFor(
+                    p.vigenciaHasta,
+                    Localizations.localeOf(context),
+                  ),
+                ),
               ].join(' · '),
               onTap: () => notifier.elegirPoliza(p),
             ),
@@ -126,7 +140,8 @@ class M0501PolizaPage extends ConsumerWidget {
     return SolFlowScaffold(
       banner: const BannerReporte(),
       title: l10n.m05Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: onHome,
       anchorActions: true,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -168,14 +183,17 @@ class M0501PolizaPage extends ConsumerWidget {
             label: l10n.m0501Fecha,
             value: fecha == null
                 ? l10n.m0501FechaElegir
-                : SolFormat.dateTime(fecha),
+                : SolFormat.dateTimeFor(fecha, Localizations.localeOf(context)),
             // Dice qué falta en lugar de dejar «Continuar» apagado sin más.
             helperText: poliza == null
                 ? l10n.m0501ElegirPoliza
                 : estado.faltaTipoAuto
                 ? l10n.m0501ElegirTipo
                 : l10n.m0501CubreDesde(
-                    SolFormat.dateTime(poliza.vigenciaDesde),
+                    SolFormat.dateTimeFor(
+                      poliza.vigenciaDesde,
+                      Localizations.localeOf(context),
+                    ),
                   ),
             errorText: errorFecha,
             onTap: () => _elegirFecha(context, ref, poliza, fecha),

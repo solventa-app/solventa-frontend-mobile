@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/moneda/monto_en_moneda.dart';
 import '../../domain/entities/cobertura.dart';
 import '../providers.dart';
 import '../widgets/cobertura_widgets.dart';
@@ -16,10 +17,14 @@ import '../widgets/cobertura_widgets.dart';
 class M0403DetalleIndemnizacionPage extends ConsumerWidget {
   const M0403DetalleIndemnizacionPage({
     super.key,
+    this.onHome,
     required this.id,
     this.onBack,
     this.onCerrar,
   });
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   final String id;
   final VoidCallback? onBack;
@@ -42,6 +47,7 @@ class M0403DetalleIndemnizacionPage extends ConsumerWidget {
     return SolFlowScaffold(
       title: l10n.m0403Titulo,
       onBack: onBack,
+      onHomeTap: onHome,
       body: cuerpo,
       actions: [
         SolButton.primary(
@@ -53,13 +59,13 @@ class M0403DetalleIndemnizacionPage extends ConsumerWidget {
   }
 }
 
-class _Detalle extends StatelessWidget {
+class _Detalle extends ConsumerWidget {
   const _Detalle({required this.indemnizacion});
 
   final Indemnizacion indemnizacion;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final m = indemnizacion;
@@ -106,7 +112,7 @@ class _Detalle extends StatelessWidget {
               _FilaDato(
                 etiqueta: l10n.m0403Indemnizacion,
                 valor: Text(
-                  SolFormat.currency(m.monto),
+                  ref.monto(context, m.monto),
                   style: context.solText.title.copyWith(
                     color: colors.onSurface,
                   ),
@@ -115,12 +121,24 @@ class _Detalle extends StatelessWidget {
               const SolDivider(),
               _FilaDato(
                 etiqueta: l10n.m0403FechaEvento,
-                valor: Text(SolFormat.date(m.fechaEvento), style: valor),
+                valor: Text(
+                  SolFormat.dateFor(
+                    m.fechaEvento,
+                    Localizations.localeOf(context),
+                  ),
+                  style: valor,
+                ),
               ),
               const SolDivider(),
               _FilaDato(
                 etiqueta: l10n.m0403FechaPago,
-                valor: Text(SolFormat.dateTime(m.pagadoEn), style: valor),
+                valor: Text(
+                  SolFormat.dateTimeFor(
+                    m.pagadoEn,
+                    Localizations.localeOf(context),
+                  ),
+                  style: valor,
+                ),
                 ultima: m.metodoTransferencia == null,
               ),
               if (m.metodoTransferencia != null) ...[
@@ -153,6 +171,7 @@ class _Detalle extends StatelessWidget {
             ],
           ),
         ),
+        const NotaMontosDeReferencia(),
         const SizedBox(height: SolSpacing.lg),
         Center(
           child: SolStatusBadge(

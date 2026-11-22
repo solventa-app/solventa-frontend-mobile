@@ -8,6 +8,8 @@ import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/moneda/monto_en_moneda.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
@@ -26,7 +28,14 @@ enum FiltroSiniestros { todos, enCurso, resueltos }
 /// pasó, el estado y lo que importa de ese estado (tiempo que queda, monto
 /// aprobado o motivo). Tocar una tarjeta abre el detalle (M05-07).
 class M0506MisSiniestrosPage extends ConsumerStatefulWidget {
-  const M0506MisSiniestrosPage({super.key, this.ahora = DateTime.now});
+  const M0506MisSiniestrosPage({
+    super.key,
+    this.onHome,
+    this.ahora = DateTime.now,
+  });
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   /// El reloj; las pruebas lo fijan.
   final DateTime Function() ahora;
@@ -111,7 +120,8 @@ class _M0506MisSiniestrosPageState
     return SolFlowScaffold(
       banner: const BannerReporte(conVer: false),
       title: l10n.m0506Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: widget.onHome,
       body: RefreshIndicator(
         onRefresh: () => ref.refresh(misSiniestrosProvider.future),
         child: ListView(
@@ -197,12 +207,16 @@ class _Lista extends StatelessWidget {
             ),
             const SizedBox(height: SolSpacing.sm),
           ],
+        if (casos.any((c) => c.resolucion?.indemnizacion != null))
+          const NotaMontosDeReferencia(
+            padding: EdgeInsets.only(top: SolSpacing.xs),
+          ),
       ],
     );
   }
 }
 
-class _FilaSiniestro extends StatelessWidget {
+class _FilaSiniestro extends ConsumerWidget {
   const _FilaSiniestro({
     required this.caso,
     required this.vehiculo,
@@ -214,7 +228,7 @@ class _FilaSiniestro extends StatelessWidget {
   final DateTime ahora;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final (status, estado) = estadoDelCaso(l10n, caso.estado);
@@ -227,7 +241,7 @@ class _FilaSiniestro extends StatelessWidget {
       'EN_REVISION' => (SolIcons.schedule, l10n.m0506EnRevisionDetalle),
       'APROBADO' when monto != null => (
         SolIcons.payments,
-        l10n.m0506Monto(SolFormat.currency(monto)),
+        l10n.m0506Monto(ref.monto(context, monto)),
       ),
       'APROBADO' => (SolIcons.payments, l10n.m0506AprobadoDetalle),
       'RECHAZADO' => (SolIcons.info, l10n.m0506RechazadoDetalle),
@@ -240,7 +254,10 @@ class _FilaSiniestro extends StatelessWidget {
         null => (
           SolIcons.schedule,
           l10n.m0506PendienteDetalle(
-            SolFormat.date(caso.venceDictamenEn.toLocal()),
+            SolFormat.dateFor(
+              caso.venceDictamenEn.toLocal(),
+              Localizations.localeOf(context),
+            ),
           ),
         ),
       },
@@ -297,7 +314,10 @@ class _FilaSiniestro extends StatelessWidget {
                         const SizedBox(height: SolSpacing.xxs),
                         Text(
                           l10n.m0506Reportado(
-                            SolFormat.date(caso.notificadoEn.toLocal()),
+                            SolFormat.dateFor(
+                              caso.notificadoEn.toLocal(),
+                              Localizations.localeOf(context),
+                            ),
                             caso.fotos,
                           ),
                           style: suave,

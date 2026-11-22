@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../icons/sol_icons.dart';
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_radius.dart';
 import '../../tokens/sol_sizes.dart';
@@ -32,10 +33,10 @@ class SolProviderRow extends StatelessWidget {
     required this.distance,
     required this.onRequest,
     this.eta,
-    this.requestLabel = 'Solicitar',
+    this.requestLabel,
     this.typeLabel,
     this.isPartner = false,
-    this.partnerLabel = 'Aliado Solventa',
+    this.partnerLabel,
     this.onTap,
     this.selected = false,
   });
@@ -50,7 +51,7 @@ class SolProviderRow extends StatelessWidget {
   final bool isPartner;
 
   /// Texto de la insignia para TalkBack, ya traducido.
-  final String partnerLabel;
+  final String? partnerLabel;
 
   final String name;
   final SolProviderType type;
@@ -64,7 +65,7 @@ class SolProviderRow extends StatelessWidget {
   /// Texto ya formateado, p. ej. `6 min`. Sin ubicación del cliente no hay.
   final String? eta;
   final VoidCallback? onRequest;
-  final String requestLabel;
+  final String? requestLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +77,17 @@ class SolProviderRow extends StatelessWidget {
       SolProviderType.grua => (SolIcons.towTruck, 22.0),
     };
     final (Color iconBg, Color iconFg) = solProviderColors(context, isPartner);
-    final meta = [typeLabel ?? type.label, distance, ?eta].join(' · ');
+    final textos = context.solTextos;
+    final requestLabel = this.requestLabel ?? textos.solSolicitar;
+    final partnerLabel = this.partnerLabel ?? textos.solAliado;
+    final tipo =
+        typeLabel ??
+        switch (type) {
+          SolProviderType.medico => textos.solProveedorMedico,
+          SolProviderType.mecanico => textos.solProveedorMecanico,
+          SolProviderType.grua => textos.solProveedorGrua,
+        };
+    final meta = [tipo, distance, ?eta].join(' · ');
 
     final iconBadge = ExcludeSemantics(
       child: Container(

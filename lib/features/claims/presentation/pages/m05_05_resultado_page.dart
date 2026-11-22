@@ -51,7 +51,10 @@ class M0505ResultadoPage extends ConsumerWidget {
         status: SolStatus.success,
         message: l10n.m0505ExitoMensaje(
           siniestro.radicado,
-          SolFormat.date(siniestro.venceDictamenEn.toLocal()),
+          SolFormat.dateFor(
+            siniestro.venceDictamenEn.toLocal(),
+            Localizations.localeOf(context),
+          ),
         ),
         actionLabel: l10n.m0505VolverInicio,
         onAction: inicio,

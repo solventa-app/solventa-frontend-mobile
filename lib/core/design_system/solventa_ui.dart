@@ -45,6 +45,7 @@ export 'gallery/sol_gallery_page.dart';
 export 'icons/sol_icons.dart';
 export 'l10n/sol_formatters.dart';
 export 'l10n/sol_localizations.dart';
+export 'l10n/sol_textos.dart';
 export 'layouts/sol_app_shell.dart';
 export 'layouts/sol_entry_scaffold.dart';
 export 'layouts/sol_flow_scaffold.dart';
