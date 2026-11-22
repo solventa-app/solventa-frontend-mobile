@@ -1,6 +1,6 @@
 # Estado del proyecto: Solventa Frontend Mobile
 
-Última actualización: **2026-11-08** (verificado contra `develop` en `5ada135` + rama `feat/KAN-260-cobertura-mock`). Es la primera lectura de cada sesión.
+Última actualización: **2026-11-22** (verificado contra `develop` en `9d661c5` y `main` en `1a4f526`; el resto del documento viene del 2026-11-08 y se marca donde cambió). Es la primera lectura de cada sesión.
 Las reglas permanentes viven en [`CLAUDE.md`](CLAUDE.md), la arquitectura en [`docs/arquitectura.md`](docs/arquitectura.md),
 el contrato con el BFF en [`docs/integracion-backend.md`](docs/integracion-backend.md) y el CI/CD en
 [`docs/ci-cd.md`](docs/ci-cd.md). Este archivo no las repite: describe el estado actual.
@@ -10,10 +10,29 @@ el contrato con el BFF en [`docs/integracion-backend.md`](docs/integracion-backe
 - **Proyecto:** Solventa, una aseguradora digital sobre Open Finance y Open Data (Proyecto Final MISW4501, Uniandes).
 - **Este repo:** solo la app nativa **Android** (sin iOS ni PWA). La web vive en `../solventa-frontend-web` y el backend en
   `../solventa-backend`.
-- **Versión:** el último tag de CD es `v1.2.0+5`. En `pubspec.yaml` queda `1.0.0+1` porque CD calcula la versión desde los
-  tags (`tool/version.sh`).
-- **Proceso:** Jira KAN, GitFlow (`develop` → `release/sprint-N` → `main`). Sprint 3 en curso (`release/sprint-3` está al
-  día con `develop`).
+- **Versión:** el último tag de CD es `v1.6.0+9` (2026-11-22, PR #124). En `pubspec.yaml` queda `1.0.0+1` porque CD calcula
+  la versión desde los tags (`tool/version.sh`).
+- **Proceso:** Jira KAN, GitFlow (`develop` → `release/sprint-N` → `main`). El cierre del proyecto (Sprint 3 y final) va por
+  `release/sprint-3` → `main`: CD calcula la versión sola y publica el Release; el tag `sprint-N` se pone a mano después
+  (hasta hoy no hay ningún `sprint-*` en este repo, solo los `v*+N`). La reintegración `main` → `develop` sigue pendiente
+  (el PR #118 quedó obsoleto).
+
+## Cambios desde el 2026-11-08 (verificado en `develop` el 2026-11-22)
+
+- **KAN-35, HU-M05 sin conexión:** ya está en `develop` (almacén cifrado con `drift` y `sqlite3`, cola de envío, indicador de
+  conexión y calidad de red, entrada con huella sin conexión, servicio en primer plano), con su prueba de integración
+  `integration_test/reporte_sin_conexion_test.dart`. **Ya no está solo en ramas locales.** Sigue sin validarse en teléfono
+  (no se reverificó).
+- **KAN-36, HU-M06:** `mapbox_maps_flutter` y `flutter_local_notifications` están en `pubspec.yaml`; se integraron ajustes de
+  la revisión (badge, mapa, idiomas, solo pólizas de auto, botón GPS).
+- **KAN-259, push y HU-M04:** `firebase_messaging`, push en primer plano con canal de alta prioridad, tocar el push lleva a la
+  indemnización y «Ver mi cobertura».
+- **KAN-209 y KAN-32:** montos en la moneda elegida con la tasa del BFF; el idioma y la moneda se guardan en la cuenta y se
+  aplican al abrir la sesión.
+- **KAN-31 y KAN-130/131:** el consentimiento empieza una verificación limpia y se puede cambiar la cédula; resumen de lo
+  verificado en `M01-07a` y texto propio para el rechazo técnico.
+- Pruebas: 98 archivos `*_test.dart` y 9 recorridos en `integration_test/` (los resultados de emuladores y de teléfono no
+  se corrieron en esta revisión).
 
 ## 2. Stack
 
