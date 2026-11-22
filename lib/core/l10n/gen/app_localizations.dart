@@ -4417,6 +4417,66 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Conéctate para ver el detalle completo.'**
   String get m0507SinConexion;
+
+  /// Sin conexión: razón por la que una opción está deshabilitada.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesita conexión'**
+  String get redNecesitaConexion;
+
+  /// Inicio de sesión sin conexión y sin sesión guardada: mensaje de la franja de conexión.
+  ///
+  /// In es, this message translates to:
+  /// **'Para entrar sin internet necesitas haber iniciado sesión antes en este teléfono con el bloqueo de pantalla activo.'**
+  String get accesoSinConexionLogin;
+
+  /// Inicio de sesión sin conexión con la sesión guardada vencida: mensaje de la franja de conexión.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu sesión guardada venció. Conéctate para iniciar sesión.'**
+  String get accesoSesionVencidaSinConexion;
+
+  /// Modo sin conexión: lo que muestran las pestañas de asistencia.
+  ///
+  /// In es, this message translates to:
+  /// **'Conéctate para solicitar asistencia y ver tus asistencias.'**
+  String get homeSinConexionPestana;
+
+  /// Mi perfil sin conexión: datos que no se guardan en el teléfono.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo y documento'**
+  String get perfilSinConexionDatos;
+
+  /// Mi perfil sin conexión: explicación de por qué no se ven el correo y el documento.
+  ///
+  /// In es, this message translates to:
+  /// **'Conéctate para ver tus datos completos'**
+  String get perfilSinConexionDatosTexto;
+
+  /// Mi perfil sin conexión: fila deshabilitada de preferencias.
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma y moneda'**
+  String get perfilIdiomaMoneda;
+
+  /// Mi perfil sin conexión: idioma y moneda actuales; no se pueden cambiar sin red.
+  ///
+  /// In es, this message translates to:
+  /// **'{idioma} · {moneda} · Necesita conexión'**
+  String perfilPreferenciasSinConexion(String idioma, String moneda);
+
+  /// Mi perfil sin conexión: la huella o el rostro están activos.
+  ///
+  /// In es, this message translates to:
+  /// **'Activada · con ella entraste sin conexión'**
+  String get perfilBiometriaSinConexion;
+
+  /// Inicio: pista para activar la biometría, que además permite el modo sin conexión.
+  ///
+  /// In es, this message translates to:
+  /// **'Activa tu huella o rostro para entrar más rápido y poder reportar un siniestro sin conexión.'**
+  String get homeBiometriaPistaReporte;
 }
 
 class _AppLocalizationsDelegate

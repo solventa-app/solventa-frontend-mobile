@@ -2713,4 +2713,42 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0507SinConexion => 'Conéctate para ver el detalle completo.';
+
+  @override
+  String get redNecesitaConexion => 'Necesita conexión';
+
+  @override
+  String get accesoSinConexionLogin =>
+      'Para entrar sin internet necesitas haber iniciado sesión antes en este teléfono con el bloqueo de pantalla activo.';
+
+  @override
+  String get accesoSesionVencidaSinConexion =>
+      'Tu sesión guardada venció. Conéctate para iniciar sesión.';
+
+  @override
+  String get homeSinConexionPestana =>
+      'Conéctate para solicitar asistencia y ver tus asistencias.';
+
+  @override
+  String get perfilSinConexionDatos => 'Correo y documento';
+
+  @override
+  String get perfilSinConexionDatosTexto =>
+      'Conéctate para ver tus datos completos';
+
+  @override
+  String get perfilIdiomaMoneda => 'Idioma y moneda';
+
+  @override
+  String perfilPreferenciasSinConexion(String idioma, String moneda) {
+    return '$idioma · $moneda · Necesita conexión';
+  }
+
+  @override
+  String get perfilBiometriaSinConexion =>
+      'Activada · con ella entraste sin conexión';
+
+  @override
+  String get homeBiometriaPistaReporte =>
+      'Activa tu huella o rostro para entrar más rápido y poder reportar un siniestro sin conexión.';
 }

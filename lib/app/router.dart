@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+import '../core/almacen/almacen_local.dart';
 import '../core/design_system/solventa_ui.dart';
+import '../core/errors/falla.dart';
 import '../core/l10n/l10n.dart';
 import '../core/network/network_providers.dart';
 import '../core/push/pending_destination.dart';
@@ -88,6 +90,18 @@ bool _esRutaM04(String ubicacion) =>
     ubicacion.startsWith('${ParametricRoutes.celebracion}/') ||
     ubicacion.startsWith('${ParametricRoutes.detalle}/') ||
     ubicacion == ParametricRoutes.cobertura;
+
+/// HU-M05 (plan 4.5): lo que se puede abrir en modo sin conexión. El inicio,
+/// el reporte de siniestro de punta a punta, «Mis siniestros» con sus detalles
+/// y Mi perfil; lo demás necesita al servidor.
+bool rutaPermitidaSinConexion(String ubicacion) =>
+    ubicacion == '/' ||
+    ubicacion == SolGalleryPage.routeName ||
+    ubicacion == OnboardingRoutes.perfil ||
+    ubicacion == ReporteRoutes.poliza ||
+    ubicacion.startsWith('${ReporteRoutes.poliza}/') ||
+    ubicacion == ReporteRoutes.misSiniestros ||
+    ubicacion.startsWith('${ReporteRoutes.misSiniestros}/');
 
 const Set<String> _rutasSinCaptura = {
   'm01-03',
@@ -173,7 +187,16 @@ String? redirigirRuta(
     guardarPendiente?.call(ubicacion);
     return '/';
   }
-  final destino = fase == null ? null : redirigirAcceso(fase(), ubicacion);
+  final faseActual = fase?.call();
+  var destino = faseActual == null
+      ? null
+      : redirigirAcceso(faseActual, ubicacion);
+  // Sin conexión solo valen las rutas que no necesitan al servidor.
+  if (destino == null &&
+      faseActual == FaseAcceso.sinConexion &&
+      !rutaPermitidaSinConexion(ubicacion)) {
+    destino = '/';
+  }
   if (destino != null && _esRutaM04(ubicacion)) {
     guardarPendiente?.call(ubicacion);
   }
@@ -397,6 +420,65 @@ GoRouter crearRouter({
   ],
 );
 
+/// G-04: confirma y cierra la sesión.
+Future<void> _confirmarCierreSesion(BuildContext context, WidgetRef ref) async {
+  final l10n = context.l10n;
+  final notifier = ref.read(onboardingProvider.notifier);
+  // HU-M05 (sin conexión): con reportes en el teléfono, el diálogo dice
+  // que quedan guardados y deja enviarlos o borrarlos (plan 4.6).
+  final guardados = ref.read(reportesPorEnviarProvider);
+  var borrarReportes = false;
+  if (guardados.isEmpty) {
+    final confirmar = await SolConfirmDialog.show(
+      context,
+      title: l10n.cerrarSesionTitulo,
+      message: l10n.cerrarSesionMensaje,
+      confirmLabel: l10n.cerrarSesionConfirmar,
+      cancelLabel: l10n.cerrarSesionCancelar,
+    );
+    if (!confirmar) return;
+  } else {
+    final sinTerminar = guardados
+        .where((r) => r.estado == EstadoLocal.borrador)
+        .length;
+    final enviables = [
+      for (final r in guardados)
+        if (r.estado == EstadoLocal.pendiente ||
+            r.estado == EstadoLocal.necesitaAtencion)
+          r.id,
+    ];
+    final eleccion = await DialogoCierreConReportes.preguntar(
+      context,
+      sinEnviar: guardados.length - sinTerminar,
+      sinTerminar: sinTerminar,
+      puedeEnviar:
+          enviables.isNotEmpty && ref.read(estadoRedProvider).conectado,
+    );
+    if (!context.mounted) return;
+    switch (eleccion) {
+      case null:
+        return;
+      case EnviarAntes():
+        final cola = ref.read(colaReportesProvider);
+        for (final id in enviables) {
+          unawaited(cola.enviarAhora(id));
+        }
+        await context.push(ReporteRoutes.misSiniestros);
+        return;
+      case CerrarSesion(:final borrar):
+        borrarReportes = borrar;
+    }
+  }
+  if (!context.mounted) return;
+  await cerrarCuentaLocal(ref, borrarReportes: borrarReportes);
+  await notifier.cerrarSesion();
+  // En modo sin conexión la fase de acceso también vuelve a la entrada.
+  ref.read(accesoProvider.notifier).alCerrarSesion();
+  if (context.mounted) {
+    context.go('/');
+  }
+}
+
 class _RootShell extends ConsumerWidget {
   const _RootShell();
 
@@ -430,10 +512,30 @@ class _RootShell extends ConsumerWidget {
       return const Scaffold(body: SizedBox.expand());
     }
 
+    // HU-M05 (plan 4.5): se entró con la huella y sin red. El inicio se arma
+    // con lo guardado en el teléfono; lo que necesita al servidor se ve
+    // deshabilitado.
+    final cuentaLocal = ref.watch(
+      accesoProvider.select(
+        (s) => s.fase == FaseAcceso.sinConexion ? s.cuentaLocal : null,
+      ),
+    );
+    if (cuentaLocal != null) return _InicioSinConexion(cuenta: cuentaLocal);
+
     // Sin sesión, la entrada abre siempre en «Inicia sesión» y debajo ofrece
     // «Crear cuenta» (QA 2026-11-10).
     if (!estado.cuentaCreada) {
-      return const M0105bCuentaPage(modoInicialLogin: true);
+      // HU-M05 (plan 4.5): sin red no se puede iniciar sesión; la franja dice
+      // qué hace falta para entrar sin internet la próxima vez.
+      final l10n = context.l10n;
+      return M0105bCuentaPage(
+        modoInicialLogin: true,
+        banner: BannerConexion(
+          mensajeSinConexion: estado.falla is SesionVencida
+              ? l10n.accesoSesionVencidaSinConexion
+              : l10n.accesoSinConexionLogin,
+        ),
+      );
     }
 
     // HU-M06 (H1): con sesión, «Mis asistencias» se carga al abrir la app (el
@@ -452,60 +554,6 @@ class _RootShell extends ConsumerWidget {
               ? estado.perfil!.nombre!
               : ''
         : '';
-
-    Future<void> confirmarCierreSesion() async {
-      // HU-M05 (sin conexión): con reportes en el teléfono, el diálogo dice
-      // que quedan guardados y deja enviarlos o borrarlos (plan 4.6).
-      final guardados = ref.read(reportesPorEnviarProvider);
-      var borrarReportes = false;
-      if (guardados.isEmpty) {
-        final confirmar = await SolConfirmDialog.show(
-          context,
-          title: l10n.cerrarSesionTitulo,
-          message: l10n.cerrarSesionMensaje,
-          confirmLabel: l10n.cerrarSesionConfirmar,
-          cancelLabel: l10n.cerrarSesionCancelar,
-        );
-        if (!confirmar) return;
-      } else {
-        final sinTerminar = guardados
-            .where((r) => r.estado == EstadoLocal.borrador)
-            .length;
-        final enviables = [
-          for (final r in guardados)
-            if (r.estado == EstadoLocal.pendiente ||
-                r.estado == EstadoLocal.necesitaAtencion)
-              r.id,
-        ];
-        final eleccion = await DialogoCierreConReportes.preguntar(
-          context,
-          sinEnviar: guardados.length - sinTerminar,
-          sinTerminar: sinTerminar,
-          puedeEnviar:
-              enviables.isNotEmpty && ref.read(estadoRedProvider).conectado,
-        );
-        if (!context.mounted) return;
-        switch (eleccion) {
-          case null:
-            return;
-          case EnviarAntes():
-            final cola = ref.read(colaReportesProvider);
-            for (final id in enviables) {
-              unawaited(cola.enviarAhora(id));
-            }
-            await context.push(ReporteRoutes.misSiniestros);
-            return;
-          case CerrarSesion(:final borrar):
-            borrarReportes = borrar;
-        }
-      }
-      if (!context.mounted) return;
-      await cerrarCuentaLocal(ref, borrarReportes: borrarReportes);
-      await notifier.cerrarSesion();
-      if (context.mounted) {
-        context.go('/');
-      }
-    }
 
     final enCamino = ref.watch(enCaminoCantidadProvider);
     return SolAppShell(
@@ -609,7 +657,99 @@ class _RootShell extends ConsumerWidget {
       onWordmarkLongPress: kDebugMode
           ? () => context.push(SolGalleryPage.routeName)
           : null,
-      onLogout: confirmarCierreSesion,
+      onLogout: () => _confirmarCierreSesion(context, ref),
+    );
+  }
+}
+
+/// G-03 en modo sin conexión (HU-M05, plan 4.5 y boceto 3.1): el saludo con
+/// el nombre guardado, «Reportar un siniestro» y «Mis siniestros» activos, y
+/// el resto deshabilitado con «Necesita conexión». No llama al servidor.
+class _InicioSinConexion extends ConsumerWidget {
+  const _InicioSinConexion({required this.cuenta});
+
+  final CuentaLocal cuenta;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    return SolAppShell(
+      banner: const BannerReporte(),
+      home: HomePage(
+        pie: const DemoRed(),
+        userName: cuenta.nombre,
+        // Solo una cuenta verificada entra sin conexión.
+        verificacion: EstadoVerificacion.verificada,
+        sinConexion: true,
+        onCompleteRegistration: () {},
+        onRequestAssistance: () {},
+        onOpenProfile: () => context.push(OnboardingRoutes.perfil),
+        onReportClaim: () {
+          ref.read(reporteProvider.notifier).reiniciar();
+          context.push(ReporteRoutes.poliza);
+        },
+        onMyClaims: () => context.push(ReporteRoutes.misSiniestros),
+        porEnviar: ref.watch(reportesPorEnviarProvider).length,
+        onMyCoverage: () {},
+      ),
+      assistance: const _NecesitaConexion(),
+      misAsistencias: const _NecesitaConexion(),
+      destinations: [
+        SolNavDestination(label: l10n.navInicio, icon: SolIcons.home),
+        SolNavDestination(
+          label: l10n.navAsistencia,
+          icon: SolIcons.assistance,
+          selectedIcon: SolIcons.assistanceActive,
+        ),
+        SolNavDestination(
+          label: l10n.navMisAsistencias,
+          icon: SolIcons.misAsistencias,
+        ),
+        SolNavDestination(label: l10n.navCerrarSesion, icon: SolIcons.logout),
+      ],
+      onLogout: () => _confirmarCierreSesion(context, ref),
+    );
+  }
+}
+
+/// Lo que muestran las pestañas de asistencia mientras no hay conexión.
+class _NecesitaConexion extends StatelessWidget {
+  const _NecesitaConexion();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.colors;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(SolSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ExcludeSemantics(
+              child: Icon(
+                SolIcons.offline,
+                size: 40,
+                color: colors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: SolSpacing.md),
+            Text(
+              l10n.redNecesitaConexion,
+              textAlign: TextAlign.center,
+              style: context.solText.title.copyWith(color: colors.onSurface),
+            ),
+            const SizedBox(height: SolSpacing.xs),
+            Text(
+              l10n.homeSinConexionPestana,
+              textAlign: TextAlign.center,
+              style: context.solText.body.copyWith(
+                color: colors.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

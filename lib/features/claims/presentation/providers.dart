@@ -213,6 +213,13 @@ final sesionParaEnviarProvider = Provider<bool Function()>((ref) {
   return () => gestor.abierta;
 });
 
+/// Modo sin conexión (se entró con la huella, sin red): la sesión se renueva
+/// sola al volver la red y la cola no pide iniciar sesión mientras tanto.
+final sesionPorRenovarProvider = Provider<bool Function()>((ref) {
+  final gestor = ref.watch(gestorSesionProvider);
+  return () => gestor.porRenovar;
+});
+
 /// La cola de envío de la app: una sola, para que dos envíos no se pisen.
 final colaReportesProvider = Provider<ColaReportes>((ref) {
   final cola = ColaReportes(
@@ -224,6 +231,7 @@ final colaReportesProvider = Provider<ColaReportes>((ref) {
     porDatosMoviles: () => ref.read(estadoRedProvider).porDatosMoviles,
     soloWifi: () => ref.read(preferenciasEnvioProvider).soloWifi,
     sesionAbierta: ref.watch(sesionParaEnviarProvider),
+    sesionPorRenovar: ref.watch(sesionPorRenovarProvider),
     reloj: ref.watch(relojReporteProvider),
   );
   ref.onDispose(cola.cerrar);

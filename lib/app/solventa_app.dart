@@ -35,7 +35,11 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
   late final GoRouter _router = crearRouter(
     fase: () => ref.read(accesoProvider).fase,
     refrescar: _cambioFase,
-    sesionAbierta: () => ref.read(gestorSesionProvider).abierta,
+    // HU-M05: en modo sin conexión no hay JWT, pero la huella ya abrió la
+    // sesión guardada; qué rutas valen ahí lo decide `redirigirRuta`.
+    sesionAbierta: () =>
+        ref.read(gestorSesionProvider).abierta ||
+        ref.read(accesoProvider).fase == FaseAcceso.sinConexion,
     guardarPendiente: (ruta) =>
         ref.read(pendingDestinationProvider.notifier).fijar(ruta),
   );
@@ -57,6 +61,8 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
         // HU-M05 (sin conexión): con la sesión abierta la cola puede enviar.
         unawaited(ref.read(vigiaReportesProvider).despertar());
       }
+      // HU-M05: se entró sin conexión tocando un aviso de un reporte.
+      if (ahora == FaseAcceso.sinConexion) _reanudarPendiente();
     });
     // Sesión vencida con pantallas apiladas (perfil, verificación…): `go`
     // las descarta y deja solo `/`, que muestra «Inicia sesión».
@@ -99,7 +105,15 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
 
   void _reanudarPendiente() {
     final pendiente = ref.read(pendingDestinationProvider);
-    if (pendiente == null || !ref.read(gestorSesionProvider).abierta) return;
+    if (pendiente == null) return;
+    final sinConexion = ref.read(accesoProvider).fase == FaseAcceso.sinConexion;
+    // Sin conexión solo se sigue hacia lo que funciona sin servidor; lo demás
+    // queda pendiente hasta que la sesión se renueve.
+    if (sinConexion
+        ? !rutaPermitidaSinConexion(pendiente)
+        : !ref.read(gestorSesionProvider).abierta) {
+      return;
+    }
     ref.read(pendingDestinationProvider.notifier).limpiar();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _router.go(pendiente);

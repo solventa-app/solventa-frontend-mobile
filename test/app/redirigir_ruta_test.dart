@@ -54,4 +54,52 @@ void main() {
       expect(pendiente, isNull);
     });
   });
+
+  group('redirigirRuta sin conexión (HU-M05)', () {
+    String? ir(String ruta, {void Function(String)? guardar}) => redirigirRuta(
+      ruta,
+      fase: () => FaseAcceso.sinConexion,
+      sesionAbierta: () => true,
+      guardarPendiente: guardar,
+    );
+
+    test('deja pasar el inicio, el reporte, «Mis siniestros» y Mi perfil', () {
+      for (final ruta in [
+        '/',
+        '/perfil',
+        '/siniestro',
+        '/siniestro/fotos',
+        '/siniestros',
+        '/siniestros/local/r1',
+      ]) {
+        expect(ir(ruta), isNull, reason: ruta);
+      }
+    });
+
+    test('lo que necesita al servidor vuelve al inicio', () {
+      for (final ruta in [
+        '/asistencia',
+        '/m04-04',
+        '/m04-02/abc',
+        '/onboarding/frente',
+        '/siniestrosx',
+      ]) {
+        expect(ir(ruta), '/', reason: ruta);
+      }
+    });
+
+    test('la ruta de un push se guarda para cuando vuelva la sesión', () {
+      String? pendiente;
+      expect(ir('/m04-02/abc', guardar: (r) => pendiente = r), '/');
+      expect(pendiente, '/m04-02/abc');
+    });
+
+    test('rutaPermitidaSinConexion no acepta prefijos parecidos', () {
+      expect(rutaPermitidaSinConexion('/siniestro'), isTrue);
+      expect(rutaPermitidaSinConexion('/siniestro/relato'), isTrue);
+      expect(rutaPermitidaSinConexion('/siniestros/abc'), isTrue);
+      expect(rutaPermitidaSinConexion('/perfil/editar'), isFalse);
+      expect(rutaPermitidaSinConexion('/siniestralidad'), isFalse);
+    });
+  });
 }

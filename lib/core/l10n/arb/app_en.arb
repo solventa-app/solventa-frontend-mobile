@@ -1689,5 +1689,25 @@
       }
     }
   },
-  "m0507SinConexion": "Connect to see the full detail."
+  "m0507SinConexion": "Connect to see the full detail.",
+  "redNecesitaConexion": "Needs connection",
+  "accesoSinConexionLogin": "To get in without internet you need to have signed in before on this phone with the screen lock on.",
+  "accesoSesionVencidaSinConexion": "Your saved session expired. Connect to sign in.",
+  "homeSinConexionPestana": "Connect to request assistance and see your requests.",
+  "perfilSinConexionDatos": "Email and ID",
+  "perfilSinConexionDatosTexto": "Connect to see your full details",
+  "perfilIdiomaMoneda": "Language and currency",
+  "perfilPreferenciasSinConexion": "{idioma} · {moneda} · Needs connection",
+  "@perfilPreferenciasSinConexion": {
+    "placeholders": {
+      "idioma": {
+        "type": "String"
+      },
+      "moneda": {
+        "type": "String"
+      }
+    }
+  },
+  "perfilBiometriaSinConexion": "On · you used it to get in offline",
+  "homeBiometriaPistaReporte": "Turn on fingerprint or face to get in faster and to report a claim offline."
 }

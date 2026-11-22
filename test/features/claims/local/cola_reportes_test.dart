@@ -58,6 +58,7 @@ void main() {
   var datosMoviles = false;
   var soloWifi = false;
   var sesion = true;
+  var porRenovar = false;
 
   setUp(() {
     almacen = AlmacenReportesMemoria();
@@ -69,6 +70,7 @@ void main() {
     datosMoviles = false;
     soloWifi = false;
     sesion = true;
+    porRenovar = false;
     cola = ColaReportes(
       almacen: almacen,
       remoto: bff,
@@ -78,6 +80,7 @@ void main() {
       porDatosMoviles: () => datosMoviles,
       soloWifi: () => soloWifi,
       sesionAbierta: () => sesion,
+      sesionPorRenovar: () => porRenovar,
       reloj: () => ahora,
     );
     eventos = [];
@@ -390,6 +393,25 @@ void main() {
       expect(eventos.whereType<SesionRequerida>(), hasLength(1));
 
       sesion = true;
+      await cola.despertar();
+      expect((await leer('r1')).estado, EstadoLocal.enviado);
+    });
+
+    test('en modo sin conexión (la sesión se renueva sola) espera sin pedir '
+        'que inicie sesión', () async {
+      await pendiente('r1');
+      sesion = false;
+      porRenovar = true;
+
+      await cola.despertar();
+
+      expect(subida.subidas, isEmpty);
+      expect(cola.progreso.espera, EsperaCola.sinSesion);
+      expect(eventos.whereType<SesionRequerida>(), isEmpty);
+
+      // La app renovó la sesión al volver la red.
+      sesion = true;
+      porRenovar = false;
       await cola.despertar();
       expect((await leer('r1')).estado, EstadoLocal.enviado);
     });

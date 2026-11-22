@@ -130,6 +130,8 @@ final class _Rechazo implements Exception {
 /// Código de `ultimoError` de una falla técnica (no es un mensaje al cliente).
 const errorTecnicoDeEnvio = 'FALLA_TECNICA';
 
+bool _nunca() => false;
+
 /// La cola de envío de HU-M05 (plan 4.4): un solo trabajador que envía los
 /// reportes pendientes de la cuenta, del más antiguo al más nuevo. Cada paso
 /// queda guardado antes del siguiente: si la app muere, al abrir se sigue
@@ -144,6 +146,7 @@ final class ColaReportes {
     required this.porDatosMoviles,
     required this.soloWifi,
     required this.sesionAbierta,
+    this.sesionPorRenovar = _nunca,
     required this.reloj,
   });
 
@@ -170,6 +173,10 @@ final class ColaReportes {
   /// La preferencia «Enviar las fotos solo con Wi-Fi» de Mi perfil.
   final bool Function() soloWifi;
   final bool Function() sesionAbierta;
+
+  /// Modo sin conexión: no hay sesión abierta, pero la app la renueva sola al
+  /// volver la red. La cola espera sin pedirle al cliente que inicie sesión.
+  final bool Function() sesionPorRenovar;
   final DateTime Function() reloj;
 
   final _cambios = StreamController<ProgresoCola>.broadcast();
@@ -348,7 +355,7 @@ final class ColaReportes {
     if (enCola.isEmpty) return EsperaCola.ninguna;
     if (!conectado()) return EsperaCola.sinRed;
     if (!sesionAbierta()) {
-      if (!_sesionAvisada) {
+      if (!_sesionAvisada && !sesionPorRenovar()) {
         _sesionAvisada = true;
         _avisar(const SesionRequerida());
       }

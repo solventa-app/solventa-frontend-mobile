@@ -3282,5 +3282,53 @@
   "m0507SinConexion": "Conéctate para ver el detalle completo.",
   "@m0507SinConexion": {
     "description": "M05-07: detalle de un caso abierto sin conexión; se muestra el resumen de la lista."
+  },
+  "redNecesitaConexion": "Necesita conexión",
+  "@redNecesitaConexion": {
+    "description": "Sin conexión: razón por la que una opción está deshabilitada."
+  },
+  "accesoSinConexionLogin": "Para entrar sin internet necesitas haber iniciado sesión antes en este teléfono con el bloqueo de pantalla activo.",
+  "@accesoSinConexionLogin": {
+    "description": "Inicio de sesión sin conexión y sin sesión guardada: mensaje de la franja de conexión."
+  },
+  "accesoSesionVencidaSinConexion": "Tu sesión guardada venció. Conéctate para iniciar sesión.",
+  "@accesoSesionVencidaSinConexion": {
+    "description": "Inicio de sesión sin conexión con la sesión guardada vencida: mensaje de la franja de conexión."
+  },
+  "homeSinConexionPestana": "Conéctate para solicitar asistencia y ver tus asistencias.",
+  "@homeSinConexionPestana": {
+    "description": "Modo sin conexión: lo que muestran las pestañas de asistencia."
+  },
+  "perfilSinConexionDatos": "Correo y documento",
+  "@perfilSinConexionDatos": {
+    "description": "Mi perfil sin conexión: datos que no se guardan en el teléfono."
+  },
+  "perfilSinConexionDatosTexto": "Conéctate para ver tus datos completos",
+  "@perfilSinConexionDatosTexto": {
+    "description": "Mi perfil sin conexión: explicación de por qué no se ven el correo y el documento."
+  },
+  "perfilIdiomaMoneda": "Idioma y moneda",
+  "@perfilIdiomaMoneda": {
+    "description": "Mi perfil sin conexión: fila deshabilitada de preferencias."
+  },
+  "perfilPreferenciasSinConexion": "{idioma} · {moneda} · Necesita conexión",
+  "@perfilPreferenciasSinConexion": {
+    "description": "Mi perfil sin conexión: idioma y moneda actuales; no se pueden cambiar sin red.",
+    "placeholders": {
+      "idioma": {
+        "type": "String"
+      },
+      "moneda": {
+        "type": "String"
+      }
+    }
+  },
+  "perfilBiometriaSinConexion": "Activada · con ella entraste sin conexión",
+  "@perfilBiometriaSinConexion": {
+    "description": "Mi perfil sin conexión: la huella o el rostro están activos."
+  },
+  "homeBiometriaPistaReporte": "Activa tu huella o rostro para entrar más rápido y poder reportar un siniestro sin conexión.",
+  "@homeBiometriaPistaReporte": {
+    "description": "Inicio: pista para activar la biometría, que además permite el modo sin conexión."
   }
 }

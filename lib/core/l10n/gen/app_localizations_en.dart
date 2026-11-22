@@ -2704,4 +2704,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0507SinConexion => 'Connect to see the full detail.';
+
+  @override
+  String get redNecesitaConexion => 'Needs connection';
+
+  @override
+  String get accesoSinConexionLogin =>
+      'To get in without internet you need to have signed in before on this phone with the screen lock on.';
+
+  @override
+  String get accesoSesionVencidaSinConexion =>
+      'Your saved session expired. Connect to sign in.';
+
+  @override
+  String get homeSinConexionPestana =>
+      'Connect to request assistance and see your requests.';
+
+  @override
+  String get perfilSinConexionDatos => 'Email and ID';
+
+  @override
+  String get perfilSinConexionDatosTexto => 'Connect to see your full details';
+
+  @override
+  String get perfilIdiomaMoneda => 'Language and currency';
+
+  @override
+  String perfilPreferenciasSinConexion(String idioma, String moneda) {
+    return '$idioma · $moneda · Needs connection';
+  }
+
+  @override
+  String get perfilBiometriaSinConexion => 'On · you used it to get in offline';
+
+  @override
+  String get homeBiometriaPistaReporte =>
+      'Turn on fingerprint or face to get in faster and to report a claim offline.';
 }

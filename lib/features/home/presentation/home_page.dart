@@ -26,6 +26,7 @@ class HomePage extends StatelessWidget {
     this.onReportClaim,
     this.onMyClaims,
     this.porEnviar = 0,
+    this.sinConexion = false,
     this.onMyCoverage,
     this.verificacion,
     this.cargandoCuenta = false,
@@ -52,6 +53,10 @@ class HomePage extends StatelessWidget {
   /// HU-M05 (sin conexión): reportes guardados en el teléfono que faltan por
   /// enviar; se ven como insignia en «Mis siniestros».
   final int porEnviar;
+
+  /// HU-M05 (plan 4.5): se entró sin conexión. Solo quedan activos el reporte
+  /// de siniestro y «Mis siniestros»; lo demás dice «Necesita conexión».
+  final bool sinConexion;
 
   /// HU-M04: cupo, movimientos y pagos de la cobertura paramétrica (M04-04).
   final VoidCallback? onMyCoverage;
@@ -81,6 +86,9 @@ class HomePage extends StatelessWidget {
     final sol = context.solColors;
     final l10n = Localizations.of<AppLocalizations>(context, AppLocalizations);
 
+    final necesitaConexion = sinConexion
+        ? l10n?.redNecesitaConexion ?? 'Necesita conexión'
+        : null;
     final tieneNombre = userName.trim().isNotEmpty;
     final saludo = tieneNombre
         ? (l10n?.homeSaludoHola(userName.trim()) ?? 'Hola, ${userName.trim()}')
@@ -292,6 +300,7 @@ class HomePage extends StatelessWidget {
           SolActionTile(
             icon: SolIcons.assistanceActive,
             title: l10n?.homeAsistenciaTile ?? 'Solicitar asistencia en sitio',
+            disabledReason: necesitaConexion,
             onTap: onRequestAssistance,
           ),
           if (onReportClaim case final reportar?) ...[
@@ -318,6 +327,7 @@ class HomePage extends StatelessWidget {
             SolActionTile(
               icon: SolIcons.wallet,
               title: l10n?.homeMiCoberturaTile ?? 'Mi cobertura',
+              disabledReason: necesitaConexion,
               onTap: miCobertura,
             ),
           ],
@@ -379,7 +389,7 @@ class _PistaBiometria extends StatelessWidget {
         const SizedBox(width: SolSpacing.sm),
         Expanded(
           child: Text(
-            l10n.homeBiometriaPista,
+            l10n.homeBiometriaPistaReporte,
             style: context.solText.note.copyWith(
               color: colors.onSurfaceVariant,
             ),
