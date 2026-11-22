@@ -8,7 +8,15 @@ import '../../tokens/sol_spacing.dart';
 
 /// Estados de producto. Nunca se comunican solo con color: cada uno trae
 /// su ícono y su texto.
-enum SolStatus { success, warning, error, info }
+enum SolStatus {
+  success,
+  warning,
+  error,
+  info,
+
+  /// Sin tono: algo a medias que no es ni bueno ni malo («Sin terminar»).
+  neutral,
+}
 
 /// Colores e íconos resueltos de un [SolStatus].
 @immutable
@@ -53,6 +61,13 @@ class SolStatusStyle {
         icon: SolIcons.info,
         badgeIcon: SolIcons.info,
         semanticPrefix: textos.solEstadoInformacion,
+      ),
+      SolStatus.neutral => SolStatusStyle(
+        foreground: colors.onSurfaceVariant,
+        container: colors.surfaceContainerHighest,
+        icon: SolIcons.draft,
+        badgeIcon: SolIcons.draft,
+        semanticPrefix: 'Estado',
       ),
     };
   }

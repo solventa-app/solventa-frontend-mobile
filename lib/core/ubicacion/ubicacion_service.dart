@@ -46,8 +46,12 @@ abstract interface class UbicacionService {
   /// Revisa el GPS y el permiso sin mostrar el diálogo del sistema.
   Future<EstadoUbicacion> estado();
 
-  /// Pide el permiso si hace falta y devuelve la posición actual.
-  Future<ResultadoUbicacion> ubicacionActual();
+  /// Pide el permiso si hace falta y devuelve la posición actual. [espera]
+  /// es cuánto se aguarda a que el GPS fije: sin internet tarda más (HU-M05
+  /// sin conexión le da 30 s).
+  Future<ResultadoUbicacion> ubicacionActual({
+    Duration espera = const Duration(seconds: 10),
+  });
 
   /// Abre los ajustes de la app (permiso negado para siempre) o los de
   /// ubicación del sistema (GPS apagado).
@@ -76,7 +80,9 @@ final class GeolocatorUbicacionService implements UbicacionService {
   }
 
   @override
-  Future<ResultadoUbicacion> ubicacionActual() async {
+  Future<ResultadoUbicacion> ubicacionActual({
+    Duration espera = const Duration(seconds: 10),
+  }) async {
     try {
       if (!await Geolocator.isLocationServiceEnabled()) {
         return const UbicacionNoDisponible();
@@ -96,9 +102,9 @@ final class GeolocatorUbicacionService implements UbicacionService {
           break;
       }
       final posicion = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
+        locationSettings: LocationSettings(
           accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 10),
+          timeLimit: espera,
         ),
       );
       return UbicacionObtenida(
@@ -159,9 +165,15 @@ final class FakeUbicacionService implements UbicacionService {
   /// Para pruebas: cuántas veces se leyó la posición.
   int lecturas = 0;
 
+  /// Para pruebas: cuánto se le dio al GPS en la última lectura.
+  Duration? ultimaEspera;
+
   @override
-  Future<ResultadoUbicacion> ubicacionActual() async {
+  Future<ResultadoUbicacion> ubicacionActual({
+    Duration espera = const Duration(seconds: 10),
+  }) async {
     lecturas++;
+    ultimaEspera = espera;
     return resultado;
   }
 

@@ -139,6 +139,13 @@ abstract final class SolFormat {
     return '$hour12:$minutes$nbsp${d.hour < 12 ? 'AM' : 'PM'}';
   }
 
+  /// `1,4 MB` (en inglés `1.4 MB`): tamaño de fotos, con un decimal.
+  static String megabytesFor(int bytes, Locale locale) {
+    final mb = bytes / (1024 * 1024);
+    final formato = _ingles(locale) ? _decimal1En : _decimal1;
+    return '${formato.format(mb)}${nbsp}MB';
+  }
+
   /// Como [distanceKm] en español (`1,5 km`); en inglés `1.5 km`.
   static String distanceKmFor(double km, Locale locale) =>
       _ingles(locale) ? '${_decimal1En.format(km)}${nbsp}km' : distanceKm(km);

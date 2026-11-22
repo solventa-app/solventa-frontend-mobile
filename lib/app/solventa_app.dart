@@ -9,13 +9,16 @@ import '../core/l10n/l10n.dart';
 import '../core/network/network_providers.dart';
 import '../core/push/pending_destination.dart';
 import '../core/push/push_service.dart';
+import '../core/red/estado_red_notifier.dart';
 import '../core/sesion/gestor_sesion.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/assistance/presentation/asistencia_routes.dart';
 import '../features/assistance/presentation/providers.dart';
+import '../features/claims/presentation/vigia_reportes.dart';
 import '../features/onboarding/presentation/onboarding_notifier.dart';
 import '../features/onboarding/presentation/preferencias_de_la_cuenta.dart';
 import '../features/profile/presentation/sol_preferencias_sheet.dart';
+import 'cuenta_local.dart';
 import 'router.dart';
 
 /// Raíz de la app: tema M3 de Solventa, idioma (`es-CO` / `en`), moneda
@@ -33,7 +36,11 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
   late final GoRouter _router = crearRouter(
     fase: () => ref.read(accesoProvider).fase,
     refrescar: _cambioFase,
-    sesionAbierta: () => ref.read(gestorSesionProvider).abierta,
+    // HU-M05: en modo sin conexión no hay JWT, pero la huella ya abrió la
+    // sesión guardada; qué rutas valen ahí lo decide `redirigirRuta`.
+    sesionAbierta: () =>
+        ref.read(gestorSesionProvider).abierta ||
+        ref.read(accesoProvider).fase == FaseAcceso.sinConexion,
     guardarPendiente: (ruta) =>
         ref.read(pendingDestinationProvider.notifier).fijar(ruta),
   );
@@ -52,18 +59,33 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
       // con clave lo reanuda `_RootShell` en `router.dart`.
       if (ahora == FaseAcceso.normal && antes != FaseAcceso.normal) {
         _reanudarPendiente();
+        // HU-M05 (sin conexión): con la sesión abierta la cola puede enviar.
+        unawaited(ref.read(vigiaReportesProvider).despertar());
       }
+      // HU-M05: se entró sin conexión tocando un aviso de un reporte.
+      if (ahora == FaseAcceso.sinConexion) _reanudarPendiente();
     });
     // Sesión vencida con pantallas apiladas (perfil, verificación…): `go`
     // las descarta y deja solo `/`, que muestra «Inicia sesión».
     _eventos = ref.read(gestorSesionProvider).eventos.listen((evento) {
       if (evento is SesionVencidaEvento) _router.go('/');
     });
+    // HU-M05 (sin conexión): de quién es lo que se guarda en el teléfono.
+    seguirCuentaLocal(ref);
+    // HU-M05 (sin conexión): la cola de reportes y sus avisos viven con la app.
+    ref.listenManual(vigiaReportesProvider, (_, _) {}, fireImmediately: true);
     // Bloqueo tras 15 min en segundo plano (HU-M02).
     _ciclo = AppLifecycleListener(
-      onHide: () => ref.read(accesoProvider.notifier).alPasarASegundoPlano(),
+      onHide: () {
+        ref.read(accesoProvider.notifier).alPasarASegundoPlano();
+        // HU-M05 (sin conexión): en segundo plano no se prueba la red.
+        ref.read(estadoRedProvider.notifier).alOcultarse();
+        ref.read(vigiaReportesProvider).alOcultarse();
+      },
       onShow: () {
         ref.read(accesoProvider.notifier).alVolverAPrimerPlano();
+        unawaited(ref.read(estadoRedProvider.notifier).alVolverAlFrente());
+        ref.read(vigiaReportesProvider).alVolverAlFrente();
         // Idioma y moneda guardados desde la web u otro teléfono (KAN-209).
         if (ref.read(accesoProvider).fase == FaseAcceso.normal) {
           unawaited(
@@ -92,7 +114,15 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
 
   void _reanudarPendiente() {
     final pendiente = ref.read(pendingDestinationProvider);
-    if (pendiente == null || !ref.read(gestorSesionProvider).abierta) return;
+    if (pendiente == null) return;
+    final sinConexion = ref.read(accesoProvider).fase == FaseAcceso.sinConexion;
+    // Sin conexión solo se sigue hacia lo que funciona sin servidor; lo demás
+    // queda pendiente hasta que la sesión se renueve.
+    if (sinConexion
+        ? !rutaPermitidaSinConexion(pendiente)
+        : !ref.read(gestorSesionProvider).abierta) {
+      return;
+    }
     ref.read(pendingDestinationProvider.notifier).limpiar();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _router.go(pendiente);

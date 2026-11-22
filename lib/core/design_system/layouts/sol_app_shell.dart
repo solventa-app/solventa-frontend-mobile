@@ -21,6 +21,7 @@ class SolAppShell extends StatefulWidget {
     this.onWordmarkLongPress,
     this.onProfileTap,
     this.pestana,
+    this.banner,
   });
 
   final Widget home;
@@ -40,6 +41,9 @@ class SolAppShell extends StatefulWidget {
   /// Control opcional de la pestaña activa desde fuera (p. ej. volver a
   /// Asistencia al terminar un recorrido). Se mantiene al día con los toques.
   final ValueNotifier<int>? pestana;
+
+  /// Franja bajo la barra superior (estado de la red), común a las pestañas.
+  final Widget? banner;
 
   static const int homeIndex = 0;
   static const int assistanceIndex = 1;
@@ -110,6 +114,7 @@ class _SolAppShellState extends State<SolAppShell> {
         onLocaleTap: widget.onLocaleTap,
         onWordmarkLongPress: widget.onWordmarkLongPress,
         onProfileTap: widget.onProfileTap,
+        banner: widget.banner,
         body: IndexedStack(
           index: _index,
           children: [

@@ -19,6 +19,7 @@ class SolFlowScaffold extends StatelessWidget {
     this.onProfileTap,
     this.onHomeTap,
     this.padding,
+    this.banner,
   });
 
   final String title;
@@ -43,6 +44,9 @@ class SolFlowScaffold extends StatelessWidget {
   final VoidCallback? onHomeTap;
   final EdgeInsets? padding;
 
+  /// Franja bajo la barra superior (estado de la red).
+  final Widget? banner;
+
   @override
   Widget build(BuildContext context) {
     final frame = SolScreenFrame(
@@ -59,6 +63,7 @@ class SolFlowScaffold extends StatelessWidget {
       actions: actions,
       anchorActions: anchorActions,
       padding: padding ?? SolScreenFrame.defaultPadding,
+      banner: banner,
     );
     if (onBack == null) return frame;
     return PopScope(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../components/feedback/sol_connection_banner.dart';
 import '../components/navigation/sol_bottom_nav.dart';
 import '../components/navigation/sol_top_bar.dart';
 import '../responsive/sol_adaptive_body.dart';
@@ -16,6 +17,7 @@ class SolTopLevelScaffold extends StatelessWidget {
     this.onLocaleTap,
     this.onWordmarkLongPress,
     this.onProfileTap,
+    this.banner,
   });
 
   final Widget body;
@@ -28,6 +30,9 @@ class SolTopLevelScaffold extends StatelessWidget {
   /// Avatar del inicio que abre Mi perfil; sin él no hay avatar.
   final VoidCallback? onProfileTap;
 
+  /// Franja bajo la barra superior (estado de la red).
+  final Widget? banner;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +41,15 @@ class SolTopLevelScaffold extends StatelessWidget {
         onWordmarkLongPress: onWordmarkLongPress,
         onProfileTap: onProfileTap,
       ),
-      body: SolAdaptiveBody(child: body),
+      body: Column(
+        children: [
+          SolBannerSlot(
+            banner: banner,
+            compact: SolBannerSlot.keyboardOpen(context),
+          ),
+          Expanded(child: SolAdaptiveBody(child: body)),
+        ],
+      ),
       bottomNavigationBar: SolBottomNav(
         selectedIndex: selectedIndex,
         onDestinationSelected: onDestinationSelected,

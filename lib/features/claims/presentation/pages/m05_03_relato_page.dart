@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,10 +7,14 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/navegacion/volver.dart';
+import '../../../../core/red/estado_red_notifier.dart';
 import '../../domain/ciudades.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
+import '../reporte_notifier.dart';
 import '../reporte_routes.dart';
+import '../widgets/banner_reporte.dart';
+import '../widgets/hoja_datos_moviles.dart';
 
 /// M05-03 · Qué pasó y dónde (KAN-277).
 class M0503RelatoPage extends ConsumerStatefulWidget {
@@ -27,6 +33,7 @@ class _M0503RelatoPageState extends ConsumerState<M0503RelatoPage> {
   late final TextEditingController _ciudad;
   late bool _otraCiudad;
   bool _intentoEnviar = false;
+  bool _guardando = false;
 
   @override
   void initState() {
@@ -100,10 +107,53 @@ class _M0503RelatoPageState extends ConsumerState<M0503RelatoPage> {
     }
   }
 
-  void _enviar() {
+  /// Con conexión envía (M05-04 muestra el avance). Sin conexión, o si el
+  /// cliente prefiere esperar Wi-Fi, lo deja guardado en la cola y va directo
+  /// a «Reporte guardado»: la app lo envía sola después.
+  Future<void> _enviar() async {
     setState(() => _intentoEnviar = true);
-    if (!ref.read(reporteProvider).listoParaEnviar) return;
-    context.push(ReporteRoutes.enviando);
+    final estado = ref.read(reporteProvider);
+    if (!estado.listoParaEnviar || _guardando) return;
+    final notifier = ref.read(reporteProvider.notifier);
+    // Sin cuenta nada se guarda en el teléfono: el envío es el directo.
+    if (ref.read(cuentaReporteProvider) == null) {
+      unawaited(context.push(ReporteRoutes.enviando));
+      return;
+    }
+    final red = ref.read(estadoRedProvider);
+    var conDatos = false;
+    var esperarWifi = false;
+    if (red.porDatosMoviles) {
+      final preferencias = ref.read(preferenciasEnvioProvider);
+      if (!preferencias.preguntado) {
+        final eleccion = await HojaDatosMoviles.preguntar(
+          context,
+          fotos: estado.fotos.length,
+          bytes: estado.fotos.fold(0, (suma, f) => suma + f.bytes.length),
+        );
+        if (eleccion == null || !mounted) return;
+        conDatos = eleccion.conDatos;
+        esperarWifi = !eleccion.conDatos;
+        if (eleccion.recordar) {
+          await ref
+              .read(preferenciasEnvioProvider.notifier)
+              .fijarSoloWifi(soloWifi: !eleccion.conDatos);
+          if (!mounted) return;
+        }
+      } else {
+        esperarWifi = preferencias.soloWifi;
+      }
+    }
+    if (!red.conectado || esperarWifi) {
+      setState(() => _guardando = true);
+      await notifier.enviar(esperarWifi: esperarWifi);
+      if (!mounted) return;
+      setState(() => _guardando = false);
+      unawaited(context.push(ReporteRoutes.resultado));
+      return;
+    }
+    unawaited(notifier.enviar(conDatos: conDatos));
+    unawaited(context.push(ReporteRoutes.enviando, extra: true));
   }
 
   @override
@@ -115,8 +165,14 @@ class _M0503RelatoPageState extends ConsumerState<M0503RelatoPage> {
         _intentoEnviar && !ReglasReporte.relatoValido(estado.descripcion);
     final lugarMal = _intentoEnviar && estado.lugar.trim().isEmpty;
     final ciudadMal = _intentoEnviar && estado.ciudad.trim().isEmpty;
+    // Sin conexión, y con dónde guardarlo, el botón guarda en vez de enviar.
+    final guardaEnTelefono = ref.watch(cuentaReporteProvider) != null;
+    final sinConexion =
+        guardaEnTelefono &&
+        !ref.watch(estadoRedProvider.select((red) => red.conectado));
 
     return SolFlowScaffold(
+      banner: const BannerReporte(),
       title: l10n.m0503Titulo,
       onBack: context.volverOInicio,
       onHomeTap: salirAlInicioConfirmando(context, widget.onHome),
@@ -168,9 +224,34 @@ class _M0503RelatoPageState extends ConsumerState<M0503RelatoPage> {
                   '${u.longitud.toStringAsFixed(4)}',
             ),
           ],
+          if (estado.avisoGuardado case final aviso?) ...[
+            const SizedBox(height: SolSpacing.md),
+            SolStatusBanner(
+              status: SolStatus.warning,
+              title: aviso == AvisoGuardado.sinEspacio
+                  ? l10n.m05SinEspacio
+                  : l10n.m05NoGuardado,
+            ),
+          ],
+          if (guardaEnTelefono) ...[
+            const SizedBox(height: SolSpacing.md),
+            SolInlineNote(
+              icon: sinConexion ? SolIcons.offline : SolIcons.info,
+              text: sinConexion
+                  ? l10n.m0503SinConexionNota
+                  : l10n.m0503Avisaremos,
+            ),
+          ],
         ],
       ),
-      actions: [SolButton.primary(label: l10n.m0503Enviar, onPressed: _enviar)],
+      actions: [
+        SolButton.primary(
+          label: sinConexion ? l10n.m0503GuardarDespues : l10n.m0503Enviar,
+          icon: sinConexion ? SolIcons.saved : null,
+          loading: _guardando,
+          onPressed: () => unawaited(_enviar()),
+        ),
+      ],
     );
   }
 }
