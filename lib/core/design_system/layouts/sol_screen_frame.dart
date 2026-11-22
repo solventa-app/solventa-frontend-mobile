@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../components/feedback/sol_connection_banner.dart';
 import '../responsive/sol_adaptive_body.dart';
 import '../tokens/sol_spacing.dart';
 
@@ -18,6 +19,7 @@ class SolScreenFrame extends StatelessWidget {
     this.centerBody = false,
     this.padding = defaultPadding,
     this.backgroundColor,
+    this.banner,
   });
 
   /// Margen lateral de 16 dp y 24 dp arriba y abajo (Figma).
@@ -37,6 +39,9 @@ class SolScreenFrame extends StatelessWidget {
 
   /// Fondo de la pantalla; por defecto el del tema (gris #F5F5F5).
   final Color? backgroundColor;
+
+  /// Franja bajo la barra superior (estado de la red). Empuja el contenido.
+  final Widget? banner;
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +105,10 @@ class SolScreenFrame extends StatelessWidget {
       appBar: topBar,
       body: Column(
         children: [
+          SolBannerSlot(
+            banner: banner,
+            compact: SolBannerSlot.keyboardOpen(context),
+          ),
           Expanded(child: scroll),
           if (anchorActions && actionColumn != null)
             SafeArea(

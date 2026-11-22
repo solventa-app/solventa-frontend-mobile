@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:solventa_mobile/core/contrato/schema.graphql.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
+import 'package:solventa_mobile/core/network/network_exceptions.dart';
 import 'package:solventa_mobile/core/network/network_providers.dart';
 import 'package:solventa_mobile/features/claims/data/datasources/reporte_siniestro_remote_datasource.dart';
 import 'package:solventa_mobile/features/claims/presentation/pages/m05_06_mis_siniestros_page.dart';
@@ -273,6 +274,27 @@ void main() {
       await tester.ensureVisible(find.text('Tu relato'));
       expect(find.text('Cra 15 con Calle 93, Bogotá'), findsOneWidget);
       expect(find.textContaining('Me chocaron por detrás'), findsOneWidget);
+    });
+
+    testWidgets('sin conexión muestra el resumen de la lista y pide '
+        'conectarse', (tester) async {
+      bff.errorAlDetallar = const ErrorRed(tipo: 'connectionError');
+      await abrir(tester, '/siniestros/demo-3');
+
+      // El detalle no se guarda en el teléfono: queda lo que traía la lista.
+      expect(find.text('SIN-2026-0942'), findsOneWidget);
+      expect(
+        find.text('Conéctate para ver el detalle completo.'),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.text('Reintentar'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Conéctate para ver el detalle completo.'),
+        findsNothing,
+      );
+      expect(find.text('SIN-2026-0942'), findsOneWidget);
     });
 
     testWidgets('si el detalle falla ofrece reintentar', (tester) async {

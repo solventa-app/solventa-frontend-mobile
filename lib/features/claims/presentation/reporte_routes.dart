@@ -9,6 +9,11 @@ abstract final class ReporteRoutes {
   static const misSiniestros = '/siniestros';
   static const detalle = '/siniestros/:id';
 
+  /// «Reporte por enviar»: el detalle de un reporte guardado en el teléfono.
+  static const pendiente = '/siniestro/pendiente/:id';
+
   /// La ruta del detalle de un caso (M05-07).
   static String detalleDe(String id) => '/siniestros/$id';
+
+  static String pendienteDe(String id) => '/siniestro/pendiente/$id';
 }

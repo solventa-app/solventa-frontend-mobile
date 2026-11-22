@@ -6,10 +6,15 @@ import '../../../core/design_system/solventa_ui.dart';
 import '../../../core/errors/resultado.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/network/network_providers.dart';
+import '../../acceso/presentation/acceso_notifier.dart';
+import '../../claims/presentation/reporte_routes.dart';
+import '../../claims/presentation/widgets/banner_reporte.dart';
+import '../../claims/presentation/widgets/seccion_envio_reportes.dart';
 import '../../onboarding/domain/entities/onboarding.dart';
 import '../../onboarding/presentation/onboarding_notifier.dart';
 import '../../onboarding/presentation/onboarding_routes.dart';
 import '../../onboarding/presentation/providers.dart';
+import 'perfil_sin_conexion.dart';
 
 /// G-05 · Mi perfil (equivalente móvil de `MiPerfil.vue` en `solventa-frontend-web`).
 ///
@@ -41,6 +46,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Future<void> _cargar() async {
     if (!mounted) return;
+    // HU-M05: en modo sin conexión el perfil se arma con lo del teléfono.
+    if (ref.read(accesoProvider).fase == FaseAcceso.sinConexion) return;
     setState(() => _cargando = true);
     await ref.read(onboardingProvider.notifier).cargarPerfilYEstado();
     if (mounted) setState(() => _cargando = false);
@@ -123,13 +130,42 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     // Con el refresh cifrado en el teléfono, M02 ya pide huella o rostro.
     final biometriaActiva = ref.read(gestorSesionProvider).refreshPersistido;
 
-    final contenido = SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(
-        SolSpacing.screen,
-        SolSpacing.xl,
-        SolSpacing.screen,
-        SolSpacing.xxl,
+    // HU-M05 (plan 4.5): se entró sin conexión.
+    final cuentaLocal = ref.watch(
+      accesoProvider.select(
+        (s) => s.fase == FaseAcceso.sinConexion ? s.cuentaLocal : null,
       ),
+    );
+    const margen = EdgeInsets.fromLTRB(
+      SolSpacing.screen,
+      SolSpacing.xl,
+      SolSpacing.screen,
+      SolSpacing.xxl,
+    );
+    if (cuentaLocal != null) {
+      final sinConexion = SingleChildScrollView(
+        padding: margen,
+        child: PerfilSinConexion(
+          cuenta: cuentaLocal,
+          idioma: locale.languageCode.toUpperCase(),
+          moneda: moneda,
+          onVerPorEnviar: () => context.push(ReporteRoutes.misSiniestros),
+          onLogout: widget.onLogout,
+        ),
+      );
+      if (widget.enShell) return sinConexion;
+      return SolFlowScaffold(
+        banner: const BannerReporte(),
+        title: l10n.perfilTitulo,
+        anchorActions: false,
+        onHomeTap: () => context.go('/'),
+        padding: EdgeInsets.zero,
+        body: sinConexion,
+      );
+    }
+
+    final contenido = SingleChildScrollView(
+      padding: margen,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -297,6 +333,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ],
               ),
             ),
+            // HU-M05 (sin conexión): cómo y cuándo se envían los reportes.
+            if (verificado) ...[
+              const SizedBox(height: SolSpacing.lg),
+              SeccionEnvioReportes(
+                onVerPorEnviar: () => context.push(ReporteRoutes.misSiniestros),
+              ),
+            ],
             const SizedBox(height: SolSpacing.lg),
             // Tarjeta de preferencias (idioma y moneda, como en KAN-209 Web)
             SolCard.outlined(
