@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/almacen/almacen_providers.dart';
+import 'package:solventa_mobile/core/network/network_exceptions.dart';
 import 'package:solventa_mobile/core/network/network_providers.dart';
+import 'package:solventa_mobile/core/network/subida_archivo_service.dart';
 import 'package:solventa_mobile/core/red/conectividad.dart';
 import 'package:solventa_mobile/core/red/estado_red.dart';
 import 'package:solventa_mobile/core/red/estado_red_notifier.dart';
@@ -27,6 +30,26 @@ final _poliza = PolizaReportable(
   esAuto: true,
   vehiculo: 'MAZDA ABC•••',
 );
+
+/// Sube de inmediato, salvo que haya una [puerta]: entonces espera a que se
+/// abra, para mirar qué pasa a mitad de un envío.
+final class _SubidaConPuerta implements SubidaArchivoService {
+  Completer<void>? puerta;
+  final empezo = Completer<void>();
+
+  @override
+  Future<void> subir({
+    required String url,
+    required String metodo,
+    required Map<String, String> encabezados,
+    required Uint8List bytes,
+    void Function(int enviados)? alAvanzar,
+  }) async {
+    if (!empezo.isCompleted) empezo.complete();
+    await puerta?.future;
+    alAvanzar?.call(bytes.length);
+  }
+}
 
 /// HU-M05 (sin conexión, plan 4.4): quién despierta la cola y qué se avisa.
 void main() {
@@ -82,6 +105,7 @@ void main() {
     late FakeNotificacionesReporte avisos;
     late ProviderContainer contenedor;
     late VigiaReportes vigia;
+    late _SubidaConPuerta subida;
     var sesion = true;
 
     Future<void> asentar() async {
@@ -95,6 +119,7 @@ void main() {
       bff = FakeReporteSiniestroRemoteDataSource(latencia: Duration.zero);
       conectividad = ConectividadFalsa(red);
       avisos = FakeNotificacionesReporte();
+      subida = _SubidaConPuerta();
       sesion = true;
       contenedor = ProviderContainer(
         overrides: [
@@ -105,6 +130,7 @@ void main() {
           relojReporteProvider.overrideWithValue(() => _ahora),
           sesionParaEnviarProvider.overrideWithValue(() => sesion),
           notificacionesReporteProvider.overrideWithValue(avisos),
+          subidaFotoSiniestroProvider.overrideWithValue(subida),
           preferenciasEnvioStoreProvider.overrideWithValue(
             MemoriaPreferenciasEnvioStore(),
           ),
@@ -283,6 +309,126 @@ void main() {
         expect(await estadoDe('r1'), EstadoLocal.pendiente);
       },
     );
+
+    group('servicio en primer plano (fase 3b)', () {
+      test('corre mientras la cola envía y se detiene al terminar', () async {
+        await crear();
+        await pendiente('r1');
+        subida.puerta = Completer<void>();
+
+        final corrida = vigia.despertar();
+        await subida.empezo.future;
+        await asentar();
+
+        // A mitad del envío: el servicio está andando con el avance.
+        expect(avisos.servicioActivo, isNotNull);
+        expect(avisos.servicioActivo!.$1, startsWith('Enviando tu reporte'));
+        expect(avisos.arranquesServicio, 1);
+
+        subida.puerta!.complete();
+        await corrida;
+        await asentar();
+
+        expect(await estadoDe('r1'), EstadoLocal.enviado);
+        expect(avisos.servicioActivo, isNull);
+        expect(avisos.arranquesServicio, 1);
+        expect(avisos.detencionesServicio, 1);
+        expect(avisos.progresoVisible, isNull);
+      });
+
+      test('si el cliente sale de la app, el envío termina y avisa', () async {
+        await crear();
+        await pendiente('r1');
+        subida.puerta = Completer<void>();
+
+        final corrida = vigia.despertar();
+        await subida.empezo.future;
+        await asentar();
+        vigia.alOcultarse();
+        await asentar();
+
+        // La notificación del servicio ya muestra el avance: no hay otra.
+        expect(avisos.servicioActivo, isNotNull);
+        expect(avisos.progresoVisible, isNull);
+
+        subida.puerta!.complete();
+        await corrida;
+        await asentar();
+
+        expect(avisos.servicioActivo, isNull);
+        expect(avisos.avisos.single.$1, 'Tu reporte fue enviado');
+      });
+
+      test('si Android no deja arrancarlo, en segundo plano queda la '
+          'notificación de progreso', () async {
+        await crear();
+        avisos.servicioPermitido = false;
+        await pendiente('r1');
+        vigia.alOcultarse();
+        subida.puerta = Completer<void>();
+
+        final corrida = vigia.despertar();
+        await subida.empezo.future;
+        await asentar();
+
+        expect(avisos.servicioActivo, isNull);
+        expect(avisos.progresoVisible, isNotNull);
+
+        subida.puerta!.complete();
+        await corrida;
+        await asentar();
+
+        expect(await estadoDe('r1'), EstadoLocal.enviado);
+        expect(avisos.progresoVisible, isNull);
+        expect(avisos.detencionesServicio, 0);
+      });
+
+      test('si se cae la red a mitad, el servicio se detiene y queda dicho '
+          'hasta dónde iba', () async {
+        await crear();
+        await pendiente('r1');
+        subida.puerta = Completer<void>();
+
+        final corrida = vigia.despertar();
+        await subida.empezo.future;
+        await asentar();
+        vigia.alOcultarse();
+        expect(avisos.servicioActivo, isNotNull);
+
+        // Se cae la red: la subida en curso falla.
+        conectividad.cambiar(TipoRed.ninguna);
+        await asentar();
+        subida.puerta!.completeError(const ErrorRed(tipo: 'connectionError'));
+        await corrida;
+        await asentar();
+
+        expect(await estadoDe('r1'), EstadoLocal.pendiente);
+        expect(avisos.servicioActivo, isNull);
+        expect(avisos.detencionesServicio, 1);
+        expect(avisos.progresoVisible?.$1, startsWith('Envío en pausa'));
+      });
+
+      test(
+        'al cerrar sesión con un envío en curso, el servicio se detiene',
+        () async {
+          await crear();
+          await pendiente('r1');
+          subida.puerta = Completer<void>();
+
+          final corrida = vigia.despertar();
+          await subida.empezo.future;
+          await asentar();
+          expect(avisos.servicioActivo, isNotNull);
+
+          contenedor.read(cuentaActualProvider.notifier).fijar(null);
+          await asentar();
+
+          expect(avisos.servicioActivo, isNull);
+          subida.puerta!.complete();
+          await corrida;
+        },
+      );
+    });
 
     test('al volver al frente quita la notificación de progreso', () async {
       await crear();

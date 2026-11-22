@@ -37,6 +37,22 @@ abstract interface class NotificacionesReporte {
 
   Future<void> quitarProgreso();
 
+  /// Arranca el servicio en primer plano de Android (tipo `dataSync`) con la
+  /// notificación de progreso, o la actualiza si ya corre: mientras exista,
+  /// el sistema no cierra la app aunque el cliente cambie de aplicación.
+  /// `false` si Android no lo dejó arrancar (p. ej. desde segundo plano): el
+  /// envío sigue igual y, si la app se cierra, retoma al abrirla.
+  Future<bool> servicio({
+    required String titulo,
+    required String cuerpo,
+    required int porcentaje,
+    required CanalReportes canal,
+    required String ruta,
+  });
+
+  /// Detiene el servicio y quita su notificación. Sin servicio no hace nada.
+  Future<void> detenerServicio();
+
   /// El resultado o un aviso de un reporte. Uno solo: el nuevo reemplaza al
   /// anterior.
   Future<void> aviso({
@@ -139,27 +155,75 @@ final class LocalNotificacionesReporte implements NotificacionesReporte {
       title: titulo,
       body: cuerpo,
       notificationDetails: NotificationDetails(
-        android: AndroidNotificationDetails(
-          idCanalProgresoReportes,
-          canal.nombre,
-          channelDescription: canal.descripcion,
-          importance: Importance.low,
-          priority: Priority.low,
-          icon: _icono,
-          color: _color,
-          category: AndroidNotificationCategory.progress,
-          visibility: NotificationVisibility.private,
-          // Fija: no se desliza y se actualiza sin volver a sonar.
-          ongoing: true,
-          autoCancel: false,
-          onlyAlertOnce: true,
-          showProgress: true,
-          maxProgress: 100,
-          progress: porcentaje.clamp(0, 100),
-        ),
+        android: _detallesProgreso(canal, porcentaje),
       ),
       payload: ruta,
     ),
+  );
+
+  AndroidNotificationDetails _detallesProgreso(
+    CanalReportes canal,
+    int porcentaje,
+  ) => AndroidNotificationDetails(
+    idCanalProgresoReportes,
+    canal.nombre,
+    channelDescription: canal.descripcion,
+    importance: Importance.low,
+    priority: Priority.low,
+    icon: _icono,
+    color: _color,
+    category: AndroidNotificationCategory.progress,
+    visibility: NotificationVisibility.private,
+    // Fija: no se desliza y se actualiza sin volver a sonar.
+    ongoing: true,
+    autoCancel: false,
+    onlyAlertOnce: true,
+    showProgress: true,
+    maxProgress: 100,
+    progress: porcentaje.clamp(0, 100),
+  );
+
+  @override
+  Future<bool> servicio({
+    required String titulo,
+    required String cuerpo,
+    required int porcentaje,
+    required CanalReportes canal,
+    required String ruta,
+  }) async {
+    final android = _android;
+    if (android == null) return false;
+    try {
+      // Llamarlo de nuevo con el servicio andando solo actualiza su
+      // notificación. Si Android mata el proceso no lo revive (`notSticky`):
+      // sin la app no hay quien envíe, y la cola retoma al abrirla.
+      await android.startForegroundService(
+        id: idNotificacionProgresoReporte,
+        title: titulo,
+        body: cuerpo,
+        notificationDetails: _detallesProgreso(canal, porcentaje),
+        payload: ruta,
+        startType: AndroidServiceStartType.startNotSticky,
+        foregroundServiceTypes: const {
+          AndroidServiceForegroundType.foregroundServiceTypeDataSync,
+        },
+      );
+      return true;
+    } catch (e) {
+      // Android 12+ no deja arrancarlo desde segundo plano; tampoco arranca
+      // si el sistema agotó el tiempo diario de `dataSync` (Android 15).
+      SolLog.info(
+        'Servicio de envío no arrancó',
+        codigo: e.runtimeType.toString(),
+      );
+      return false;
+    }
+  }
+
+  @override
+  Future<void> detenerServicio() => _intentar(
+    'detener servicio',
+    () async => _android?.stopForegroundService(),
   );
 
   @override
@@ -241,6 +305,7 @@ final class LocalNotificacionesReporte implements NotificacionesReporte {
   @override
   Future<void> cancelarTodo() async {
     await cancelarRecordatorios();
+    await detenerServicio();
     await quitarProgreso();
     await _intentar(
       'cancelar aviso',
@@ -283,6 +348,34 @@ final class FakeNotificacionesReporte implements NotificacionesReporte {
   @override
   Future<void> quitarProgreso() async => progresoVisible = null;
 
+  /// Android deja arrancar el servicio (desde segundo plano no lo permite).
+  bool servicioPermitido = true;
+
+  /// La notificación del servicio mientras corre: (título, cuerpo, porcentaje).
+  (String, String, int)? servicioActivo;
+  int arranquesServicio = 0;
+  int detencionesServicio = 0;
+
+  @override
+  Future<bool> servicio({
+    required String titulo,
+    required String cuerpo,
+    required int porcentaje,
+    required CanalReportes canal,
+    required String ruta,
+  }) async {
+    if (!servicioPermitido) return false;
+    if (servicioActivo == null) arranquesServicio++;
+    servicioActivo = (titulo, cuerpo, porcentaje);
+    return true;
+  }
+
+  @override
+  Future<void> detenerServicio() async {
+    if (servicioActivo != null) detencionesServicio++;
+    servicioActivo = null;
+  }
+
   @override
   Future<void> aviso({
     required String titulo,
@@ -307,5 +400,6 @@ final class FakeNotificacionesReporte implements NotificacionesReporte {
     cancelaciones++;
     recordatorios = const [];
     progresoVisible = null;
+    await detenerServicio();
   }
 }

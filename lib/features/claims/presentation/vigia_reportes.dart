@@ -95,9 +95,14 @@ List<DateTime> horasDeRecordatorio(DateTime desde, DateTime ahora) {
 ///
 /// - La despierta al volver la red, al entrar a la cuenta y al volver la app
 ///   al frente.
-/// - Con la app al frente no notifica: lo mismo se ve adentro (franja, chips,
-///   pantalla de resultado). En segundo plano muestra el progreso, el
-///   resultado y lo que requiera al cliente.
+/// - Con la app al frente no avisa resultados: lo mismo se ve adentro (franja,
+///   chips, pantalla de resultado). En segundo plano muestra el resultado y
+///   lo que requiera al cliente.
+/// - Mientras la cola envía corre el servicio en primer plano de Android con
+///   la notificación de progreso (fase 3b), para que el sistema no cierre la
+///   app si el cliente sale de ella. Arranca con el envío y se detiene al
+///   terminar o al quedar en pausa. Si Android no lo deja arrancar, en
+///   segundo plano queda la notificación de progreso normal.
 /// - Programa los recordatorios de lo pendiente y los cancela al enviarse.
 ///
 /// Ningún texto lleva datos personales: solo el estado y el radicado.
@@ -146,6 +151,19 @@ final class VigiaReportes {
   int _ultimoPorcentaje = 0;
   bool _cerrado = false;
 
+  /// El servicio en primer plano está corriendo.
+  bool _servicio = false;
+
+  /// Lo último que mostró la notificación de progreso, para no repetirlo.
+  String? _progresoMostrado;
+
+  /// Las llamadas al servicio y a su notificación van una tras otra: detener
+  /// nunca se adelanta a un arranque que seguía en curso.
+  Future<void> _turno = Future.value();
+
+  Future<void> _enOrden(Future<void> Function() accion) =>
+      _turno = _turno.then((_) => accion()).catchError((Object _) {});
+
   /// Firma de los recordatorios programados, para no reprogramar lo mismo.
   String? _recordatorios;
 
@@ -168,6 +186,7 @@ final class VigiaReportes {
     _cerrado = true;
     unawaited(_eventos.cancel());
     unawaited(_progreso.cancel());
+    if (_servicio) unawaited(_avisos.detenerServicio());
   }
 
   Future<void> _alEntrar() async {
@@ -187,56 +206,106 @@ final class VigiaReportes {
   void alOcultarse() {
     _alFrente = false;
     final p = _cola.progreso;
-    if (p.activa) unawaited(_mostrarProgreso(p));
+    // Con el servicio andando, su notificación ya muestra el avance.
+    if (p.activa) {
+      unawaited(
+        _enOrden(() async {
+          if (!_servicio) await _mostrarProgreso(p);
+        }),
+      );
+    }
   }
 
   /// La app volvió: el progreso se ve adentro, y los temporizadores que
   /// Android pausó se recuperan revisando la cola.
   void alVolverAlFrente() {
     _alFrente = true;
-    unawaited(_avisos.quitarProgreso());
+    unawaited(
+      _enOrden(() async {
+        // La del servicio se queda mientras dure el envío.
+        if (!_servicio) await _avisos.quitarProgreso();
+      }),
+    );
     unawaited(_cola.despertar());
   }
 
-  Future<void> _mostrarProgreso(ProgresoCola p) {
+  (String, String) _textosDeProgreso(ProgresoCola p) {
     final l10n = _l10n;
-    return _avisos.progreso(
-      titulo: p.total > 1
+    return (
+      p.total > 1
           ? l10n.avisoReporteEnviandoVarios(p.posicion, p.total, p.porcentaje)
           : l10n.avisoReporteEnviando(p.porcentaje),
-      cuerpo: p.radicando
+      p.radicando
           ? l10n.avisoReporteRadicando
           : l10n.avisoReporteFoto(p.foto.clamp(1, p.fotos), p.fotos),
+    );
+  }
+
+  Future<void> _mostrarProgreso(ProgresoCola p) {
+    final (titulo, cuerpo) = _textosDeProgreso(p);
+    return _avisos.progreso(
+      titulo: titulo,
+      cuerpo: cuerpo,
       porcentaje: p.porcentaje,
       canal: _canalProgreso,
       ruta: ReporteRoutes.misSiniestros,
     );
   }
 
+  /// La cola avanza: el servicio arranca (o actualiza su notificación). Si
+  /// Android no lo deja arrancar, en segundo plano queda la notificación de
+  /// progreso de siempre.
+  Future<void> _avanzar(ProgresoCola p) async {
+    final (titulo, cuerpo) = _textosDeProgreso(p);
+    // De 5 en 5 puntos: Android limita cuántas veces por segundo se puede
+    // actualizar una notificación.
+    final mostrado =
+        '${p.enviando}|${p.posicion}|${p.total}|${p.foto}|${p.radicando}|'
+        '${p.porcentaje ~/ 5}|${_alFrente || _servicio}';
+    if (mostrado == _progresoMostrado) return;
+    _progresoMostrado = mostrado;
+    _servicio = await _avisos.servicio(
+      titulo: titulo,
+      cuerpo: cuerpo,
+      porcentaje: p.porcentaje,
+      canal: _canalProgreso,
+      ruta: ReporteRoutes.misSiniestros,
+    );
+    if (!_servicio && !_alFrente) await _mostrarProgreso(p);
+  }
+
+  /// La cola se detuvo: el servicio también. Si quedó en pausa por la red y
+  /// la app no está al frente, se deja dicho hasta dónde iba.
+  Future<void> _parar(ProgresoCola p) async {
+    _progresoMostrado = null;
+    if (_servicio) {
+      _servicio = false;
+      await _avisos.detenerServicio();
+    }
+    if (!_alFrente && p.espera == EsperaCola.sinRed) {
+      final l10n = _l10n;
+      await _avisos.progreso(
+        titulo: l10n.avisoReportePausa(_ultimoPorcentaje),
+        cuerpo: l10n.avisoReportePausaCuerpo,
+        porcentaje: _ultimoPorcentaje,
+        canal: _canalProgreso,
+        ruta: ReporteRoutes.misSiniestros,
+      );
+    } else {
+      await _avisos.quitarProgreso();
+    }
+  }
+
   void _alProgreso(ProgresoCola p) {
     if (p.activa) {
       _habiaEnvio = true;
       _ultimoPorcentaje = p.porcentaje;
-      if (!_alFrente) unawaited(_mostrarProgreso(p));
+      unawaited(_enOrden(() => _avanzar(p)));
       return;
     }
     if (!_habiaEnvio) return;
     _habiaEnvio = false;
-    if (_alFrente) return;
-    if (p.espera == EsperaCola.sinRed) {
-      final l10n = _l10n;
-      unawaited(
-        _avisos.progreso(
-          titulo: l10n.avisoReportePausa(_ultimoPorcentaje),
-          cuerpo: l10n.avisoReportePausaCuerpo,
-          porcentaje: _ultimoPorcentaje,
-          canal: _canalProgreso,
-          ruta: ReporteRoutes.misSiniestros,
-        ),
-      );
-    } else {
-      unawaited(_avisos.quitarProgreso());
-    }
+    unawaited(_enOrden(() => _parar(p)));
   }
 
   void _alEvento(EventoCola evento) {
