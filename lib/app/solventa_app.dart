@@ -13,6 +13,7 @@ import '../core/sesion/gestor_sesion.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/assistance/presentation/asistencia_routes.dart';
 import '../features/assistance/presentation/providers.dart';
+import '../features/onboarding/presentation/onboarding_notifier.dart';
 import '../features/onboarding/presentation/preferencias_de_la_cuenta.dart';
 import '../features/profile/presentation/sol_preferencias_sheet.dart';
 import 'router.dart';
@@ -61,7 +62,17 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
     // Bloqueo tras 15 min en segundo plano (HU-M02).
     _ciclo = AppLifecycleListener(
       onHide: () => ref.read(accesoProvider.notifier).alPasarASegundoPlano(),
-      onShow: () => ref.read(accesoProvider.notifier).alVolverAPrimerPlano(),
+      onShow: () {
+        ref.read(accesoProvider.notifier).alVolverAPrimerPlano();
+        // Idioma y moneda guardados desde la web u otro teléfono (KAN-209).
+        if (ref.read(accesoProvider).fase == FaseAcceso.normal) {
+          unawaited(
+            ref
+                .read(onboardingProvider.notifier)
+                .refrescarPreferenciasDeLaCuenta(),
+          );
+        }
+      },
     );
     // HU-M04 Fase 6 (KAN-259): nunca lanza, aun sin `google-services.json`.
     unawaited(ref.read(pushServiceProvider).init());
