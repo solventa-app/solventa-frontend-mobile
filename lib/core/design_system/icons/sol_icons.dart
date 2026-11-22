@@ -90,6 +90,10 @@ abstract final class SolIcons {
   static const IconData synced = Symbols.cloud_done;
   static const IconData upload = Symbols.cloud_upload;
   static const IconData sendLater = Symbols.schedule_send;
+  static const IconData draft = Symbols.edit_note;
+  static const IconData edit = Symbols.edit;
+  static const IconData delete = Symbols.delete;
+  static const IconData saved = Symbols.save;
   static const IconData slowConnection = Symbols.signal_cellular_1_bar;
   static const IconData wifi = Symbols.wifi;
   static const IconData wifiFair = Symbols.network_wifi_2_bar;

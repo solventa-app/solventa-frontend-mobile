@@ -2088,4 +2088,142 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get redDemoReal => 'Back to the real connection';
+
+  @override
+  String get tiempoHaceMomento => 'just now';
+
+  @override
+  String tiempoHaceMin(int n) {
+    return '$n min ago';
+  }
+
+  @override
+  String tiempoHaceHoras(int n) {
+    return '$n h ago';
+  }
+
+  @override
+  String tiempoHaceDias(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n days ago',
+      one: '1 day ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0506PorEnviar => 'To send';
+
+  @override
+  String get m0506Enviados => 'Sent';
+
+  @override
+  String m0506Actualizado(String cuando) {
+    return 'Updated $cuando';
+  }
+
+  @override
+  String get m0506SinCopia => 'Connect to see your sent claims.';
+
+  @override
+  String get m0506SinTerminar => 'Unfinished';
+
+  @override
+  String get m0506BorradorTitulo => 'Unfinished report';
+
+  @override
+  String m0506UltimaEdicion(String fecha, int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos photos',
+      one: '1 photo',
+      zero: 'no photos',
+    );
+    return 'Last edited: $fecha · $_temp0';
+  }
+
+  @override
+  String m0506BorradorSeBorra(int dias) {
+    String _temp0 = intl.Intl.pluralLogic(
+      dias,
+      locale: localeName,
+      other: 'It will be deleted in $dias days if you don\'t finish it.',
+      one: 'It will be deleted in 1 day if you don\'t finish it.',
+      zero: 'It will be deleted today if you don\'t finish it.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0506Continuar => 'Continue report';
+
+  @override
+  String get m0506Descartar => 'Discard report';
+
+  @override
+  String get m0506DescartarTitulo => 'Discard this report?';
+
+  @override
+  String get m0506DescartarMensaje =>
+      'Its photos and what you wrote will be deleted from this phone. This can\'t be undone.';
+
+  @override
+  String get m0506DescartarConfirmar => 'Discard';
+
+  @override
+  String get m0506DescartarCancelar => 'Keep';
+
+  @override
+  String get m0506BaseReiniciadaTitulo => 'We couldn\'t read what was saved';
+
+  @override
+  String get m0506BaseReiniciadaMensaje =>
+      'The unsent reports on this phone were lost. If one is missing from the list, report it again.';
+
+  @override
+  String m0501PolizasGuardadas(String fecha) {
+    return 'Policies saved on this phone on $fecha. They are checked again when sending.';
+  }
+
+  @override
+  String get m0501SinPolizasGuardadas =>
+      'Connect once to download your policies.';
+
+  @override
+  String m0501YaTienes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'You already have $n reports to send.',
+      one: 'You already have 1 report to send.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String m0501TopeReportes(int n) {
+    return 'You have $n unsent reports, which is the maximum. Send or discard one to create another.';
+  }
+
+  @override
+  String get m0501VerPendientes => 'See my reports';
+
+  @override
+  String get m0502FotosCifradas =>
+      'Photos are stored encrypted on this phone until they are sent. They don\'t go to your gallery.';
+
+  @override
+  String get m0502FotoMuyGrande =>
+      'That photo is larger than 10 MB. Take it again.';
+
+  @override
+  String get m05SinEspacio =>
+      'Your phone has no space to save the report. Free up space so you don\'t lose it.';
+
+  @override
+  String get m05NoGuardado =>
+      'We couldn\'t save the report on this phone. If you close the app, it will be lost.';
 }

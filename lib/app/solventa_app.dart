@@ -16,6 +16,7 @@ import '../features/assistance/presentation/asistencia_routes.dart';
 import '../features/assistance/presentation/providers.dart';
 import '../features/onboarding/presentation/preferencias_de_la_cuenta.dart';
 import '../features/profile/presentation/sol_preferencias_sheet.dart';
+import 'cuenta_local.dart';
 import 'router.dart';
 
 /// Raíz de la app: tema M3 de Solventa, idioma (`es-CO` / `en`), moneda
@@ -59,6 +60,8 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
     _eventos = ref.read(gestorSesionProvider).eventos.listen((evento) {
       if (evento is SesionVencidaEvento) _router.go('/');
     });
+    // HU-M05 (sin conexión): de quién es lo que se guarda en el teléfono.
+    seguirCuentaLocal(ref);
     // Bloqueo tras 15 min en segundo plano (HU-M02).
     _ciclo = AppLifecycleListener(
       onHide: () {

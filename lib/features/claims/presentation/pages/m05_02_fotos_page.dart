@@ -12,6 +12,7 @@ import '../../../assistance/domain/entities/asistencia.dart';
 import '../../../assistance/presentation/widgets/hoja_direccion.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
+import '../reporte_notifier.dart';
 import '../reporte_routes.dart';
 import '../widgets/visor_camara_reporte.dart';
 
@@ -71,6 +72,8 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
     // permisos a la vez y el segundo quedaría colgado.
     final ubicacionLista =
         estado.ubicacion != null || estado.ubicacionSinPermiso;
+    // Con cuenta, el reporte queda guardado cifrado desde la primera foto.
+    final guardaEnTelefono = ref.watch(cuentaReporteProvider) != null;
 
     return SolFlowScaffold(
       banner: const BannerConexion(),
@@ -107,6 +110,18 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
             onQuitar: notifier.quitarFoto,
           ),
           const SizedBox(height: SolSpacing.md),
+          if (estado.avisoGuardado case final aviso?) ...[
+            SolStatusBanner(
+              status: SolStatus.warning,
+              title: aviso == AvisoGuardado.sinEspacio
+                  ? l10n.m05SinEspacio
+                  : l10n.m05NoGuardado,
+            ),
+            const SizedBox(height: SolSpacing.md),
+          ] else if (guardaEnTelefono) ...[
+            SolInlineNote(icon: SolIcons.lock, text: l10n.m0502FotosCifradas),
+            const SizedBox(height: SolSpacing.sm),
+          ],
           if (estado.direccionEscrita case final direccion?) ...[
             SolInlineNote(
               icon: SolIcons.location,

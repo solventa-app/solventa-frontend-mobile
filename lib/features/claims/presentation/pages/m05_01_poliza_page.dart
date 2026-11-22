@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
+import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/red/presentation/banner_conexion.dart';
+import '../../domain/entities/reporte_guardado.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
@@ -51,8 +53,14 @@ class M0501PolizaPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final estado = ref.watch(reporteProvider);
-    final polizas = ref.watch(polizasReportablesProvider);
+    final polizas = ref.watch(polizasConCopiaProvider);
     final notifier = ref.read(reporteProvider.notifier);
+    // Los otros reportes que siguen en el teléfono (este no cuenta).
+    final otros = ref
+        .watch(reportesPorEnviarProvider)
+        .where((r) => r.id != estado.idReporte)
+        .length;
+    final enElTope = otros >= LimitesLocales.maxSinEnviar;
     final fecha = estado.ocurridoEn;
     final poliza = estado.poliza;
     final fueraDeVigencia =
@@ -64,13 +72,21 @@ class M0501PolizaPage extends ConsumerWidget {
         : l10n.m0501FechaFuera;
 
     final lista = switch (polizas) {
-      AsyncData(value: Exito(:final valor)) when valor.isEmpty => SolInlineNote(
-        text: l10n.m0501SinPolizas,
-      ),
+      AsyncData(value: Exito(:final valor)) when valor.valor.isEmpty =>
+        SolInlineNote(text: l10n.m0501SinPolizas),
       AsyncData(value: Exito(:final valor)) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (final p in valor) ...[
+          if (valor.guardadaEn case final guardadas?) ...[
+            SolInlineNote(
+              icon: SolIcons.saved,
+              text: l10n.m0501PolizasGuardadas(
+                SolFormat.dateTime(guardadas.toLocal()),
+              ),
+            ),
+            const SizedBox(height: SolSpacing.sm),
+          ],
+          for (final p in valor.valor) ...[
             _FilaPoliza(
               poliza: p,
               elegida: estado.poliza?.id == p.id,
@@ -88,10 +104,16 @@ class M0501PolizaPage extends ConsumerWidget {
       AsyncData(value: Fracaso(:final falla)) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SolInlineNote(text: l10n.falla(falla)),
+          SolInlineNote(
+            icon: falla is SinConexion ? SolIcons.offline : null,
+            // Sin conexión y sin pólizas guardadas: falta conectarse una vez.
+            text: falla is SinConexion
+                ? l10n.m0501SinPolizasGuardadas
+                : l10n.falla(falla),
+          ),
           SolButton.text(
             label: l10n.m05Reintentar,
-            onPressed: () => ref.invalidate(polizasReportablesProvider),
+            onPressed: () => ref.invalidate(polizasConCopiaProvider),
           ),
         ],
       ),
@@ -109,6 +131,22 @@ class M0501PolizaPage extends ConsumerWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (otros > 0) ...[
+            SolStatusBanner(
+              status: enElTope ? SolStatus.warning : SolStatus.info,
+              title: enElTope
+                  ? l10n.m0501TopeReportes(otros)
+                  : l10n.m0501YaTienes(otros),
+              action: SolLinkButton(
+                label: l10n.m0501VerPendientes,
+                inline: true,
+                size: SolLinkSize.small,
+                onPressed: () =>
+                    context.pushReplacement(ReporteRoutes.misSiniestros),
+              ),
+            ),
+            const SizedBox(height: SolSpacing.md),
+          ],
           SolSectionHeader(title: l10n.m0501Poliza),
           lista,
           // KAN-290: en una póliza de auto el cliente dice qué le pasó al vehículo;
@@ -151,7 +189,8 @@ class M0501PolizaPage extends ConsumerWidget {
               poliza != null &&
                   fecha != null &&
                   !fueraDeVigencia &&
-                  !estado.faltaTipoAuto
+                  !estado.faltaTipoAuto &&
+                  !enElTope
               ? () => context.push(ReporteRoutes.fotos)
               : null,
         ),

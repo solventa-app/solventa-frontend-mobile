@@ -8,6 +8,7 @@ import '../../../../core/red/presentation/banner_conexion.dart';
 import '../../domain/ciudades.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
+import '../reporte_notifier.dart';
 import '../reporte_routes.dart';
 
 /// M05-03 · Qué pasó y dónde (KAN-277).
@@ -163,6 +164,15 @@ class _M0503RelatoPageState extends ConsumerState<M0503RelatoPage> {
               text:
                   '${u.latitud.toStringAsFixed(4)}, '
                   '${u.longitud.toStringAsFixed(4)}',
+            ),
+          ],
+          if (estado.avisoGuardado case final aviso?) ...[
+            const SizedBox(height: SolSpacing.md),
+            SolStatusBanner(
+              status: SolStatus.warning,
+              title: aviso == AvisoGuardado.sinEspacio
+                  ? l10n.m05SinEspacio
+                  : l10n.m05NoGuardado,
             ),
           ],
         ],

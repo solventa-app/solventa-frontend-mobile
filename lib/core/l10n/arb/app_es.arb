@@ -2491,5 +2491,169 @@
   "redDemoReal": "Volver a la conexión real",
   "@redDemoReal": {
     "description": "Disparador de demo: quita la simulación de red"
+  },
+  "tiempoHaceMomento": "hace un momento",
+  "@tiempoHaceMomento": {
+    "description": "Tiempo relativo: menos de un minuto"
+  },
+  "tiempoHaceMin": "hace {n} min",
+  "@tiempoHaceMin": {
+    "description": "Tiempo relativo en minutos",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tiempoHaceHoras": "hace {n} h",
+  "@tiempoHaceHoras": {
+    "description": "Tiempo relativo en horas",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tiempoHaceDias": "{n, plural, =1{hace 1 día} other{hace {n} días}}",
+  "@tiempoHaceDias": {
+    "description": "Tiempo relativo en días",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506PorEnviar": "Por enviar",
+  "@m0506PorEnviar": {
+    "description": "M05-06 sección de reportes guardados en el teléfono"
+  },
+  "m0506Enviados": "Enviados",
+  "@m0506Enviados": {
+    "description": "M05-06 sección de casos ya radicados"
+  },
+  "m0506Actualizado": "Actualizado {cuando}",
+  "@m0506Actualizado": {
+    "description": "M05-06 antigüedad de la copia sin conexión",
+    "placeholders": {
+      "cuando": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506SinCopia": "Conéctate para ver tus siniestros enviados.",
+  "@m0506SinCopia": {
+    "description": "M05-06 sin conexión y sin copia guardada"
+  },
+  "m0506SinTerminar": "Sin terminar",
+  "@m0506SinTerminar": {
+    "description": "M05-06 insignia de borrador"
+  },
+  "m0506BorradorTitulo": "Reporte sin terminar",
+  "@m0506BorradorTitulo": {
+    "description": "M05-06 título de un borrador sin póliza elegida"
+  },
+  "m0506UltimaEdicion": "Última edición: {fecha} · {fotos, plural, =0{sin fotos} =1{1 foto} other{{fotos} fotos}}",
+  "@m0506UltimaEdicion": {
+    "description": "M05-06 fecha y fotos de un borrador",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506BorradorSeBorra": "{dias, plural, =0{Se borrará hoy si no lo terminas.} =1{Se borrará en 1 día si no lo terminas.} other{Se borrará en {dias} días si no lo terminas.}}",
+  "@m0506BorradorSeBorra": {
+    "description": "M05-06 aviso de borrador por vencer",
+    "placeholders": {
+      "dias": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506Continuar": "Continuar reporte",
+  "@m0506Continuar": {
+    "description": "M05-06 retomar un borrador"
+  },
+  "m0506Descartar": "Descartar reporte",
+  "@m0506Descartar": {
+    "description": "M05-06 borrar un reporte guardado"
+  },
+  "m0506DescartarTitulo": "¿Descartar este reporte?",
+  "@m0506DescartarTitulo": {
+    "description": "Diálogo de descartar: título"
+  },
+  "m0506DescartarMensaje": "Se borrarán de este teléfono sus fotos y lo que escribiste. No se puede deshacer.",
+  "@m0506DescartarMensaje": {
+    "description": "Diálogo de descartar: mensaje"
+  },
+  "m0506DescartarConfirmar": "Descartar",
+  "@m0506DescartarConfirmar": {
+    "description": "Diálogo de descartar: confirmar"
+  },
+  "m0506DescartarCancelar": "Conservar",
+  "@m0506DescartarCancelar": {
+    "description": "Diálogo de descartar: cancelar"
+  },
+  "m0506BaseReiniciadaTitulo": "No pudimos leer lo guardado",
+  "@m0506BaseReiniciadaTitulo": {
+    "description": "Aviso único: la base local se reinició"
+  },
+  "m0506BaseReiniciadaMensaje": "Los reportes sin enviar que había en este teléfono se perdieron. Si alguno no aparece en la lista, repórtalo de nuevo.",
+  "@m0506BaseReiniciadaMensaje": {
+    "description": "Aviso único: la base local se reinició"
+  },
+  "m0501PolizasGuardadas": "Pólizas guardadas en este teléfono el {fecha}. Se validan de nuevo al enviar.",
+  "@m0501PolizasGuardadas": {
+    "description": "M05-01 nota de pólizas en copia sin conexión",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501SinPolizasGuardadas": "Conéctate una vez para descargar tus pólizas.",
+  "@m0501SinPolizasGuardadas": {
+    "description": "M05-01 sin conexión y sin pólizas guardadas"
+  },
+  "m0501YaTienes": "{n, plural, =1{Ya tienes 1 reporte por enviar.} other{Ya tienes {n} reportes por enviar.}}",
+  "@m0501YaTienes": {
+    "description": "M05-01 aviso de reportes pendientes al empezar otro",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0501TopeReportes": "Tienes {n} reportes sin enviar, que es el máximo. Envía o descarta alguno para crear otro.",
+  "@m0501TopeReportes": {
+    "description": "M05-01 tope de reportes sin enviar",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0501VerPendientes": "Ver mis reportes",
+  "@m0501VerPendientes": {
+    "description": "M05-01 enlace a Mis siniestros desde el aviso de pendientes"
+  },
+  "m0502FotosCifradas": "Las fotos se guardan cifradas en este teléfono hasta que se envíen. No van a tu galería.",
+  "@m0502FotosCifradas": {
+    "description": "M05-02 nota de privacidad de las fotos"
+  },
+  "m0502FotoMuyGrande": "Esa foto pesa más de 10 MB. Tómala de nuevo.",
+  "@m0502FotoMuyGrande": {
+    "description": "M05-02 foto que supera el tope"
+  },
+  "m05SinEspacio": "Tu teléfono no tiene espacio para guardar el reporte. Libera espacio para no perderlo.",
+  "@m05SinEspacio": {
+    "description": "M05 aviso: sin espacio en el teléfono"
+  },
+  "m05NoGuardado": "No pudimos guardar el reporte en este teléfono. Si cierras la app, se pierde.",
+  "@m05NoGuardado": {
+    "description": "M05 aviso: el guardado local falló"
   }
 }

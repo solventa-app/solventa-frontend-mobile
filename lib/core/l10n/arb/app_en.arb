@@ -1240,5 +1240,100 @@
   "redChipSinConexion": "No connection",
   "redDemoSinConexion": "Simulate no connection",
   "redDemoLenta": "Simulate slow connection",
-  "redDemoReal": "Back to the real connection"
+  "redDemoReal": "Back to the real connection",
+  "tiempoHaceMomento": "just now",
+  "tiempoHaceMin": "{n} min ago",
+  "@tiempoHaceMin": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tiempoHaceHoras": "{n} h ago",
+  "@tiempoHaceHoras": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tiempoHaceDias": "{n, plural, =1{1 day ago} other{{n} days ago}}",
+  "@tiempoHaceDias": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506PorEnviar": "To send",
+  "m0506Enviados": "Sent",
+  "m0506Actualizado": "Updated {cuando}",
+  "@m0506Actualizado": {
+    "placeholders": {
+      "cuando": {
+        "type": "String"
+      }
+    }
+  },
+  "m0506SinCopia": "Connect to see your sent claims.",
+  "m0506SinTerminar": "Unfinished",
+  "m0506BorradorTitulo": "Unfinished report",
+  "m0506UltimaEdicion": "Last edited: {fecha} · {fotos, plural, =0{no photos} =1{1 photo} other{{fotos} photos}}",
+  "@m0506UltimaEdicion": {
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506BorradorSeBorra": "{dias, plural, =0{It will be deleted today if you don't finish it.} =1{It will be deleted in 1 day if you don't finish it.} other{It will be deleted in {dias} days if you don't finish it.}}",
+  "@m0506BorradorSeBorra": {
+    "placeholders": {
+      "dias": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506Continuar": "Continue report",
+  "m0506Descartar": "Discard report",
+  "m0506DescartarTitulo": "Discard this report?",
+  "m0506DescartarMensaje": "Its photos and what you wrote will be deleted from this phone. This can't be undone.",
+  "m0506DescartarConfirmar": "Discard",
+  "m0506DescartarCancelar": "Keep",
+  "m0506BaseReiniciadaTitulo": "We couldn't read what was saved",
+  "m0506BaseReiniciadaMensaje": "The unsent reports on this phone were lost. If one is missing from the list, report it again.",
+  "m0501PolizasGuardadas": "Policies saved on this phone on {fecha}. They are checked again when sending.",
+  "@m0501PolizasGuardadas": {
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "m0501SinPolizasGuardadas": "Connect once to download your policies.",
+  "m0501YaTienes": "{n, plural, =1{You already have 1 report to send.} other{You already have {n} reports to send.}}",
+  "@m0501YaTienes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0501TopeReportes": "You have {n} unsent reports, which is the maximum. Send or discard one to create another.",
+  "@m0501TopeReportes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0501VerPendientes": "See my reports",
+  "m0502FotosCifradas": "Photos are stored encrypted on this phone until they are sent. They don't go to your gallery.",
+  "m0502FotoMuyGrande": "That photo is larger than 10 MB. Take it again.",
+  "m05SinEspacio": "Your phone has no space to save the report. Free up space so you don't lose it.",
+  "m05NoGuardado": "We couldn't save the report on this phone. If you close the app, it will be lost."
 }

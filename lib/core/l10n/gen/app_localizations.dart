@@ -3577,6 +3577,180 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Volver a la conexión real'**
   String get redDemoReal;
+
+  /// Tiempo relativo: menos de un minuto
+  ///
+  /// In es, this message translates to:
+  /// **'hace un momento'**
+  String get tiempoHaceMomento;
+
+  /// Tiempo relativo en minutos
+  ///
+  /// In es, this message translates to:
+  /// **'hace {n} min'**
+  String tiempoHaceMin(int n);
+
+  /// Tiempo relativo en horas
+  ///
+  /// In es, this message translates to:
+  /// **'hace {n} h'**
+  String tiempoHaceHoras(int n);
+
+  /// Tiempo relativo en días
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{hace 1 día} other{hace {n} días}}'**
+  String tiempoHaceDias(int n);
+
+  /// M05-06 sección de reportes guardados en el teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Por enviar'**
+  String get m0506PorEnviar;
+
+  /// M05-06 sección de casos ya radicados
+  ///
+  /// In es, this message translates to:
+  /// **'Enviados'**
+  String get m0506Enviados;
+
+  /// M05-06 antigüedad de la copia sin conexión
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizado {cuando}'**
+  String m0506Actualizado(String cuando);
+
+  /// M05-06 sin conexión y sin copia guardada
+  ///
+  /// In es, this message translates to:
+  /// **'Conéctate para ver tus siniestros enviados.'**
+  String get m0506SinCopia;
+
+  /// M05-06 insignia de borrador
+  ///
+  /// In es, this message translates to:
+  /// **'Sin terminar'**
+  String get m0506SinTerminar;
+
+  /// M05-06 título de un borrador sin póliza elegida
+  ///
+  /// In es, this message translates to:
+  /// **'Reporte sin terminar'**
+  String get m0506BorradorTitulo;
+
+  /// M05-06 fecha y fotos de un borrador
+  ///
+  /// In es, this message translates to:
+  /// **'Última edición: {fecha} · {fotos, plural, =0{sin fotos} =1{1 foto} other{{fotos} fotos}}'**
+  String m0506UltimaEdicion(String fecha, int fotos);
+
+  /// M05-06 aviso de borrador por vencer
+  ///
+  /// In es, this message translates to:
+  /// **'{dias, plural, =0{Se borrará hoy si no lo terminas.} =1{Se borrará en 1 día si no lo terminas.} other{Se borrará en {dias} días si no lo terminas.}}'**
+  String m0506BorradorSeBorra(int dias);
+
+  /// M05-06 retomar un borrador
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar reporte'**
+  String get m0506Continuar;
+
+  /// M05-06 borrar un reporte guardado
+  ///
+  /// In es, this message translates to:
+  /// **'Descartar reporte'**
+  String get m0506Descartar;
+
+  /// Diálogo de descartar: título
+  ///
+  /// In es, this message translates to:
+  /// **'¿Descartar este reporte?'**
+  String get m0506DescartarTitulo;
+
+  /// Diálogo de descartar: mensaje
+  ///
+  /// In es, this message translates to:
+  /// **'Se borrarán de este teléfono sus fotos y lo que escribiste. No se puede deshacer.'**
+  String get m0506DescartarMensaje;
+
+  /// Diálogo de descartar: confirmar
+  ///
+  /// In es, this message translates to:
+  /// **'Descartar'**
+  String get m0506DescartarConfirmar;
+
+  /// Diálogo de descartar: cancelar
+  ///
+  /// In es, this message translates to:
+  /// **'Conservar'**
+  String get m0506DescartarCancelar;
+
+  /// Aviso único: la base local se reinició
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos leer lo guardado'**
+  String get m0506BaseReiniciadaTitulo;
+
+  /// Aviso único: la base local se reinició
+  ///
+  /// In es, this message translates to:
+  /// **'Los reportes sin enviar que había en este teléfono se perdieron. Si alguno no aparece en la lista, repórtalo de nuevo.'**
+  String get m0506BaseReiniciadaMensaje;
+
+  /// M05-01 nota de pólizas en copia sin conexión
+  ///
+  /// In es, this message translates to:
+  /// **'Pólizas guardadas en este teléfono el {fecha}. Se validan de nuevo al enviar.'**
+  String m0501PolizasGuardadas(String fecha);
+
+  /// M05-01 sin conexión y sin pólizas guardadas
+  ///
+  /// In es, this message translates to:
+  /// **'Conéctate una vez para descargar tus pólizas.'**
+  String get m0501SinPolizasGuardadas;
+
+  /// M05-01 aviso de reportes pendientes al empezar otro
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{Ya tienes 1 reporte por enviar.} other{Ya tienes {n} reportes por enviar.}}'**
+  String m0501YaTienes(int n);
+
+  /// M05-01 tope de reportes sin enviar
+  ///
+  /// In es, this message translates to:
+  /// **'Tienes {n} reportes sin enviar, que es el máximo. Envía o descarta alguno para crear otro.'**
+  String m0501TopeReportes(int n);
+
+  /// M05-01 enlace a Mis siniestros desde el aviso de pendientes
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mis reportes'**
+  String get m0501VerPendientes;
+
+  /// M05-02 nota de privacidad de las fotos
+  ///
+  /// In es, this message translates to:
+  /// **'Las fotos se guardan cifradas en este teléfono hasta que se envíen. No van a tu galería.'**
+  String get m0502FotosCifradas;
+
+  /// M05-02 foto que supera el tope
+  ///
+  /// In es, this message translates to:
+  /// **'Esa foto pesa más de 10 MB. Tómala de nuevo.'**
+  String get m0502FotoMuyGrande;
+
+  /// M05 aviso: sin espacio en el teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Tu teléfono no tiene espacio para guardar el reporte. Libera espacio para no perderlo.'**
+  String get m05SinEspacio;
+
+  /// M05 aviso: el guardado local falló
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar el reporte en este teléfono. Si cierras la app, se pierde.'**
+  String get m05NoGuardado;
 }
 
 class _AppLocalizationsDelegate
