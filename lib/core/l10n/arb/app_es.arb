@@ -2655,5 +2655,632 @@
   "m05NoGuardado": "No pudimos guardar el reporte en este teléfono. Si cierras la app, se pierde.",
   "@m05NoGuardado": {
     "description": "M05 aviso: el guardado local falló"
+  },
+  "avisoReporteCanal": "Reportes de siniestro",
+  "@avisoReporteCanal": {
+    "description": "Nombre del canal de notificaciones locales del reporte de siniestro en Ajustes de Android"
+  },
+  "avisoReporteCanalDescripcion": "Avisos de tus reportes de siniestro: enviado, por corregir y recordatorios.",
+  "@avisoReporteCanalDescripcion": {
+    "description": "Descripción del canal de reportes"
+  },
+  "avisoReporteProgresoCanal": "Envío de reportes",
+  "@avisoReporteProgresoCanal": {
+    "description": "Nombre del canal silencioso con el progreso del envío"
+  },
+  "avisoReporteProgresoCanalDescripcion": "Avance del envío de tus reportes. No suena.",
+  "@avisoReporteProgresoCanalDescripcion": {
+    "description": "Descripción del canal de progreso"
+  },
+  "avisoReporteEnviando": "Enviando tu reporte · {porcentaje} %",
+  "@avisoReporteEnviando": {
+    "description": "Notificación fija de progreso de un reporte",
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReporteEnviandoVarios": "Enviando {posicion} de {total} reportes · {porcentaje} %",
+  "@avisoReporteEnviandoVarios": {
+    "description": "Notificación fija de progreso con varios reportes en cola",
+    "placeholders": {
+      "posicion": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReporteFoto": "Foto {foto} de {fotos}",
+  "@avisoReporteFoto": {
+    "description": "Paso del envío: qué foto se está subiendo",
+    "placeholders": {
+      "foto": {
+        "type": "int"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReporteRadicando": "Registrando tu caso",
+  "@avisoReporteRadicando": {
+    "description": "Paso del envío: las fotos ya subieron y se crea el caso"
+  },
+  "avisoReportePausa": "Envío en pausa · {porcentaje} %",
+  "@avisoReportePausa": {
+    "description": "Notificación cuando se cae la red a mitad de un envío",
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReportePausaCuerpo": "Sin conexión. Sigue solo cuando vuelva la señal.",
+  "@avisoReportePausaCuerpo": {
+    "description": "Cuerpo de la notificación de envío en pausa"
+  },
+  "avisoReporteEnviado": "Tu reporte fue enviado",
+  "@avisoReporteEnviado": {
+    "description": "Notificación al recibir el radicado"
+  },
+  "avisoReporteEnviadoCuerpo": "Radicado {radicado}. La aseguradora responde antes del {fecha}.",
+  "@avisoReporteEnviadoCuerpo": {
+    "description": "Cuerpo de la notificación de reporte enviado",
+    "placeholders": {
+      "radicado": {
+        "type": "String"
+      },
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "avisoReportesEnviados": "Tus {n} reportes fueron enviados",
+  "@avisoReportesEnviados": {
+    "description": "Notificación cuando la cola envió varios reportes",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReportesMixto": "{enviados, plural, =1{1 enviado} other{{enviados} enviados}} y {porCorregir} por corregir",
+  "@avisoReportesMixto": {
+    "description": "Notificación cuando la cola terminó con enviados y rechazados",
+    "placeholders": {
+      "enviados": {
+        "type": "int"
+      },
+      "porCorregir": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReportesVer": "Abre Solventa para verlos.",
+  "@avisoReportesVer": {
+    "description": "Cuerpo de la notificación con varios reportes"
+  },
+  "avisoReporteRechazado": "No pudimos enviar tu reporte",
+  "@avisoReporteRechazado": {
+    "description": "Notificación cuando la aseguradora rechaza un reporte guardado"
+  },
+  "avisoReporteRechazadoCuerpo": "Ábrelo para ver el motivo y corregirlo.",
+  "@avisoReporteRechazadoCuerpo": {
+    "description": "Cuerpo de la notificación de rechazo, sin datos del reporte"
+  },
+  "avisoReporteAtencionCuerpo": "Abre Solventa para intentarlo de nuevo.",
+  "@avisoReporteAtencionCuerpo": {
+    "description": "Cuerpo de la notificación cuando el envío falló muchas veces"
+  },
+  "avisoReporteEsperaWifi": "Tu reporte espera Wi-Fi",
+  "@avisoReporteEsperaWifi": {
+    "description": "Notificación silenciosa, una vez por reporte"
+  },
+  "avisoReporteEsperaWifiCuerpo": "Se envía solo al conectarte a Wi-Fi. Ábrelo si prefieres enviarlo con datos.",
+  "@avisoReporteEsperaWifiCuerpo": {
+    "description": "Cuerpo de la notificación de espera de Wi-Fi"
+  },
+  "avisoReporteSesion": "Inicia sesión para enviar tu reporte",
+  "@avisoReporteSesion": {
+    "description": "Notificación cuando la sesión venció con reportes pendientes"
+  },
+  "avisoReporteSesionCuerpo": "Tu reporte sigue guardado en este teléfono.",
+  "@avisoReporteSesionCuerpo": {
+    "description": "Cuerpo de la notificación de sesión vencida"
+  },
+  "avisoReporteRecordatorio": "{n, plural, =1{Tienes un reporte por enviar} other{Tienes {n} reportes por enviar}}",
+  "@avisoReporteRecordatorio": {
+    "description": "Recordatorio local (30 min, 3 h y 24 h) de reportes pendientes",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReporteRecordatorioCuerpo": "Abre Solventa cuando tengas señal.",
+  "@avisoReporteRecordatorioCuerpo": {
+    "description": "Cuerpo del recordatorio: no promete nada, puede salir sin internet"
+  },
+  "redSinConexionReporte": "Puedes reportar un siniestro. Se envía cuando vuelva la señal.",
+  "@redSinConexionReporte": {
+    "description": "Franja sin conexión en el reporte de siniestro, sin reportes pendientes"
+  },
+  "redReportesPorEnviar": "{n, plural, =1{1 reporte por enviar} other{{n} reportes por enviar}}",
+  "@redReportesPorEnviar": {
+    "description": "Franja sin conexión con reportes en cola",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "redVer": "Ver",
+  "@redVer": {
+    "description": "Acción de la franja de conexión: abre lo pendiente o el caso enviado"
+  },
+  "redEnviandoTitulo": "Envío en curso",
+  "@redEnviandoTitulo": {
+    "description": "Franja mientras la cola envía con conexión"
+  },
+  "redEnviandoReportes": "{n, plural, =1{Enviando 1 reporte…} other{Enviando {n} reportes…}} {porcentaje} %",
+  "@redEnviandoReportes": {
+    "description": "Mensaje de la franja con el avance de la cola",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "redReporteEnviado": "Reporte enviado",
+  "@redReporteEnviado": {
+    "description": "Franja al terminar el envío de un reporte"
+  },
+  "redReportesEnviados": "{n} reportes enviados",
+  "@redReportesEnviados": {
+    "description": "Franja al terminar el envío de varios reportes",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "redRadicado": "Radicado {radicado}",
+  "@redRadicado": {
+    "description": "Mensaje de la franja con el radicado del reporte enviado",
+    "placeholders": {
+      "radicado": {
+        "type": "String"
+      }
+    }
+  },
+  "m05DatosTitulo": "Estás usando datos móviles",
+  "@m05DatosTitulo": {
+    "description": "Hoja que pregunta una vez si enviar el reporte por datos móviles"
+  },
+  "m05DatosMensaje": "{fotos, plural, =1{Enviar 1 foto} other{Enviar {fotos} fotos}} gasta cerca de {tamano} de tu plan.",
+  "@m05DatosMensaje": {
+    "description": "Cuánto gasta enviar las fotos por datos móviles",
+    "placeholders": {
+      "fotos": {
+        "type": "int"
+      },
+      "tamano": {
+        "type": "String"
+      }
+    }
+  },
+  "m05EnviarConDatos": "Enviar ahora con datos",
+  "@m05EnviarConDatos": {
+    "description": "Enviar el reporte por datos móviles, solo este"
+  },
+  "m05EsperarWifi": "Esperar Wi-Fi",
+  "@m05EsperarWifi": {
+    "description": "Dejar el reporte guardado hasta tener Wi-Fi"
+  },
+  "m05DatosRecordar": "Recordar mi elección. Puedes cambiarla en Mi perfil.",
+  "@m05DatosRecordar": {
+    "description": "Casilla de la hoja de datos móviles"
+  },
+  "m0503GuardarDespues": "Guardar y enviar después",
+  "@m0503GuardarDespues": {
+    "description": "M05-03 botón final sin conexión"
+  },
+  "m0503SinConexionNota": "No hay conexión. Guardaremos tu reporte y lo enviaremos cuando vuelva la señal.",
+  "@m0503SinConexionNota": {
+    "description": "M05-03 nota sobre el botón, sin conexión"
+  },
+  "m0503Avisaremos": "Te avisaremos cuando tu reporte se envíe.",
+  "@m0503Avisaremos": {
+    "description": "M05-03 nota antes de pedir el permiso de notificaciones"
+  },
+  "m0504SegundoPlano": "Seguir en segundo plano",
+  "@m0504SegundoPlano": {
+    "description": "M05-04 salir de la pantalla sin cortar el envío"
+  },
+  "m0504Porcentaje": "{porcentaje} %",
+  "@m0504Porcentaje": {
+    "description": "M05-04 porcentaje dentro del anillo",
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "m0504AvanceSemantica": "Enviando, {porcentaje} por ciento. {paso}",
+  "@m0504AvanceSemantica": {
+    "description": "M05-04 lo que lee TalkBack al avanzar",
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      },
+      "paso": {
+        "type": "String"
+      }
+    }
+  },
+  "m0504Avance": "{paso}. Puedes salir de esta pantalla: el envío sigue y te avisamos al terminar.",
+  "@m0504Avance": {
+    "description": "M05-04 texto bajo el anillo",
+    "placeholders": {
+      "paso": {
+        "type": "String"
+      }
+    }
+  },
+  "m0504Foto": "Foto {numero}",
+  "@m0504Foto": {
+    "description": "M05-04 fila de una foto en la lista de pasos",
+    "placeholders": {
+      "numero": {
+        "type": "int"
+      }
+    }
+  },
+  "m0504Radicar": "Registrar el caso",
+  "@m0504Radicar": {
+    "description": "M05-04 último paso del envío"
+  },
+  "m0504PasoListo": "lista",
+  "@m0504PasoListo": {
+    "description": "M05-04 estado de un paso terminado"
+  },
+  "m0504PasoEnCurso": "enviando",
+  "@m0504PasoEnCurso": {
+    "description": "M05-04 estado del paso en curso"
+  },
+  "m0504PasoEnEspera": "en espera",
+  "@m0504PasoEnEspera": {
+    "description": "M05-04 estado de un paso que no ha empezado"
+  },
+  "m0505Guardado": "Reporte guardado",
+  "@m0505Guardado": {
+    "description": "M05-05 desenlace sin conexión: guardado, sin radicado"
+  },
+  "m0505GuardadoSinRed": "Lo enviaremos a la aseguradora apenas vuelva la conexión. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las {hora}.",
+  "@m0505GuardadoSinRed": {
+    "description": "M05-05 reporte guardado, sin conexión",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505GuardadoWifi": "Lo enviaremos cuando te conectes a Wi-Fi. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las {hora}.",
+  "@m0505GuardadoWifi": {
+    "description": "M05-05 reporte guardado, esperando Wi-Fi",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505GuardadoSesion": "Lo enviaremos cuando vuelvas a iniciar sesión. Todavía no tiene radicado. Guardado a las {hora}.",
+  "@m0505GuardadoSesion": {
+    "description": "M05-05 reporte guardado, sin sesión abierta",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505GuardadoReintento": "No pudimos enviarlo ahora. Lo intentaremos de nuevo en un momento, sin que tengas que hacer nada. Todavía no tiene radicado. Guardado a las {hora}.",
+  "@m0505GuardadoReintento": {
+    "description": "M05-05 reporte guardado tras una falla técnica que se reintenta sola",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505GuardadoDetalle": "Guardado cifrado en este teléfono con {fotos, plural, =1{1 foto} other{{fotos} fotos}} y tu ubicación.",
+  "@m0505GuardadoDetalle": {
+    "description": "M05-05 detalle del reporte guardado",
+    "placeholders": {
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0505GuardadoAviso": "Si desinstalas la app o borras sus datos, se pierde.",
+  "@m0505GuardadoAviso": {
+    "description": "M05-05 advertencia del reporte guardado"
+  },
+  "m05EnviarAhora": "Enviar ahora",
+  "@m05EnviarAhora": {
+    "description": "Enviar ya un reporte guardado, sin esperar el reintento"
+  },
+  "m0506PendienteEnvio": "Pendiente de envío",
+  "@m0506PendienteEnvio": {
+    "description": "M05-06 estado de un reporte completo que espera red o turno"
+  },
+  "m0506EsperandoWifi": "Esperando Wi-Fi",
+  "@m0506EsperandoWifi": {
+    "description": "M05-06 estado de un reporte que espera Wi-Fi por la preferencia del cliente"
+  },
+  "m0506Enviando": "Enviando",
+  "@m0506Enviando": {
+    "description": "M05-06 estado de un reporte que la cola está enviando"
+  },
+  "m0506EnviandoFoto": "Enviando · foto {foto} de {fotos}",
+  "@m0506EnviandoFoto": {
+    "description": "M05-06 estado de un reporte con la foto que se sube",
+    "placeholders": {
+      "foto": {
+        "type": "int"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506ConError": "Con error",
+  "@m0506ConError": {
+    "description": "M05-06 estado de un reporte que la aseguradora rechazó"
+  },
+  "m0506NecesitaAtencion": "No se pudo enviar",
+  "@m0506NecesitaAtencion": {
+    "description": "M05-06 estado de un reporte que falló muchas veces por razones técnicas"
+  },
+  "m0506GuardadoEl": "Guardado el {fecha} · {fotos, plural, =1{1 foto} other{{fotos} fotos}}",
+  "@m0506GuardadoEl": {
+    "description": "M05-06 cuándo quedó guardado un reporte pendiente",
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0507bTitulo": "Reporte por enviar",
+  "@m0507bTitulo": {
+    "description": "M05-07b título del detalle de un reporte guardado en el teléfono"
+  },
+  "m0507bYaNoEsta": "Este reporte ya no está guardado en el teléfono. Si se envió, lo encuentras en Mis siniestros.",
+  "@m0507bYaNoEsta": {
+    "description": "M05-07b el reporte ya no existe en el teléfono"
+  },
+  "m0507bVerCaso": "Ver el caso",
+  "@m0507bVerCaso": {
+    "description": "M05-07b abre el caso ya recibido por la aseguradora"
+  },
+  "m0507bCorregir": "Corregir y enviar",
+  "@m0507bCorregir": {
+    "description": "M05-07b corregir un reporte rechazado"
+  },
+  "m0507bEditar": "Editar reporte",
+  "@m0507bEditar": {
+    "description": "M05-07b editar un reporte pendiente"
+  },
+  "m0507bEstadoEnvio": "Estado del envío",
+  "@m0507bEstadoEnvio": {
+    "description": "M05-07b título de la línea de tiempo"
+  },
+  "m0507bGuardadoTelefono": "Guardado en este teléfono",
+  "@m0507bGuardadoTelefono": {
+    "description": "M05-07b primer paso de la línea de tiempo"
+  },
+  "m0507bBorradorNota": "Termínalo para poder enviarlo.",
+  "@m0507bBorradorNota": {
+    "description": "M05-07b paso actual de un borrador"
+  },
+  "m0507bEsperandoConexion": "Esperando conexión",
+  "@m0507bEsperandoConexion": {
+    "description": "M05-07b paso actual sin conexión"
+  },
+  "m0507bEsperandoConexionNota": "Se envía solo cuando vuelva la señal.",
+  "@m0507bEsperandoConexionNota": {
+    "description": "M05-07b nota del paso sin conexión"
+  },
+  "m0507bEsperandoSesion": "Esperando que inicies sesión",
+  "@m0507bEsperandoSesion": {
+    "description": "M05-07b paso actual sin sesión abierta"
+  },
+  "m0507bEsperandoWifiNota": "Se envía solo al conectarte a Wi-Fi.",
+  "@m0507bEsperandoWifiNota": {
+    "description": "M05-07b nota del paso esperando Wi-Fi"
+  },
+  "m0507bEnCola": "En cola de envío",
+  "@m0507bEnCola": {
+    "description": "M05-07b paso actual con conexión, esperando turno o reintento"
+  },
+  "m0507bEnColaNota": "Sale en un momento.",
+  "@m0507bEnColaNota": {
+    "description": "M05-07b nota del paso en cola"
+  },
+  "m0507bReintento": "No se pudo enviar. Reintento automático a las {hora}.",
+  "@m0507bReintento": {
+    "description": "M05-07b cuándo será el próximo intento",
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507bNoAceptado": "La aseguradora no lo aceptó",
+  "@m0507bNoAceptado": {
+    "description": "M05-07b paso actual de un reporte rechazado"
+  },
+  "m0507bNoAceptadoNota": "Corrige el dato y vuelve a enviarlo.",
+  "@m0507bNoAceptadoNota": {
+    "description": "M05-07b nota del paso rechazado"
+  },
+  "m0507bErrorTecnico": "Falló varias veces. Puedes intentar enviarlo de nuevo.",
+  "@m0507bErrorTecnico": {
+    "description": "M05-07b falla técnica repetida"
+  },
+  "m0507bAtencion": "Falló varias veces y dejamos de reintentarlo. Toca «Enviar ahora» para intentarlo de nuevo. Tu reporte sigue guardado.",
+  "@m0507bAtencion": {
+    "description": "M05-07b aviso cuando el envío falló 8 veces"
+  },
+  "m0507bRecibido": "Recibido por la aseguradora",
+  "@m0507bRecibido": {
+    "description": "M05-07b último paso de la línea de tiempo"
+  },
+  "m0507bRecibidoNota": "Aquí verás tu radicado.",
+  "@m0507bRecibidoNota": {
+    "description": "M05-07b nota del último paso"
+  },
+  "m0507bIncierto": "Estamos confirmando si la aseguradora ya lo recibió. Por ahora no se puede editar.",
+  "@m0507bIncierto": {
+    "description": "M05-07b el intento de radicar quedó sin respuesta"
+  },
+  "m0507bEnviandoNota": "Puedes seguir usando la app. No cierres sesión mientras se envía.",
+  "@m0507bEnviandoNota": {
+    "description": "M05-07b nota mientras se envía"
+  },
+  "m0507bNadaSePerdio": "Tus fotos y tu relato siguen guardados. No se perdió nada.",
+  "@m0507bNadaSePerdio": {
+    "description": "M05-07b nota de un reporte rechazado"
+  },
+  "m0507bActivaAvisos": "Activa las notificaciones para avisarte cuando se envíe.",
+  "@m0507bActivaAvisos": {
+    "description": "M05-07b nota si el permiso de notificaciones está negado"
+  },
+  "m0507bPoliza": "Póliza",
+  "@m0507bPoliza": {
+    "description": "M05-07b dato del reporte"
+  },
+  "m0507bQuePaso": "Qué pasó",
+  "@m0507bQuePaso": {
+    "description": "M05-07b dato del reporte"
+  },
+  "m0507bCuando": "Cuándo",
+  "@m0507bCuando": {
+    "description": "M05-07b dato del reporte"
+  },
+  "m0507bDonde": "Dónde",
+  "@m0507bDonde": {
+    "description": "M05-07b dato del reporte"
+  },
+  "m0507bFotos": "Fotos",
+  "@m0507bFotos": {
+    "description": "M05-07b dato del reporte"
+  },
+  "m0507bFotosSubidas": "{subidas, plural, =0{{fotos}} other{{fotos}, {subidas} ya subidas}}",
+  "@m0507bFotosSubidas": {
+    "description": "M05-07b cuántas fotos tiene el reporte y cuántas ya subieron",
+    "placeholders": {
+      "fotos": {
+        "type": "int"
+      },
+      "subidas": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502UbicacionSinRed": "Para reportar sin conexión necesitamos la ubicación de tu teléfono.",
+  "@m0502UbicacionSinRed": {
+    "description": "M05-02: sin red no se puede escribir la dirección, solo usar el GPS."
+  },
+  "homePorEnviar": "{n} por enviar",
+  "@homePorEnviar": {
+    "description": "Inicio: insignia de «Mis siniestros» con los reportes guardados que faltan por enviar.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "cerrarSesionReportesSinEnviar": "{n, plural, =1{Tienes 1 reporte sin enviar. Quedará guardado en este teléfono y se enviará cuando vuelvas a iniciar sesión con esta cuenta.} other{Tienes {n} reportes sin enviar. Quedarán guardados en este teléfono y se enviarán cuando vuelvas a iniciar sesión con esta cuenta.}}",
+  "@cerrarSesionReportesSinEnviar": {
+    "description": "G-04: cierre de sesión con reportes de siniestro completos que no se han enviado.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "cerrarSesionReportesSinTerminar": "{n, plural, =1{Tienes 1 reporte sin terminar. Quedará guardado en este teléfono para cuando vuelvas a iniciar sesión con esta cuenta.} other{Tienes {n} reportes sin terminar. Quedarán guardados en este teléfono para cuando vuelvas a iniciar sesión con esta cuenta.}}",
+  "@cerrarSesionReportesSinTerminar": {
+    "description": "G-04: cierre de sesión cuando solo hay borradores de reporte.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "cerrarSesionBorrarReportes": "Borrar también los reportes guardados",
+  "@cerrarSesionBorrarReportes": {
+    "description": "G-04: casilla para borrar del teléfono los reportes sin enviar al cerrar sesión."
+  },
+  "cerrarSesionEnviarAhora": "Enviar ahora",
+  "@cerrarSesionEnviarAhora": {
+    "description": "G-04: con conexión, enviar los reportes pendientes antes de cerrar sesión."
+  },
+  "perfilEnvioTitulo": "Envío de reportes",
+  "@perfilEnvioTitulo": {
+    "description": "Mi perfil: título de la sección del envío de reportes de siniestro."
+  },
+  "perfilEnvioConexion": "Conexión",
+  "@perfilEnvioConexion": {
+    "description": "Mi perfil, Envío de reportes: fila con el estado de la conexión."
+  },
+  "perfilEnvioConexionTexto": "Se revisa mientras reportas un siniestro",
+  "@perfilEnvioConexionTexto": {
+    "description": "Mi perfil, Envío de reportes: explicación bajo «Conexión»."
+  },
+  "perfilEnvioSoloWifi": "Enviar las fotos solo con Wi-Fi",
+  "@perfilEnvioSoloWifi": {
+    "description": "Mi perfil, Envío de reportes: interruptor de solo Wi-Fi."
+  },
+  "perfilEnvioSoloWifiApagado": "Apagado: se envía con Wi-Fi o con datos móviles",
+  "@perfilEnvioSoloWifiApagado": {
+    "description": "Mi perfil: estado del interruptor de solo Wi-Fi apagado."
+  },
+  "perfilEnvioSoloWifiEncendido": "Encendido: las fotos esperan a que haya Wi-Fi",
+  "@perfilEnvioSoloWifiEncendido": {
+    "description": "Mi perfil: estado del interruptor de solo Wi-Fi encendido."
+  },
+  "perfilEnvioPorEnviar": "Reportes por enviar",
+  "@perfilEnvioPorEnviar": {
+    "description": "Mi perfil, Envío de reportes: acceso a los reportes guardados en el teléfono."
+  },
+  "perfilEnvioNinguno": "Ninguno",
+  "@perfilEnvioNinguno": {
+    "description": "Mi perfil: no hay reportes por enviar."
+  },
+  "perfilEnvioGuardados": "{n, plural, =1{1 guardado en este teléfono} other{{n} guardados en este teléfono}}",
+  "@perfilEnvioGuardados": {
+    "description": "Mi perfil: cuántos reportes por enviar hay guardados en el teléfono.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0507SinConexion": "Conéctate para ver el detalle completo.",
+  "@m0507SinConexion": {
+    "description": "M05-07: detalle de un caso abierto sin conexión; se muestra el resumen de la lista."
   }
 }

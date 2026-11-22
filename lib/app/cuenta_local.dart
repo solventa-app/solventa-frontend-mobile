@@ -78,3 +78,25 @@ Future<void> _anotar(
     ahora: ahora,
   );
 }
+
+/// Cierre de sesión (plan 4.6): la cuenta deja de estar activa en el teléfono
+/// y se borran su nombre y las copias de lo que respondió el servidor. Los
+/// reportes sin enviar se conservan cifrados a nombre de la cuenta, salvo que
+/// el cliente pida borrarlos ([borrarReportes]).
+Future<void> cerrarCuentaLocal(
+  WidgetRef ref, {
+  required bool borrarReportes,
+}) async {
+  final cuenta = ref.read(cuentaActualProvider);
+  try {
+    if (borrarReportes && cuenta != null) {
+      await ref.read(almacenReportesProvider).borrarDeCuenta(cuenta);
+    }
+    await ref.read(almacenLocalProvider).cerrarCuenta();
+  } on Object catch (e) {
+    SolLog.warning(
+      'No se pudo cerrar la cuenta en el teléfono',
+      codigo: e.runtimeType.toString(),
+    );
+  }
+}

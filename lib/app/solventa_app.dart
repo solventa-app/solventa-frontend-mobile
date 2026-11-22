@@ -14,6 +14,7 @@ import '../core/sesion/gestor_sesion.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/assistance/presentation/asistencia_routes.dart';
 import '../features/assistance/presentation/providers.dart';
+import '../features/claims/presentation/vigia_reportes.dart';
 import '../features/onboarding/presentation/preferencias_de_la_cuenta.dart';
 import '../features/profile/presentation/sol_preferencias_sheet.dart';
 import 'cuenta_local.dart';
@@ -53,6 +54,8 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
       // con clave lo reanuda `_RootShell` en `router.dart`.
       if (ahora == FaseAcceso.normal && antes != FaseAcceso.normal) {
         _reanudarPendiente();
+        // HU-M05 (sin conexión): con la sesión abierta la cola puede enviar.
+        unawaited(ref.read(vigiaReportesProvider).despertar());
       }
     });
     // Sesión vencida con pantallas apiladas (perfil, verificación…): `go`
@@ -62,16 +65,20 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
     });
     // HU-M05 (sin conexión): de quién es lo que se guarda en el teléfono.
     seguirCuentaLocal(ref);
+    // HU-M05 (sin conexión): la cola de reportes y sus avisos viven con la app.
+    ref.listenManual(vigiaReportesProvider, (_, _) {}, fireImmediately: true);
     // Bloqueo tras 15 min en segundo plano (HU-M02).
     _ciclo = AppLifecycleListener(
       onHide: () {
         ref.read(accesoProvider.notifier).alPasarASegundoPlano();
         // HU-M05 (sin conexión): en segundo plano no se prueba la red.
         ref.read(estadoRedProvider.notifier).alOcultarse();
+        ref.read(vigiaReportesProvider).alOcultarse();
       },
       onShow: () {
         ref.read(accesoProvider.notifier).alVolverAPrimerPlano();
         unawaited(ref.read(estadoRedProvider.notifier).alVolverAlFrente());
+        ref.read(vigiaReportesProvider).alVolverAlFrente();
       },
     );
     // HU-M04 Fase 6 (KAN-259): nunca lanza, aun sin `google-services.json`.

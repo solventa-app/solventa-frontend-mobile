@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,12 +8,15 @@ import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/red/presentation/banner_conexion.dart';
+import '../../data/cola_reportes.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_notifier.dart';
 import '../reporte_routes.dart';
 
 /// M05-05 · Desenlace: radicado y plazo, o el motivo con un siguiente paso.
+/// Sin conexión (o esperando Wi-Fi) el desenlace es «Reporte guardado»: está
+/// completo en el teléfono, sin radicado todavía, y la app lo envía sola.
 class M0505ResultadoPage extends ConsumerWidget {
   const M0505ResultadoPage({super.key});
 
@@ -79,6 +84,53 @@ class M0505ResultadoPage extends ConsumerWidget {
         ),
         showBack: false,
       ),
+      EnvioGuardado(:final guardadoEn, :final espera) => () {
+        final hora = SolFormat.timeFor(
+          guardadoEn.toLocal(),
+          Localizations.localeOf(context),
+        );
+        void misSiniestros() => despues(() {
+          context.go('/');
+          context.push(ReporteRoutes.misSiniestros);
+        });
+        final esperaWifi = espera == EsperaCola.wifi;
+        return SolResultScreen(
+          banner: const BannerConexion(),
+          title: l10n.m0505Guardado,
+          status: SolStatus.warning,
+          message: switch (espera) {
+            EsperaCola.sinRed => l10n.m0505GuardadoSinRed(hora),
+            EsperaCola.wifi => l10n.m0505GuardadoWifi(hora),
+            EsperaCola.sinSesion => l10n.m0505GuardadoSesion(hora),
+            EsperaCola.ninguna => l10n.m0505GuardadoReintento(hora),
+          },
+          details: [
+            l10n.m0505GuardadoDetalle(
+              ref.watch(reporteProvider.select((s) => s.fotos.length)),
+            ),
+            l10n.m0505GuardadoAviso,
+          ],
+          // Esperando Wi-Fi siempre se puede enviar ya, solo este reporte.
+          actionLabel: esperaWifi
+              ? l10n.m05EnviarConDatos
+              : l10n.m0505VerMisSiniestros,
+          onAction: esperaWifi
+              ? () => despues(() {
+                  unawaited(
+                    ref.read(reporteProvider.notifier).enviar(conDatos: true),
+                  );
+                  context.pushReplacement(ReporteRoutes.enviando, extra: true);
+                })
+              : misSiniestros,
+          secondaryAction: SolButton.text(
+            label: esperaWifi
+                ? l10n.m0505VerMisSiniestros
+                : l10n.m0505VolverInicio,
+            onPressed: esperaWifi ? misSiniestros : inicio,
+          ),
+          showBack: false,
+        );
+      }(),
       _ => const SizedBox.shrink(),
     };
   }

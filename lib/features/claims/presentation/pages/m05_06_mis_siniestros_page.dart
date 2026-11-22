@@ -8,10 +8,10 @@ import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
-import '../../../../core/red/presentation/banner_conexion.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
+import '../widgets/banner_reporte.dart';
 import '../widgets/reportes_por_enviar.dart';
 import 'm05_01_poliza_page.dart' show nombreTipoAuto;
 import 'm05_07_detalle_siniestro_page.dart' show estadoDelCaso, tiempoRestante;
@@ -109,7 +109,7 @@ class _M0506MisSiniestrosPageState
     };
 
     return SolFlowScaffold(
-      banner: const BannerConexion(),
+      banner: const BannerReporte(conVer: false),
       title: l10n.m0506Titulo,
       onBack: () => context.pop(),
       body: RefreshIndicator(

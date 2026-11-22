@@ -7,13 +7,14 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/network/network_providers.dart';
-import '../../../../core/red/presentation/banner_conexion.dart';
+import '../../../../core/red/estado_red_notifier.dart';
 import '../../../assistance/domain/entities/asistencia.dart';
 import '../../../assistance/presentation/widgets/hoja_direccion.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_notifier.dart';
 import '../reporte_routes.dart';
+import '../widgets/banner_reporte.dart';
 import '../widgets/visor_camara_reporte.dart';
 
 /// M05-02 · Fotos del daño con GPS (KAN-276). Cada foto lleva la ubicación
@@ -74,9 +75,14 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
         estado.ubicacion != null || estado.ubicacionSinPermiso;
     // Con cuenta, el reporte queda guardado cifrado desde la primera foto.
     final guardaEnTelefono = ref.watch(cuentaReporteProvider) != null;
+    // Ubicar una dirección escrita necesita internet: sin conexión solo vale
+    // el GPS del teléfono (que no usa internet).
+    final conectado = ref.watch(
+      estadoRedProvider.select((red) => red.conectado),
+    );
 
     return SolFlowScaffold(
-      banner: const BannerConexion(),
+      banner: const BannerReporte(),
       title: l10n.m0502Titulo,
       onBack: () => context.pop(),
       body: Column(
@@ -128,10 +134,11 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
               text: l10n.m0502UbicadaDireccion(direccion),
               color: sol.success,
             ),
-            SolButton.text(
-              label: l10n.m0502CambiarDireccion,
-              onPressed: () => unawaited(_escribirDireccion()),
-            ),
+            if (conectado)
+              SolButton.text(
+                label: l10n.m0502CambiarDireccion,
+                onPressed: () => unawaited(_escribirDireccion()),
+              ),
           ] else if (estado.ubicacion != null)
             SolInlineNote(
               icon: SolIcons.location,
@@ -141,13 +148,16 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
           else if (estado.ubicacionSinPermiso) ...[
             SolInlineNote(
               icon: SolIcons.location,
-              text: l10n.m0502SinUbicacion,
+              text: conectado
+                  ? l10n.m0502SinUbicacion
+                  : l10n.m0502UbicacionSinRed,
             ),
             // Sin GPS no se bloquea: la dirección se ubica con Places.
-            SolButton.tonal(
-              label: l10n.m0502EscribirDireccion,
-              onPressed: () => unawaited(_escribirDireccion()),
-            ),
+            if (conectado)
+              SolButton.tonal(
+                label: l10n.m0502EscribirDireccion,
+                onPressed: () => unawaited(_escribirDireccion()),
+              ),
             const SizedBox(height: SolSpacing.sm),
             SolButtonPair(
               primary: SolButton.tonal(

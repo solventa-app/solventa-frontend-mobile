@@ -2227,4 +2227,490 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get m05NoGuardado =>
       'No pudimos guardar el reporte en este teléfono. Si cierras la app, se pierde.';
+
+  @override
+  String get avisoReporteCanal => 'Reportes de siniestro';
+
+  @override
+  String get avisoReporteCanalDescripcion =>
+      'Avisos de tus reportes de siniestro: enviado, por corregir y recordatorios.';
+
+  @override
+  String get avisoReporteProgresoCanal => 'Envío de reportes';
+
+  @override
+  String get avisoReporteProgresoCanalDescripcion =>
+      'Avance del envío de tus reportes. No suena.';
+
+  @override
+  String avisoReporteEnviando(int porcentaje) {
+    return 'Enviando tu reporte · $porcentaje %';
+  }
+
+  @override
+  String avisoReporteEnviandoVarios(int posicion, int total, int porcentaje) {
+    return 'Enviando $posicion de $total reportes · $porcentaje %';
+  }
+
+  @override
+  String avisoReporteFoto(int foto, int fotos) {
+    return 'Foto $foto de $fotos';
+  }
+
+  @override
+  String get avisoReporteRadicando => 'Registrando tu caso';
+
+  @override
+  String avisoReportePausa(int porcentaje) {
+    return 'Envío en pausa · $porcentaje %';
+  }
+
+  @override
+  String get avisoReportePausaCuerpo =>
+      'Sin conexión. Sigue solo cuando vuelva la señal.';
+
+  @override
+  String get avisoReporteEnviado => 'Tu reporte fue enviado';
+
+  @override
+  String avisoReporteEnviadoCuerpo(String radicado, String fecha) {
+    return 'Radicado $radicado. La aseguradora responde antes del $fecha.';
+  }
+
+  @override
+  String avisoReportesEnviados(int n) {
+    return 'Tus $n reportes fueron enviados';
+  }
+
+  @override
+  String avisoReportesMixto(int enviados, int porCorregir) {
+    String _temp0 = intl.Intl.pluralLogic(
+      enviados,
+      locale: localeName,
+      other: '$enviados enviados',
+      one: '1 enviado',
+    );
+    return '$_temp0 y $porCorregir por corregir';
+  }
+
+  @override
+  String get avisoReportesVer => 'Abre Solventa para verlos.';
+
+  @override
+  String get avisoReporteRechazado => 'No pudimos enviar tu reporte';
+
+  @override
+  String get avisoReporteRechazadoCuerpo =>
+      'Ábrelo para ver el motivo y corregirlo.';
+
+  @override
+  String get avisoReporteAtencionCuerpo =>
+      'Abre Solventa para intentarlo de nuevo.';
+
+  @override
+  String get avisoReporteEsperaWifi => 'Tu reporte espera Wi-Fi';
+
+  @override
+  String get avisoReporteEsperaWifiCuerpo =>
+      'Se envía solo al conectarte a Wi-Fi. Ábrelo si prefieres enviarlo con datos.';
+
+  @override
+  String get avisoReporteSesion => 'Inicia sesión para enviar tu reporte';
+
+  @override
+  String get avisoReporteSesionCuerpo =>
+      'Tu reporte sigue guardado en este teléfono.';
+
+  @override
+  String avisoReporteRecordatorio(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Tienes $n reportes por enviar',
+      one: 'Tienes un reporte por enviar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get avisoReporteRecordatorioCuerpo =>
+      'Abre Solventa cuando tengas señal.';
+
+  @override
+  String get redSinConexionReporte =>
+      'Puedes reportar un siniestro. Se envía cuando vuelva la señal.';
+
+  @override
+  String redReportesPorEnviar(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n reportes por enviar',
+      one: '1 reporte por enviar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get redVer => 'Ver';
+
+  @override
+  String get redEnviandoTitulo => 'Envío en curso';
+
+  @override
+  String redEnviandoReportes(int n, int porcentaje) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Enviando $n reportes…',
+      one: 'Enviando 1 reporte…',
+    );
+    return '$_temp0 $porcentaje %';
+  }
+
+  @override
+  String get redReporteEnviado => 'Reporte enviado';
+
+  @override
+  String redReportesEnviados(int n) {
+    return '$n reportes enviados';
+  }
+
+  @override
+  String redRadicado(String radicado) {
+    return 'Radicado $radicado';
+  }
+
+  @override
+  String get m05DatosTitulo => 'Estás usando datos móviles';
+
+  @override
+  String m05DatosMensaje(int fotos, String tamano) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: 'Enviar $fotos fotos',
+      one: 'Enviar 1 foto',
+    );
+    return '$_temp0 gasta cerca de $tamano de tu plan.';
+  }
+
+  @override
+  String get m05EnviarConDatos => 'Enviar ahora con datos';
+
+  @override
+  String get m05EsperarWifi => 'Esperar Wi-Fi';
+
+  @override
+  String get m05DatosRecordar =>
+      'Recordar mi elección. Puedes cambiarla en Mi perfil.';
+
+  @override
+  String get m0503GuardarDespues => 'Guardar y enviar después';
+
+  @override
+  String get m0503SinConexionNota =>
+      'No hay conexión. Guardaremos tu reporte y lo enviaremos cuando vuelva la señal.';
+
+  @override
+  String get m0503Avisaremos => 'Te avisaremos cuando tu reporte se envíe.';
+
+  @override
+  String get m0504SegundoPlano => 'Seguir en segundo plano';
+
+  @override
+  String m0504Porcentaje(int porcentaje) {
+    return '$porcentaje %';
+  }
+
+  @override
+  String m0504AvanceSemantica(int porcentaje, String paso) {
+    return 'Enviando, $porcentaje por ciento. $paso';
+  }
+
+  @override
+  String m0504Avance(String paso) {
+    return '$paso. Puedes salir de esta pantalla: el envío sigue y te avisamos al terminar.';
+  }
+
+  @override
+  String m0504Foto(int numero) {
+    return 'Foto $numero';
+  }
+
+  @override
+  String get m0504Radicar => 'Registrar el caso';
+
+  @override
+  String get m0504PasoListo => 'lista';
+
+  @override
+  String get m0504PasoEnCurso => 'enviando';
+
+  @override
+  String get m0504PasoEnEspera => 'en espera';
+
+  @override
+  String get m0505Guardado => 'Reporte guardado';
+
+  @override
+  String m0505GuardadoSinRed(String hora) {
+    return 'Lo enviaremos a la aseguradora apenas vuelva la conexión. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las $hora.';
+  }
+
+  @override
+  String m0505GuardadoWifi(String hora) {
+    return 'Lo enviaremos cuando te conectes a Wi-Fi. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las $hora.';
+  }
+
+  @override
+  String m0505GuardadoSesion(String hora) {
+    return 'Lo enviaremos cuando vuelvas a iniciar sesión. Todavía no tiene radicado. Guardado a las $hora.';
+  }
+
+  @override
+  String m0505GuardadoReintento(String hora) {
+    return 'No pudimos enviarlo ahora. Lo intentaremos de nuevo en un momento, sin que tengas que hacer nada. Todavía no tiene radicado. Guardado a las $hora.';
+  }
+
+  @override
+  String m0505GuardadoDetalle(int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos fotos',
+      one: '1 foto',
+    );
+    return 'Guardado cifrado en este teléfono con $_temp0 y tu ubicación.';
+  }
+
+  @override
+  String get m0505GuardadoAviso =>
+      'Si desinstalas la app o borras sus datos, se pierde.';
+
+  @override
+  String get m05EnviarAhora => 'Enviar ahora';
+
+  @override
+  String get m0506PendienteEnvio => 'Pendiente de envío';
+
+  @override
+  String get m0506EsperandoWifi => 'Esperando Wi-Fi';
+
+  @override
+  String get m0506Enviando => 'Enviando';
+
+  @override
+  String m0506EnviandoFoto(int foto, int fotos) {
+    return 'Enviando · foto $foto de $fotos';
+  }
+
+  @override
+  String get m0506ConError => 'Con error';
+
+  @override
+  String get m0506NecesitaAtencion => 'No se pudo enviar';
+
+  @override
+  String m0506GuardadoEl(String fecha, int fotos) {
+    String _temp0 = intl.Intl.pluralLogic(
+      fotos,
+      locale: localeName,
+      other: '$fotos fotos',
+      one: '1 foto',
+    );
+    return 'Guardado el $fecha · $_temp0';
+  }
+
+  @override
+  String get m0507bTitulo => 'Reporte por enviar';
+
+  @override
+  String get m0507bYaNoEsta =>
+      'Este reporte ya no está guardado en el teléfono. Si se envió, lo encuentras en Mis siniestros.';
+
+  @override
+  String get m0507bVerCaso => 'Ver el caso';
+
+  @override
+  String get m0507bCorregir => 'Corregir y enviar';
+
+  @override
+  String get m0507bEditar => 'Editar reporte';
+
+  @override
+  String get m0507bEstadoEnvio => 'Estado del envío';
+
+  @override
+  String get m0507bGuardadoTelefono => 'Guardado en este teléfono';
+
+  @override
+  String get m0507bBorradorNota => 'Termínalo para poder enviarlo.';
+
+  @override
+  String get m0507bEsperandoConexion => 'Esperando conexión';
+
+  @override
+  String get m0507bEsperandoConexionNota =>
+      'Se envía solo cuando vuelva la señal.';
+
+  @override
+  String get m0507bEsperandoSesion => 'Esperando que inicies sesión';
+
+  @override
+  String get m0507bEsperandoWifiNota => 'Se envía solo al conectarte a Wi-Fi.';
+
+  @override
+  String get m0507bEnCola => 'En cola de envío';
+
+  @override
+  String get m0507bEnColaNota => 'Sale en un momento.';
+
+  @override
+  String m0507bReintento(String hora) {
+    return 'No se pudo enviar. Reintento automático a las $hora.';
+  }
+
+  @override
+  String get m0507bNoAceptado => 'La aseguradora no lo aceptó';
+
+  @override
+  String get m0507bNoAceptadoNota => 'Corrige el dato y vuelve a enviarlo.';
+
+  @override
+  String get m0507bErrorTecnico =>
+      'Falló varias veces. Puedes intentar enviarlo de nuevo.';
+
+  @override
+  String get m0507bAtencion =>
+      'Falló varias veces y dejamos de reintentarlo. Toca «Enviar ahora» para intentarlo de nuevo. Tu reporte sigue guardado.';
+
+  @override
+  String get m0507bRecibido => 'Recibido por la aseguradora';
+
+  @override
+  String get m0507bRecibidoNota => 'Aquí verás tu radicado.';
+
+  @override
+  String get m0507bIncierto =>
+      'Estamos confirmando si la aseguradora ya lo recibió. Por ahora no se puede editar.';
+
+  @override
+  String get m0507bEnviandoNota =>
+      'Puedes seguir usando la app. No cierres sesión mientras se envía.';
+
+  @override
+  String get m0507bNadaSePerdio =>
+      'Tus fotos y tu relato siguen guardados. No se perdió nada.';
+
+  @override
+  String get m0507bActivaAvisos =>
+      'Activa las notificaciones para avisarte cuando se envíe.';
+
+  @override
+  String get m0507bPoliza => 'Póliza';
+
+  @override
+  String get m0507bQuePaso => 'Qué pasó';
+
+  @override
+  String get m0507bCuando => 'Cuándo';
+
+  @override
+  String get m0507bDonde => 'Dónde';
+
+  @override
+  String get m0507bFotos => 'Fotos';
+
+  @override
+  String m0507bFotosSubidas(int fotos, int subidas) {
+    String _temp0 = intl.Intl.pluralLogic(
+      subidas,
+      locale: localeName,
+      other: '$fotos, $subidas ya subidas',
+      zero: '$fotos',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0502UbicacionSinRed =>
+      'Para reportar sin conexión necesitamos la ubicación de tu teléfono.';
+
+  @override
+  String homePorEnviar(int n) {
+    return '$n por enviar';
+  }
+
+  @override
+  String cerrarSesionReportesSinEnviar(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other:
+          'Tienes $n reportes sin enviar. Quedarán guardados en este teléfono y se enviarán cuando vuelvas a iniciar sesión con esta cuenta.',
+      one: 'Tienes 1 reporte sin enviar. Quedará guardado en este teléfono y se enviará cuando vuelvas a iniciar sesión con esta cuenta.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String cerrarSesionReportesSinTerminar(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other:
+          'Tienes $n reportes sin terminar. Quedarán guardados en este teléfono para cuando vuelvas a iniciar sesión con esta cuenta.',
+      one: 'Tienes 1 reporte sin terminar. Quedará guardado en este teléfono para cuando vuelvas a iniciar sesión con esta cuenta.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cerrarSesionBorrarReportes =>
+      'Borrar también los reportes guardados';
+
+  @override
+  String get cerrarSesionEnviarAhora => 'Enviar ahora';
+
+  @override
+  String get perfilEnvioTitulo => 'Envío de reportes';
+
+  @override
+  String get perfilEnvioConexion => 'Conexión';
+
+  @override
+  String get perfilEnvioConexionTexto =>
+      'Se revisa mientras reportas un siniestro';
+
+  @override
+  String get perfilEnvioSoloWifi => 'Enviar las fotos solo con Wi-Fi';
+
+  @override
+  String get perfilEnvioSoloWifiApagado =>
+      'Apagado: se envía con Wi-Fi o con datos móviles';
+
+  @override
+  String get perfilEnvioSoloWifiEncendido =>
+      'Encendido: las fotos esperan a que haya Wi-Fi';
+
+  @override
+  String get perfilEnvioPorEnviar => 'Reportes por enviar';
+
+  @override
+  String get perfilEnvioNinguno => 'Ninguno';
+
+  @override
+  String perfilEnvioGuardados(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n guardados en este teléfono',
+      one: '1 guardado en este teléfono',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get m0507SinConexion => 'Conéctate para ver el detalle completo.';
 }

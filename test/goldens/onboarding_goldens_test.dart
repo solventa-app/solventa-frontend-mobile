@@ -6,6 +6,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:solventa_mobile/core/errors/resultado.dart';
 import 'package:solventa_mobile/core/l10n/l10n.dart';
+import 'package:solventa_mobile/core/red/conectividad.dart';
+import 'package:solventa_mobile/core/red/estado_red_notifier.dart';
+import 'package:solventa_mobile/core/red/sonda_red.dart';
 import 'package:solventa_mobile/features/onboarding/domain/entities/onboarding.dart';
 import 'package:solventa_mobile/features/onboarding/domain/entities/verificacion_identidad.dart';
 import 'package:solventa_mobile/features/onboarding/domain/repositories/onboarding_repository.dart';
@@ -79,6 +82,9 @@ void main() {
         if (camara != null)
           estadoCamaraForzadoProvider.overrideWithValue(camara),
         onboardingRepositoryProvider.overrideWithValue(_NuncaTermina()),
+        // Mi perfil muestra el estado de la red (HU-M05): fijo, sin plugin.
+        conectividadProvider.overrideWithValue(ConectividadFalsa()),
+        sondaRedProvider.overrideWithValue(SondaFalsa()),
         esperasVerificacionProvider.overrideWithValue(const [Duration.zero]),
         if (estado != null)
           onboardingProvider.overrideWith(() => _EstadoFijo(estado)),

@@ -6,11 +6,11 @@ import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
-import '../../../../core/red/presentation/banner_conexion.dart';
 import '../../domain/entities/reporte_guardado.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
+import '../widgets/banner_reporte.dart';
 
 /// M05-01 · Póliza y fecha del siniestro (KAN-277). Sin frame en Figma: se
 /// arma con el sistema de diseño (decisión del 2026-11-04).
@@ -124,7 +124,7 @@ class M0501PolizaPage extends ConsumerWidget {
     };
 
     return SolFlowScaffold(
-      banner: const BannerConexion(),
+      banner: const BannerReporte(),
       title: l10n.m05Titulo,
       onBack: () => context.pop(),
       anchorActions: true,

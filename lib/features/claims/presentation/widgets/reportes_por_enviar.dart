@@ -4,7 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/red/estado_red_notifier.dart';
+import '../../data/cola_reportes.dart';
 import '../../domain/entities/reporte_guardado.dart';
+import '../../domain/entities/reporte_siniestro.dart';
 import '../pages/m05_01_poliza_page.dart' show nombreTipoAuto;
 import '../providers.dart';
 import '../reporte_routes.dart';
@@ -30,18 +33,42 @@ String tituloDeReporte(AppLocalizations l10n, ReporteGuardado r) {
 }
 
 /// Insignia del estado de un reporte guardado: ícono y texto, nunca solo color.
-(SolStatus, String) estadoLocalDe(AppLocalizations l10n, ReporteGuardado r) =>
-    switch (r.estado) {
-      EstadoLocal.borrador => (SolStatus.neutral, l10n.m0506SinTerminar),
-      EstadoLocal.pendiente ||
-      EstadoLocal.enviando ||
-      EstadoLocal.enviado ||
-      EstadoLocal.conError ||
-      EstadoLocal.necesitaAtencion => (
-        SolStatus.neutral,
-        l10n.m0506SinTerminar,
-      ),
-    };
+/// [progreso] es el de la cola (para «Enviando · foto 2 de 3») y [esperaWifi]
+/// dice si, con la red de ahora, este reporte está esperando Wi-Fi.
+(SolStatus, String) estadoLocalDe(
+  AppLocalizations l10n,
+  ReporteGuardado r, {
+  ProgresoCola? progreso,
+  bool esperaWifi = false,
+}) => switch (r.estado) {
+  EstadoLocal.borrador => (SolStatus.neutral, l10n.m0506SinTerminar),
+  EstadoLocal.pendiente when esperaWifi => (
+    SolStatus.warning,
+    l10n.m0506EsperandoWifi,
+  ),
+  EstadoLocal.pendiente => (SolStatus.warning, l10n.m0506PendienteEnvio),
+  EstadoLocal.enviando => (
+    SolStatus.info,
+    progreso != null && progreso.enviando == r.id && !progreso.radicando
+        ? l10n.m0506EnviandoFoto(
+            progreso.foto.clamp(1, progreso.fotos),
+            progreso.fotos,
+          )
+        : l10n.m0506Enviando,
+  ),
+  EstadoLocal.enviado => (SolStatus.success, l10n.redReporteEnviado),
+  EstadoLocal.conError => (SolStatus.error, l10n.m0506ConError),
+  EstadoLocal.necesitaAtencion => (SolStatus.error, l10n.m0506NecesitaAtencion),
+};
+
+/// Por qué no se envió, en palabras para el cliente: el mensaje de la
+/// aseguradora tal cual, o la traducción del código.
+String motivoDeError(AppLocalizations l10n, ReporteGuardado r) {
+  final motivo = r.ultimoError ?? '';
+  if (motivo == motivoFotoNoConfirmada) return l10n.m0505FotoNoConfirmada;
+  if (r.estado == EstadoLocal.conError && motivo.contains(' ')) return motivo;
+  return l10n.m0507bErrorTecnico;
+}
 
 /// Pide confirmación y borra el reporte [id] del teléfono, con sus fotos.
 Future<bool> descartarReporte(
@@ -73,11 +100,16 @@ class SeccionPorEnviar extends ConsumerWidget {
   final List<ReporteGuardado> reportes;
   final DateTime ahora;
 
-  Future<void> _continuar(
+  /// Un borrador se retoma donde iba; lo demás abre su detalle.
+  Future<void> _abrir(
     BuildContext context,
     WidgetRef ref,
     ReporteGuardado r,
   ) async {
+    if (r.estado != EstadoLocal.borrador) {
+      await context.push(ReporteRoutes.pendienteDe(r.id));
+      return;
+    }
     final retomado = await ref.read(reporteProvider.notifier).continuar(r.id);
     if (retomado && context.mounted) {
       await context.push(ReporteRoutes.poliza);
@@ -87,6 +119,13 @@ class SeccionPorEnviar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final progreso = ref.watch(progresoColaProvider).value;
+    final porDatos = ref.watch(
+      estadoRedProvider.select((red) => red.porDatosMoviles),
+    );
+    final soloWifi = ref.watch(
+      preferenciasEnvioProvider.select((p) => p.soloWifi),
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -98,8 +137,10 @@ class SeccionPorEnviar extends ConsumerWidget {
           FilaPorEnviar(
             reporte: r,
             ahora: ahora,
-            onTap: () => _continuar(context, ref, r),
-            onDescartar: r.editable
+            progreso: progreso,
+            esperaWifi: porDatos && r.esperaWifiCon(soloWifi: soloWifi),
+            onTap: () => _abrir(context, ref, r),
+            onDescartar: r.estado == EstadoLocal.borrador
                 ? () => descartarReporte(context, ref, r.id)
                 : null,
           ),
@@ -119,10 +160,18 @@ class FilaPorEnviar extends StatelessWidget {
     required this.ahora,
     required this.onTap,
     this.onDescartar,
+    this.progreso,
+    this.esperaWifi = false,
   });
 
   final ReporteGuardado reporte;
   final DateTime ahora;
+
+  /// En qué va la cola, para la fila del que se está enviando.
+  final ProgresoCola? progreso;
+
+  /// Con la red de ahora, este reporte espera Wi-Fi.
+  final bool esperaWifi;
   final VoidCallback onTap;
   final VoidCallback? onDescartar;
 
@@ -131,7 +180,22 @@ class FilaPorEnviar extends StatelessWidget {
     final l10n = context.l10n;
     final colors = context.colors;
     final r = reporte;
-    final (status, estado) = estadoLocalDe(l10n, r);
+    final (status, estado) = estadoLocalDe(
+      l10n,
+      r,
+      progreso: progreso,
+      esperaWifi: esperaWifi,
+    );
+    final borrador = r.estado == EstadoLocal.borrador;
+    final enviando =
+        r.estado == EstadoLocal.enviando && progreso?.enviando == r.id;
+    // Lo que el cliente puede hacer desde la fila, si hay algo.
+    final accion = switch (r.estado) {
+      EstadoLocal.borrador => l10n.m0506Continuar,
+      EstadoLocal.conError => l10n.m0507bCorregir,
+      EstadoLocal.necesitaAtencion => l10n.m05EnviarAhora,
+      _ => null,
+    };
     final estilo = SolStatusStyle.of(context, status);
     final suave = context.solText.body.copyWith(color: colors.onSurfaceVariant);
 
@@ -185,12 +249,30 @@ class FilaPorEnviar extends StatelessWidget {
                             ),
                             const SizedBox(height: SolSpacing.xxs),
                             Text(
-                              l10n.m0506UltimaEdicion(
-                                SolFormat.dateTime(r.actualizadoEn.toLocal()),
-                                r.fotos.length,
-                              ),
+                              borrador
+                                  ? l10n.m0506UltimaEdicion(
+                                      SolFormat.dateTime(
+                                        r.actualizadoEn.toLocal(),
+                                      ),
+                                      r.fotos.length,
+                                    )
+                                  : l10n.m0506GuardadoEl(
+                                      SolFormat.dateTime(
+                                        (r.guardadoEn ?? r.actualizadoEn)
+                                            .toLocal(),
+                                      ),
+                                      r.fotos.length,
+                                    ),
                               style: suave,
                             ),
+                            if (r.estado == EstadoLocal.conError) ...[
+                              const SizedBox(height: SolSpacing.xs),
+                              Text(motivoDeError(l10n, r), style: suave),
+                            ],
+                            if (enviando) ...[
+                              const SizedBox(height: SolSpacing.sm),
+                              SolProgressBar(value: progreso!.fraccionReporte),
+                            ],
                             if (porVencer) ...[
                               const SizedBox(height: SolSpacing.xs),
                               Text(
@@ -201,14 +283,16 @@ class FilaPorEnviar extends StatelessWidget {
                                 ),
                               ),
                             ],
-                            const SizedBox(height: SolSpacing.xs),
-                            Text(
-                              l10n.m0506Continuar,
-                              style: context.solText.body.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: colors.secondary,
+                            if (accion != null) ...[
+                              const SizedBox(height: SolSpacing.xs),
+                              Text(
+                                accion,
+                                style: context.solText.body.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: colors.secondary,
+                                ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                       ),

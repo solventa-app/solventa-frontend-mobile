@@ -5,11 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
+import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
-import '../../../../core/red/presentation/banner_conexion.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
+import '../widgets/banner_reporte.dart';
 import 'm05_01_poliza_page.dart' show nombreTipoAuto;
 
 /// M05-07 · Detalle de un siniestro del cliente (contrato v0.54, `miSiniestro`).
@@ -107,6 +108,12 @@ class _M0507DetalleSiniestroPageState
         text: l10n.m0507NoEncontrado,
         center: true,
       ),
+      // Sin conexión: el detalle no se guarda en el teléfono; se muestra el
+      // resumen que quedó de la lista (plan 8.1).
+      Fracaso(falla: SinConexion()) => _ResumenSinConexion(
+        id: widget.id,
+        onReintentar: () => ref.invalidate(miSiniestroProvider(widget.id)),
+      ),
       Fracaso(:final falla) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -124,7 +131,7 @@ class _M0507DetalleSiniestroPageState
     };
 
     return SolFlowScaffold(
-      banner: const BannerConexion(),
+      banner: const BannerReporte(),
       title: l10n.m0507Titulo,
       onBack: () => context.pop(),
       body: RefreshIndicator(
@@ -139,6 +146,69 @@ class _M0507DetalleSiniestroPageState
           children: [cuerpo],
         ),
       ),
+    );
+  }
+}
+
+/// El caso tal como quedó en la copia de «Mis siniestros», con la invitación a
+/// conectarse para ver el resto.
+class _ResumenSinConexion extends ConsumerWidget {
+  const _ResumenSinConexion({required this.id, required this.onReintentar});
+
+  final String id;
+  final VoidCallback onReintentar;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final colors = context.colors;
+    final caso = switch (ref.watch(misSiniestrosProvider).value) {
+      Exito(:final valor) => valor.valor.where((c) => c.id == id).firstOrNull,
+      _ => null,
+    };
+    final tipo = caso?.tipoAuto;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (caso != null) ...[
+          SolCard.outlined(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Wrap(
+                  spacing: SolSpacing.sm,
+                  runSpacing: SolSpacing.xs,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(caso.radicado, style: context.solText.title),
+                    SolStatusBadge(
+                      status: estadoDelCaso(l10n, caso.estado).$1,
+                      label: estadoDelCaso(l10n, caso.estado).$2,
+                    ),
+                  ],
+                ),
+                if (tipo != null) ...[
+                  const SizedBox(height: SolSpacing.xxs),
+                  Text(nombreTipoAuto(l10n, tipo), style: context.solText.body),
+                ],
+                const SizedBox(height: SolSpacing.xxs),
+                Text(
+                  l10n.m0506Reportado(
+                    SolFormat.date(caso.notificadoEn.toLocal()),
+                    caso.fotos,
+                  ),
+                  style: context.solText.body.copyWith(
+                    color: colors.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: SolSpacing.md),
+        ],
+        SolInlineNote(icon: SolIcons.offline, text: l10n.m0507SinConexion),
+        SolButton.text(label: l10n.m05Reintentar, onPressed: onReintentar),
+      ],
     );
   }
 }

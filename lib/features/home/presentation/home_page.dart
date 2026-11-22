@@ -25,6 +25,7 @@ class HomePage extends StatelessWidget {
     required this.onRequestAssistance,
     this.onReportClaim,
     this.onMyClaims,
+    this.porEnviar = 0,
     this.onMyCoverage,
     this.verificacion,
     this.cargandoCuenta = false,
@@ -47,6 +48,10 @@ class HomePage extends StatelessWidget {
 
   /// HU-M05: los siniestros que reportó y su estado (M05-06).
   final VoidCallback? onMyClaims;
+
+  /// HU-M05 (sin conexión): reportes guardados en el teléfono que faltan por
+  /// enviar; se ven como insignia en «Mis siniestros».
+  final int porEnviar;
 
   /// HU-M04: cupo, movimientos y pagos de la cobertura paramétrica (M04-04).
   final VoidCallback? onMyCoverage;
@@ -302,6 +307,9 @@ class HomePage extends StatelessWidget {
             SolActionTile(
               icon: SolIcons.success,
               title: l10n?.homeMisSiniestrosTile ?? 'Mis siniestros',
+              badge: porEnviar > 0
+                  ? l10n?.homePorEnviar(porEnviar) ?? '$porEnviar por enviar'
+                  : null,
               onTap: misSiniestros,
             ),
           ],

@@ -11,6 +11,7 @@ import '../core/l10n/l10n.dart';
 import '../core/network/network_providers.dart';
 import '../core/push/pending_destination.dart';
 import '../core/push/push_service.dart';
+import '../core/red/estado_red_notifier.dart';
 import '../core/red/presentation/banner_conexion.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/acceso/presentation/acceso_routes.dart';
@@ -25,6 +26,7 @@ import '../features/assistance/presentation/pages/m06_04_resultado_page.dart';
 import '../features/assistance/presentation/pages/m06_06_cancelada_page.dart';
 import '../features/assistance/presentation/pages/mis_asistencias_page.dart';
 import '../features/assistance/presentation/providers.dart';
+import '../features/claims/domain/entities/reporte_guardado.dart';
 import '../features/claims/presentation/pages/m05_01_poliza_page.dart';
 import '../features/claims/presentation/pages/m05_02_fotos_page.dart';
 import '../features/claims/presentation/pages/m05_03_relato_page.dart';
@@ -32,8 +34,11 @@ import '../features/claims/presentation/pages/m05_04_enviando_page.dart';
 import '../features/claims/presentation/pages/m05_05_resultado_page.dart';
 import '../features/claims/presentation/pages/m05_06_mis_siniestros_page.dart';
 import '../features/claims/presentation/pages/m05_07_detalle_siniestro_page.dart';
+import '../features/claims/presentation/pages/m05_07b_reporte_pendiente_page.dart';
 import '../features/claims/presentation/providers.dart';
 import '../features/claims/presentation/reporte_routes.dart';
+import '../features/claims/presentation/widgets/banner_reporte.dart';
+import '../features/claims/presentation/widgets/cierre_sesion_reportes.dart';
 import '../features/home/presentation/home_page.dart';
 import '../features/onboarding/domain/entities/verificacion_identidad.dart';
 import '../features/onboarding/presentation/onboarding_notifier.dart';
@@ -54,6 +59,7 @@ import '../features/parametric/presentation/pages/m04_03_detalle_indemnizacion_p
 import '../features/parametric/presentation/pages/m04_04_cobertura_page.dart';
 import '../features/parametric/presentation/parametric_routes.dart';
 import '../features/profile/presentation/profile_page.dart';
+import 'cuenta_local.dart';
 
 const bool _openGallery = bool.fromEnvironment('SOL_GALLERY');
 
@@ -70,6 +76,12 @@ GoRouter? enrutadorActivo;
 /// `true` si [ubicacion] es una de las rutas de HU-M04 que el push puede
 /// abrir directamente ([ParametricRoutes.celebracion] y `.detalle`).
 bool _esRutaM04(String ubicacion) =>
+    // HU-M05 (sin conexión): las notificaciones del reporte abren «Mis
+    // siniestros», un caso o un reporte por enviar; con la app bloqueada,
+    // primero la huella.
+    ubicacion == ReporteRoutes.misSiniestros ||
+    ubicacion.startsWith('${ReporteRoutes.misSiniestros}/') ||
+    ubicacion.startsWith(ReporteRoutes.pendienteDe('')) ||
     // HU-M06 (4.5): el detalle de la asistencia también llega desde una
     // notificación y pide sesión, como el push de M04.
     ubicacion.startsWith('${AsistenciaRoutes.detalle}/') ||
@@ -326,7 +338,8 @@ GoRouter crearRouter({
     GoRoute(
       path: ReporteRoutes.enviando,
       name: 'm05-04',
-      builder: (_, _) => const M0504EnviandoPage(),
+      builder: (_, estado) =>
+          M0504EnviandoPage(yaEnCurso: estado.extra == true),
     ),
     GoRoute(
       path: ReporteRoutes.resultado,
@@ -337,6 +350,12 @@ GoRouter crearRouter({
       path: ReporteRoutes.misSiniestros,
       name: 'm05-06',
       builder: (_, _) => const M0506MisSiniestrosPage(),
+    ),
+    GoRoute(
+      path: ReporteRoutes.pendiente,
+      name: 'm05-07b',
+      builder: (_, state) =>
+          M0507bReportePendientePage(id: state.pathParameters['id']!),
     ),
     GoRoute(
       path: ReporteRoutes.detalle,
@@ -435,24 +454,62 @@ class _RootShell extends ConsumerWidget {
         : '';
 
     Future<void> confirmarCierreSesion() async {
-      final confirmar = await SolConfirmDialog.show(
-        context,
-        title: l10n.cerrarSesionTitulo,
-        message: l10n.cerrarSesionMensaje,
-        confirmLabel: l10n.cerrarSesionConfirmar,
-        cancelLabel: l10n.cerrarSesionCancelar,
-      );
-      if (confirmar && context.mounted) {
-        await notifier.cerrarSesion();
-        if (context.mounted) {
-          context.go('/');
+      // HU-M05 (sin conexión): con reportes en el teléfono, el diálogo dice
+      // que quedan guardados y deja enviarlos o borrarlos (plan 4.6).
+      final guardados = ref.read(reportesPorEnviarProvider);
+      var borrarReportes = false;
+      if (guardados.isEmpty) {
+        final confirmar = await SolConfirmDialog.show(
+          context,
+          title: l10n.cerrarSesionTitulo,
+          message: l10n.cerrarSesionMensaje,
+          confirmLabel: l10n.cerrarSesionConfirmar,
+          cancelLabel: l10n.cerrarSesionCancelar,
+        );
+        if (!confirmar) return;
+      } else {
+        final sinTerminar = guardados
+            .where((r) => r.estado == EstadoLocal.borrador)
+            .length;
+        final enviables = [
+          for (final r in guardados)
+            if (r.estado == EstadoLocal.pendiente ||
+                r.estado == EstadoLocal.necesitaAtencion)
+              r.id,
+        ];
+        final eleccion = await DialogoCierreConReportes.preguntar(
+          context,
+          sinEnviar: guardados.length - sinTerminar,
+          sinTerminar: sinTerminar,
+          puedeEnviar:
+              enviables.isNotEmpty && ref.read(estadoRedProvider).conectado,
+        );
+        if (!context.mounted) return;
+        switch (eleccion) {
+          case null:
+            return;
+          case EnviarAntes():
+            final cola = ref.read(colaReportesProvider);
+            for (final id in enviables) {
+              unawaited(cola.enviarAhora(id));
+            }
+            await context.push(ReporteRoutes.misSiniestros);
+            return;
+          case CerrarSesion(:final borrar):
+            borrarReportes = borrar;
         }
+      }
+      if (!context.mounted) return;
+      await cerrarCuentaLocal(ref, borrarReportes: borrarReportes);
+      await notifier.cerrarSesion();
+      if (context.mounted) {
+        context.go('/');
       }
     }
 
     final enCamino = ref.watch(enCaminoCantidadProvider);
     return SolAppShell(
-      banner: const BannerConexion(),
+      banner: const BannerReporte(),
       home: HomePage(
         pie: const DemoRed(),
         userName: nombre,
@@ -497,6 +554,7 @@ class _RootShell extends ConsumerWidget {
         onMyClaims: verificado
             ? () => context.push(ReporteRoutes.misSiniestros)
             : null,
+        porEnviar: ref.watch(reportesPorEnviarProvider).length,
         // HU-M04 (M04-04): la cobertura paramétrica y sus indemnizaciones.
         onMyCoverage: () => context.push(ParametricRoutes.cobertura),
         // M01-08 es opcional: mientras no esté activa, el Home la sugiere.

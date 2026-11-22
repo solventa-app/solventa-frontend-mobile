@@ -100,6 +100,7 @@ final class ReporteGuardado {
     this.ultimoError,
     this.radicacionIncierta = false,
     this.datosPermitidos = false,
+    this.esperaWifi = false,
     this.avisoWifiDado = false,
     this.resultado,
     this.enviadoEn,
@@ -144,6 +145,10 @@ final class ReporteGuardado {
   /// esperar Wi-Fi.
   final bool datosPermitidos;
 
+  /// El cliente pidió esperar Wi-Fi para este reporte (sin cambiar la
+  /// preferencia de Mi perfil).
+  final bool esperaWifi;
+
   /// Ya se avisó que espera Wi-Fi (se avisa una sola vez).
   final bool avisoWifiDado;
 
@@ -173,6 +178,11 @@ final class ReporteGuardado {
   bool get enCola =>
       estado == EstadoLocal.pendiente || estado == EstadoLocal.enviando;
 
+  /// Con solo datos móviles, este reporte espera Wi-Fi: lo pide la
+  /// preferencia de Mi perfil ([soloWifi]) o lo pidió el cliente para este.
+  bool esperaWifiCon({required bool soloWifi}) =>
+      !datosPermitidos && (soloWifi || esperaWifi);
+
   /// Se puede corregir o descartar.
   bool get editable =>
       !radicacionIncierta &&
@@ -200,6 +210,7 @@ final class ReporteGuardado {
     String? Function()? ultimoError,
     bool? radicacionIncierta,
     bool? datosPermitidos,
+    bool? esperaWifi,
     bool? avisoWifiDado,
     SiniestroReportado? Function()? resultado,
     DateTime? Function()? enviadoEn,
@@ -228,6 +239,7 @@ final class ReporteGuardado {
     ultimoError: ultimoError != null ? ultimoError() : this.ultimoError,
     radicacionIncierta: radicacionIncierta ?? this.radicacionIncierta,
     datosPermitidos: datosPermitidos ?? this.datosPermitidos,
+    esperaWifi: esperaWifi ?? this.esperaWifi,
     avisoWifiDado: avisoWifiDado ?? this.avisoWifiDado,
     resultado: resultado != null ? resultado() : this.resultado,
     enviadoEn: enviadoEn != null ? enviadoEn() : this.enviadoEn,

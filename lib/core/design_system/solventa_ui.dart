@@ -14,6 +14,7 @@ export 'components/feedback/sol_connection_banner.dart';
 export 'components/feedback/sol_demo_trigger.dart';
 export 'components/feedback/sol_inline_note.dart';
 export 'components/feedback/sol_loading_state.dart';
+export 'components/feedback/sol_progress.dart';
 export 'components/feedback/sol_result_view.dart';
 export 'components/feedback/sol_skeleton.dart';
 export 'components/feedback/sol_status.dart';

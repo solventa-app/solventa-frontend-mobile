@@ -242,6 +242,17 @@ class _SolGalleryPageState extends State<SolGalleryPage> {
             ],
           ),
 
+          const _Section('Avance (HU-M05)'),
+          const Center(
+            child: SolProgressRing(
+              value: 0.58,
+              label: '58 %',
+              semanticLabel: 'Enviando, 58 por ciento',
+            ),
+          ),
+          const _Gap(),
+          const SolProgressBar(value: 0.58),
+
           const _Section('Consentimiento'),
           SolConsentCheckbox(
             value: _consent,

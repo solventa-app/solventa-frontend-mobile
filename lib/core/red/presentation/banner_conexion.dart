@@ -15,11 +15,28 @@ import '../estado_red_notifier.dart';
 ///
 /// Mientras está montada pide que la red se vigile ([EstadoRedNotifier.vigilar]).
 class BannerConexion extends ConsumerStatefulWidget {
-  const BannerConexion({super.key, this.mensajeSinConexion});
+  const BannerConexion({
+    super.key,
+    this.mensajeSinConexion,
+    this.accionSinConexion,
+    this.alTocarSinConexion,
+    this.conConexion,
+  });
 
   /// Qué puede hacer la persona sin conexión en esta pantalla. Sin él, el
   /// mensaje general.
   final String? mensajeSinConexion;
+
+  /// Acción de la franja «Sin conexión» (p. ej. «Ver» lo pendiente).
+  final String? accionSinConexion;
+  final VoidCallback? alTocarSinConexion;
+
+  /// Con conexión, lo que la pantalla quiera mostrar en vez de «Conexión
+  /// restablecida» o «Conexión lenta» (p. ej. «Enviando 1 reporte…»).
+  /// [restablecida] es `true` en los segundos siguientes a volver la red.
+  /// Si devuelve `null`, la franja de siempre.
+  final Widget? Function(BuildContext context, {required bool restablecida})?
+  conConexion;
 
   /// Cuánto se muestra «Conexión restablecida» antes de ocultarse.
   static const duracionRestablecida = Duration(seconds: 4);
@@ -71,8 +88,15 @@ class _BannerConexionState extends ConsumerState<BannerConexion> {
         tone: SolConnectionTone.offline,
         title: l10n.redSinConexionTitulo,
         message: widget.mensajeSinConexion ?? l10n.redSinConexionMensaje,
+        actionLabel: widget.accionSinConexion,
+        onAction: widget.alTocarSinConexion,
       );
     }
+    final propia = widget.conConexion?.call(
+      context,
+      restablecida: _restablecida,
+    );
+    if (propia != null) return propia;
     if (_restablecida) {
       return SolConnectionBanner(
         tone: SolConnectionTone.done,

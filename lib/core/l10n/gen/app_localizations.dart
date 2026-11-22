@@ -3751,6 +3751,672 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No pudimos guardar el reporte en este teléfono. Si cierras la app, se pierde.'**
   String get m05NoGuardado;
+
+  /// Nombre del canal de notificaciones locales del reporte de siniestro en Ajustes de Android
+  ///
+  /// In es, this message translates to:
+  /// **'Reportes de siniestro'**
+  String get avisoReporteCanal;
+
+  /// Descripción del canal de reportes
+  ///
+  /// In es, this message translates to:
+  /// **'Avisos de tus reportes de siniestro: enviado, por corregir y recordatorios.'**
+  String get avisoReporteCanalDescripcion;
+
+  /// Nombre del canal silencioso con el progreso del envío
+  ///
+  /// In es, this message translates to:
+  /// **'Envío de reportes'**
+  String get avisoReporteProgresoCanal;
+
+  /// Descripción del canal de progreso
+  ///
+  /// In es, this message translates to:
+  /// **'Avance del envío de tus reportes. No suena.'**
+  String get avisoReporteProgresoCanalDescripcion;
+
+  /// Notificación fija de progreso de un reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Enviando tu reporte · {porcentaje} %'**
+  String avisoReporteEnviando(int porcentaje);
+
+  /// Notificación fija de progreso con varios reportes en cola
+  ///
+  /// In es, this message translates to:
+  /// **'Enviando {posicion} de {total} reportes · {porcentaje} %'**
+  String avisoReporteEnviandoVarios(int posicion, int total, int porcentaje);
+
+  /// Paso del envío: qué foto se está subiendo
+  ///
+  /// In es, this message translates to:
+  /// **'Foto {foto} de {fotos}'**
+  String avisoReporteFoto(int foto, int fotos);
+
+  /// Paso del envío: las fotos ya subieron y se crea el caso
+  ///
+  /// In es, this message translates to:
+  /// **'Registrando tu caso'**
+  String get avisoReporteRadicando;
+
+  /// Notificación cuando se cae la red a mitad de un envío
+  ///
+  /// In es, this message translates to:
+  /// **'Envío en pausa · {porcentaje} %'**
+  String avisoReportePausa(int porcentaje);
+
+  /// Cuerpo de la notificación de envío en pausa
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión. Sigue solo cuando vuelva la señal.'**
+  String get avisoReportePausaCuerpo;
+
+  /// Notificación al recibir el radicado
+  ///
+  /// In es, this message translates to:
+  /// **'Tu reporte fue enviado'**
+  String get avisoReporteEnviado;
+
+  /// Cuerpo de la notificación de reporte enviado
+  ///
+  /// In es, this message translates to:
+  /// **'Radicado {radicado}. La aseguradora responde antes del {fecha}.'**
+  String avisoReporteEnviadoCuerpo(String radicado, String fecha);
+
+  /// Notificación cuando la cola envió varios reportes
+  ///
+  /// In es, this message translates to:
+  /// **'Tus {n} reportes fueron enviados'**
+  String avisoReportesEnviados(int n);
+
+  /// Notificación cuando la cola terminó con enviados y rechazados
+  ///
+  /// In es, this message translates to:
+  /// **'{enviados, plural, =1{1 enviado} other{{enviados} enviados}} y {porCorregir} por corregir'**
+  String avisoReportesMixto(int enviados, int porCorregir);
+
+  /// Cuerpo de la notificación con varios reportes
+  ///
+  /// In es, this message translates to:
+  /// **'Abre Solventa para verlos.'**
+  String get avisoReportesVer;
+
+  /// Notificación cuando la aseguradora rechaza un reporte guardado
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos enviar tu reporte'**
+  String get avisoReporteRechazado;
+
+  /// Cuerpo de la notificación de rechazo, sin datos del reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Ábrelo para ver el motivo y corregirlo.'**
+  String get avisoReporteRechazadoCuerpo;
+
+  /// Cuerpo de la notificación cuando el envío falló muchas veces
+  ///
+  /// In es, this message translates to:
+  /// **'Abre Solventa para intentarlo de nuevo.'**
+  String get avisoReporteAtencionCuerpo;
+
+  /// Notificación silenciosa, una vez por reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Tu reporte espera Wi-Fi'**
+  String get avisoReporteEsperaWifi;
+
+  /// Cuerpo de la notificación de espera de Wi-Fi
+  ///
+  /// In es, this message translates to:
+  /// **'Se envía solo al conectarte a Wi-Fi. Ábrelo si prefieres enviarlo con datos.'**
+  String get avisoReporteEsperaWifiCuerpo;
+
+  /// Notificación cuando la sesión venció con reportes pendientes
+  ///
+  /// In es, this message translates to:
+  /// **'Inicia sesión para enviar tu reporte'**
+  String get avisoReporteSesion;
+
+  /// Cuerpo de la notificación de sesión vencida
+  ///
+  /// In es, this message translates to:
+  /// **'Tu reporte sigue guardado en este teléfono.'**
+  String get avisoReporteSesionCuerpo;
+
+  /// Recordatorio local (30 min, 3 h y 24 h) de reportes pendientes
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{Tienes un reporte por enviar} other{Tienes {n} reportes por enviar}}'**
+  String avisoReporteRecordatorio(int n);
+
+  /// Cuerpo del recordatorio: no promete nada, puede salir sin internet
+  ///
+  /// In es, this message translates to:
+  /// **'Abre Solventa cuando tengas señal.'**
+  String get avisoReporteRecordatorioCuerpo;
+
+  /// Franja sin conexión en el reporte de siniestro, sin reportes pendientes
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes reportar un siniestro. Se envía cuando vuelva la señal.'**
+  String get redSinConexionReporte;
+
+  /// Franja sin conexión con reportes en cola
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 reporte por enviar} other{{n} reportes por enviar}}'**
+  String redReportesPorEnviar(int n);
+
+  /// Acción de la franja de conexión: abre lo pendiente o el caso enviado
+  ///
+  /// In es, this message translates to:
+  /// **'Ver'**
+  String get redVer;
+
+  /// Franja mientras la cola envía con conexión
+  ///
+  /// In es, this message translates to:
+  /// **'Envío en curso'**
+  String get redEnviandoTitulo;
+
+  /// Mensaje de la franja con el avance de la cola
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{Enviando 1 reporte…} other{Enviando {n} reportes…}} {porcentaje} %'**
+  String redEnviandoReportes(int n, int porcentaje);
+
+  /// Franja al terminar el envío de un reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Reporte enviado'**
+  String get redReporteEnviado;
+
+  /// Franja al terminar el envío de varios reportes
+  ///
+  /// In es, this message translates to:
+  /// **'{n} reportes enviados'**
+  String redReportesEnviados(int n);
+
+  /// Mensaje de la franja con el radicado del reporte enviado
+  ///
+  /// In es, this message translates to:
+  /// **'Radicado {radicado}'**
+  String redRadicado(String radicado);
+
+  /// Hoja que pregunta una vez si enviar el reporte por datos móviles
+  ///
+  /// In es, this message translates to:
+  /// **'Estás usando datos móviles'**
+  String get m05DatosTitulo;
+
+  /// Cuánto gasta enviar las fotos por datos móviles
+  ///
+  /// In es, this message translates to:
+  /// **'{fotos, plural, =1{Enviar 1 foto} other{Enviar {fotos} fotos}} gasta cerca de {tamano} de tu plan.'**
+  String m05DatosMensaje(int fotos, String tamano);
+
+  /// Enviar el reporte por datos móviles, solo este
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar ahora con datos'**
+  String get m05EnviarConDatos;
+
+  /// Dejar el reporte guardado hasta tener Wi-Fi
+  ///
+  /// In es, this message translates to:
+  /// **'Esperar Wi-Fi'**
+  String get m05EsperarWifi;
+
+  /// Casilla de la hoja de datos móviles
+  ///
+  /// In es, this message translates to:
+  /// **'Recordar mi elección. Puedes cambiarla en Mi perfil.'**
+  String get m05DatosRecordar;
+
+  /// M05-03 botón final sin conexión
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar y enviar después'**
+  String get m0503GuardarDespues;
+
+  /// M05-03 nota sobre el botón, sin conexión
+  ///
+  /// In es, this message translates to:
+  /// **'No hay conexión. Guardaremos tu reporte y lo enviaremos cuando vuelva la señal.'**
+  String get m0503SinConexionNota;
+
+  /// M05-03 nota antes de pedir el permiso de notificaciones
+  ///
+  /// In es, this message translates to:
+  /// **'Te avisaremos cuando tu reporte se envíe.'**
+  String get m0503Avisaremos;
+
+  /// M05-04 salir de la pantalla sin cortar el envío
+  ///
+  /// In es, this message translates to:
+  /// **'Seguir en segundo plano'**
+  String get m0504SegundoPlano;
+
+  /// M05-04 porcentaje dentro del anillo
+  ///
+  /// In es, this message translates to:
+  /// **'{porcentaje} %'**
+  String m0504Porcentaje(int porcentaje);
+
+  /// M05-04 lo que lee TalkBack al avanzar
+  ///
+  /// In es, this message translates to:
+  /// **'Enviando, {porcentaje} por ciento. {paso}'**
+  String m0504AvanceSemantica(int porcentaje, String paso);
+
+  /// M05-04 texto bajo el anillo
+  ///
+  /// In es, this message translates to:
+  /// **'{paso}. Puedes salir de esta pantalla: el envío sigue y te avisamos al terminar.'**
+  String m0504Avance(String paso);
+
+  /// M05-04 fila de una foto en la lista de pasos
+  ///
+  /// In es, this message translates to:
+  /// **'Foto {numero}'**
+  String m0504Foto(int numero);
+
+  /// M05-04 último paso del envío
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar el caso'**
+  String get m0504Radicar;
+
+  /// M05-04 estado de un paso terminado
+  ///
+  /// In es, this message translates to:
+  /// **'lista'**
+  String get m0504PasoListo;
+
+  /// M05-04 estado del paso en curso
+  ///
+  /// In es, this message translates to:
+  /// **'enviando'**
+  String get m0504PasoEnCurso;
+
+  /// M05-04 estado de un paso que no ha empezado
+  ///
+  /// In es, this message translates to:
+  /// **'en espera'**
+  String get m0504PasoEnEspera;
+
+  /// M05-05 desenlace sin conexión: guardado, sin radicado
+  ///
+  /// In es, this message translates to:
+  /// **'Reporte guardado'**
+  String get m0505Guardado;
+
+  /// M05-05 reporte guardado, sin conexión
+  ///
+  /// In es, this message translates to:
+  /// **'Lo enviaremos a la aseguradora apenas vuelva la conexión. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las {hora}.'**
+  String m0505GuardadoSinRed(String hora);
+
+  /// M05-05 reporte guardado, esperando Wi-Fi
+  ///
+  /// In es, this message translates to:
+  /// **'Lo enviaremos cuando te conectes a Wi-Fi. Todavía no tiene radicado: te avisaremos cuando lo reciban. Guardado a las {hora}.'**
+  String m0505GuardadoWifi(String hora);
+
+  /// M05-05 reporte guardado, sin sesión abierta
+  ///
+  /// In es, this message translates to:
+  /// **'Lo enviaremos cuando vuelvas a iniciar sesión. Todavía no tiene radicado. Guardado a las {hora}.'**
+  String m0505GuardadoSesion(String hora);
+
+  /// M05-05 reporte guardado tras una falla técnica que se reintenta sola
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos enviarlo ahora. Lo intentaremos de nuevo en un momento, sin que tengas que hacer nada. Todavía no tiene radicado. Guardado a las {hora}.'**
+  String m0505GuardadoReintento(String hora);
+
+  /// M05-05 detalle del reporte guardado
+  ///
+  /// In es, this message translates to:
+  /// **'Guardado cifrado en este teléfono con {fotos, plural, =1{1 foto} other{{fotos} fotos}} y tu ubicación.'**
+  String m0505GuardadoDetalle(int fotos);
+
+  /// M05-05 advertencia del reporte guardado
+  ///
+  /// In es, this message translates to:
+  /// **'Si desinstalas la app o borras sus datos, se pierde.'**
+  String get m0505GuardadoAviso;
+
+  /// Enviar ya un reporte guardado, sin esperar el reintento
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar ahora'**
+  String get m05EnviarAhora;
+
+  /// M05-06 estado de un reporte completo que espera red o turno
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente de envío'**
+  String get m0506PendienteEnvio;
+
+  /// M05-06 estado de un reporte que espera Wi-Fi por la preferencia del cliente
+  ///
+  /// In es, this message translates to:
+  /// **'Esperando Wi-Fi'**
+  String get m0506EsperandoWifi;
+
+  /// M05-06 estado de un reporte que la cola está enviando
+  ///
+  /// In es, this message translates to:
+  /// **'Enviando'**
+  String get m0506Enviando;
+
+  /// M05-06 estado de un reporte con la foto que se sube
+  ///
+  /// In es, this message translates to:
+  /// **'Enviando · foto {foto} de {fotos}'**
+  String m0506EnviandoFoto(int foto, int fotos);
+
+  /// M05-06 estado de un reporte que la aseguradora rechazó
+  ///
+  /// In es, this message translates to:
+  /// **'Con error'**
+  String get m0506ConError;
+
+  /// M05-06 estado de un reporte que falló muchas veces por razones técnicas
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo enviar'**
+  String get m0506NecesitaAtencion;
+
+  /// M05-06 cuándo quedó guardado un reporte pendiente
+  ///
+  /// In es, this message translates to:
+  /// **'Guardado el {fecha} · {fotos, plural, =1{1 foto} other{{fotos} fotos}}'**
+  String m0506GuardadoEl(String fecha, int fotos);
+
+  /// M05-07b título del detalle de un reporte guardado en el teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Reporte por enviar'**
+  String get m0507bTitulo;
+
+  /// M05-07b el reporte ya no existe en el teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Este reporte ya no está guardado en el teléfono. Si se envió, lo encuentras en Mis siniestros.'**
+  String get m0507bYaNoEsta;
+
+  /// M05-07b abre el caso ya recibido por la aseguradora
+  ///
+  /// In es, this message translates to:
+  /// **'Ver el caso'**
+  String get m0507bVerCaso;
+
+  /// M05-07b corregir un reporte rechazado
+  ///
+  /// In es, this message translates to:
+  /// **'Corregir y enviar'**
+  String get m0507bCorregir;
+
+  /// M05-07b editar un reporte pendiente
+  ///
+  /// In es, this message translates to:
+  /// **'Editar reporte'**
+  String get m0507bEditar;
+
+  /// M05-07b título de la línea de tiempo
+  ///
+  /// In es, this message translates to:
+  /// **'Estado del envío'**
+  String get m0507bEstadoEnvio;
+
+  /// M05-07b primer paso de la línea de tiempo
+  ///
+  /// In es, this message translates to:
+  /// **'Guardado en este teléfono'**
+  String get m0507bGuardadoTelefono;
+
+  /// M05-07b paso actual de un borrador
+  ///
+  /// In es, this message translates to:
+  /// **'Termínalo para poder enviarlo.'**
+  String get m0507bBorradorNota;
+
+  /// M05-07b paso actual sin conexión
+  ///
+  /// In es, this message translates to:
+  /// **'Esperando conexión'**
+  String get m0507bEsperandoConexion;
+
+  /// M05-07b nota del paso sin conexión
+  ///
+  /// In es, this message translates to:
+  /// **'Se envía solo cuando vuelva la señal.'**
+  String get m0507bEsperandoConexionNota;
+
+  /// M05-07b paso actual sin sesión abierta
+  ///
+  /// In es, this message translates to:
+  /// **'Esperando que inicies sesión'**
+  String get m0507bEsperandoSesion;
+
+  /// M05-07b nota del paso esperando Wi-Fi
+  ///
+  /// In es, this message translates to:
+  /// **'Se envía solo al conectarte a Wi-Fi.'**
+  String get m0507bEsperandoWifiNota;
+
+  /// M05-07b paso actual con conexión, esperando turno o reintento
+  ///
+  /// In es, this message translates to:
+  /// **'En cola de envío'**
+  String get m0507bEnCola;
+
+  /// M05-07b nota del paso en cola
+  ///
+  /// In es, this message translates to:
+  /// **'Sale en un momento.'**
+  String get m0507bEnColaNota;
+
+  /// M05-07b cuándo será el próximo intento
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo enviar. Reintento automático a las {hora}.'**
+  String m0507bReintento(String hora);
+
+  /// M05-07b paso actual de un reporte rechazado
+  ///
+  /// In es, this message translates to:
+  /// **'La aseguradora no lo aceptó'**
+  String get m0507bNoAceptado;
+
+  /// M05-07b nota del paso rechazado
+  ///
+  /// In es, this message translates to:
+  /// **'Corrige el dato y vuelve a enviarlo.'**
+  String get m0507bNoAceptadoNota;
+
+  /// M05-07b falla técnica repetida
+  ///
+  /// In es, this message translates to:
+  /// **'Falló varias veces. Puedes intentar enviarlo de nuevo.'**
+  String get m0507bErrorTecnico;
+
+  /// M05-07b aviso cuando el envío falló 8 veces
+  ///
+  /// In es, this message translates to:
+  /// **'Falló varias veces y dejamos de reintentarlo. Toca «Enviar ahora» para intentarlo de nuevo. Tu reporte sigue guardado.'**
+  String get m0507bAtencion;
+
+  /// M05-07b último paso de la línea de tiempo
+  ///
+  /// In es, this message translates to:
+  /// **'Recibido por la aseguradora'**
+  String get m0507bRecibido;
+
+  /// M05-07b nota del último paso
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí verás tu radicado.'**
+  String get m0507bRecibidoNota;
+
+  /// M05-07b el intento de radicar quedó sin respuesta
+  ///
+  /// In es, this message translates to:
+  /// **'Estamos confirmando si la aseguradora ya lo recibió. Por ahora no se puede editar.'**
+  String get m0507bIncierto;
+
+  /// M05-07b nota mientras se envía
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes seguir usando la app. No cierres sesión mientras se envía.'**
+  String get m0507bEnviandoNota;
+
+  /// M05-07b nota de un reporte rechazado
+  ///
+  /// In es, this message translates to:
+  /// **'Tus fotos y tu relato siguen guardados. No se perdió nada.'**
+  String get m0507bNadaSePerdio;
+
+  /// M05-07b nota si el permiso de notificaciones está negado
+  ///
+  /// In es, this message translates to:
+  /// **'Activa las notificaciones para avisarte cuando se envíe.'**
+  String get m0507bActivaAvisos;
+
+  /// M05-07b dato del reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Póliza'**
+  String get m0507bPoliza;
+
+  /// M05-07b dato del reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Qué pasó'**
+  String get m0507bQuePaso;
+
+  /// M05-07b dato del reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Cuándo'**
+  String get m0507bCuando;
+
+  /// M05-07b dato del reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Dónde'**
+  String get m0507bDonde;
+
+  /// M05-07b dato del reporte
+  ///
+  /// In es, this message translates to:
+  /// **'Fotos'**
+  String get m0507bFotos;
+
+  /// M05-07b cuántas fotos tiene el reporte y cuántas ya subieron
+  ///
+  /// In es, this message translates to:
+  /// **'{subidas, plural, =0{{fotos}} other{{fotos}, {subidas} ya subidas}}'**
+  String m0507bFotosSubidas(int fotos, int subidas);
+
+  /// M05-02: sin red no se puede escribir la dirección, solo usar el GPS.
+  ///
+  /// In es, this message translates to:
+  /// **'Para reportar sin conexión necesitamos la ubicación de tu teléfono.'**
+  String get m0502UbicacionSinRed;
+
+  /// Inicio: insignia de «Mis siniestros» con los reportes guardados que faltan por enviar.
+  ///
+  /// In es, this message translates to:
+  /// **'{n} por enviar'**
+  String homePorEnviar(int n);
+
+  /// G-04: cierre de sesión con reportes de siniestro completos que no se han enviado.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{Tienes 1 reporte sin enviar. Quedará guardado en este teléfono y se enviará cuando vuelvas a iniciar sesión con esta cuenta.} other{Tienes {n} reportes sin enviar. Quedarán guardados en este teléfono y se enviarán cuando vuelvas a iniciar sesión con esta cuenta.}}'**
+  String cerrarSesionReportesSinEnviar(int n);
+
+  /// G-04: cierre de sesión cuando solo hay borradores de reporte.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{Tienes 1 reporte sin terminar. Quedará guardado en este teléfono para cuando vuelvas a iniciar sesión con esta cuenta.} other{Tienes {n} reportes sin terminar. Quedarán guardados en este teléfono para cuando vuelvas a iniciar sesión con esta cuenta.}}'**
+  String cerrarSesionReportesSinTerminar(int n);
+
+  /// G-04: casilla para borrar del teléfono los reportes sin enviar al cerrar sesión.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar también los reportes guardados'**
+  String get cerrarSesionBorrarReportes;
+
+  /// G-04: con conexión, enviar los reportes pendientes antes de cerrar sesión.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar ahora'**
+  String get cerrarSesionEnviarAhora;
+
+  /// Mi perfil: título de la sección del envío de reportes de siniestro.
+  ///
+  /// In es, this message translates to:
+  /// **'Envío de reportes'**
+  String get perfilEnvioTitulo;
+
+  /// Mi perfil, Envío de reportes: fila con el estado de la conexión.
+  ///
+  /// In es, this message translates to:
+  /// **'Conexión'**
+  String get perfilEnvioConexion;
+
+  /// Mi perfil, Envío de reportes: explicación bajo «Conexión».
+  ///
+  /// In es, this message translates to:
+  /// **'Se revisa mientras reportas un siniestro'**
+  String get perfilEnvioConexionTexto;
+
+  /// Mi perfil, Envío de reportes: interruptor de solo Wi-Fi.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar las fotos solo con Wi-Fi'**
+  String get perfilEnvioSoloWifi;
+
+  /// Mi perfil: estado del interruptor de solo Wi-Fi apagado.
+  ///
+  /// In es, this message translates to:
+  /// **'Apagado: se envía con Wi-Fi o con datos móviles'**
+  String get perfilEnvioSoloWifiApagado;
+
+  /// Mi perfil: estado del interruptor de solo Wi-Fi encendido.
+  ///
+  /// In es, this message translates to:
+  /// **'Encendido: las fotos esperan a que haya Wi-Fi'**
+  String get perfilEnvioSoloWifiEncendido;
+
+  /// Mi perfil, Envío de reportes: acceso a los reportes guardados en el teléfono.
+  ///
+  /// In es, this message translates to:
+  /// **'Reportes por enviar'**
+  String get perfilEnvioPorEnviar;
+
+  /// Mi perfil: no hay reportes por enviar.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguno'**
+  String get perfilEnvioNinguno;
+
+  /// Mi perfil: cuántos reportes por enviar hay guardados en el teléfono.
+  ///
+  /// In es, this message translates to:
+  /// **'{n, plural, =1{1 guardado en este teléfono} other{{n} guardados en este teléfono}}'**
+  String perfilEnvioGuardados(int n);
+
+  /// M05-07: detalle de un caso abierto sin conexión; se muestra el resumen de la lista.
+  ///
+  /// In es, this message translates to:
+  /// **'Conéctate para ver el detalle completo.'**
+  String get m0507SinConexion;
 }
 
 class _AppLocalizationsDelegate

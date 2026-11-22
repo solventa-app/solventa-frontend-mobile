@@ -157,6 +157,7 @@ String datosDeReporteAJson(ReporteGuardado r) => jsonEncode({
   'ultimoError': r.ultimoError,
   'radicacionIncierta': r.radicacionIncierta,
   'datosPermitidos': r.datosPermitidos,
+  'esperaWifi': r.esperaWifi,
   'avisoWifiDado': r.avisoWifiDado,
   'resultado': switch (r.resultado) {
     final s? => siniestroAJson(s),
@@ -199,6 +200,7 @@ ReporteGuardado reporteDesdeDatos({
     ultimoError: j['ultimoError'] as String?,
     radicacionIncierta: j['radicacionIncierta'] == true,
     datosPermitidos: j['datosPermitidos'] == true,
+    esperaWifi: j['esperaWifi'] == true,
     avisoWifiDado: j['avisoWifiDado'] == true,
     resultado: siniestroDesdeJson(j['resultado']),
     enviadoEn: _fecha(j['enviadoEn']),

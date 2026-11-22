@@ -41,6 +41,7 @@ void main() {
         almacenReportesProvider.overrideWithValue(almacen),
         reporteSiniestroRemoteDataSourceProvider.overrideWithValue(bff),
         relojReporteProvider.overrideWithValue(() => _ahora),
+        sesionParaEnviarProvider.overrideWithValue(() => true),
       ],
     );
     addTearDown(c.dispose);
@@ -350,7 +351,7 @@ void main() {
   });
 
   group('al enviar', () {
-    test('con radicado, el borrador se borra del teléfono', () async {
+    test('con radicado, queda como enviado y sus fotos se borran', () async {
       crear();
       await completar();
       final id = estado().idReporte;
@@ -359,10 +360,13 @@ void main() {
       await notifier().guardado;
 
       expect(estado().envio, isA<Enviado>());
-      expect(await almacen.leer(id), isNull);
+      final guardado = await almacen.leer(id);
+      expect(guardado?.estado, EstadoLocal.enviado);
+      expect(guardado?.resultado?.radicado, isNotEmpty);
+      expect(await almacen.bytesDeFoto(guardado!.fotos.first.id), isNull);
     });
 
-    test('si falla, el borrador sigue guardado', () async {
+    test('si se cae la red, queda guardado para enviarse después', () async {
       crear();
       await completar();
       final id = estado().idReporte;
@@ -371,8 +375,25 @@ void main() {
       await notifier().enviar();
       await notifier().guardado;
 
+      expect(estado().envio, isA<EnvioGuardado>());
+      final guardado = await almacen.leer(id);
+      expect(guardado?.estado, EstadoLocal.pendiente);
+      expect(guardado?.fotos, hasLength(1));
+    });
+
+    test('si la aseguradora lo rechaza, queda con error y su motivo', () async {
+      crear();
+      await completar();
+      final id = estado().idReporte;
+      bff.rechazar = true;
+
+      await notifier().enviar();
+      await notifier().guardado;
+
       expect(estado().envio, isA<EnvioFallido>());
-      expect((await almacen.leer(id))!.fotos, hasLength(1));
+      final guardado = await almacen.leer(id);
+      expect(guardado?.estado, EstadoLocal.conError);
+      expect(guardado?.ultimoError, isNotEmpty);
     });
   });
 }

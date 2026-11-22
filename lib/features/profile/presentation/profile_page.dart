@@ -6,6 +6,8 @@ import '../../../core/design_system/solventa_ui.dart';
 import '../../../core/errors/resultado.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/network/network_providers.dart';
+import '../../claims/presentation/reporte_routes.dart';
+import '../../claims/presentation/widgets/seccion_envio_reportes.dart';
 import '../../onboarding/domain/entities/onboarding.dart';
 import '../../onboarding/presentation/onboarding_notifier.dart';
 import '../../onboarding/presentation/onboarding_routes.dart';
@@ -297,6 +299,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ],
               ),
             ),
+            // HU-M05 (sin conexión): cómo y cuándo se envían los reportes.
+            if (verificado) ...[
+              const SizedBox(height: SolSpacing.lg),
+              SeccionEnvioReportes(
+                onVerPorEnviar: () => context.push(ReporteRoutes.misSiniestros),
+              ),
+            ],
             const SizedBox(height: SolSpacing.lg),
             // Tarjeta de preferencias (idioma y moneda, como en KAN-209 Web)
             SolCard.outlined(

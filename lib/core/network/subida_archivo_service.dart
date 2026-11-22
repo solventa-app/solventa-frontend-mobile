@@ -7,12 +7,14 @@ import 'network_exceptions.dart';
 /// PUT directo a la URL firmada del almacenamiento: las imágenes nunca pasan
 /// por el BFF. Usa un `Dio` propio, sin `baseUrl` ni el JWT de la sesión.
 abstract interface class SubidaArchivoService {
-  /// Lanza [ErrorCliente] si la subida no terminó en 2xx.
+  /// Lanza [ErrorCliente] si la subida no terminó en 2xx. [alAvanzar] recibe
+  /// los bytes enviados hasta el momento, para mostrar el progreso.
   Future<void> subir({
     required String url,
     required String metodo,
     required Map<String, String> encabezados,
     required Uint8List bytes,
+    void Function(int enviados)? alAvanzar,
   });
 }
 
@@ -36,12 +38,16 @@ final class DioSubidaArchivoService implements SubidaArchivoService {
     required String metodo,
     required Map<String, String> encabezados,
     required Uint8List bytes,
+    void Function(int enviados)? alAvanzar,
   }) async {
     final Response<Object?> r;
     try {
       r = await _dio.request<Object?>(
         url,
         data: Stream.fromIterable([bytes]),
+        onSendProgress: alAvanzar == null
+            ? null
+            : (enviados, _) => alAvanzar(enviados),
         options: Options(
           method: metodo,
           headers: {...encabezados, Headers.contentLengthHeader: bytes.length},
@@ -62,7 +68,14 @@ final class DioSubidaArchivoService implements SubidaArchivoService {
 
 /// Para `API_ENV=mock` y pruebas: registra lo que se habría subido.
 final class FakeSubidaArchivoService implements SubidaArchivoService {
+  FakeSubidaArchivoService({this.latencia = Duration.zero});
+
+  /// Lo que tarda cada subida; con `API_ENV=mock` deja ver la barra avanzar.
+  final Duration latencia;
   final subidas = <String>[];
+
+  /// Para pruebas: mientras esté puesto, la subida falla con este error.
+  Object? error;
 
   @override
   Future<void> subir({
@@ -70,5 +83,15 @@ final class FakeSubidaArchivoService implements SubidaArchivoService {
     required String metodo,
     required Map<String, String> encabezados,
     required Uint8List bytes,
-  }) async => subidas.add(url);
+    void Function(int enviados)? alAvanzar,
+  }) async {
+    final falla = error;
+    if (falla != null) throw falla;
+    if (latencia > Duration.zero) {
+      alAvanzar?.call(bytes.length ~/ 2);
+      await Future<void>.delayed(latencia);
+    }
+    alAvanzar?.call(bytes.length);
+    subidas.add(url);
+  }
 }

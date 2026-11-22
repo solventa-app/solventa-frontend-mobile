@@ -127,7 +127,9 @@ class _VisorCamaraReporteState extends State<VisorCamaraReporte>
     final c = _ctrl;
     if (c == null || !c.value.isInitialized) {
       if (widget.esPrueba || (widget.permitirRespaldo && _sinCamara)) {
-        widget.onCapturada(fotoDePrueba);
+        // Una copia por captura: cada foto es un objeto distinto, como las de
+        // la cámara (el guardado en el teléfono las distingue así).
+        widget.onCapturada(Uint8List.fromList(fotoDePrueba));
       }
       return;
     }

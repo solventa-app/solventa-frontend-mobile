@@ -8,8 +8,10 @@ import '../../../core/errors/falla.dart';
 import '../../../core/errors/resultado.dart';
 import '../../../core/ids/uuid.dart';
 import '../../../core/log/sol_log.dart';
+import '../../../core/red/estado_red_notifier.dart';
 import '../../../core/ubicacion/coordenada.dart';
 import '../../../core/ubicacion/ubicacion_service.dart';
+import '../data/cola_reportes.dart';
 import '../domain/entities/reporte_guardado.dart';
 import '../domain/entities/reporte_siniestro.dart';
 import '../domain/repositories/almacen_reportes.dart';
@@ -36,6 +38,14 @@ final class Enviado extends EnvioReporte {
 final class EnvioFallido extends EnvioReporte {
   const EnvioFallido(this.falla);
   final Falla falla;
+}
+
+/// Quedó completo en el teléfono, en la cola: sin radicado todavía. La app lo
+/// envía sola cuando se pueda ([espera] dice qué falta).
+final class EnvioGuardado extends EnvioReporte {
+  const EnvioGuardado({required this.guardadoEn, required this.espera});
+  final DateTime guardadoEn;
+  final EsperaCola espera;
 }
 
 /// Por qué el teléfono no pudo guardar el reporte (M05-02 y M05-03 lo dicen).
@@ -170,6 +180,10 @@ final class ReporteNotifier extends Notifier<ReporteState> {
   Timer? _relatoPendiente;
 
   static const pausaRelato = Duration(milliseconds: 600);
+
+  /// Cuánto se espera a que el GPS fije, con y sin internet.
+  static const esperaGps = Duration(seconds: 10);
+  static const esperaGpsSinRed = Duration(seconds: 30);
 
   /// Termina cuando todo lo pendiente quedó escrito en el teléfono.
   Future<void> get guardado {
@@ -377,8 +391,13 @@ final class ReporteNotifier extends Notifier<ReporteState> {
 
   /// M05-02 al entrar: pide el permiso y guarda dónde está el cliente. Las
   /// fotos que tome después llevan esa ubicación.
+  ///
+  /// Sin internet el GPS tarda más en fijar: se le dan 30 s en vez de 10.
   Future<void> prepararUbicacion() async {
-    final r = await ref.read(ubicacionReporteProvider).ubicacionActual();
+    final conectado = ref.read(estadoRedProvider).conectado;
+    final r = await ref
+        .read(ubicacionReporteProvider)
+        .ubicacionActual(espera: conectado ? esperaGps : esperaGpsSinRed);
     if (!ref.mounted) return;
     state = switch (r) {
       UbicacionObtenida(:final coordenada) => state.copyWith(
@@ -471,11 +490,120 @@ final class ReporteNotifier extends Notifier<ReporteState> {
 
   /// M05-04. Reintentar usa el mismo `idReporte`: no duplica el caso ni vuelve
   /// a subir las fotos que ya subieron.
-  Future<void> enviar() async {
+  ///
+  /// Con el reporte guardado en el teléfono, el envío es de la cola: queda
+  /// «pendiente» y la cola lo sube y lo radica. Si no se puede ahora (sin red,
+  /// sin sesión o esperando Wi-Fi) termina en [EnvioGuardado] y sale solo
+  /// después. [conDatos] lo deja salir por datos móviles aunque la preferencia
+  /// pida Wi-Fi; [esperarWifi] lo retiene hasta tener Wi-Fi.
+  Future<void> enviar({bool conDatos = false, bool esperarWifi = false}) async {
     final s = state;
     if (!s.listoParaEnviar || s.envio is Enviando) return;
     _escribirRelatoYa();
     state = s.copyWith(envio: const Enviando());
+    await _escrituras;
+    if (!ref.mounted) return;
+    if (!_guardado || state.avisoGuardado != null) {
+      // Sin cuenta, o el teléfono no pudo guardar: se envía desde la memoria.
+      return _enviarDirecto(s);
+    }
+    final ahora = _ahora();
+    final enCola = await _marcarPendiente(
+      s.idReporte,
+      ahora,
+      conDatos: conDatos,
+      esperarWifi: esperarWifi,
+    );
+    if (!ref.mounted) return;
+    if (enCola == null) return _enviarDirecto(s);
+    unawaited(_pedirPermisoDeAvisos());
+    final fin = await ref
+        .read(colaReportesProvider)
+        .enviarYEsperar(s.idReporte, conDatos: conDatos);
+    if (!ref.mounted || state.idReporte != s.idReporte) return;
+    _alTerminarEnvio(fin ?? enCola);
+  }
+
+  Future<ReporteGuardado?> _marcarPendiente(
+    String id,
+    DateTime ahora, {
+    required bool conDatos,
+    required bool esperarWifi,
+  }) async {
+    try {
+      return await _almacen.actualizar(
+        id,
+        (a) => a.copyWith(
+          estado: EstadoLocal.pendiente,
+          actualizadoEn: ahora,
+          guardadoEn: () => a.guardadoEn ?? ahora,
+          intentos: 0,
+          proximoIntentoEn: () => null,
+          ultimoError: () => null,
+          datosPermitidos: conDatos || (a.datosPermitidos && !esperarWifi),
+          esperaWifi: esperarWifi,
+          avisoWifiDado: false,
+        ),
+      );
+    } on Object catch (e) {
+      SolLog.severe(
+        'No se pudo dejar el reporte en la cola',
+        codigo: e.runtimeType.toString(),
+      );
+      return null;
+    }
+  }
+
+  void _alTerminarEnvio(ReporteGuardado r) {
+    switch (r.estado) {
+      // Enviado: las fotos ya no hacen falta en memoria (la cola ya las
+      // borró del teléfono).
+      case EstadoLocal.enviado when r.resultado != null:
+        _guardado = false;
+        _idsDeFotos.clear();
+        state = state.copyWith(envio: Enviado(r.resultado!), fotos: const []);
+      case EstadoLocal.conError:
+        state = state.copyWith(
+          envio: EnvioFallido(FallaNegocio(r.ultimoError ?? '')),
+        );
+      case EstadoLocal.necesitaAtencion:
+        state = state.copyWith(envio: const EnvioFallido(Inesperada()));
+      case EstadoLocal.borrador ||
+          EstadoLocal.pendiente ||
+          EstadoLocal.enviando ||
+          EstadoLocal.enviado:
+        state = state.copyWith(
+          envio: EnvioGuardado(
+            guardadoEn: r.guardadoEn ?? r.actualizadoEn,
+            espera: _queEspera(r),
+          ),
+        );
+    }
+  }
+
+  /// Por qué un reporte en cola no está saliendo ahora mismo.
+  EsperaCola _queEspera(ReporteGuardado r) {
+    final red = ref.read(estadoRedProvider);
+    if (!red.conectado) return EsperaCola.sinRed;
+    if (!ref.read(sesionParaEnviarProvider)()) return EsperaCola.sinSesion;
+    final soloWifi = ref.read(preferenciasEnvioProvider).soloWifi;
+    if (red.porDatosMoviles && r.esperaWifiCon(soloWifi: soloWifi)) {
+      return EsperaCola.wifi;
+    }
+    return EsperaCola.ninguna;
+  }
+
+  /// La primera vez que un reporte queda guardado o empieza a enviarse se
+  /// pide el permiso de notificaciones (Android 13+). Si lo niega no se
+  /// insiste: el estado se ve dentro de la app.
+  Future<void> _pedirPermisoDeAvisos() async {
+    if (ref.read(preferenciasEnvioProvider).permisoPedido) return;
+    await ref.read(preferenciasEnvioProvider.notifier).marcarPermisoPedido();
+    if (!ref.mounted) return;
+    await ref.read(notificacionesReporteProvider).pedirPermiso();
+  }
+
+  Future<void> _enviarDirecto(ReporteState s) async {
     final r = await ref
         .read(reporteSiniestroRepositoryProvider)
         .reportar(

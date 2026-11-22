@@ -1335,5 +1335,359 @@
   "m0502FotosCifradas": "Photos are stored encrypted on this phone until they are sent. They don't go to your gallery.",
   "m0502FotoMuyGrande": "That photo is larger than 10 MB. Take it again.",
   "m05SinEspacio": "Your phone has no space to save the report. Free up space so you don't lose it.",
-  "m05NoGuardado": "We couldn't save the report on this phone. If you close the app, it will be lost."
+  "m05NoGuardado": "We couldn't save the report on this phone. If you close the app, it will be lost.",
+  "avisoReporteCanal": "Claim reports",
+  "avisoReporteCanalDescripcion": "Updates on your claim reports: sent, needs fixing and reminders.",
+  "avisoReporteProgresoCanal": "Report upload",
+  "avisoReporteProgresoCanalDescripcion": "Upload progress of your reports. Silent.",
+  "avisoReporteEnviando": "Sending your report · {porcentaje}%",
+  "@avisoReporteEnviando": {
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReporteEnviandoVarios": "Sending {posicion} of {total} reports · {porcentaje}%",
+  "@avisoReporteEnviandoVarios": {
+    "placeholders": {
+      "posicion": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReporteFoto": "Photo {foto} of {fotos}",
+  "@avisoReporteFoto": {
+    "placeholders": {
+      "foto": {
+        "type": "int"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReporteRadicando": "Filing your claim",
+  "avisoReportePausa": "Upload paused · {porcentaje}%",
+  "@avisoReportePausa": {
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReportePausaCuerpo": "No connection. It resumes on its own when you are back online.",
+  "avisoReporteEnviado": "Your report was sent",
+  "avisoReporteEnviadoCuerpo": "Claim number {radicado}. The insurer will reply by {fecha}.",
+  "@avisoReporteEnviadoCuerpo": {
+    "placeholders": {
+      "radicado": {
+        "type": "String"
+      },
+      "fecha": {
+        "type": "String"
+      }
+    }
+  },
+  "avisoReportesEnviados": "Your {n} reports were sent",
+  "@avisoReportesEnviados": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReportesMixto": "{enviados} sent and {porCorregir} to fix",
+  "@avisoReportesMixto": {
+    "placeholders": {
+      "enviados": {
+        "type": "int"
+      },
+      "porCorregir": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReportesVer": "Open Solventa to see them.",
+  "avisoReporteRechazado": "We couldn't send your report",
+  "avisoReporteRechazadoCuerpo": "Open it to see why and fix it.",
+  "avisoReporteAtencionCuerpo": "Open Solventa to try again.",
+  "avisoReporteEsperaWifi": "Your report is waiting for Wi-Fi",
+  "avisoReporteEsperaWifiCuerpo": "It will be sent once you are on Wi-Fi. Open it if you'd rather use mobile data.",
+  "avisoReporteSesion": "Sign in to send your report",
+  "avisoReporteSesionCuerpo": "Your report is still saved on this phone.",
+  "avisoReporteRecordatorio": "{n, plural, =1{You have a report to send} other{You have {n} reports to send}}",
+  "@avisoReporteRecordatorio": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "avisoReporteRecordatorioCuerpo": "Open Solventa when you are back online.",
+  "redSinConexionReporte": "You can report a claim. It will be sent when you are back online.",
+  "redReportesPorEnviar": "{n, plural, =1{1 report to send} other{{n} reports to send}}",
+  "@redReportesPorEnviar": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "redVer": "View",
+  "redEnviandoTitulo": "Upload in progress",
+  "redEnviandoReportes": "{n, plural, =1{Sending 1 report…} other{Sending {n} reports…}} {porcentaje}%",
+  "@redEnviandoReportes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "redReporteEnviado": "Report sent",
+  "redReportesEnviados": "{n} reports sent",
+  "@redReportesEnviados": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "redRadicado": "Claim number {radicado}",
+  "@redRadicado": {
+    "placeholders": {
+      "radicado": {
+        "type": "String"
+      }
+    }
+  },
+  "m05DatosTitulo": "You are on mobile data",
+  "m05DatosMensaje": "{fotos, plural, =1{Sending 1 photo} other{Sending {fotos} photos}} uses about {tamano} of your plan.",
+  "@m05DatosMensaje": {
+    "placeholders": {
+      "fotos": {
+        "type": "int"
+      },
+      "tamano": {
+        "type": "String"
+      }
+    }
+  },
+  "m05EnviarConDatos": "Send now with mobile data",
+  "m05EsperarWifi": "Wait for Wi-Fi",
+  "m05DatosRecordar": "Remember my choice. You can change it in My profile.",
+  "m0503GuardarDespues": "Save and send later",
+  "m0503SinConexionNota": "No connection. We will save your report and send it when you are back online.",
+  "m0503Avisaremos": "We will let you know when your report is sent.",
+  "m0504SegundoPlano": "Continue in the background",
+  "m0504Porcentaje": "{porcentaje}%",
+  "@m0504Porcentaje": {
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      }
+    }
+  },
+  "m0504AvanceSemantica": "Sending, {porcentaje} percent. {paso}",
+  "@m0504AvanceSemantica": {
+    "placeholders": {
+      "porcentaje": {
+        "type": "int"
+      },
+      "paso": {
+        "type": "String"
+      }
+    }
+  },
+  "m0504Avance": "{paso}. You can leave this screen: the upload continues and we will let you know when it is done.",
+  "@m0504Avance": {
+    "placeholders": {
+      "paso": {
+        "type": "String"
+      }
+    }
+  },
+  "m0504Foto": "Photo {numero}",
+  "@m0504Foto": {
+    "placeholders": {
+      "numero": {
+        "type": "int"
+      }
+    }
+  },
+  "m0504Radicar": "File the claim",
+  "m0504PasoListo": "done",
+  "m0504PasoEnCurso": "sending",
+  "m0504PasoEnEspera": "waiting",
+  "m0505Guardado": "Report saved",
+  "m0505GuardadoSinRed": "We will send it to the insurer as soon as you are back online. It has no claim number yet: we will let you know when they receive it. Saved at {hora}.",
+  "@m0505GuardadoSinRed": {
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505GuardadoWifi": "We will send it once you are on Wi-Fi. It has no claim number yet: we will let you know when they receive it. Saved at {hora}.",
+  "@m0505GuardadoWifi": {
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505GuardadoSesion": "We will send it when you sign in again. It has no claim number yet. Saved at {hora}.",
+  "@m0505GuardadoSesion": {
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505GuardadoReintento": "We couldn't send it right now. We will try again shortly, you don't need to do anything. It has no claim number yet. Saved at {hora}.",
+  "@m0505GuardadoReintento": {
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0505GuardadoDetalle": "Saved encrypted on this phone with {fotos, plural, =1{1 photo} other{{fotos} photos}} and your location.",
+  "@m0505GuardadoDetalle": {
+    "placeholders": {
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0505GuardadoAviso": "If you uninstall the app or clear its data, it is lost.",
+  "m05EnviarAhora": "Send now",
+  "m0506PendienteEnvio": "Waiting to be sent",
+  "m0506EsperandoWifi": "Waiting for Wi-Fi",
+  "m0506Enviando": "Sending",
+  "m0506EnviandoFoto": "Sending · photo {foto} of {fotos}",
+  "@m0506EnviandoFoto": {
+    "placeholders": {
+      "foto": {
+        "type": "int"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0506ConError": "Needs fixing",
+  "m0506NecesitaAtencion": "Couldn't be sent",
+  "m0506GuardadoEl": "Saved on {fecha} · {fotos, plural, =1{1 photo} other{{fotos} photos}}",
+  "@m0506GuardadoEl": {
+    "placeholders": {
+      "fecha": {
+        "type": "String"
+      },
+      "fotos": {
+        "type": "int"
+      }
+    }
+  },
+  "m0507bTitulo": "Report to send",
+  "m0507bYaNoEsta": "This report is no longer saved on the phone. If it was sent, you will find it in My claims.",
+  "m0507bVerCaso": "View the claim",
+  "m0507bCorregir": "Fix and send",
+  "m0507bEditar": "Edit report",
+  "m0507bEstadoEnvio": "Sending status",
+  "m0507bGuardadoTelefono": "Saved on this phone",
+  "m0507bBorradorNota": "Finish it so it can be sent.",
+  "m0507bEsperandoConexion": "Waiting for a connection",
+  "m0507bEsperandoConexionNota": "It is sent automatically when you are back online.",
+  "m0507bEsperandoSesion": "Waiting for you to sign in",
+  "m0507bEsperandoWifiNota": "It is sent automatically once you are on Wi-Fi.",
+  "m0507bEnCola": "In the sending queue",
+  "m0507bEnColaNota": "It will go out shortly.",
+  "m0507bReintento": "It couldn't be sent. Automatic retry at {hora}.",
+  "@m0507bReintento": {
+    "placeholders": {
+      "hora": {
+        "type": "String"
+      }
+    }
+  },
+  "m0507bNoAceptado": "The insurer didn't accept it",
+  "m0507bNoAceptadoNota": "Fix the detail and send it again.",
+  "m0507bErrorTecnico": "It failed several times. You can try sending it again.",
+  "m0507bAtencion": "It failed several times and we stopped retrying. Tap “Send now” to try again. Your report is still saved.",
+  "m0507bRecibido": "Received by the insurer",
+  "m0507bRecibidoNota": "Your claim number will appear here.",
+  "m0507bIncierto": "We are confirming whether the insurer already received it. It can't be edited for now.",
+  "m0507bEnviandoNota": "You can keep using the app. Don't sign out while it is being sent.",
+  "m0507bNadaSePerdio": "Your photos and your statement are still saved. Nothing was lost.",
+  "m0507bActivaAvisos": "Turn on notifications so we can let you know when it is sent.",
+  "m0507bPoliza": "Policy",
+  "m0507bQuePaso": "What happened",
+  "m0507bCuando": "When",
+  "m0507bDonde": "Where",
+  "m0507bFotos": "Photos",
+  "m0507bFotosSubidas": "{subidas, plural, =0{{fotos}} other{{fotos}, {subidas} already uploaded}}",
+  "@m0507bFotosSubidas": {
+    "placeholders": {
+      "fotos": {
+        "type": "int"
+      },
+      "subidas": {
+        "type": "int"
+      }
+    }
+  },
+  "m0502UbicacionSinRed": "To report offline we need your phone's location.",
+  "homePorEnviar": "{n} to send",
+  "@homePorEnviar": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "cerrarSesionReportesSinEnviar": "{n, plural, =1{You have 1 unsent report. It stays saved on this phone and will be sent when you sign in again with this account.} other{You have {n} unsent reports. They stay saved on this phone and will be sent when you sign in again with this account.}}",
+  "@cerrarSesionReportesSinEnviar": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "cerrarSesionReportesSinTerminar": "{n, plural, =1{You have 1 unfinished report. It stays saved on this phone for when you sign in again with this account.} other{You have {n} unfinished reports. They stay saved on this phone for when you sign in again with this account.}}",
+  "@cerrarSesionReportesSinTerminar": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "cerrarSesionBorrarReportes": "Also delete the saved reports",
+  "cerrarSesionEnviarAhora": "Send now",
+  "perfilEnvioTitulo": "Sending reports",
+  "perfilEnvioConexion": "Connection",
+  "perfilEnvioConexionTexto": "Checked while you report a claim",
+  "perfilEnvioSoloWifi": "Send photos only over Wi-Fi",
+  "perfilEnvioSoloWifiApagado": "Off: sends over Wi-Fi or mobile data",
+  "perfilEnvioSoloWifiEncendido": "On: photos wait until there is Wi-Fi",
+  "perfilEnvioPorEnviar": "Reports to send",
+  "perfilEnvioNinguno": "None",
+  "perfilEnvioGuardados": "{n, plural, =1{1 saved on this phone} other{{n} saved on this phone}}",
+  "@perfilEnvioGuardados": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "m0507SinConexion": "Connect to see the full detail."
 }
