@@ -1172,6 +1172,30 @@ abstract class AppLocalizations {
   /// **'No, seguir aquí'**
   String get cerrarSesionCancelar;
 
+  /// No description provided for @salirInicioTitulo.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Salir al inicio?'**
+  String get salirInicioTitulo;
+
+  /// No description provided for @salirInicioMensaje.
+  ///
+  /// In es, this message translates to:
+  /// **'Se perderá lo que llevas en este formulario.'**
+  String get salirInicioMensaje;
+
+  /// No description provided for @salirInicioConfirmar.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, salir'**
+  String get salirInicioConfirmar;
+
+  /// No description provided for @salirInicioCancelar.
+  ///
+  /// In es, this message translates to:
+  /// **'No, seguir aquí'**
+  String get salirInicioCancelar;
+
   /// No description provided for @camaraEnVivoListo.
   ///
   /// In es, this message translates to:
@@ -2509,6 +2533,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ver detalle'**
   String get m0402VerDetalle;
+
+  /// M04-02: botón a Mi cobertura (M04-04), con todos los pagos
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mi cobertura'**
+  String get m0402VerCobertura;
 
   /// M04-02 y M04-03: cargando
   ///

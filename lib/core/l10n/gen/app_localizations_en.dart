@@ -633,6 +633,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cerrarSesionCancelar => 'No, stay here';
 
   @override
+  String get salirInicioTitulo => 'Leave to home?';
+
+  @override
+  String get salirInicioMensaje =>
+      'You will lose what you have entered in this form.';
+
+  @override
+  String get salirInicioConfirmar => 'Yes, leave';
+
+  @override
+  String get salirInicioCancelar => 'No, stay here';
+
+  @override
   String get camaraEnVivoListo => 'Live camera active in viewfinder';
 
   @override
@@ -1426,6 +1439,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get m0402VerDetalle => 'See details';
+
+  @override
+  String get m0402VerCobertura => 'See my coverage';
 
   @override
   String get m0402Cargando => 'Loading your payout…';

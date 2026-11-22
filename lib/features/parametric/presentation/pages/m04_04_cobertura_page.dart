@@ -13,11 +13,19 @@ import '../widgets/cobertura_widgets.dart';
 /// M04-04 · Mi cobertura (KAN-280). Sin frame en Figma: sigue los mockups de
 /// `docs/hu-m04/diseno/` (sin saldo, saldo a favor y saldo en contra).
 ///
-/// Sin navegación todavía (M04-D2): la flecha y las filas llaman callbacks.
+/// La flecha, la casita y las filas llaman callbacks; el router las conecta.
 class M0404CoberturaPage extends ConsumerWidget {
-  const M0404CoberturaPage({super.key, this.onBack, this.onTapMovimiento});
+  const M0404CoberturaPage({
+    super.key,
+    this.onBack,
+    this.onHome,
+    this.onTapMovimiento,
+  });
 
   final VoidCallback? onBack;
+
+  /// Casita al Home en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   /// Recibe el id de la indemnización (irá a M04-03).
   final ValueChanged<String>? onTapMovimiento;
@@ -42,6 +50,7 @@ class M0404CoberturaPage extends ConsumerWidget {
     return SolFlowScaffold(
       title: l10n.m0404Titulo,
       onBack: onBack,
+      onHomeTap: onHome,
       body: RefreshIndicator(
         onRefresh: () => ref.refresh(resumenCoberturaProvider.future),
         child: ListView(

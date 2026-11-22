@@ -635,6 +635,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cerrarSesionCancelar => 'No, seguir aquí';
 
   @override
+  String get salirInicioTitulo => '¿Salir al inicio?';
+
+  @override
+  String get salirInicioMensaje =>
+      'Se perderá lo que llevas en este formulario.';
+
+  @override
+  String get salirInicioConfirmar => 'Sí, salir';
+
+  @override
+  String get salirInicioCancelar => 'No, seguir aquí';
+
+  @override
   String get camaraEnVivoListo => 'Cámara activa en el visor';
 
   @override
@@ -1429,6 +1442,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0402VerDetalle => 'Ver detalle';
+
+  @override
+  String get m0402VerCobertura => 'Ver mi cobertura';
 
   @override
   String get m0402Cargando => 'Consultando tu indemnización…';

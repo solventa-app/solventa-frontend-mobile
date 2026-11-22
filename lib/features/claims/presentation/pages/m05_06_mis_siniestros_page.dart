@@ -6,6 +6,7 @@ import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/moneda/monto_en_moneda.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
@@ -22,7 +23,14 @@ enum FiltroSiniestros { todos, enCurso, resueltos }
 /// pasó, el estado y lo que importa de ese estado (tiempo que queda, monto
 /// aprobado o motivo). Tocar una tarjeta abre el detalle (M05-07).
 class M0506MisSiniestrosPage extends ConsumerStatefulWidget {
-  const M0506MisSiniestrosPage({super.key, this.ahora = DateTime.now});
+  const M0506MisSiniestrosPage({
+    super.key,
+    this.onHome,
+    this.ahora = DateTime.now,
+  });
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   /// El reloj; las pruebas lo fijan.
   final DateTime Function() ahora;
@@ -85,7 +93,8 @@ class _M0506MisSiniestrosPageState
 
     return SolFlowScaffold(
       title: l10n.m0506Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: widget.onHome,
       body: RefreshIndicator(
         onRefresh: () => ref.refresh(misSiniestrosProvider.future),
         child: ListView(

@@ -41,12 +41,12 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
     this.localeLabel,
     this.onLocaleTap,
     this.onWordmarkLongPress,
+    this.onProfileTap,
   }) : type = SolTopBarType.home,
        title = 'Solventa',
        onBack = null,
        showBack = false,
        showProfile = false,
-       onProfileTap = null,
        onHomeTap = null;
 
   final SolTopBarType type;
@@ -118,7 +118,9 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
     // área táctil del avatar absorbe 8 dp del margen derecho.
     final padding = EdgeInsetsDirectional.only(
       start: isHome ? SolSpacing.lg : (hasBack ? SolSpacing.xs : SolSpacing.lg),
-      end: !isHome && (showProfile || onHomeTap != null)
+      end:
+          (isHome && onProfileTap != null) ||
+              (!isHome && (showProfile || onHomeTap != null))
           ? SolSpacing.sm
           : SolSpacing.lg,
     );
@@ -153,7 +155,10 @@ class SolTopBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 // Sin onProfileTap el avatar no es interactivo; se reserva
                 // el mismo hueco de 48 dp para no mover la píldora.
-                if (!isHome && onHomeTap != null)
+                // Inicio: el avatar abre Mi perfil (solo si hay a dónde ir).
+                if (isHome && onProfileTap != null)
+                  SolAvatar(onTap: onProfileTap)
+                else if (!isHome && onHomeTap != null)
                   IconButton(
                     onPressed: onHomeTap,
                     tooltip: context.solTextos.navInicio,

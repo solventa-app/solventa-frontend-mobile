@@ -464,6 +464,10 @@
   "cerrarSesionMensaje": "Tendrás que ingresar de nuevo para usar Solventa.",
   "cerrarSesionConfirmar": "Sí, cerrar sesión",
   "cerrarSesionCancelar": "No, seguir aquí",
+  "salirInicioTitulo": "¿Salir al inicio?",
+  "salirInicioMensaje": "Se perderá lo que llevas en este formulario.",
+  "salirInicioConfirmar": "Sí, salir",
+  "salirInicioCancelar": "No, seguir aquí",
   "camaraEnVivoListo": "Cámara activa en el visor",
   "camaraReintentarEnvio": "Reintentar envío",
   "m0108DemoActivar": "Simular huella/rostro activado en el emulador",
@@ -1584,6 +1588,10 @@
   "m0402VerDetalle": "Ver detalle",
   "@m0402VerDetalle": {
     "description": "M04-02: botón al detalle"
+  },
+  "m0402VerCobertura": "Ver mi cobertura",
+  "@m0402VerCobertura": {
+    "description": "M04-02: botón a Mi cobertura (M04-04), con todos los pagos"
   },
   "m0402Cargando": "Consultando tu indemnización…",
   "@m0402Cargando": {

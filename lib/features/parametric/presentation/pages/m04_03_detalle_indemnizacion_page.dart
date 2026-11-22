@@ -17,10 +17,14 @@ import '../widgets/cobertura_widgets.dart';
 class M0403DetalleIndemnizacionPage extends ConsumerWidget {
   const M0403DetalleIndemnizacionPage({
     super.key,
+    this.onHome,
     required this.id,
     this.onBack,
     this.onCerrar,
   });
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   final String id;
   final VoidCallback? onBack;
@@ -43,6 +47,7 @@ class M0403DetalleIndemnizacionPage extends ConsumerWidget {
     return SolFlowScaffold(
       title: l10n.m0403Titulo,
       onBack: onBack,
+      onHomeTap: onHome,
       body: cuerpo,
       actions: [
         SolButton.primary(

@@ -8,6 +8,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../core/design_system/solventa_ui.dart';
 import '../core/l10n/l10n.dart';
+import '../core/navegacion/volver.dart';
 import '../core/network/network_providers.dart';
 import '../core/push/pending_destination.dart';
 import '../core/push/push_service.dart';
@@ -273,6 +274,7 @@ GoRouter crearRouter({
         // Atrás vuelve a «Mis asistencias», también si llegó por la
         // notificación sin pila previa (4.4).
         onBack: () => _volverAPestana(context, SolAppShell.misAsistenciasIndex),
+        onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
         onPedirOtra: () =>
             _volverAPestana(context, SolAppShell.assistanceIndex),
       ),
@@ -287,7 +289,9 @@ GoRouter crearRouter({
           // Llega también por push con la app recién abierta, sin pila
           // previa: `/` vuelve al inicio en vez de intentar un pop vacío.
           onBack: () => context.go('/'),
+          onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
           onVerDetalle: () => context.push(ParametricRoutes.detalleCon(id)),
+          onVerCobertura: () => context.push(ParametricRoutes.cobertura),
         );
       },
     ),
@@ -297,6 +301,8 @@ GoRouter crearRouter({
       builder: (context, state) => M0403DetalleIndemnizacionPage(
         id: state.pathParameters['id']!,
         // Puede ser el destino pendiente de un push (sin pila previa).
+        onBack: context.volverOInicio,
+        onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
         onCerrar: () => context.canPop() ? context.pop() : context.go('/'),
       ),
     ),
@@ -304,23 +310,31 @@ GoRouter crearRouter({
       path: ParametricRoutes.cobertura,
       name: 'm04-04',
       builder: (context, state) => M0404CoberturaPage(
+        onBack: context.volverOInicio,
+        onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
         onTapMovimiento: (id) => context.push(ParametricRoutes.detalleCon(id)),
       ),
     ),
     GoRoute(
       path: ReporteRoutes.poliza,
       name: 'm05-01',
-      builder: (_, _) => const M0501PolizaPage(),
+      builder: (context, _) => M0501PolizaPage(
+        onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
+      ),
     ),
     GoRoute(
       path: ReporteRoutes.fotos,
       name: 'm05-02',
-      builder: (_, _) => const M0502FotosPage(),
+      builder: (context, _) => M0502FotosPage(
+        onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
+      ),
     ),
     GoRoute(
       path: ReporteRoutes.relato,
       name: 'm05-03',
-      builder: (_, _) => const M0503RelatoPage(),
+      builder: (context, _) => M0503RelatoPage(
+        onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
+      ),
     ),
     GoRoute(
       path: ReporteRoutes.enviando,
@@ -335,18 +349,24 @@ GoRouter crearRouter({
     GoRoute(
       path: ReporteRoutes.misSiniestros,
       name: 'm05-06',
-      builder: (_, _) => const M0506MisSiniestrosPage(),
+      builder: (context, _) => M0506MisSiniestrosPage(
+        onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
+      ),
     ),
     GoRoute(
       path: ReporteRoutes.detalle,
       name: 'm05-07',
-      builder: (_, state) =>
-          M0507DetalleSiniestroPage(id: state.pathParameters['id']!),
+      builder: (context, state) => M0507DetalleSiniestroPage(
+        id: state.pathParameters['id']!,
+        onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
+      ),
     ),
     GoRoute(
       path: AsistenciaRoutes.solicitud,
       name: 'm06-02',
-      builder: (_, _) => const M0602SolicitudPage(),
+      builder: (context, _) => M0602SolicitudPage(
+        onHome: () => _volverAPestana(context, SolAppShell.homeIndex),
+      ),
     ),
     GoRoute(
       path: AsistenciaRoutes.enviando,
@@ -451,6 +471,9 @@ class _RootShell extends ConsumerWidget {
 
     final enCamino = ref.watch(enCaminoCantidadProvider);
     return SolAppShell(
+      onProfileTap: verificado
+          ? () => context.push(OnboardingRoutes.perfil)
+          : null,
       home: HomePage(
         userName: nombre,
         verificacion: estado.verificacion,
