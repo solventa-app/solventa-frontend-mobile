@@ -1435,6 +1435,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get m0402VerDetalle => 'Ver detalle';
 
   @override
+  String get m0402VerCobertura => 'Ver mi cobertura';
+
+  @override
   String get m0402Cargando => 'Consultando tu indemnización…';
 
   @override

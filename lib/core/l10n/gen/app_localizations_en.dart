@@ -1432,6 +1432,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get m0402VerDetalle => 'See details';
 
   @override
+  String get m0402VerCobertura => 'See my coverage';
+
+  @override
   String get m0402Cargando => 'Loading your payout…';
 
   @override

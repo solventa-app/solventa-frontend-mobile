@@ -288,6 +288,7 @@ GoRouter crearRouter({
           // previa: `/` vuelve al inicio en vez de intentar un pop vacío.
           onBack: () => context.go('/'),
           onVerDetalle: () => context.push(ParametricRoutes.detalleCon(id)),
+          onVerCobertura: () => context.push(ParametricRoutes.cobertura),
         );
       },
     ),

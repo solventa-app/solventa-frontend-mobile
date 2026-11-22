@@ -252,6 +252,30 @@ void main() {
       expect(vistos, 1);
     });
 
+    testWidgets('«Ver mi cobertura» llama onVerCobertura', (tester) async {
+      var vistos = 0;
+      await montar(
+        tester,
+        M0402CelebracionPage(
+          id: 'IND-2026-0912',
+          onVerCobertura: () => vistos++,
+        ),
+      );
+
+      await tester.tap(find.text('Ver mi cobertura'));
+      await tester.pump();
+
+      expect(vistos, 1);
+    });
+
+    testWidgets('sin onVerCobertura no hay botón a Mi cobertura', (
+      tester,
+    ) async {
+      await montar(tester, const M0402CelebracionPage(id: 'IND-2026-0912'));
+
+      expect(find.text('Ver mi cobertura'), findsNothing);
+    });
+
     testWidgets('la flecha llama onBack', (tester) async {
       var atras = 0;
       await montar(

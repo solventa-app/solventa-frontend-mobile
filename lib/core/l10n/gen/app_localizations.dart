@@ -2516,6 +2516,12 @@ abstract class AppLocalizations {
   /// **'Ver detalle'**
   String get m0402VerDetalle;
 
+  /// M04-02: botón a Mi cobertura (M04-04), con todos los pagos
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mi cobertura'**
+  String get m0402VerCobertura;
+
   /// M04-02 y M04-03: cargando
   ///
   /// In es, this message translates to:

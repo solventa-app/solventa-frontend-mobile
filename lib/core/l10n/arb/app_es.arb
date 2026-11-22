@@ -1589,6 +1589,10 @@
   "@m0402VerDetalle": {
     "description": "M04-02: botón al detalle"
   },
+  "m0402VerCobertura": "Ver mi cobertura",
+  "@m0402VerCobertura": {
+    "description": "M04-02: botón a Mi cobertura (M04-04), con todos los pagos"
+  },
   "m0402Cargando": "Consultando tu indemnización…",
   "@m0402Cargando": {
     "description": "M04-02 y M04-03: cargando"
