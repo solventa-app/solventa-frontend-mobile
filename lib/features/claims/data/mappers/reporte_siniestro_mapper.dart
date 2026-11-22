@@ -141,6 +141,10 @@ Input$ReporteSiniestroInput entradaReporte(
         tomadaEn: foto.tomadaEn.toUtc(),
         latitud: foto.ubicacion?.latitud,
         longitud: foto.ubicacion?.longitud,
+        // v0.66: la mesa distingue el GPS de la dirección escrita.
+        origenUbicacion: foto.deDireccion && foto.ubicacion != null
+            ? Enum$OrigenUbicacion.DIRECCION
+            : Enum$OrigenUbicacion.GPS,
       ),
   ],
 );

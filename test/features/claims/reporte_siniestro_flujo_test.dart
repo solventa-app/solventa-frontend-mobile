@@ -281,7 +281,7 @@ void main() {
       null;
 
   testWidgets(
-    'sin GPS se escribe la dirección (Places) y deja continuar, sin geoetiquetar las fotos',
+    'sin GPS se escribe la dirección (Places) y deja continuar, con las fotos en ese punto',
     (tester) async {
       gps.resultado = const UbicacionSinPermiso(permanente: true);
       await abrir(tester);
@@ -311,11 +311,11 @@ void main() {
       await tester.pump();
       await tester.tap(find.text('Tomar foto'));
       await tester.pumpAndSettle();
+      // v0.66: las fotos llevan el punto de la dirección escrita, marcado.
+      final fotos = contenedor.read(reporteProvider).fotos;
+      expect(fotos, hasLength(2));
       expect(
-        contenedor
-            .read(reporteProvider)
-            .fotos
-            .every((f) => f.ubicacion == null),
+        fotos.every((f) => f.ubicacion == estado.ubicacion && f.deDireccion),
         isTrue,
       );
       expect(continuarActivo(tester), isTrue);

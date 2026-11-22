@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/core/contrato/schema.graphql.dart';
 import 'package:solventa_mobile/core/ubicacion/coordenada.dart';
@@ -130,6 +132,50 @@ void main() {
       'HURTO_PARCIAL',
     );
   });
+
+  test(
+    'sin GPS las fotos van con el punto de la dirección escrita (v0.66)',
+    () {
+      final punto = const Coordenada(4.68, -74.07);
+      final foto = FotoSiniestro(
+        bytes: Uint8List.fromList([1, 2, 3]),
+        tipoContenido: 'image/jpeg',
+        tomadaEn: DateTime.utc(2026, 11, 4, 13, 5),
+      );
+      final reporte = ReporteSiniestro(
+        idReporte: 'rep-2',
+        poliza: PolizaReportable(
+          id: 'pol-demo-02',
+          numero: 'SOL-2026-000456',
+          vigenciaDesde: DateTime.utc(2026, 6),
+          vigenciaHasta: DateTime.utc(2027, 6),
+        ),
+        ocurridoEn: DateTime.utc(2026, 11, 4, 13),
+        descripcion: 'Choque leve en la calle 80 con 30.',
+        lugar: 'Calle 80 con 30',
+        ciudad: 'Bogotá',
+        ubicacion: punto,
+        fotos: [
+          foto.conDireccion(punto),
+          FotoSiniestro(
+            bytes: Uint8List.fromList([4]),
+            tipoContenido: 'image/jpeg',
+            tomadaEn: DateTime.utc(2026, 11, 4, 13, 6),
+            ubicacion: punto,
+          ),
+        ],
+      );
+
+      final fotos =
+          entradaReporte(reporte, const ['arc-1', 'arc-2']).toJson()['fotos']
+              as List<Object?>;
+      final primera = fotos[0]! as Map<String, Object?>;
+      final segunda = fotos[1]! as Map<String, Object?>;
+      expect(primera['latitud'], 4.68);
+      expect(primera['origenUbicacion'], 'DIRECCION');
+      expect(segunda['origenUbicacion'], 'GPS');
+    },
+  );
 
   test('reportar devuelve la regla rechazada', () async {
     bff.responder(ReporteSiniestroFixtures.rechazado);
