@@ -23,6 +23,7 @@ void main() {
       ),
       assistance: const SizedBox.shrink(),
       onLogout: noop,
+      onProfileTap: noop,
     );
   }, height: height);
 

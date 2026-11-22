@@ -4,6 +4,7 @@ import 'package:sentry_dio/sentry_dio.dart';
 
 import '../config/app_config.dart';
 import '../l10n/l10n.dart';
+import '../red/senales_red.dart';
 import '../sesion/gestor_sesion.dart';
 import '../sesion/llavero_sesion.dart';
 import '../sesion/sesion_remota.dart';
@@ -35,6 +36,8 @@ final dioProvider = Provider<Dio>((ref) {
     ),
   );
   dio.addSentry(captureFailedRequests: false);
+  // Cada petición real cuenta cómo está la red (HU-M05, sin conexión).
+  dio.interceptors.add(InterceptorSenalesRed(ref.watch(senalesRedProvider)));
   ref.onDispose(dio.close);
   return dio;
 });

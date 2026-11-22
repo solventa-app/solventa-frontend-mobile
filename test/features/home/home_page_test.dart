@@ -120,7 +120,10 @@ void main() {
     );
 
     expect(
-      find.text('Activa tu huella o rostro para entrar más rápido.'),
+      find.text(
+        'Activa tu huella o rostro para entrar más rápido y poder reportar '
+        'un siniestro sin conexión.',
+      ),
       findsOneWidget,
     );
     await tester.tap(find.text('Activar'));
@@ -139,7 +142,10 @@ void main() {
     );
 
     expect(
-      find.text('Turn on your fingerprint or face unlock to sign in faster.'),
+      find.text(
+        'Turn on fingerprint or face to get in faster and to report a claim '
+        'offline.',
+      ),
       findsOneWidget,
     );
     expect(find.text('Turn on'), findsOneWidget);

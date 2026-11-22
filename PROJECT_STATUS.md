@@ -55,6 +55,9 @@ Flutter 3.47.8 / Dart ^3.13 (fijado; `tool/verificar-versiones.sh` lo controla c
 - **Perfil `G-05` (`/perfil`, solo si está verificado) y cierre de sesión `G-04`** (`SolConfirmDialog`). Datos de solo
   lectura, documento enmascarado.
 - **Preferencias:** `SolPreferenciasSheet` (ES/EN y 7 monedas) persistidas en `SharedPreferences`.
+  Al cambiarlas, textos, fechas y montos se actualizan al instante: los montos en COP se convierten con
+  `convertirMontos` del BFF (`lib/core/moneda/`, KAN-209) y el sistema de diseño toma sus textos del ARB (`sol*`,
+  `context.solTextos`). La píldora solo abre la hoja; ya no alterna el idioma al tocarla.
 - **Sentry (`uniandes-xm`):** `SolLog`, `limpiar`, `SentryMask` y bloqueo de capturas en `M01-03`..`M01-05`, y subida de
   símbolos en `cd.yml`/`rollback.yml`.
 - **CI/CD y seguridad:** según `docs/ci-cd.md` (estados «hoy»). 24 archivos de prueba (unitarias, widget, contrato,
@@ -65,6 +68,21 @@ Flutter 3.47.8 / Dart ^3.13 (fijado; `tool/verificar-versiones.sh` lo controla c
 - **HU-M05 (KAN-35) reporte de siniestro** (#38) y **HU-M06 (KAN-36) asistencia en sitio** (#37, #52): ver `CLAUDE.md`
   §Estado. Reporte HTML de Emuladores con capturas (#56: `integration_test/soporte/capturas.dart`,
   `tool/reporte-emuladores.py`).
+
+### En curso: HU-M05 (KAN-35), reporte de siniestro sin conexión
+
+Ramas locales apiladas `feat/KAN-35-sin-conexion-1-indicador` a `…-5-pruebas` (la última contiene todo), sin PR
+todavía. Estado, piezas, pendientes y huecos conocidos en [`docs/hu-m05/README.md`](docs/hu-m05/README.md).
+
+- Hecho: estado y calidad de red (`lib/core/red/`), base local cifrada (`lib/core/almacen/`), guardado automático del
+  reporte, cola de envío con estados, «Por enviar» en «Mis siniestros», detalle de un reporte por enviar (M05-07b),
+  notificaciones y recordatorios, servicio en primer plano durante el envío, pregunta de datos móviles y su ajuste en
+  Mi perfil, cierre de sesión que conserva los reportes, y entrada con la huella sin red a un inicio donde solo
+  funciona el reporte. Textos ES/EN, pruebas unitarias y de widget, goldens e
+  `integration_test/reporte_sin_conexion_test.dart`.
+- Verificado con `flutter analyze` y `flutter test`. **Falta en dispositivo:** `tool/verificar.sh --apk`, regenerar los
+  goldens con `tool/goldens.sh` y la lista de [`docs/hu-m05/pruebas-sin-conexion.md`](docs/hu-m05/pruebas-sin-conexion.md)
+  (modo avión, huella sin red, servicio en primer plano, base cifrada nativa), con su evidencia.
 
 ### En curso: HU-M04 (KAN-38), siniestro paramétrico — contrato real y push (Fase 6, KAN-259)
 
@@ -114,7 +132,7 @@ real, staging y el aviso de privacidad (A6).
 ### Pendiente
 
 - HU-M04: confirmar los goldens regenerados en el devcontainer; `google-services.json` real (paso del usuario);
-  prueba de integración del flujo push→login→detalle; moneda seleccionada y los datos de M04-03 que pide KAN-146
+  prueba de integración del flujo push→login→detalle; los datos de M04-03 que pide KAN-146
   (fuente, umbral, desglose, referencia). Lista completa en `docs/hu-m04/README.md`.
 - Firebase App Distribution y Test Lab: listos, falta la cuenta. Google Play queda para el futuro.
 - Goldens horizontales de 640 × 360 (`docs/ci-cd.md`).

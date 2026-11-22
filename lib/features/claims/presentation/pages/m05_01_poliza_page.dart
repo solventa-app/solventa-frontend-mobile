@@ -3,16 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
+import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/navegacion/volver.dart';
+import '../../domain/entities/reporte_guardado.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
+import '../widgets/banner_reporte.dart';
 
 /// M05-01 · Póliza y fecha del siniestro (KAN-277). Sin frame en Figma: se
 /// arma con el sistema de diseño (decisión del 2026-11-04).
 class M0501PolizaPage extends ConsumerWidget {
-  const M0501PolizaPage({super.key});
+  const M0501PolizaPage({super.key, this.onHome});
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   Future<void> _elegirFecha(
     BuildContext context,
@@ -50,8 +57,14 @@ class M0501PolizaPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final estado = ref.watch(reporteProvider);
-    final polizas = ref.watch(polizasReportablesProvider);
+    final polizas = ref.watch(polizasConCopiaProvider);
     final notifier = ref.read(reporteProvider.notifier);
+    // Los otros reportes que siguen en el teléfono (este no cuenta).
+    final otros = ref
+        .watch(reportesPorEnviarProvider)
+        .where((r) => r.id != estado.idReporte)
+        .length;
+    final enElTope = otros >= LimitesLocales.maxSinEnviar;
     final fecha = estado.ocurridoEn;
     final poliza = estado.poliza;
     final fueraDeVigencia =
@@ -59,24 +72,42 @@ class M0501PolizaPage extends ConsumerWidget {
     final errorFecha = !fueraDeVigencia
         ? null
         : fecha.isBefore(poliza.vigenciaDesde)
-        ? l10n.m0501FechaAntes(SolFormat.dateTime(poliza.vigenciaDesde))
+        ? l10n.m0501FechaAntes(
+            SolFormat.dateTimeFor(
+              poliza.vigenciaDesde,
+              Localizations.localeOf(context),
+            ),
+          )
         : l10n.m0501FechaFuera;
 
     final lista = switch (polizas) {
-      AsyncData(value: Exito(:final valor)) when valor.isEmpty => SolInlineNote(
-        text: l10n.m0501SinPolizas,
-      ),
+      AsyncData(value: Exito(:final valor)) when valor.valor.isEmpty =>
+        SolInlineNote(text: l10n.m0501SinPolizas),
       AsyncData(value: Exito(:final valor)) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (final p in valor) ...[
+          if (valor.guardadaEn case final guardadas?) ...[
+            SolInlineNote(
+              icon: SolIcons.saved,
+              text: l10n.m0501PolizasGuardadas(
+                SolFormat.dateTime(guardadas.toLocal()),
+              ),
+            ),
+            const SizedBox(height: SolSpacing.sm),
+          ],
+          for (final p in valor.valor) ...[
             _FilaPoliza(
               poliza: p,
               elegida: estado.poliza?.id == p.id,
               titulo: l10n.m0501PolizaNumero(p.numero),
               vigencia: [
                 if (p.vehiculo case final v?) l10n.m0501PolizaAuto(v),
-                l10n.m0501Vigencia(SolFormat.date(p.vigenciaHasta)),
+                l10n.m0501Vigencia(
+                  SolFormat.dateFor(
+                    p.vigenciaHasta,
+                    Localizations.localeOf(context),
+                  ),
+                ),
               ].join(' · '),
               onTap: () => notifier.elegirPoliza(p),
             ),
@@ -87,10 +118,16 @@ class M0501PolizaPage extends ConsumerWidget {
       AsyncData(value: Fracaso(:final falla)) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SolInlineNote(text: l10n.falla(falla)),
+          SolInlineNote(
+            icon: falla is SinConexion ? SolIcons.offline : null,
+            // Sin conexión y sin pólizas guardadas: falta conectarse una vez.
+            text: falla is SinConexion
+                ? l10n.m0501SinPolizasGuardadas
+                : l10n.falla(falla),
+          ),
           SolButton.text(
             label: l10n.m05Reintentar,
-            onPressed: () => ref.invalidate(polizasReportablesProvider),
+            onPressed: () => ref.invalidate(polizasConCopiaProvider),
           ),
         ],
       ),
@@ -101,12 +138,30 @@ class M0501PolizaPage extends ConsumerWidget {
     };
 
     return SolFlowScaffold(
+      banner: const BannerReporte(),
       title: l10n.m05Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: onHome,
       anchorActions: true,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (otros > 0) ...[
+            SolStatusBanner(
+              status: enElTope ? SolStatus.warning : SolStatus.info,
+              title: enElTope
+                  ? l10n.m0501TopeReportes(otros)
+                  : l10n.m0501YaTienes(otros),
+              action: SolLinkButton(
+                label: l10n.m0501VerPendientes,
+                inline: true,
+                size: SolLinkSize.small,
+                onPressed: () =>
+                    context.pushReplacement(ReporteRoutes.misSiniestros),
+              ),
+            ),
+            const SizedBox(height: SolSpacing.md),
+          ],
           SolSectionHeader(title: l10n.m0501Poliza),
           lista,
           // KAN-290: en una póliza de auto el cliente dice qué le pasó al vehículo;
@@ -128,14 +183,17 @@ class M0501PolizaPage extends ConsumerWidget {
             label: l10n.m0501Fecha,
             value: fecha == null
                 ? l10n.m0501FechaElegir
-                : SolFormat.dateTime(fecha),
+                : SolFormat.dateTimeFor(fecha, Localizations.localeOf(context)),
             // Dice qué falta en lugar de dejar «Continuar» apagado sin más.
             helperText: poliza == null
                 ? l10n.m0501ElegirPoliza
                 : estado.faltaTipoAuto
                 ? l10n.m0501ElegirTipo
                 : l10n.m0501CubreDesde(
-                    SolFormat.dateTime(poliza.vigenciaDesde),
+                    SolFormat.dateTimeFor(
+                      poliza.vigenciaDesde,
+                      Localizations.localeOf(context),
+                    ),
                   ),
             errorText: errorFecha,
             onTap: () => _elegirFecha(context, ref, poliza, fecha),
@@ -149,7 +207,8 @@ class M0501PolizaPage extends ConsumerWidget {
               poliza != null &&
                   fecha != null &&
                   !fueraDeVigencia &&
-                  !estado.faltaTipoAuto
+                  !estado.faltaTipoAuto &&
+                  !enElTope
               ? () => context.push(ReporteRoutes.fotos)
               : null,
         ),

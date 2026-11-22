@@ -116,6 +116,12 @@ final class GestorSesion {
   /// `true` si hay JWT y refresh en memoria.
   bool get abierta => _token != null && _refresh != null;
 
+  /// `true` si el refresh ya está en memoria (la huella lo descifró) pero no
+  /// hay JWT: no se pudo renovar por falta de red. Es el modo sin conexión de
+  /// HU-M05; al volver la red, [reintentarRenovacion] abre la sesión sin
+  /// volver a pedir la huella.
+  bool get porRenovar => _token == null && _refresh != null;
+
   /// `false` si el refresh de la sesión abierta no se pudo guardar (teléfono
   /// sin bloqueo de pantalla): al cerrar la app habrá que iniciar sesión.
   bool get refreshPersistido => _refreshPersistido;

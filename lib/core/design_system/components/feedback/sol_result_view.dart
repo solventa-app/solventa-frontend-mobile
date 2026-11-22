@@ -41,6 +41,7 @@ class SolResultView extends StatelessWidget {
       SolStatus.warning => SolIcons.inReview,
       SolStatus.error => SolIcons.failure,
       SolStatus.info => SolIcons.info,
+      SolStatus.neutral => SolIcons.draft,
     };
     return Semantics(
       container: true,

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/moneda/monto_en_moneda.dart';
 import '../../domain/entities/cobertura.dart';
 import '../providers.dart';
 import '../widgets/cobertura_widgets.dart';
@@ -11,18 +12,25 @@ import '../widgets/cobertura_widgets.dart';
 /// M04-02 · Celebración (Figma 2005:301, KAN-139).
 ///
 /// El monto va en COP (pendiente 2: moneda de la barra). Sin navegación
-/// (M04-D2): «Ver detalle» y la flecha llaman callbacks.
+/// (M04-D2): «Ver detalle», «Ver mi cobertura» y la flecha llaman callbacks.
+/// «Ver mi cobertura» solo se pinta si llega [onVerCobertura].
 class M0402CelebracionPage extends ConsumerWidget {
   const M0402CelebracionPage({
     super.key,
     required this.id,
     this.onBack,
+    this.onHome,
     this.onVerDetalle,
+    this.onVerCobertura,
   });
 
   final String id;
   final VoidCallback? onBack;
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
   final VoidCallback? onVerDetalle;
+  final VoidCallback? onVerCobertura;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,6 +41,7 @@ class M0402CelebracionPage extends ConsumerWidget {
       AsyncData(value: Exito(:final valor)) => _Celebracion(
         indemnizacion: valor,
         onVerDetalle: onVerDetalle,
+        onVerCobertura: onVerCobertura,
       ),
       AsyncData(value: Fracaso(:final falla)) => ErrorConReintento(
         texto: l10n.falla(falla),
@@ -46,6 +55,7 @@ class M0402CelebracionPage extends ConsumerWidget {
         title: l10n.m0402Titulo,
         onBack: onBack,
         showBack: onBack != null,
+        onHomeTap: onHome,
       ),
       centerBody: true,
       body: cuerpo,
@@ -61,18 +71,23 @@ class M0402CelebracionPage extends ConsumerWidget {
   }
 }
 
-class _Celebracion extends StatelessWidget {
-  const _Celebracion({required this.indemnizacion, required this.onVerDetalle});
+class _Celebracion extends ConsumerWidget {
+  const _Celebracion({
+    required this.indemnizacion,
+    required this.onVerDetalle,
+    required this.onVerCobertura,
+  });
 
   final Indemnizacion indemnizacion;
   final VoidCallback? onVerDetalle;
+  final VoidCallback? onVerCobertura;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final sol = context.solColors;
-    final monto = l10n.m0402Monto(SolFormat.currency(indemnizacion.monto));
+    final monto = l10n.m0402Monto(ref.monto(context, indemnizacion.monto));
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -144,11 +159,19 @@ class _Celebracion extends StatelessWidget {
             semantica: l10n.m0402CuentaSemantica,
           ),
         ),
+        const NotaMontosDeReferencia(center: true),
         const SizedBox(height: SolSpacing.xxxl),
         SolButton.primary(
           label: l10n.m0402VerDetalle,
           onPressed: () => onVerDetalle?.call(),
         ),
+        if (onVerCobertura case final verCobertura?) ...[
+          const SizedBox(height: SolSpacing.sm),
+          SolButton.outlined(
+            label: l10n.m0402VerCobertura,
+            onPressed: verCobertura,
+          ),
+        ],
       ],
     );
   }

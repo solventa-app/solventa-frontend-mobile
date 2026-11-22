@@ -1,0 +1,8 @@
+# KAN-209: montos en la moneda que el usuario eligió en la barra superior, con las tasas del ACL Worker.
+# Solo para mostrar: lo cobrado y lo indemnizado siguen en COP.
+query ConvertirMontos($montos: [MontoInput!]!, $moneda: String!) {
+  convertirMontos(montos: $montos, moneda: $moneda) {
+    valor
+    moneda
+  }
+}

@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../icons/sol_icons.dart';
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_radius.dart';
 import '../../tokens/sol_spacing.dart';
 
 /// Estados de producto. Nunca se comunican solo con color: cada uno trae
 /// su ícono y su texto.
-enum SolStatus { success, warning, error, info }
+enum SolStatus {
+  success,
+  warning,
+  error,
+  info,
+
+  /// Sin tono: algo a medias que no es ni bueno ni malo («Sin terminar»).
+  neutral,
+}
 
 /// Colores e íconos resueltos de un [SolStatus].
 @immutable
@@ -23,34 +32,42 @@ class SolStatusStyle {
   factory SolStatusStyle.of(BuildContext context, SolStatus status) {
     final colors = context.colors;
     final sol = context.solColors;
+    final textos = context.solTextos;
     return switch (status) {
       SolStatus.success => SolStatusStyle(
         foreground: sol.success,
         container: sol.successContainer,
         icon: SolIcons.success,
         badgeIcon: SolIcons.check,
-        semanticPrefix: 'Éxito',
+        semanticPrefix: textos.solEstadoExito,
       ),
       SolStatus.warning => SolStatusStyle(
         foreground: sol.warning,
         container: sol.warningContainer,
         icon: SolIcons.warning,
         badgeIcon: SolIcons.attention,
-        semanticPrefix: 'Atención',
+        semanticPrefix: textos.solEstadoAtencion,
       ),
       SolStatus.error => SolStatusStyle(
         foreground: colors.error,
         container: colors.errorContainer,
         icon: SolIcons.error,
         badgeIcon: SolIcons.close,
-        semanticPrefix: 'Error',
+        semanticPrefix: textos.solEstadoError,
       ),
       SolStatus.info => SolStatusStyle(
         foreground: colors.primary,
         container: colors.primaryContainer,
         icon: SolIcons.info,
         badgeIcon: SolIcons.info,
-        semanticPrefix: 'Información',
+        semanticPrefix: textos.solEstadoInformacion,
+      ),
+      SolStatus.neutral => SolStatusStyle(
+        foreground: colors.onSurfaceVariant,
+        container: colors.surfaceContainerHighest,
+        icon: SolIcons.draft,
+        badgeIcon: SolIcons.draft,
+        semanticPrefix: 'Estado',
       ),
     };
   }

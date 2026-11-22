@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/moneda/monto_en_moneda.dart';
 import '../../domain/calculo_cobertura.dart';
 import '../../domain/entities/cobertura.dart';
 import '../providers.dart';
@@ -12,11 +13,19 @@ import '../widgets/cobertura_widgets.dart';
 /// M04-04 · Mi cobertura (KAN-280). Sin frame en Figma: sigue los mockups de
 /// `docs/hu-m04/diseno/` (sin saldo, saldo a favor y saldo en contra).
 ///
-/// Sin navegación todavía (M04-D2): la flecha y las filas llaman callbacks.
+/// La flecha, la casita y las filas llaman callbacks; el router las conecta.
 class M0404CoberturaPage extends ConsumerWidget {
-  const M0404CoberturaPage({super.key, this.onBack, this.onTapMovimiento});
+  const M0404CoberturaPage({
+    super.key,
+    this.onBack,
+    this.onHome,
+    this.onTapMovimiento,
+  });
 
   final VoidCallback? onBack;
+
+  /// Casita al Home en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   /// Recibe el id de la indemnización (irá a M04-03).
   final ValueChanged<String>? onTapMovimiento;
@@ -41,6 +50,7 @@ class M0404CoberturaPage extends ConsumerWidget {
     return SolFlowScaffold(
       title: l10n.m0404Titulo,
       onBack: onBack,
+      onHomeTap: onHome,
       body: RefreshIndicator(
         onRefresh: () => ref.refresh(resumenCoberturaProvider.future),
         child: ListView(
@@ -115,19 +125,20 @@ class _Resumen extends StatelessWidget {
             ),
           ),
         ),
+        const NotaMontosDeReferencia(),
       ],
     );
   }
 }
 
 /// Cupo de cobertura: póliza, tope, barra de uso y disponible.
-class _TarjetaCupo extends StatelessWidget {
+class _TarjetaCupo extends ConsumerWidget {
   const _TarjetaCupo({required this.resumen});
 
   final ResumenCobertura resumen;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final variante = textoPequeno(context)
@@ -159,7 +170,10 @@ class _TarjetaCupo extends StatelessWidget {
                     Text(
                       l10n.m0404Poliza(
                         resumen.numeroPoliza,
-                        SolFormat.date(resumen.vigenteHasta),
+                        SolFormat.dateFor(
+                          resumen.vigenteHasta,
+                          Localizations.localeOf(context),
+                        ),
                       ),
                       style: variante,
                     ),
@@ -175,7 +189,7 @@ class _TarjetaCupo extends StatelessWidget {
           Text(l10n.m0404Tope, style: variante),
           const SizedBox(height: SolSpacing.xxs),
           Text(
-            SolFormat.currency(resumen.tope),
+            ref.monto(context, resumen.tope),
             style: context.solText.headline.copyWith(color: colors.onSurface),
           ),
           const SizedBox(height: SolSpacing.md),
@@ -223,7 +237,7 @@ class _TarjetaCupo extends StatelessWidget {
                     Text(l10n.m0404Disponible, style: variante),
                     const SizedBox(height: SolSpacing.xxs),
                     Text(
-                      SolFormat.currency(resumen.disponible),
+                      ref.monto(context, resumen.disponible),
                       style: context.solText.titleSmall.copyWith(
                         color: colors.onSurface,
                       ),
@@ -240,13 +254,13 @@ class _TarjetaCupo extends StatelessWidget {
 }
 
 /// Total indemnizado, cuenta de depósito y, si hay, el saldo de prima.
-class _TarjetaTotal extends StatelessWidget {
+class _TarjetaTotal extends ConsumerWidget {
   const _TarjetaTotal({required this.resumen});
 
   final ResumenCobertura resumen;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final sol = context.solColors;
@@ -272,7 +286,7 @@ class _TarjetaTotal extends StatelessWidget {
                       Text(l10n.m0404TotalIndemnizado, style: variante),
                       const SizedBox(height: SolSpacing.xxs),
                       Text(
-                        SolFormat.currency(resumen.totalIndemnizado),
+                        ref.monto(context, resumen.totalIndemnizado),
                         style: context.solText.headline.copyWith(
                           color: sol.success,
                         ),
@@ -293,7 +307,7 @@ class _TarjetaTotal extends StatelessWidget {
             Text(
               l10n.m0404TotalDetalle(
                 resumen.movimientos.length,
-                SolFormat.monthYear(desde),
+                SolFormat.monthYearFor(desde, Localizations.localeOf(context)),
               ),
               style: variante.copyWith(height: 1.45),
             ),
@@ -320,18 +334,21 @@ class _TarjetaTotal extends StatelessWidget {
 
 /// Saldo de prima: verde a favor, rojo en contra. El signo y el ícono van
 /// siempre, no solo el color.
-class _BloqueSaldo extends StatelessWidget {
+class _BloqueSaldo extends ConsumerWidget {
   const _BloqueSaldo({required this.saldo});
 
   final SaldoPrima saldo;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final sol = context.solColors;
-    final monto = SolFormat.currency(saldo.monto.abs());
-    final mes = SolFormat.monthName(saldo.periodo);
+    final monto = ref.monto(context, saldo.monto.abs());
+    final mes = SolFormat.monthNameFor(
+      saldo.periodo,
+      Localizations.localeOf(context),
+    );
     final (fondo, color, icono, titulo, detalle) = saldo.aFavor
         ? (
             sol.successContainer,
@@ -409,14 +426,14 @@ class _ListaMovimientos extends StatelessWidget {
   }
 }
 
-class _FilaMovimiento extends StatelessWidget {
+class _FilaMovimiento extends ConsumerWidget {
   const _FilaMovimiento({required this.movimiento, required this.onTap});
 
   final Indemnizacion movimiento;
   final ValueChanged<String>? onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final sol = context.solColors;
@@ -428,7 +445,7 @@ class _FilaMovimiento extends StatelessWidget {
     final apilar = MediaQuery.textScalerOf(context).scale(10) > 13;
 
     final monto = Text(
-      SolFormat.currency(m.monto),
+      ref.monto(context, m.monto),
       style: context.solText.titleSmall.copyWith(color: colors.onSurface),
     );
     final estado = Row(
@@ -458,7 +475,10 @@ class _FilaMovimiento extends StatelessWidget {
       ),
       const SizedBox(height: SolSpacing.xxs),
       Text(
-        l10n.m0404Meta(SolFormat.date(m.fechaEvento), detalleEvento(l10n, m)),
+        l10n.m0404Meta(
+          SolFormat.dateFor(m.fechaEvento, Localizations.localeOf(context)),
+          detalleEvento(l10n, m),
+        ),
         style: textoPequeno(context).copyWith(color: colors.onSurfaceVariant),
       ),
       if (apilar) ...[

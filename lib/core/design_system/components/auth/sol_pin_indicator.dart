@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_motion.dart';
 import '../../tokens/sol_sizes.dart';
@@ -19,7 +20,7 @@ class SolPinIndicator extends StatelessWidget {
     final duration = SolMotion.of(context, SolMotion.short);
     return Semantics(
       liveRegion: true,
-      label: 'PIN: $filled de $length dígitos ingresados',
+      label: context.solTextos.solPinProgreso(filled, length),
       excludeSemantics: true,
       child: Row(
         mainAxisSize: MainAxisSize.min,

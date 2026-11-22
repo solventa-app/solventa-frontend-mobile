@@ -245,7 +245,7 @@ void main() {
               );
         return UncontrolledProviderScope(
           container: contenedor,
-          child: conL10n(const M0602SolicitudPage(), locale),
+          child: conL10n(M0602SolicitudPage(onHome: () {}), locale),
         );
       },
     );

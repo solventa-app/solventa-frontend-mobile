@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../icons/sol_icons.dart';
+import '../../l10n/sol_textos.dart';
 import '../../theme/context_x.dart';
 import '../../tokens/sol_radius.dart';
 import '../../tokens/sol_sizes.dart';
@@ -60,7 +61,7 @@ class SolNumericKeypad extends StatelessWidget {
             const SizedBox.shrink(),
             digit(0),
             _Key(
-              semanticLabel: 'Borrar dígito',
+              semanticLabel: context.solTextos.solBorrarDigito,
               onTap: enabled ? onBackspace : null,
               child: Icon(
                 SolIcons.backspace,

@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/almacen/almacen_providers.dart';
+import '../../../../core/almacen/base_local.dart';
 import '../../../../core/design_system/solventa_ui.dart';
+import '../../../../core/errors/falla.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/moneda/monto_en_moneda.dart';
+import '../../../../core/navegacion/volver.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
+import '../widgets/banner_reporte.dart';
+import '../widgets/reportes_por_enviar.dart';
 import 'm05_01_poliza_page.dart' show nombreTipoAuto;
 import 'm05_07_detalle_siniestro_page.dart' show estadoDelCaso, tiempoRestante;
 
@@ -21,7 +28,14 @@ enum FiltroSiniestros { todos, enCurso, resueltos }
 /// pasó, el estado y lo que importa de ese estado (tiempo que queda, monto
 /// aprobado o motivo). Tocar una tarjeta abre el detalle (M05-07).
 class M0506MisSiniestrosPage extends ConsumerStatefulWidget {
-  const M0506MisSiniestrosPage({super.key, this.ahora = DateTime.now});
+  const M0506MisSiniestrosPage({
+    super.key,
+    this.onHome,
+    this.ahora = DateTime.now,
+  });
+
+  /// Casita al inicio en la barra superior (en lugar del avatar).
+  final VoidCallback? onHome;
 
   /// El reloj; las pruebas lo fijan.
   final DateTime Function() ahora;
@@ -54,17 +68,38 @@ class _M0506MisSiniestrosPageState
       _ => const <String, String>{},
     };
 
+    final ahora = widget.ahora();
+    final remotos = switch (casos) {
+      AsyncData(value: Exito(:final valor)) => valor,
+      _ => null,
+    };
+    // Si el caso ya está en la aseguradora, gana ese: el local no se muestra.
+    final radicados = {
+      for (final c in remotos?.valor ?? const <SiniestroReportado>[]) c.id,
+    };
+    final porEnviar = [
+      for (final r in ref.watch(reportesPorEnviarProvider))
+        if (!radicados.contains(r.id)) r,
+    ];
+    final copiaDe = remotos?.guardadaEn;
+    final reiniciada =
+        ref.watch(aperturaBaseProvider).value == AperturaBase.reiniciada;
+
     final cuerpo = switch (casos) {
-      AsyncData(value: Exito(:final valor)) when valor.isEmpty => SolInlineNote(
-        text: l10n.m0506Vacio,
-        center: true,
-      ),
+      AsyncData(value: Exito(:final valor)) when valor.valor.isEmpty =>
+        SolInlineNote(text: l10n.m0506Vacio, center: true),
       AsyncData(value: Exito(:final valor)) => _Lista(
-        casos: valor.where((c) => _enGrupo(c, _filtro)).toList(),
+        casos: valor.valor.where((c) => _enGrupo(c, _filtro)).toList(),
         filtro: _filtro,
         onFiltro: (f) => setState(() => _filtro = f),
         vehiculos: vehiculos,
-        ahora: widget.ahora(),
+        ahora: ahora,
+      ),
+      // Sin conexión y sin copia: no es un error, es que falta conectarse.
+      AsyncData(value: Fracaso(falla: SinConexion())) => SolInlineNote(
+        icon: SolIcons.offline,
+        text: l10n.m0506SinCopia,
+        center: true,
       ),
       AsyncData(value: Fracaso(:final falla)) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -83,14 +118,37 @@ class _M0506MisSiniestrosPageState
     };
 
     return SolFlowScaffold(
+      banner: const BannerReporte(conVer: false),
       title: l10n.m0506Titulo,
-      onBack: () => context.pop(),
+      onBack: context.volverOInicio,
+      onHomeTap: widget.onHome,
       body: RefreshIndicator(
         onRefresh: () => ref.refresh(misSiniestrosProvider.future),
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           shrinkWrap: true,
-          children: [cuerpo],
+          children: [
+            if (reiniciada) ...[
+              SolStatusBanner(
+                status: SolStatus.warning,
+                title: l10n.m0506BaseReiniciadaTitulo,
+                message: l10n.m0506BaseReiniciadaMensaje,
+              ),
+              const SizedBox(height: SolSpacing.md),
+            ],
+            if (porEnviar.isNotEmpty)
+              SeccionPorEnviar(reportes: porEnviar, ahora: ahora),
+            // Con una sola lista no hace falta el título; con «Por enviar»
+            // encima, o mostrando una copia, sí.
+            if (porEnviar.isNotEmpty || copiaDe != null)
+              SolSectionHeader(
+                title: l10n.m0506Enviados,
+                count: copiaDe == null
+                    ? null
+                    : l10n.m0506Actualizado(haceCuanto(l10n, copiaDe, ahora)),
+              ),
+            cuerpo,
+          ],
         ),
       ),
     );
@@ -149,12 +207,16 @@ class _Lista extends StatelessWidget {
             ),
             const SizedBox(height: SolSpacing.sm),
           ],
+        if (casos.any((c) => c.resolucion?.indemnizacion != null))
+          const NotaMontosDeReferencia(
+            padding: EdgeInsets.only(top: SolSpacing.xs),
+          ),
       ],
     );
   }
 }
 
-class _FilaSiniestro extends StatelessWidget {
+class _FilaSiniestro extends ConsumerWidget {
   const _FilaSiniestro({
     required this.caso,
     required this.vehiculo,
@@ -166,7 +228,7 @@ class _FilaSiniestro extends StatelessWidget {
   final DateTime ahora;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final colors = context.colors;
     final (status, estado) = estadoDelCaso(l10n, caso.estado);
@@ -179,7 +241,7 @@ class _FilaSiniestro extends StatelessWidget {
       'EN_REVISION' => (SolIcons.schedule, l10n.m0506EnRevisionDetalle),
       'APROBADO' when monto != null => (
         SolIcons.payments,
-        l10n.m0506Monto(SolFormat.currency(monto)),
+        l10n.m0506Monto(ref.monto(context, monto)),
       ),
       'APROBADO' => (SolIcons.payments, l10n.m0506AprobadoDetalle),
       'RECHAZADO' => (SolIcons.info, l10n.m0506RechazadoDetalle),
@@ -192,7 +254,10 @@ class _FilaSiniestro extends StatelessWidget {
         null => (
           SolIcons.schedule,
           l10n.m0506PendienteDetalle(
-            SolFormat.date(caso.venceDictamenEn.toLocal()),
+            SolFormat.dateFor(
+              caso.venceDictamenEn.toLocal(),
+              Localizations.localeOf(context),
+            ),
           ),
         ),
       },
@@ -249,7 +314,10 @@ class _FilaSiniestro extends StatelessWidget {
                         const SizedBox(height: SolSpacing.xxs),
                         Text(
                           l10n.m0506Reportado(
-                            SolFormat.date(caso.notificadoEn.toLocal()),
+                            SolFormat.dateFor(
+                              caso.notificadoEn.toLocal(),
+                              Localizations.localeOf(context),
+                            ),
                             caso.fotos,
                           ),
                           style: suave,
