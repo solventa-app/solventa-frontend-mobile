@@ -68,7 +68,7 @@ final class ReporteState {
   final bool ubicacionSinPermiso;
 
   /// Sin GPS, la dirección que el cliente escribió y Places ubicó: da la
-  /// [ubicacion] del siniestro, pero no geoetiqueta las fotos.
+  /// [ubicacion] del siniestro y la de las fotos, marcadas como de dirección.
   final String? direccionEscrita;
   final String descripcion;
   final String lugar;
@@ -153,13 +153,20 @@ final class ReporteNotifier extends Notifier<ReporteState> {
   }
 
   /// Sin GPS: la dirección escrita y ubicada con Places (la misma hoja de
-  /// HU-M06) da el punto del siniestro y, si aún no hay lugar, lo llena.
+  /// HU-M06) da el punto del siniestro y, si aún no hay lugar, lo llena. Las
+  /// fotos sin GPS (las de antes y las de después) llevan ese punto (v0.66).
   void usarDireccion(Coordenada coordenada, String direccion) =>
       state = state.copyWith(
         ubicacion: coordenada,
         ubicacionSinPermiso: false,
         direccionEscrita: () => direccion,
         lugar: state.lugar.trim().isEmpty ? direccion : null,
+        fotos: [
+          for (final foto in state.fotos)
+            foto.ubicacion == null || foto.deDireccion
+                ? foto.conDireccion(coordenada)
+                : foto,
+        ],
       );
 
   Future<void> abrirAjustesUbicacion() =>
@@ -172,8 +179,9 @@ final class ReporteNotifier extends Notifier<ReporteState> {
       bytes: bytes,
       tipoContenido: tipoContenido,
       tomadaEn: ref.read(relojReporteProvider)(),
-      // Una dirección escrita no dice dónde se tomó la foto.
-      ubicacion: state.direccionEscrita == null ? state.ubicacion : null,
+      // Sin GPS, el punto de la dirección escrita (marcado como tal).
+      ubicacion: state.ubicacion,
+      deDireccion: state.direccionEscrita != null,
     );
     state = state.copyWith(fotos: [...state.fotos, foto]);
   }

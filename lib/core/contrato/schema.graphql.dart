@@ -2051,11 +2051,13 @@ class Input$FotoReporteInput {
     required DateTime tomadaEn,
     double? latitud,
     double? longitud,
+    Enum$OrigenUbicacion? origenUbicacion,
   }) => Input$FotoReporteInput._({
     r'archivoId': archivoId,
     r'tomadaEn': tomadaEn,
     if (latitud != null) r'latitud': latitud,
     if (longitud != null) r'longitud': longitud,
+    if (origenUbicacion != null) r'origenUbicacion': origenUbicacion,
   });
 
   Input$FotoReporteInput._(this._$data);
@@ -2074,6 +2076,12 @@ class Input$FotoReporteInput {
       final l$longitud = data['longitud'];
       result$data['longitud'] = (l$longitud as num?)?.toDouble();
     }
+    if (data.containsKey('origenUbicacion')) {
+      final l$origenUbicacion = data['origenUbicacion'];
+      result$data['origenUbicacion'] = fromJson$Enum$OrigenUbicacion(
+        (l$origenUbicacion as String),
+      );
+    }
     return Input$FotoReporteInput._(result$data);
   }
 
@@ -2086,6 +2094,9 @@ class Input$FotoReporteInput {
   double? get latitud => (_$data['latitud'] as double?);
 
   double? get longitud => (_$data['longitud'] as double?);
+
+  Enum$OrigenUbicacion? get origenUbicacion =>
+      (_$data['origenUbicacion'] as Enum$OrigenUbicacion?);
 
   Map<String, dynamic> toJson() {
     final result$data = <String, dynamic>{};
@@ -2100,6 +2111,12 @@ class Input$FotoReporteInput {
     if (_$data.containsKey('longitud')) {
       final l$longitud = longitud;
       result$data['longitud'] = l$longitud;
+    }
+    if (_$data.containsKey('origenUbicacion')) {
+      final l$origenUbicacion = origenUbicacion;
+      result$data['origenUbicacion'] = toJson$Enum$OrigenUbicacion(
+        (l$origenUbicacion as Enum$OrigenUbicacion),
+      );
     }
     return result$data;
   }
@@ -2139,6 +2156,15 @@ class Input$FotoReporteInput {
     if (l$longitud != lOther$longitud) {
       return false;
     }
+    final l$origenUbicacion = origenUbicacion;
+    final lOther$origenUbicacion = other.origenUbicacion;
+    if (_$data.containsKey('origenUbicacion') !=
+        other._$data.containsKey('origenUbicacion')) {
+      return false;
+    }
+    if (l$origenUbicacion != lOther$origenUbicacion) {
+      return false;
+    }
     return true;
   }
 
@@ -2148,11 +2174,13 @@ class Input$FotoReporteInput {
     final l$tomadaEn = tomadaEn;
     final l$latitud = latitud;
     final l$longitud = longitud;
+    final l$origenUbicacion = origenUbicacion;
     return Object.hashAll([
       l$archivoId,
       l$tomadaEn,
       _$data.containsKey('latitud') ? l$latitud : const {},
       _$data.containsKey('longitud') ? l$longitud : const {},
+      _$data.containsKey('origenUbicacion') ? l$origenUbicacion : const {},
     ]);
   }
 }
