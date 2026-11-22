@@ -3475,6 +3475,108 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Un operador está valorando el daño'**
   String get m0506PorValorar;
+
+  /// Franja de red: título sin salida a internet
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión'**
+  String get redSinConexionTitulo;
+
+  /// Franja de red: mensaje sin conexión
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu Wi-Fi o tus datos móviles.'**
+  String get redSinConexionMensaje;
+
+  /// Franja de red: título con conexión mala
+  ///
+  /// In es, this message translates to:
+  /// **'Conexión lenta'**
+  String get redLentaTitulo;
+
+  /// Franja de red: conexión mala por datos móviles
+  ///
+  /// In es, this message translates to:
+  /// **'Estás con datos móviles y poca señal. El envío puede tardar.'**
+  String get redLentaDatos;
+
+  /// Franja de red: conexión mala por Wi-Fi
+  ///
+  /// In es, this message translates to:
+  /// **'Tu Wi-Fi responde lento. El envío puede tardar.'**
+  String get redLentaWifi;
+
+  /// Franja de red: conexión mala por otra interfaz
+  ///
+  /// In es, this message translates to:
+  /// **'Tu conexión responde lento. El envío puede tardar.'**
+  String get redLentaOtra;
+
+  /// Franja de red: volvió la conexión; se oculta sola
+  ///
+  /// In es, this message translates to:
+  /// **'Conexión restablecida'**
+  String get redRestablecidaTitulo;
+
+  /// Píldora de red por Wi-Fi con su calidad
+  ///
+  /// In es, this message translates to:
+  /// **'Wi-Fi · {calidad}'**
+  String redChipWifi(String calidad);
+
+  /// Píldora de red por datos móviles con su calidad
+  ///
+  /// In es, this message translates to:
+  /// **'Datos · {calidad}'**
+  String redChipDatos(String calidad);
+
+  /// Píldora de red por otra interfaz con su calidad
+  ///
+  /// In es, this message translates to:
+  /// **'Conexión · {calidad}'**
+  String redChipOtra(String calidad);
+
+  /// Calidad de red: responde rápido
+  ///
+  /// In es, this message translates to:
+  /// **'buena'**
+  String get redCalidadBuena;
+
+  /// Calidad de red: responde aceptable
+  ///
+  /// In es, this message translates to:
+  /// **'regular'**
+  String get redCalidadRegular;
+
+  /// Calidad de red: responde lento o con cortes
+  ///
+  /// In es, this message translates to:
+  /// **'mala'**
+  String get redCalidadMala;
+
+  /// Píldora de red sin salida a internet
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión'**
+  String get redChipSinConexion;
+
+  /// Disparador de demo: fuerza el estado sin conexión
+  ///
+  /// In es, this message translates to:
+  /// **'Simular sin conexión'**
+  String get redDemoSinConexion;
+
+  /// Disparador de demo: fuerza la conexión mala
+  ///
+  /// In es, this message translates to:
+  /// **'Simular conexión lenta'**
+  String get redDemoLenta;
+
+  /// Disparador de demo: quita la simulación de red
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a la conexión real'**
+  String get redDemoReal;
 }
 
 class _AppLocalizationsDelegate

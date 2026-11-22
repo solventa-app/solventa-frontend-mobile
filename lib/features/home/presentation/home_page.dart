@@ -35,6 +35,7 @@ class HomePage extends StatelessWidget {
     this.onOpenProfile,
     this.onActivarBiometria,
     this.onCerrarPistaBiometria,
+    this.pie,
   });
 
   final String userName;
@@ -65,6 +66,9 @@ class HomePage extends StatelessWidget {
   /// (o con la biometría ya activa) no se muestra.
   final VoidCallback? onActivarBiometria;
   final VoidCallback? onCerrarPistaBiometria;
+
+  /// Contenido opcional al final (p. ej. los disparadores de demo de la red).
+  final Widget? pie;
 
   @override
   Widget build(BuildContext context) {
@@ -317,6 +321,7 @@ class HomePage extends StatelessWidget {
                 'Billetera y estado de póliza — próximamente',
             center: true,
           ),
+          ?pie,
         ],
       ),
     );

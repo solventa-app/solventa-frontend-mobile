@@ -2030,4 +2030,63 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get m0506PorValorar => 'Un operador está valorando el daño';
+
+  @override
+  String get redSinConexionTitulo => 'Sin conexión';
+
+  @override
+  String get redSinConexionMensaje => 'Revisa tu Wi-Fi o tus datos móviles.';
+
+  @override
+  String get redLentaTitulo => 'Conexión lenta';
+
+  @override
+  String get redLentaDatos =>
+      'Estás con datos móviles y poca señal. El envío puede tardar.';
+
+  @override
+  String get redLentaWifi => 'Tu Wi-Fi responde lento. El envío puede tardar.';
+
+  @override
+  String get redLentaOtra =>
+      'Tu conexión responde lento. El envío puede tardar.';
+
+  @override
+  String get redRestablecidaTitulo => 'Conexión restablecida';
+
+  @override
+  String redChipWifi(String calidad) {
+    return 'Wi-Fi · $calidad';
+  }
+
+  @override
+  String redChipDatos(String calidad) {
+    return 'Datos · $calidad';
+  }
+
+  @override
+  String redChipOtra(String calidad) {
+    return 'Conexión · $calidad';
+  }
+
+  @override
+  String get redCalidadBuena => 'buena';
+
+  @override
+  String get redCalidadRegular => 'regular';
+
+  @override
+  String get redCalidadMala => 'mala';
+
+  @override
+  String get redChipSinConexion => 'Sin conexión';
+
+  @override
+  String get redDemoSinConexion => 'Simular sin conexión';
+
+  @override
+  String get redDemoLenta => 'Simular conexión lenta';
+
+  @override
+  String get redDemoReal => 'Volver a la conexión real';
 }

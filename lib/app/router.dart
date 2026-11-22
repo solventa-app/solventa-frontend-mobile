@@ -11,6 +11,7 @@ import '../core/l10n/l10n.dart';
 import '../core/network/network_providers.dart';
 import '../core/push/pending_destination.dart';
 import '../core/push/push_service.dart';
+import '../core/red/presentation/banner_conexion.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/acceso/presentation/acceso_routes.dart';
 import '../features/acceso/presentation/pages/m02_01_desbloqueo_page.dart';
@@ -451,7 +452,9 @@ class _RootShell extends ConsumerWidget {
 
     final enCamino = ref.watch(enCaminoCantidadProvider);
     return SolAppShell(
+      banner: const BannerConexion(),
       home: HomePage(
+        pie: const DemoRed(),
         userName: nombre,
         verificacion: estado.verificacion,
         // KAN-131: el inicio dice por qué se rechazó (p. ej. una falla técnica

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../components/feedback/sol_connection_banner.dart';
 import '../components/navigation/sol_bottom_nav.dart';
 import '../components/navigation/sol_top_bar.dart';
 import '../responsive/sol_adaptive_body.dart';
@@ -15,6 +16,7 @@ class SolTopLevelScaffold extends StatelessWidget {
     this.destinations = SolBottomNav.defaultDestinations,
     this.onLocaleTap,
     this.onWordmarkLongPress,
+    this.banner,
   });
 
   final Widget body;
@@ -24,6 +26,9 @@ class SolTopLevelScaffold extends StatelessWidget {
   final VoidCallback? onLocaleTap;
   final VoidCallback? onWordmarkLongPress;
 
+  /// Franja bajo la barra superior (estado de la red).
+  final Widget? banner;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +36,15 @@ class SolTopLevelScaffold extends StatelessWidget {
         onLocaleTap: onLocaleTap,
         onWordmarkLongPress: onWordmarkLongPress,
       ),
-      body: SolAdaptiveBody(child: body),
+      body: Column(
+        children: [
+          SolBannerSlot(
+            banner: banner,
+            compact: SolBannerSlot.keyboardOpen(context),
+          ),
+          Expanded(child: SolAdaptiveBody(child: body)),
+        ],
+      ),
       bottomNavigationBar: SolBottomNav(
         selectedIndex: selectedIndex,
         onDestinationSelected: onDestinationSelected,

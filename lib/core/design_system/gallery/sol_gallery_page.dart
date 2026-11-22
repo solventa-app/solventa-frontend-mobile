@@ -186,6 +186,62 @@ class _SolGalleryPageState extends State<SolGalleryPage> {
             message: 'Estamos revisando tu identidad, te avisamos.',
           ),
 
+          const _Section('Conexión (HU-M05)'),
+          const SolConnectionBanner(
+            tone: SolConnectionTone.offline,
+            title: 'Sin conexión',
+            message: 'Puedes reportar un siniestro. Se envía cuando vuelva la señal.',
+          ),
+          const _Gap(),
+          const SolConnectionBanner(
+            tone: SolConnectionTone.slow,
+            title: 'Conexión lenta',
+            message:
+                'Estás con datos móviles y poca señal. El envío puede tardar.',
+          ),
+          const _Gap(),
+          SolConnectionBanner(
+            tone: SolConnectionTone.syncing,
+            title: 'Conexión restablecida',
+            message: 'Enviando 1 reporte…',
+            actionLabel: 'Ver',
+            onAction: _noop,
+          ),
+          const _Gap(),
+          SolConnectionBanner(
+            tone: SolConnectionTone.done,
+            title: 'Reporte enviado',
+            message: 'Radicado SIN-2026-000123',
+            actionLabel: 'Ver',
+            onAction: _noop,
+          ),
+          const _Gap(),
+          const Wrap(
+            spacing: SolSpacing.sm,
+            runSpacing: SolSpacing.sm,
+            children: [
+              SolNetworkChip(
+                quality: SolNetworkQuality.good,
+                link: SolNetworkLink.wifi,
+                label: 'Wi-Fi · buena',
+              ),
+              SolNetworkChip(
+                quality: SolNetworkQuality.fair,
+                link: SolNetworkLink.mobile,
+                label: 'Datos · regular',
+              ),
+              SolNetworkChip(
+                quality: SolNetworkQuality.poor,
+                link: SolNetworkLink.mobile,
+                label: 'Datos · mala',
+              ),
+              SolNetworkChip(
+                quality: SolNetworkQuality.offline,
+                label: 'Sin conexión',
+              ),
+            ],
+          ),
+
           const _Section('Consentimiento'),
           SolConsentCheckbox(
             value: _consent,

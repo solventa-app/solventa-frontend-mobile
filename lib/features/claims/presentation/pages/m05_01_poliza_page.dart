@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/resultado.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/red/presentation/banner_conexion.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_routes.dart';
@@ -101,6 +102,7 @@ class M0501PolizaPage extends ConsumerWidget {
     };
 
     return SolFlowScaffold(
+      banner: const BannerConexion(),
       title: l10n.m05Titulo,
       onBack: () => context.pop(),
       anchorActions: true,

@@ -9,6 +9,7 @@ import '../core/l10n/l10n.dart';
 import '../core/network/network_providers.dart';
 import '../core/push/pending_destination.dart';
 import '../core/push/push_service.dart';
+import '../core/red/estado_red_notifier.dart';
 import '../core/sesion/gestor_sesion.dart';
 import '../features/acceso/presentation/acceso_notifier.dart';
 import '../features/assistance/presentation/asistencia_routes.dart';
@@ -60,8 +61,15 @@ class _SolventaAppState extends ConsumerState<SolventaApp> {
     });
     // Bloqueo tras 15 min en segundo plano (HU-M02).
     _ciclo = AppLifecycleListener(
-      onHide: () => ref.read(accesoProvider.notifier).alPasarASegundoPlano(),
-      onShow: () => ref.read(accesoProvider.notifier).alVolverAPrimerPlano(),
+      onHide: () {
+        ref.read(accesoProvider.notifier).alPasarASegundoPlano();
+        // HU-M05 (sin conexión): en segundo plano no se prueba la red.
+        ref.read(estadoRedProvider.notifier).alOcultarse();
+      },
+      onShow: () {
+        ref.read(accesoProvider.notifier).alVolverAPrimerPlano();
+        unawaited(ref.read(estadoRedProvider.notifier).alVolverAlFrente());
+      },
     );
     // HU-M04 Fase 6 (KAN-259): nunca lanza, aun sin `google-services.json`.
     unawaited(ref.read(pushServiceProvider).init());

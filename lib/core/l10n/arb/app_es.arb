@@ -2408,5 +2408,88 @@
   "m0506PorValorar": "Un operador está valorando el daño",
   "@m0506PorValorar": {
     "description": "M05-06 plazo vencido sin aprobación automática"
+  },
+  "redSinConexionTitulo": "Sin conexión",
+  "@redSinConexionTitulo": {
+    "description": "Franja de red: título sin salida a internet"
+  },
+  "redSinConexionMensaje": "Revisa tu Wi-Fi o tus datos móviles.",
+  "@redSinConexionMensaje": {
+    "description": "Franja de red: mensaje sin conexión"
+  },
+  "redLentaTitulo": "Conexión lenta",
+  "@redLentaTitulo": {
+    "description": "Franja de red: título con conexión mala"
+  },
+  "redLentaDatos": "Estás con datos móviles y poca señal. El envío puede tardar.",
+  "@redLentaDatos": {
+    "description": "Franja de red: conexión mala por datos móviles"
+  },
+  "redLentaWifi": "Tu Wi-Fi responde lento. El envío puede tardar.",
+  "@redLentaWifi": {
+    "description": "Franja de red: conexión mala por Wi-Fi"
+  },
+  "redLentaOtra": "Tu conexión responde lento. El envío puede tardar.",
+  "@redLentaOtra": {
+    "description": "Franja de red: conexión mala por otra interfaz"
+  },
+  "redRestablecidaTitulo": "Conexión restablecida",
+  "@redRestablecidaTitulo": {
+    "description": "Franja de red: volvió la conexión; se oculta sola"
+  },
+  "redChipWifi": "Wi-Fi · {calidad}",
+  "@redChipWifi": {
+    "description": "Píldora de red por Wi-Fi con su calidad",
+    "placeholders": {
+      "calidad": {
+        "type": "String"
+      }
+    }
+  },
+  "redChipDatos": "Datos · {calidad}",
+  "@redChipDatos": {
+    "description": "Píldora de red por datos móviles con su calidad",
+    "placeholders": {
+      "calidad": {
+        "type": "String"
+      }
+    }
+  },
+  "redChipOtra": "Conexión · {calidad}",
+  "@redChipOtra": {
+    "description": "Píldora de red por otra interfaz con su calidad",
+    "placeholders": {
+      "calidad": {
+        "type": "String"
+      }
+    }
+  },
+  "redCalidadBuena": "buena",
+  "@redCalidadBuena": {
+    "description": "Calidad de red: responde rápido"
+  },
+  "redCalidadRegular": "regular",
+  "@redCalidadRegular": {
+    "description": "Calidad de red: responde aceptable"
+  },
+  "redCalidadMala": "mala",
+  "@redCalidadMala": {
+    "description": "Calidad de red: responde lento o con cortes"
+  },
+  "redChipSinConexion": "Sin conexión",
+  "@redChipSinConexion": {
+    "description": "Píldora de red sin salida a internet"
+  },
+  "redDemoSinConexion": "Simular sin conexión",
+  "@redDemoSinConexion": {
+    "description": "Disparador de demo: fuerza el estado sin conexión"
+  },
+  "redDemoLenta": "Simular conexión lenta",
+  "@redDemoLenta": {
+    "description": "Disparador de demo: fuerza la conexión mala"
+  },
+  "redDemoReal": "Volver a la conexión real",
+  "@redDemoReal": {
+    "description": "Disparador de demo: quita la simulación de red"
   }
 }

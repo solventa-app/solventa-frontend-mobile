@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/red/presentation/banner_conexion.dart';
 import '../../domain/ciudades.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
@@ -113,6 +114,7 @@ class _M0503RelatoPageState extends ConsumerState<M0503RelatoPage> {
     final ciudadMal = _intentoEnviar && estado.ciudad.trim().isEmpty;
 
     return SolFlowScaffold(
+      banner: const BannerConexion(),
       title: l10n.m0503Titulo,
       onBack: () => context.pop(),
       anchorActions: false,

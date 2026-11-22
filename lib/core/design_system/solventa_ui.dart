@@ -10,6 +10,7 @@ export 'components/auth/sol_pin_indicator.dart';
 export 'components/buttons/sol_button.dart';
 export 'components/buttons/sol_button_pair.dart';
 export 'components/buttons/sol_link_button.dart';
+export 'components/feedback/sol_connection_banner.dart';
 export 'components/feedback/sol_demo_trigger.dart';
 export 'components/feedback/sol_inline_note.dart';
 export 'components/feedback/sol_loading_state.dart';

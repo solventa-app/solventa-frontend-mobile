@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/network/network_providers.dart';
+import '../../../../core/red/presentation/banner_conexion.dart';
 import '../../../assistance/domain/entities/asistencia.dart';
 import '../../../assistance/presentation/widgets/hoja_direccion.dart';
 import '../../domain/entities/reporte_siniestro.dart';
@@ -72,6 +73,7 @@ class _M0502FotosPageState extends ConsumerState<M0502FotosPage> {
         estado.ubicacion != null || estado.ubicacionSinPermiso;
 
     return SolFlowScaffold(
+      banner: const BannerConexion(),
       title: l10n.m0502Titulo,
       onBack: () => context.pop(),
       body: Column(

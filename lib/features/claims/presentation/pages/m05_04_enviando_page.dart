@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/red/presentation/banner_conexion.dart';
 import '../providers.dart';
 import '../reporte_notifier.dart';
 import '../reporte_routes.dart';
@@ -36,6 +37,7 @@ class _M0504EnviandoPageState extends ConsumerState<M0504EnviandoPage> {
     });
     final l10n = context.l10n;
     return SolTransitionalScreen(
+      banner: const BannerConexion(),
       title: l10n.m0504Titulo,
       message: l10n.m0504Mensaje,
     );

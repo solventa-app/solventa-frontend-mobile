@@ -1202,5 +1202,43 @@
       }
     }
   },
-  "m0506PorValorar": "An operator is assessing the damage"
+  "m0506PorValorar": "An operator is assessing the damage",
+  "redSinConexionTitulo": "No connection",
+  "redSinConexionMensaje": "Check your Wi-Fi or mobile data.",
+  "redLentaTitulo": "Slow connection",
+  "redLentaDatos": "You're on mobile data with a weak signal. Sending may take a while.",
+  "redLentaWifi": "Your Wi-Fi is responding slowly. Sending may take a while.",
+  "redLentaOtra": "Your connection is responding slowly. Sending may take a while.",
+  "redRestablecidaTitulo": "Connection restored",
+  "redChipWifi": "Wi-Fi · {calidad}",
+  "@redChipWifi": {
+    "placeholders": {
+      "calidad": {
+        "type": "String"
+      }
+    }
+  },
+  "redChipDatos": "Data · {calidad}",
+  "@redChipDatos": {
+    "placeholders": {
+      "calidad": {
+        "type": "String"
+      }
+    }
+  },
+  "redChipOtra": "Connection · {calidad}",
+  "@redChipOtra": {
+    "placeholders": {
+      "calidad": {
+        "type": "String"
+      }
+    }
+  },
+  "redCalidadBuena": "good",
+  "redCalidadRegular": "fair",
+  "redCalidadMala": "poor",
+  "redChipSinConexion": "No connection",
+  "redDemoSinConexion": "Simulate no connection",
+  "redDemoLenta": "Simulate slow connection",
+  "redDemoReal": "Back to the real connection"
 }

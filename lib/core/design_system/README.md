@@ -37,7 +37,7 @@ lib/core/design_system/
     navigation/         SolTopBar, SolBottomNav, SolLocaleChip
     lists/              SolProviderRow, SolActionTile, SolSectionHeader
     feedback/           SolStatusBadge/Banner, SolLoadingState, SolSkeleton, SolResultView,
-                        SolInlineNote, SolDemoTrigger
+                        SolInlineNote, SolDemoTrigger, SolConnectionBanner, SolNetworkChip
     inputs/             SolTextField, SolConsentCheckbox
     surfaces/           SolCard, SolBottomSheet(+Panel, SolSheetLayout), SolConfirmDialog(+Panel),
                         SolDivider, SolAvatar
@@ -240,6 +240,33 @@ SolStatusBanner(
 ```
 Usa `inline: true` en el enlace para que quede alineado con el título.
 El banner se anuncia a TalkBack al aparecer (`liveRegion`).
+
+### SolConnectionBanner / SolNetworkChip
+Franja de estado de la red (HU-M05, sin conexión). Va en el hueco `banner` de
+`SolFlowScaffold`, `SolResultScreen`, `SolTransitionalScreen` y `SolAppShell`:
+queda pegada bajo la barra superior, a todo el ancho, y empuja el contenido.
+Tonos `offline`, `slow`, `syncing` y `done`, siempre con ícono y texto. Con el
+teclado abierto se reduce a una línea; con el texto al 200 % crece.
+```dart
+SolFlowScaffold(
+  title: 'Reportar siniestro',
+  banner: SolConnectionBanner(
+    tone: SolConnectionTone.offline,
+    title: 'Sin conexión',
+    message: 'Puedes reportar un siniestro. Se envía cuando vuelva la señal.',
+    actionLabel: 'Ver',
+    onAction: abrirPendientes,
+  ),
+  body: ...,
+);
+SolNetworkChip(
+  quality: SolNetworkQuality.good,
+  link: SolNetworkLink.wifi,
+  label: 'Wi-Fi · buena',
+);
+```
+Las features no arman la franja a mano: usan `BannerConexion` y `ChipRed`
+(`lib/core/red/presentation/`), que leen el estado real de la red.
 
 ### SolConsentCheckbox
 Toda la fila es táctil (≥ 48 dp) y se anuncia como casilla.

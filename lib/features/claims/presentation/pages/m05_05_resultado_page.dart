@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/design_system/solventa_ui.dart';
 import '../../../../core/errors/falla.dart';
 import '../../../../core/l10n/l10n.dart';
+import '../../../../core/red/presentation/banner_conexion.dart';
 import '../../domain/entities/reporte_siniestro.dart';
 import '../providers.dart';
 import '../reporte_notifier.dart';
@@ -40,6 +41,7 @@ class M0505ResultadoPage extends ConsumerWidget {
 
     return switch (envio) {
       Enviado(:final siniestro) => SolResultScreen(
+        banner: const BannerConexion(),
         title: l10n.m0505Exito,
         status: SolStatus.success,
         message: l10n.m0505ExitoMensaje(
@@ -58,6 +60,7 @@ class M0505ResultadoPage extends ConsumerWidget {
         showBack: false,
       ),
       EnvioFallido(:final falla) => SolResultScreen(
+        banner: const BannerConexion(),
         title: l10n.m0505Error,
         status: SolStatus.error,
         message: _mensaje(l10n, falla),
