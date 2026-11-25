@@ -12,6 +12,7 @@ class SolFlowScaffold extends StatelessWidget {
     required this.body,
     this.actions = const [],
     this.anchorActions = true,
+    this.centerBody = false,
     this.onBack,
     this.showBack = true,
     this.showProfile = true,
@@ -32,6 +33,10 @@ class SolFlowScaffold extends StatelessWidget {
   /// `true`: acciones ancladas abajo (M01-03, M01-07). `false`: al final del
   /// contenido (M01-02, M02-02, M06-02).
   final bool anchorActions;
+
+  /// Contenido centrado a lo alto en el espacio libre, p. ej. mientras carga
+  /// (`SolLoadingState.page`).
+  final bool centerBody;
 
   /// Si se da, intercepta la flecha y el atrás del sistema (PopScope).
   final VoidCallback? onBack;
@@ -62,6 +67,7 @@ class SolFlowScaffold extends StatelessWidget {
       body: body,
       actions: actions,
       anchorActions: anchorActions,
+      centerBody: centerBody,
       padding: padding ?? SolScreenFrame.defaultPadding,
       banner: banner,
     );

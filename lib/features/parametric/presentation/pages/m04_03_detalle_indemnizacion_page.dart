@@ -41,13 +41,16 @@ class M0403DetalleIndemnizacionPage extends ConsumerWidget {
         texto: l10n.falla(falla),
         onReintentar: () => ref.invalidate(indemnizacionProvider(id)),
       ),
-      _ => SolLoadingState(message: l10n.m0402Cargando),
+      _ => SolLoadingState.page(message: l10n.m0402Cargando),
     };
+    // Mientras carga, el indicador va en el centro de la pantalla.
+    final cargando = detalle is! AsyncData<Object?>;
 
     return SolFlowScaffold(
       title: l10n.m0403Titulo,
       onBack: onBack,
       onHomeTap: onHome,
+      centerBody: cargando,
       body: cuerpo,
       actions: [
         SolButton.primary(

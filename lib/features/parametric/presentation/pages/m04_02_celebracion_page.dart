@@ -47,7 +47,7 @@ class M0402CelebracionPage extends ConsumerWidget {
         texto: l10n.falla(falla),
         onReintentar: () => ref.invalidate(indemnizacionProvider(id)),
       ),
-      _ => SolLoadingState(message: l10n.m0402Cargando, center: true),
+      _ => SolLoadingState.page(message: l10n.m0402Cargando),
     };
 
     final frame = SolScreenFrame(

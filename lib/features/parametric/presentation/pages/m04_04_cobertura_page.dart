@@ -44,21 +44,26 @@ class M0404CoberturaPage extends ConsumerWidget {
         texto: l10n.falla(falla),
         onReintentar: () => ref.invalidate(resumenCoberturaProvider),
       ),
-      _ => SolLoadingState(message: l10n.m0404Cargando),
+      _ => SolLoadingState.page(message: l10n.m0404Cargando),
     };
+    // Mientras carga, el indicador va en el centro de la pantalla.
+    final cargando = resumen is! AsyncData<Object?>;
 
     return SolFlowScaffold(
       title: l10n.m0404Titulo,
       onBack: onBack,
       onHomeTap: onHome,
-      body: RefreshIndicator(
-        onRefresh: () => ref.refresh(resumenCoberturaProvider.future),
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          shrinkWrap: true,
-          children: [cuerpo],
-        ),
-      ),
+      centerBody: cargando,
+      body: cargando
+          ? cuerpo
+          : RefreshIndicator(
+              onRefresh: () => ref.refresh(resumenCoberturaProvider.future),
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: [cuerpo],
+              ),
+            ),
     );
   }
 }

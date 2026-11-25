@@ -525,7 +525,7 @@ class _M0601PrestadoresPageState extends ConsumerState<M0601PrestadoresPage> {
 
     return switch (estado) {
       PrestadoresCargando() => _Centro(
-        child: SolLoadingState(message: l10n.m0601Buscando, center: true),
+        child: SolLoadingState.page(message: l10n.m0601Buscando),
       ),
       PrestadoresFallidos(:final falla) => _Centro(
         child: _Aviso(

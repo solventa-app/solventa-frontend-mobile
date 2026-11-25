@@ -8,12 +8,19 @@ import '../../tokens/sol_spacing.dart';
 /// Se anuncia a TalkBack (liveRegion). El indicador es siempre indeterminado:
 /// con «quitar animaciones» no se congela en un arco fijo, porque un círculo
 /// quieto parece una carga colgada (T12).
+///
+/// Para la carga de una pantalla completa se usa [SolLoadingState.page]: queda
+/// en el centro, a lo alto y a lo ancho, del espacio que le den. Dentro de un
+/// SolFlowScaffold o un SolScreenFrame (cuerpo con scroll, alto sin límite) la
+/// pantalla además debe pedir `centerBody: true` para centrarlo a lo alto.
 class SolLoadingState extends StatelessWidget {
-  const SolLoadingState({
-    super.key,
-    required this.message,
-    this.center = false,
-  });
+  const SolLoadingState({super.key, required this.message, this.center = false})
+    : expand = false;
+
+  /// Carga de pantalla completa: centrada en el espacio disponible.
+  const SolLoadingState.page({super.key, required this.message})
+    : center = true,
+      expand = true;
 
   /// Qué está pasando, p. ej. «Validando con el proveedor KYC/AML...».
   final String message;
@@ -21,10 +28,14 @@ class SolLoadingState extends StatelessWidget {
   /// Centrado (por defecto alineado al inicio, como en M01-06).
   final bool center;
 
+  /// Ocupa el espacio disponible y se pone en su centro ([SolLoadingState.page]).
+  /// Con un alto sin límite (dentro de un scroll) solo se centra a lo ancho.
+  final bool expand;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Semantics(
+    final estado = Semantics(
       liveRegion: true,
       label: message,
       excludeSemantics: true,
@@ -58,5 +69,6 @@ class SolLoadingState extends StatelessWidget {
         ],
       ),
     );
+    return expand ? Center(child: estado) : estado;
   }
 }

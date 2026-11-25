@@ -131,10 +131,7 @@ class _MisAsistenciasPageState extends ConsumerState<MisAsistenciasPage> {
     });
 
     if (s.cargando && s.asistencias.isEmpty) {
-      return SolLoadingState(
-        message: l10n.misAsistenciasCargando,
-        center: true,
-      );
+      return SolLoadingState.page(message: l10n.misAsistenciasCargando);
     }
     final enCamino = s.enCamino;
     final yaLlegaron = s.yaLlegaron;

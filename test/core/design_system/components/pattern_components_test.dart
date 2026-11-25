@@ -353,6 +353,61 @@ void main() {
       handle.dispose();
     });
 
+    testWidgets('la carga de pantalla completa queda en el centro', (
+      tester,
+    ) async {
+      // Como en una pestaña del inicio: el espacio de la pantalla, sin scroll.
+      await pumpSol(
+        tester,
+        const SolLoadingState.page(message: 'Cargando...'),
+        scaffold: false,
+        disableAnimations: true,
+      );
+      final centro = tester.getCenter(find.byType(CircularProgressIndicator));
+      final texto = tester.getCenter(find.text('Cargando...'));
+      expect(centro.dx, moreOrLessEquals(390 / 2, epsilon: 0.5));
+      expect(texto.dx, moreOrLessEquals(390 / 2, epsilon: 0.5));
+      // El bloque (indicador + texto) queda a media altura.
+      final bloque = tester.getRect(
+        find.descendant(
+          of: find.byType(SolLoadingState),
+          matching: find.byType(Column),
+        ),
+      );
+      expect(bloque.center.dy, moreOrLessEquals(844 / 2, epsilon: 0.5));
+    });
+
+    testWidgets(
+      'en un SolFlowScaffold con centerBody va al centro del cuerpo',
+      (tester) async {
+        await pumpSol(
+          tester,
+          const SolFlowScaffold(
+            title: 'Cobertura',
+            centerBody: true,
+            body: SolLoadingState.page(message: 'Cargando...'),
+          ),
+          scaffold: false,
+          disableAnimations: true,
+        );
+        final cuerpo = tester.getRect(find.byType(SingleChildScrollView));
+        final bloque = tester.getRect(
+          find.descendant(
+            of: find.byType(SolLoadingState),
+            matching: find.byType(Column),
+          ),
+        );
+        expect(
+          bloque.center.dx,
+          moreOrLessEquals(cuerpo.center.dx, epsilon: 0.5),
+        );
+        expect(
+          bloque.center.dy,
+          moreOrLessEquals(cuerpo.center.dy, epsilon: 0.5),
+        );
+      },
+    );
+
     testWidgets('el resultado anuncia estado y mensaje', (tester) async {
       final handle = tester.ensureSemantics();
       await pumpSol(

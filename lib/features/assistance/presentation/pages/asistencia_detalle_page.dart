@@ -92,10 +92,7 @@ class _AsistenciaDetallePageState extends ConsumerState<AsistenciaDetallePage> {
     final List<Widget> acciones;
     switch (_r) {
       case null:
-        cuerpo = SolLoadingState(
-          message: l10n.misAsistenciasCargando,
-          center: true,
-        );
+        cuerpo = SolLoadingState.page(message: l10n.misAsistenciasCargando);
         acciones = const [];
       case Fracaso(:final falla):
         cuerpo = SolInlineNote(
@@ -285,6 +282,7 @@ class _AsistenciaDetallePageState extends ConsumerState<AsistenciaDetallePage> {
       onBack: widget.onBack,
       onHomeTap: widget.onHome,
       anchorActions: false,
+      centerBody: _r == null,
       body: cuerpo,
       actions: acciones,
     );

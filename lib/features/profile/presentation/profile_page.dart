@@ -164,6 +164,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       );
     }
 
+    // Mientras llega el perfil, el indicador va en el centro de la pantalla.
+    if (_cargando && perfil == null && !widget.enShell) {
+      return SolFlowScaffold(
+        title: l10n.perfilTitulo,
+        anchorActions: false,
+        centerBody: true,
+        onHomeTap: () => context.go('/'),
+        body: SolLoadingState.page(message: l10n.perfilCargando),
+      );
+    }
+
     final contenido = SingleChildScrollView(
       padding: margen,
       child: Column(
@@ -220,7 +231,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           if (_cargando && perfil == null)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: SolSpacing.xxl),
-              child: SolLoadingState(message: l10n.perfilCargando),
+              child: SolLoadingState.page(message: l10n.perfilCargando),
             )
           else ...[
             // Tarjeta principal de identidad y estado (G-05)
