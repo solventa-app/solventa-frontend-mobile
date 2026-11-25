@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -21,6 +23,17 @@ class _EstadoFijo extends OnboardingNotifier {
 
   @override
   Future<void> cargarPerfilYEstado() async {}
+}
+
+/// El perfil nunca termina de llegar: la pantalla se queda cargando.
+class _CargaSinFin extends OnboardingNotifier {
+  final _nunca = Completer<void>();
+
+  @override
+  OnboardingState build() => const OnboardingState();
+
+  @override
+  Future<void> cargarPerfilYEstado() => _nunca.future;
 }
 
 /// T24: nombre, documento enmascarado y correo del perfil, solo lectura.
@@ -70,6 +83,57 @@ void main() {
     creadoEn: '2026-10-28T15:00:00Z',
     idioma: 'ES',
     moneda: 'COP',
+  );
+
+  testWidgets(
+    'mientras carga: el encabezado arriba y el indicador en el centro de lo '
+    'que queda debajo',
+    (tester) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [onboardingProvider.overrideWith(_CargaSinFin.new)],
+          child: MaterialApp(
+            theme: SolTheme.light(),
+            locale: AppLocales.es,
+            supportedLocales: AppLocales.supported,
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              ...SolLocalizations.delegates,
+            ],
+            home: const ProfilePage(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.byType(SolLoadingState), findsOneWidget);
+      // El encabezado de G-05 sigue a la vista.
+      expect(find.text('Solo lectura'), findsOneWidget);
+      final divisor = tester.getBottomLeft(find.byType(SolDivider)).dy;
+      final bloque = tester.getRect(
+        find.descendant(
+          of: find.byType(SolLoadingState),
+          matching: find.byType(Column),
+        ),
+      );
+      final scroll = tester.getRect(find.byType(SingleChildScrollView));
+      // Centrado a lo ancho de la pantalla.
+      expect(bloque.center.dx, moreOrLessEquals(390 / 2, epsilon: 0.5));
+      // Debajo del encabezado, a media altura del espacio que queda (sin el
+      // espacio tras el divisor ni el margen de abajo).
+      expect(bloque.top, greaterThan(divisor));
+      final arriba = divisor + SolSpacing.lg;
+      final abajo = scroll.bottom - SolSpacing.xxl;
+      expect(
+        bloque.center.dy,
+        moreOrLessEquals((arriba + abajo) / 2, epsilon: 0.5),
+      );
+    },
   );
 
   testWidgets('muestra nombre, documento enmascarado y correo del backend', (

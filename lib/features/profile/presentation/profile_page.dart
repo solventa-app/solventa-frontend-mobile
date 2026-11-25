@@ -164,14 +164,74 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       );
     }
 
-    // Mientras llega el perfil, el indicador va en el centro de la pantalla.
+    // Título, subtítulo y divisor de G-05: también se ven mientras carga.
+    final encabezado = <Widget>[
+      Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.end,
+        spacing: SolSpacing.sm,
+        runSpacing: SolSpacing.xs,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Semantics(
+                header: true,
+                child: Text(
+                  l10n.perfilTitulo,
+                  style: context.solText.headline.copyWith(
+                    color: colors.onSurface,
+                    letterSpacing: -0.6,
+                  ),
+                ),
+              ),
+              const SizedBox(height: SolSpacing.xxs),
+              Text(
+                l10n.perfilSubtitulo,
+                style: context.solText.body.copyWith(
+                  color: colors.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(SolIcons.lock, size: 16, color: colors.onSurfaceVariant),
+              const SizedBox(width: SolSpacing.xxs),
+              Flexible(
+                child: Text(
+                  l10n.perfilSoloLectura,
+                  style: context.solText.note.copyWith(
+                    color: colors.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      const SizedBox(height: SolSpacing.md),
+      const SolDivider(),
+      const SizedBox(height: SolSpacing.lg),
+    ];
+
+    // Mientras llega el perfil: el encabezado arriba y el indicador en el
+    // centro del espacio que queda debajo.
     if (_cargando && perfil == null && !widget.enShell) {
       return SolFlowScaffold(
         title: l10n.perfilTitulo,
         anchorActions: false,
-        centerBody: true,
+        fillBody: true,
         onHomeTap: () => context.go('/'),
-        body: SolLoadingState.page(message: l10n.perfilCargando),
+        padding: margen,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ...encabezado,
+            Expanded(child: SolLoadingState.page(message: l10n.perfilCargando)),
+          ],
+        ),
       );
     }
 
@@ -180,54 +240,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            crossAxisAlignment: WrapCrossAlignment.end,
-            spacing: SolSpacing.sm,
-            runSpacing: SolSpacing.xs,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      l10n.perfilTitulo,
-                      style: context.solText.headline.copyWith(
-                        color: colors.onSurface,
-                        letterSpacing: -0.6,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: SolSpacing.xxs),
-                  Text(
-                    l10n.perfilSubtitulo,
-                    style: context.solText.body.copyWith(
-                      color: colors.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(SolIcons.lock, size: 16, color: colors.onSurfaceVariant),
-                  const SizedBox(width: SolSpacing.xxs),
-                  Flexible(
-                    child: Text(
-                      l10n.perfilSoloLectura,
-                      style: context.solText.note.copyWith(
-                        color: colors.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: SolSpacing.md),
-          const SolDivider(),
-          const SizedBox(height: SolSpacing.lg),
+          ...encabezado,
           if (_cargando && perfil == null)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: SolSpacing.xxl),
