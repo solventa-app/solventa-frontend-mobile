@@ -55,6 +55,7 @@ Cuenta de prueba: verificada, con al menos una póliza de auto vigente, y el tel
 
 | # | Paso | Se espera |
 |---|---|---|
+| 5.0 | Iniciar sesión con red en un teléfono recién instalado y **no** abrir «Reportar un siniestro» ni «Mis siniestros». Cerrar la app, modo avión, abrirla con la huella y tocar «Reportar un siniestro» | Las pólizas aparecen («Pólizas guardadas en este teléfono el…»): se bajaron al entrar. No sale «Conéctate una vez para descargar tus pólizas» |
 | 5.1 | Con sesión iniciada y huella activa, cerrar la app. Modo avión. Abrirla y poner la huella | Entra al inicio: «Solicitar asistencia» y «Mi cobertura» dicen «Necesita conexión»; «Reportar un siniestro» y «Mis siniestros» funcionan |
 | 5.2 | Reportar de principio a fin | Las pólizas salen de lo guardado («Pólizas guardadas en este teléfono el…»). El GPS es obligatorio. Termina en «Reporte guardado» |
 | 5.3 | Abrir Mi perfil | Nombre y «Cuenta activa»; correo y documento piden conexión; «Envío de reportes» funciona; la huella dice «Activada · con ella entraste sin conexión» |

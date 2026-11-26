@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:solventa_mobile/app/solventa_app.dart';
 import 'package:solventa_mobile/core/biometria/biometria_service.dart';
 import 'package:solventa_mobile/core/design_system/solventa_ui.dart';
+import 'package:solventa_mobile/features/claims/data/datasources/reporte_siniestro_remote_datasource.dart';
+import 'package:solventa_mobile/features/claims/presentation/providers.dart';
 import 'package:solventa_mobile/features/onboarding/data/datasources/fake_onboarding_remote_datasource.dart';
 import 'package:solventa_mobile/features/onboarding/data/fixtures/onboarding_fixtures.dart';
 import 'package:solventa_mobile/features/onboarding/presentation/onboarding_notifier.dart';
@@ -53,6 +55,11 @@ void main() {
       ProviderScope(
         overrides: [
           fakeOnboardingProvider.overrideWithValue(bff),
+          // Ya verificada, el inicio baja las pólizas para el modo sin
+          // conexión (HU-M05): sin la espera del fake no deja temporizadores.
+          reporteSiniestroRemoteDataSourceProvider.overrideWithValue(
+            FakeReporteSiniestroRemoteDataSource(latencia: Duration.zero),
+          ),
           esperasVerificacionProvider.overrideWithValue(const [
             Duration.zero,
             Duration.zero,

@@ -11,6 +11,7 @@ cobertura paramétrica (HU-M04) no cambian y sin red dicen «Necesita conexión�
 
 | Situación | Qué pasa |
 |---|---|
+| Se entra con red (iniciar sesión o abrir la app), con la cuenta verificada | El inicio baja las pólizas reportables y «Mis siniestros» y guarda su copia cifrada, sin que el cliente abra el reporte. Se repite al volver la red. También se actualizan cada vez que se abre «Reportar un siniestro» o «Mis siniestros» con red. No hay descarga en segundo plano ni con la app cerrada |
 | Se cae la red mientras se llena el reporte | La franja de conexión lo dice. El botón cambia a «Guardar y enviar después» y el reporte queda cifrado en el teléfono con sus fotos, el GPS y el relato |
 | Se cierra la app a mitad del reporte | Queda como «Sin terminar» en «Mis siniestros» y se puede continuar. Un borrador sin tocar se borra a los 7 días (avisa desde el día 5) |
 | Vuelve la red | La cola lo envía sola, una sola vez (mismo `idReporte`), sin volver a subir las fotos ya subidas. La franja muestra el radicado; con la app en segundo plano llega una notificación |
@@ -27,6 +28,7 @@ cobertura paramétrica (HU-M04) no cambian y sin red dicen «Necesita conexión�
 |---|---|
 | Estado y calidad de la red, franja y píldora | `lib/core/red/` (`estadoRedProvider`, `BannerConexion`, `ChipRed`) |
 | Base local cifrada, cuenta local y copias de lo último que respondió el servidor | `lib/core/almacen/` |
+| Copias de pólizas y «Mis siniestros», y su descarga al entrar | `lib/features/claims/data/local/copias_reporte.dart`, `cargaInicialReporteProvider` (lo observa el inicio en `lib/app/router.dart`) |
 | Reportes guardados, fotos y limpieza | `lib/features/claims/data/local/`, `domain/entities/reporte_guardado.dart` |
 | Cola de envío (un solo trabajador, reintentos, estados) | `lib/features/claims/data/cola_reportes.dart` |
 | Vigía: despierta la cola, notificaciones, recordatorios y servicio en primer plano | `lib/features/claims/presentation/vigia_reportes.dart`, `data/notificaciones_reporte.dart` |
