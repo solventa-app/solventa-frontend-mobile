@@ -49,8 +49,9 @@ class M0507bReportePendientePage extends ConsumerWidget {
         banner: const BannerReporte(),
         title: l10n.m0507bTitulo,
         onBack: atras,
+        centerBody: guardados.isLoading,
         body: guardados.isLoading
-            ? SolLoadingState(message: l10n.m0506Cargando)
+            ? SolLoadingState.page(message: l10n.m0506Cargando)
             : SolInlineNote(icon: SolIcons.info, text: l10n.m0507bYaNoEsta),
         actions: [
           if (!guardados.isLoading)

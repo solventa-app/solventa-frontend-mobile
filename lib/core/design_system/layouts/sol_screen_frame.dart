@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../components/feedback/sol_connection_banner.dart';
 import '../responsive/sol_adaptive_body.dart';
+import '../tokens/sol_sizes.dart';
 import '../tokens/sol_spacing.dart';
 
 /// Marco común de pantallas con barra superior: contenido con scroll y
@@ -17,10 +18,11 @@ class SolScreenFrame extends StatelessWidget {
     this.actions = const [],
     this.anchorActions = true,
     this.centerBody = false,
+    this.fillBody = false,
     this.padding = defaultPadding,
     this.backgroundColor,
     this.banner,
-  });
+  }) : assert(!(centerBody && fillBody), 'centerBody y fillBody no van juntos');
 
   /// Margen lateral de 16 dp y 24 dp arriba y abajo (Figma).
   static const EdgeInsets defaultPadding = EdgeInsets.fromLTRB(
@@ -35,6 +37,11 @@ class SolScreenFrame extends StatelessWidget {
   final List<Widget> actions;
   final bool anchorActions;
   final bool centerBody;
+
+  /// El cuerpo ocupa todo el alto libre (al menos), así su columna puede usar
+  /// `Expanded`: p. ej. un encabezado arriba y la carga en el centro de lo que
+  /// queda (Mi perfil). Si no cabe, se desplaza.
+  final bool fillBody;
   final EdgeInsets padding;
 
   /// Fondo de la pantalla; por defecto el del tema (gris #F5F5F5).
@@ -70,7 +77,38 @@ class SolScreenFrame extends StatelessWidget {
       ],
     );
 
-    final Widget scroll = centerBody
+    final Widget scroll = fillBody
+        // IntrinsicHeight mide el cuerpo con su ancho real (hasta 600 dp) y lo
+        // estira al alto libre; así el Expanded de adentro tiene un alto fijo.
+        ? LayoutBuilder(
+            builder: (context, limites) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: limites.maxHeight),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: padding,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              maxWidth: SolSizes.maxContentWidth,
+                            ),
+                            child: body,
+                          ),
+                        ),
+                        if (!anchorActions && actionColumn != null) ...[
+                          const SizedBox(height: SolSpacing.xxxl),
+                          SolAdaptiveBody(child: actionColumn),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        : centerBody
         // No se usa SliverFillRemaining: mide con el ancho de la pantalla y no
         // con los 600 dp de SolAdaptiveBody, y en una tablet en horizontal con
         // poco alto el texto ocupa más líneas de las medidas y se desborda.
