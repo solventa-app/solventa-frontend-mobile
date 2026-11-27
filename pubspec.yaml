@@ -71,7 +71,7 @@ dependencies:
   firebase_messaging: ^17.1.0
   # HU-M06 (4.5): notificación local programada para la llegada de la
   # asistencia (convive con FCM en su propio canal, ajuste A2).
-  flutter_local_notifications: 22.3.3
+  flutter_local_notifications: 23.0.4
   timezone: 0.11.2
   connectivity_plus: ^7.3.1
   drift: ^2.35.4
